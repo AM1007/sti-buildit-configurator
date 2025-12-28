@@ -36,8 +36,8 @@ export interface UseConfigurationReturn {
   /** Current configuration state */
   config: Configuration;
 
-  /** Currently open accordion step */
-  currentStep: StepId;
+  /** Currently open accordion step (null = all closed) */
+  currentStep: StepId | null;
 
   /** Select an option for a step */
   selectOption: (stepId: StepId, optionId: OptionId) => void;
@@ -48,7 +48,7 @@ export interface UseConfigurationReturn {
   /** Reset entire configuration to initial state */
   resetConfiguration: () => void;
 
-  /** Manually set which step is open */
+  /** Toggle which step is open (click again to close) */
   setCurrentStep: (stepId: StepId) => void;
 
   /** Whether all required steps are complete */
@@ -76,25 +76,11 @@ export interface UseConfigurationReturn {
  * - Auto-advances to next step after selection
  * - Auto-resets dependent steps when their dependency changes
  * - Provides completion status
+ * - Toggle accordion: click same step to close
  *
  * @param model - The model definition to configure
  * @param initialConfig - Optional initial configuration state
  * @returns Configuration state and control functions
- *
- * @example
- * const {
- *   config,
- *   currentStep,
- *   selectOption,
- *   resetConfiguration,
- *   isComplete
- * } = useConfiguration(stopperStationsModel);
- *
- * // Select Red colour
- * selectOption("colour", "0");
- *
- * // config.colour is now "0"
- * // currentStep auto-advanced to next step
  */
 export function useConfiguration(
   model: ModelDefinition,
@@ -105,8 +91,8 @@ export function useConfiguration(
     initialConfig ?? createEmptyConfiguration(model)
   );
 
-  // Start at first step
-  const [currentStep, setCurrentStep] = useState<StepId>(model.stepOrder[0]);
+  // Start at first step (null = all closed)
+  const [currentStep, setCurrentStep] = useState<StepId | null>(model.stepOrder[0]);
 
   // Track which step triggered the last change (for cascade reset)
   const [lastChangedStep, setLastChangedStep] = useState<StepId | null>(null);
@@ -194,10 +180,10 @@ export function useConfiguration(
   }, [model]);
 
   // ==========================================================================
-  // Manual step navigation (for accordion toggle)
+  // Manual step navigation (TOGGLE: click same step to close)
   // ==========================================================================
   const handleSetCurrentStep = useCallback((stepId: StepId) => {
-    setCurrentStep(stepId);
+    setCurrentStep((prev) => (prev === stepId ? null : stepId));
   }, []);
 
   // ==========================================================================
@@ -244,8 +230,6 @@ export function useConfiguration(
  * This wrapper maintains compatibility with existing Stopper Stations code.
  */
 export function useConfigurationLegacy() {
-  // This would need to import stopperStationsModel
-  // For now, throw error to force migration
   throw new Error(
     "useConfigurationLegacy is deprecated. Use useConfiguration(model) instead."
   );

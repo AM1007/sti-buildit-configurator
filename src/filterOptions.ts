@@ -2,18 +2,14 @@
 // UNIVERSAL RULE ENGINE - OPTION FILTERING
 // ============================================================================
 //
-// Determines option availability based on dependencies defined in ModelDefinition.
+// Determines option availability based on:
+// 1. Legacy `availableFor` rules (for models without constraint engine)
+// 2. Constraint engine rules (for models with bidirectional deps)
 //
-// Supports:
-// - Single-step dependencies (COLOUR → ACTIVATION)
-// - Bidirectional dependencies (COLOUR ↔ BUTTON COLOUR)
-// - Non-colour dependencies (SWITCH TYPE → ELECTRICAL)
-//
-// Rules:
-// 1. Options WITHOUT `availableFor` are always available
-// 2. Options WITH `availableFor` require the dependency step to have a selection
-//    that is included in the availableFor array
-// 3. If dependency step has no selection, dependent options are BLOCKED
+// Migration status:
+// - stopper-stations: ✅ constraint engine
+// - indoor-push-buttons: ✅ constraint engine
+// - Other models: legacy availableFor
 //
 // ============================================================================
 
@@ -26,34 +22,115 @@ import type {
   StepId,
 } from "./types";
 
+import {
+  createConstraintEngine,
+  STOPPER_STATIONS_CONSTRAINTS,
+  INDOOR_PUSH_BUTTONS_CONSTRAINTS,
+  KEY_SWITCHES_CONSTRAINTS,
+  WATERPROOF_PUSH_BUTTONS_CONSTRAINTS,
+  RESET_CALL_POINTS_CONSTRAINTS,
+  WATERPROOF_RESET_CALL_POINT_CONSTRAINTS,
+  type IConstraintEngine,
+  type ConstraintResult,
+} from "./rules";
+
+// ============================================================================
+// CONSTRAINT ENGINE INSTANCES (cached)
+// ============================================================================
+
+const engineCache = new Map<string, IConstraintEngine>();
+
+/**
+ * Get or create constraint engine for a model.
+ * Returns null if model doesn't have constraint rules.
+ */
+function getConstraintEngine(modelId: string): IConstraintEngine | null {
+  if (engineCache.has(modelId)) {
+    return engineCache.get(modelId)!;
+  }
+  
+  // Models with constraint engine
+  switch (modelId) {
+    case "stopper-stations": {
+      const engine = createConstraintEngine(STOPPER_STATIONS_CONSTRAINTS);
+      engineCache.set(modelId, engine);
+      return engine;
+    }
+    case "indoor-push-buttons": {
+      const engine = createConstraintEngine(INDOOR_PUSH_BUTTONS_CONSTRAINTS);
+      engineCache.set(modelId, engine);
+      return engine;
+    }
+    case "key-switches": {
+      const engine = createConstraintEngine(KEY_SWITCHES_CONSTRAINTS);
+      engineCache.set(modelId, engine);
+      return engine;
+    }
+    case "waterproof-push-buttons": {
+      const engine = createConstraintEngine(WATERPROOF_PUSH_BUTTONS_CONSTRAINTS);
+      engineCache.set(modelId, engine);
+      return engine;
+    }
+    case "reset-call-points": {
+      const engine = createConstraintEngine(RESET_CALL_POINTS_CONSTRAINTS);
+      engineCache.set(modelId, engine);
+      return engine;
+    }
+    case "waterproof-reset-call-point": {
+      const engine = createConstraintEngine(WATERPROOF_RESET_CALL_POINT_CONSTRAINTS);
+      engineCache.set(modelId, engine);
+      return engine;
+    }
+    default:
+      // Other models: no constraint engine yet
+      return null;
+  }
+}
+
 // ============================================================================
 // CORE AVAILABILITY CHECK
 // ============================================================================
 
 /**
  * Checks if a single option is available based on current configuration.
+ * Uses constraint engine if available, falls back to legacy logic.
  *
  * @param option - The option to check
  * @param config - Current configuration state
+ * @param modelId - Optional model ID for constraint engine lookup
+ * @param stepId - Optional step ID for constraint engine
  * @returns AvailabilityResult with available flag and reason if blocked
- *
- * @example
- * // Option without dependency - always available
- * checkOptionAvailability(
- *   { id: "EN", label: "English", code: "EN" },
- *   config
- * );
- * // → { available: true }
- *
- * @example
- * // Option with dependency - blocked by unmet condition
- * checkOptionAvailability(
- *   { id: "R", code: "R", availableFor: ["1", "5", "7"], dependsOn: "colour" },
- *   { colour: "3", ... } // Green selected
- * );
- * // → { available: false, reason: "Not compatible with selected colour", blockedBy: "colour" }
  */
 export function checkOptionAvailability(
+  option: Option,
+  config: Configuration,
+  modelId?: string,
+  stepId?: string
+): AvailabilityResult {
+  // Try constraint engine first
+  if (modelId && stepId) {
+    const engine = getConstraintEngine(modelId);
+    if (engine) {
+      const result = engine.checkOptionAvailability(stepId, option.id, config);
+      if (!result.available) {
+        return {
+          available: false,
+          reason: result.reasons.map((r) => r.message).join("; "),
+          blockedBy: result.reasons[0]?.blockedBy,
+        };
+      }
+      return { available: true };
+    }
+  }
+  
+  // Fall back to legacy logic
+  return checkOptionAvailabilityLegacy(option, config);
+}
+
+/**
+ * Legacy availability check using availableFor arrays.
+ */
+function checkOptionAvailabilityLegacy(
   option: Option,
   config: Configuration
 ): AvailabilityResult {
@@ -65,7 +142,7 @@ export function checkOptionAvailability(
   const dependencyStepId = option.dependsOn;
   const selectedValue = config[dependencyStepId];
 
-  // Dependency step has no selection = blocked (can't determine compatibility)
+  // Dependency step has no selection = blocked
   if (!selectedValue) {
     return {
       available: false,
@@ -79,7 +156,6 @@ export function checkOptionAvailability(
     return { available: true };
   }
 
-  // Not compatible with current selection
   return {
     available: false,
     reason: `Not compatible with selected ${dependencyStepId}`,
@@ -89,13 +165,14 @@ export function checkOptionAvailability(
 
 /**
  * Simple boolean check for option availability.
- * Use checkOptionAvailability() if you need the reason.
  */
 export function isOptionAvailable(
   option: Option,
-  config: Configuration
+  config: Configuration,
+  modelId?: string,
+  stepId?: string
 ): boolean {
-  return checkOptionAvailability(option, config).available;
+  return checkOptionAvailability(option, config, modelId, stepId).available;
 }
 
 // ============================================================================
@@ -104,33 +181,31 @@ export function isOptionAvailable(
 
 /**
  * Gets all options for a step with their availability status.
- *
- * @param step - The step definition
- * @param config - Current configuration state
- * @returns Array of options with availability info
+ * Uses constraint engine for supported models.
  */
 export function getOptionsWithAvailability(
   step: Step,
-  config: Configuration
+  config: Configuration,
+  modelId?: string
 ): Array<{ option: Option; availability: AvailabilityResult }> {
   return step.options.map((option) => ({
     option,
-    availability: checkOptionAvailability(option, config),
+    availability: checkOptionAvailability(option, config, modelId, step.id),
   }));
 }
 
 /**
  * Filters options to return only those currently available.
- *
- * @param options - Array of options to filter
- * @param config - Current configuration state
- * @returns Array of available options only
  */
 export function filterAvailableOptions(
   options: Option[],
-  config: Configuration
+  config: Configuration,
+  modelId?: string,
+  stepId?: string
 ): Option[] {
-  return options.filter((option) => isOptionAvailable(option, config));
+  return options.filter((option) => 
+    isOptionAvailable(option, config, modelId, stepId)
+  );
 }
 
 /**
@@ -138,9 +213,12 @@ export function filterAvailableOptions(
  */
 export function countAvailableOptions(
   step: Step,
-  config: Configuration
+  config: Configuration,
+  modelId?: string
 ): number {
-  return step.options.filter((opt) => isOptionAvailable(opt, config)).length;
+  return step.options.filter((opt) => 
+    isOptionAvailable(opt, config, modelId, step.id)
+  ).length;
 }
 
 // ============================================================================
@@ -149,35 +227,27 @@ export function countAvailableOptions(
 
 /**
  * Checks if a current selection is still valid after configuration change.
- *
- * @param optionId - The ID of the selected option
- * @param step - The step definition containing the option
- * @param config - Current configuration state
- * @returns true if the selection is still valid
  */
 export function isSelectionStillValid(
   optionId: string | null,
   step: Step,
-  config: Configuration
+  config: Configuration,
+  modelId?: string
 ): boolean {
   if (!optionId) {
-    return true; // No selection = nothing to validate
+    return true;
   }
 
   const option = step.options.find((o) => o.id === optionId);
   if (!option) {
-    return false; // Option not found = invalid
+    return false;
   }
 
-  return isOptionAvailable(option, config);
+  return isOptionAvailable(option, config, modelId, step.id);
 }
 
 /**
  * Finds all invalid selections in a configuration after a change.
- *
- * @param model - Model definition
- * @param config - Current configuration state
- * @returns Array of stepIds with invalid selections
  */
 export function findInvalidSelections(
   model: ModelDefinition,
@@ -185,9 +255,16 @@ export function findInvalidSelections(
 ): StepId[] {
   const invalid: StepId[] = [];
 
+  // Try constraint engine first
+  const engine = getConstraintEngine(model.id);
+  if (engine) {
+    return engine.validateConfiguration(config);
+  }
+
+  // Fall back to legacy validation
   for (const step of model.steps) {
     const selectedId = config[step.id];
-    if (selectedId && !isSelectionStillValid(selectedId, step, config)) {
+    if (selectedId && !isSelectionStillValid(selectedId, step, config, model.id)) {
       invalid.push(step.id);
     }
   }
@@ -201,18 +278,7 @@ export function findInvalidSelections(
 
 /**
  * Determines which selections should be reset when a step changes.
- * Handles cascading dependencies.
- *
- * @param model - Model definition
- * @param changedStepId - The step that was just changed
- * @param config - Current configuration state (after the change)
- * @returns Array of stepIds that should be reset to null
- *
- * @example
- * // User changes colour from Red to Green
- * // Button colour "R" (Red) is no longer valid for Green housing
- * getSelectionsToReset(model, "colour", { colour: "3", buttonColour: "R", ... });
- * // → ["buttonColour"]
+ * Uses constraint engine for bidirectional validation.
  */
 export function getSelectionsToReset(
   model: ModelDefinition,
@@ -221,22 +287,32 @@ export function getSelectionsToReset(
 ): StepId[] {
   const toReset: StepId[] = [];
 
+  // Use constraint engine if available
+  const engine = getConstraintEngine(model.id);
+  
   for (const step of model.steps) {
     // Skip the step that was just changed
     if (step.id === changedStepId) {
       continue;
     }
 
-    // Check if any option in this step depends on the changed step
-    const hasDependency = step.options.some(
-      (opt) => opt.dependsOn === changedStepId
-    );
+    const selectedId = config[step.id];
+    if (!selectedId) {
+      continue;
+    }
 
-    if (hasDependency) {
-      const selectedId = config[step.id];
-      if (selectedId && !isSelectionStillValid(selectedId, step, config)) {
-        toReset.push(step.id);
-      }
+    // Check if current selection is still valid
+    let isValid: boolean;
+    
+    if (engine) {
+      const result = engine.checkOptionAvailability(step.id, selectedId, config);
+      isValid = result.available;
+    } else {
+      isValid = isSelectionStillValid(selectedId, step, config, model.id);
+    }
+
+    if (!isValid) {
+      toReset.push(step.id);
     }
   }
 
@@ -289,26 +365,22 @@ export function getCompletionPercentage(
 }
 
 // ============================================================================
-// LEGACY COMPATIBILITY
-// ============================================================================
-// These functions maintain compatibility with existing Stopper Stations code.
-// They assume colour-based dependencies only.
-// TODO: Remove after migrating all components.
+// DEBUG UTILITIES
 // ============================================================================
 
 /**
- * @deprecated Use isOptionAvailable with full config instead.
- * Legacy function that only checks colour dependency.
+ * Get detailed availability info for debugging.
  */
-export function isOptionAvailableLegacy(
-  option: Option,
-  colourId: string | null
-): boolean {
-  if (!option.availableFor) {
-    return true;
+export function debugOptionAvailability(
+  modelId: string,
+  stepId: StepId,
+  optionId: string,
+  config: Configuration
+): ConstraintResult | null {
+  const engine = getConstraintEngine(modelId);
+  if (!engine) {
+    return null;
   }
-  if (!colourId) {
-    return false;
-  }
-  return option.availableFor.includes(colourId);
+  return engine.checkOptionAvailability(stepId, optionId, config);
 }
+

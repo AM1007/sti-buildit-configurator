@@ -5,6 +5,9 @@
 // Grid of preview tiles showing current selections.
 // Dynamic based on model's stepOrder.
 //
+// Interaction:
+// - Click on tile → opens corresponding step in sidebar
+//
 // Layout:
 // - Mobile: 2 columns
 // - Tablet: 3 columns
@@ -12,7 +15,7 @@
 //
 // ============================================================================
 
-import type { Configuration, ModelDefinition } from "../types";
+import type { Configuration, ModelDefinition, StepId } from "../types";
 import { PreviewTile } from "./PreviewTile";
 
 // ============================================================================
@@ -25,6 +28,9 @@ interface ProductPreviewProps {
 
   /** Current configuration state */
   config: Configuration;
+
+  /** Callback when user clicks tile to edit step */
+  onEditStep: (stepId: StepId) => void;
 }
 
 // ============================================================================
@@ -60,8 +66,11 @@ function getGridClasses(stepCount: number): string {
  * - Indoor Push Buttons: 5 tiles
  * - Key Switches: 4 tiles
  * - etc.
+ *
+ * Interaction:
+ * - Click tile → onEditStep callback → opens step in sidebar
  */
-export function ProductPreview({ model, config }: ProductPreviewProps) {
+export function ProductPreview({ model, config, onEditStep }: ProductPreviewProps) {
   const gridClasses = getGridClasses(model.stepOrder.length);
 
   return (
@@ -84,10 +93,12 @@ export function ProductPreview({ model, config }: ProductPreviewProps) {
           return (
             <PreviewTile
               key={stepId}
+              stepId={stepId}
               label={step.title}
               image={selectedOption?.image}
               selectedLabel={selectedOption?.label}
               isSelected={!!selectedOptionId}
+              onEdit={onEditStep}
             />
           );
         })}

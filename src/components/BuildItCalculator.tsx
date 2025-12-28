@@ -8,6 +8,11 @@
 // - Generates product model via buildProductModel utility
 // - Renders Sidebar (left) and MainPanel (right)
 //
+// Interaction:
+// - Click preview tile → opens corresponding step in sidebar
+// - Click option → selects/deselects option
+// - Click accordion header → toggles accordion
+//
 // Responsive:
 // - Desktop: Two-column layout (sidebar + main)
 // - Mobile: Stacked layout with collapsible sidebar
@@ -62,6 +67,7 @@ export function BuildItCalculator({
     config,
     currentStep,
     selectOption,
+    clearSelection,
     resetConfiguration,
     setCurrentStep,
     isComplete,
@@ -75,6 +81,13 @@ export function BuildItCalculator({
     if (productModel.isComplete && onAddToMyList) {
       onAddToMyList(productModel.fullCode);
     }
+  };
+
+  // Handle edit step from preview tile click
+  const handleEditStep = (stepId: string) => {
+    setCurrentStep(stepId);
+    // On mobile, open sidebar when editing
+    setSidebarOpen(true);
   };
 
   return (
@@ -131,6 +144,9 @@ export function BuildItCalculator({
             // Close sidebar on mobile after selection
             setSidebarOpen(false);
           }}
+          onClearOption={(stepId) => {
+            clearSelection(stepId);
+          }}
           onSetCurrentStep={setCurrentStep}
           className="h-full"
         />
@@ -143,6 +159,7 @@ export function BuildItCalculator({
         productModel={productModel}
         onReset={resetConfiguration}
         onAddToMyList={handleAddToMyList}
+        onEditStep={handleEditStep}
         className="flex-1"
       />
 

@@ -2,7 +2,7 @@
 // WATERPROOF PUSH BUTTONS MODEL DEFINITION
 // ============================================================================
 //
-// Source: 04_Конфигуратор_StopperSwitches_Waterproof_Push_Buttons.pdf (VERIFIED)
+// Source: 04_Конфигуратор_StopperSwitches_Waterproof_Push_Buttons.md (VERIFIED)
 // BaseCode: WSS3
 // Format: WSS3-[housing][buttonColour][buttonType][electrical][-CL]
 //
@@ -16,108 +16,62 @@
 // 4. ELECTRICAL ARRANGEMENTS
 // 5. LABEL
 //
-// KEY DIFFERENCES FROM INDOOR PUSH BUTTONS (PDF 02):
+// KEY DIFFERENCES FROM INDOOR PUSH BUTTONS:
 // - BaseCode: WSS3 vs SS3-
+// - All housing options are "Surface Mount" (not "Dual Mount")
 // - BUTTON TYPE: 2 options (#0, #1) vs 3 options (#0, #1, #6)
 // - ELECTRICAL: Only 1 option (#4) vs 2 options (#0, #4)
-// - HOUSING COLOUR dependencies differ slightly
+// - Different HOUSING → BUTTON COLOUR compatibility matrix
 //
-// CRITICAL: This model has ONE-WAY dependencies from HOUSING COLOUR to BUTTON COLOUR.
+// Dependencies handled by constraint engine in src/rules/waterproofPushButtonsRules.ts
 // ============================================================================
 
 import type { ModelDefinition, Step } from "../../types";
 
 // ============================================================================
-// COMPATIBILITY MATRIX (from PDF pages with dependencies)
+// IMAGE PATH CONSTANTS
 // ============================================================================
-
-// HOUSING COLOUR → BUTTON COLOUR availability
-const HOUSING_TO_BUTTON: Record<string, string[]> = {
-  "1": ["R", "W"],           // Red housing → Red, White buttons
-  "3": ["G", "W"],           // Green housing → Green, White buttons (differs from Indoor!)
-  "5": ["R", "G", "Y"],      // Yellow housing → Red, Green, Yellow buttons
-  "7": ["R", "G", "W", "B"], // White housing → Red, Green, White, Blue buttons
-  "9": ["B"],                // Blue housing → Blue button only (differs from Indoor!)
-  "E": ["E"],                // Orange housing → Orange button only (differs from Indoor!)
-};
+const IMG = "/Waterproof Push Buttons";
 
 // ============================================================================
-// STEPS DEFINITION (VERIFIED FROM PDF 04)
+// STEPS DEFINITION (VERIFIED FROM MD 04)
 // ============================================================================
 
 const steps: Step[] = [
   // ==========================================================================
   // STEP 1: HOUSING COLOUR & MOUNTING
   // ==========================================================================
-  // Note: All options are "Surface Mount" (not "Dual Mount" like Indoor)
-  // ==========================================================================
   {
     id: "housingColour",
     title: "HOUSING COLOUR & MOUNTING",
     required: true,
     options: [
-      { id: "1", label: "#1 Red (Surface Mount)", code: "1" },
-      { id: "3", label: "#3 Green (Surface Mount)", code: "3" },
-      { id: "5", label: "#5 Yellow (Surface Mount)", code: "5" },
-      { id: "7", label: "#7 White (Surface Mount)", code: "7" },
-      { id: "9", label: "#9 Blue (Surface Mount)", code: "9" },
-      { id: "E", label: "#E Orange (Surface Mount)", code: "E" },
+      { id: "1", label: "#1 Red (Surface Mount)", code: "1", image: `${IMG}/HOUSING COLOUR & MOUNTING/1-Red (Surface Mount).webp` },
+      { id: "3", label: "#3 Green (Surface Mount)", code: "3", image: `${IMG}/HOUSING COLOUR & MOUNTING/3-Green (Surface Mount).webp` },
+      { id: "5", label: "#5 Yellow (Surface Mount)", code: "5", image: `${IMG}/HOUSING COLOUR & MOUNTING/5-Yellow (Surface Mount).webp` },
+      { id: "7", label: "#7 White (Surface Mount)", code: "7", image: `${IMG}/HOUSING COLOUR & MOUNTING/7-White (Surface Mount).webp` },
+      { id: "9", label: "#9 Blue (Surface Mount)", code: "9", image: `${IMG}/HOUSING COLOUR & MOUNTING/9-Blue (Surface Mount).webp` },
+      { id: "E", label: "#E Orange (Surface Mount)", code: "E", image: `${IMG}/HOUSING COLOUR & MOUNTING/E-Orange (Surface Mount).webp` },
     ],
   },
 
   // ==========================================================================
   // STEP 2: BUTTON COLOUR
   // ==========================================================================
-  // Dependencies from HOUSING COLOUR step.
-  // Note: Dependencies differ from Indoor Push Buttons!
+  // Bidirectional dependencies with HOUSING COLOUR.
+  // Handled by constraint engine.
   // ==========================================================================
   {
     id: "buttonColour",
     title: "BUTTON COLOUR",
     required: true,
     options: [
-      {
-        id: "R",
-        label: "#R Red Button",
-        code: "R",
-        availableFor: ["1", "5", "7"], // Red, Yellow, White housing
-        dependsOn: "housingColour",
-      },
-      {
-        id: "G",
-        label: "#G Green Button",
-        code: "G",
-        availableFor: ["3", "5", "7"], // Green, Yellow, White housing
-        dependsOn: "housingColour",
-      },
-      {
-        id: "Y",
-        label: "#Y Yellow Button",
-        code: "Y",
-        availableFor: ["5"], // Yellow housing only
-        dependsOn: "housingColour",
-      },
-      {
-        id: "W",
-        label: "#W White Button",
-        code: "W",
-        availableFor: ["1", "3", "7"], // Red, Green, White housing
-        dependsOn: "housingColour",
-      },
-      {
-        id: "B",
-        label: "#B Blue Button",
-        code: "B",
-        availableFor: ["7", "9"], // White, Blue housing
-        dependsOn: "housingColour",
-      },
-      {
-        id: "E",
-        label: "#E Orange Button",
-        code: "E",
-        availableFor: ["E"], // Orange housing only
-        dependsOn: "housingColour",
-      },
+      { id: "R", label: "#R Red Button", code: "R", image: `${IMG}/BUTTON COLOUR/R-Red-Button.webp` },
+      { id: "G", label: "#G Green Button", code: "G", image: `${IMG}/BUTTON COLOUR/G-Green-Button.webp` },
+      { id: "Y", label: "#Y Yellow Button", code: "Y", image: `${IMG}/BUTTON COLOUR/Y-Yellow-Button.webp` },
+      { id: "W", label: "#W White Button", code: "W", image: `${IMG}/BUTTON COLOUR/W-White-Button.webp` },
+      { id: "B", label: "#B Blue Button", code: "B", image: `${IMG}/BUTTON COLOUR/B-Blue-Button.webp` },
+      { id: "E", label: "#E Orange Button", code: "E", image: `${IMG}/BUTTON COLOUR/E-Orange-Button.webp` },
     ],
   },
 
@@ -125,37 +79,35 @@ const steps: Step[] = [
   // STEP 3: BUTTON TYPE
   // ==========================================================================
   // Only 2 options (Indoor has 3 with #6 Pneumatic)
-  // No dependencies - all options always available
+  // No dependencies
   // ==========================================================================
   {
     id: "buttonType",
     title: "BUTTON TYPE",
     required: true,
     options: [
-      { id: "0", label: "#0 Latching (Key-to-Reset)", code: "0" },
-      { id: "1", label: "#1 Momentary", code: "1" },
+      { id: "0", label: "#0 Latching (Key-to-Reset)", code: "0", image: `${IMG}/BUTTON TYPE/0-Latching-(Key-to-Reset).webp` },
+      { id: "1", label: "#1 Momentary", code: "1", image: `${IMG}/BUTTON TYPE/1-Momentary.webp` },
     ],
   },
 
   // ==========================================================================
   // STEP 4: ELECTRICAL ARRANGEMENTS
   // ==========================================================================
-  // Only 1 option! (Indoor has 2: #0 and #4)
-  // No dependencies - always available
+  // Only 1 option (Indoor has 2: #0 and #4)
+  // No dependencies
   // ==========================================================================
   {
     id: "electricalArrangements",
     title: "ELECTRICAL ARRANGEMENTS",
     required: true,
     options: [
-      { id: "4", label: "#4 Multi-Functional Signal (SPC & DPC)", code: "4" },
+      { id: "4", label: "#4 Multi-Functional Signal (SPC & DPC)", code: "4", image: `${IMG}/ELECTRICAL ARRANGEMENTS/4-Multi-Functional-Signal-(SPC-DPC).webp` },
     ],
   },
 
   // ==========================================================================
   // STEP 5: LABEL
-  // ==========================================================================
-  // Only #CL adds code to Product Model
   // ==========================================================================
   {
     id: "label",
@@ -165,12 +117,14 @@ const steps: Step[] = [
       {
         id: "SAK",
         label: "# Self-Assemble Label Kit",
-        code: "", // No code in Product Model
+        code: "",
+        image: `${IMG}/LABEL/Self-Assemble Label Kit.webp`,
       },
       {
         id: "CL",
         label: "#CL Custom Label",
-        code: "CL", // Adds "-CL" section to Product Model
+        code: "CL",
+        image: `${IMG}/LABEL/CL Custom Label.webp`,
       },
     ],
   },
@@ -204,38 +158,15 @@ export const waterproofPushButtonsModel: ModelDefinition = {
       "electricalArrangements",
       "label",
     ],
-    separator: "none", // Parts are concatenated without separator
-    // Format: WSS3-[housing][button][type][electrical][-CL]
-    // Note: There's a dash between WSS3 and the codes
+    separator: "none",
     separatorMap: {
-      housingColour: "-", // Dash after WSS3
+      housingColour: "-",
       buttonColour: "",
       buttonType: "",
       electricalArrangements: "",
-      label: "-", // Dash before CL if present
+      label: "-",
     },
   },
   
   primaryDependencyStep: "housingColour",
-};
-
-// ============================================================================
-// KEY DIFFERENCES FROM INDOOR PUSH BUTTONS
-// ============================================================================
-//
-// | Element | Indoor (PDF 02) | Waterproof (PDF 04) |
-// |---------|-----------------|---------------------|
-// | BaseCode | SS3- | WSS3 |
-// | Mounting | Dual Mount | Surface Mount |
-// | BUTTON TYPE | 3 (#0, #1, #6) | 2 (#0, #1) |
-// | ELECTRICAL | 2 (#0, #4) | 1 (#4 only) |
-// | #3 Green housing | All buttons | G, W only |
-// | #9 Blue housing | W, B | B only |
-// | #E Orange housing | W, E | E only |
-//
-// ============================================================================
-
-// Export compatibility matrix for rule engine
-export const waterproofPushButtonsCompatibility = {
-  housingToButton: HOUSING_TO_BUTTON,
 };

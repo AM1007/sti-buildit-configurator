@@ -32,6 +32,9 @@ interface SidebarProps {
   /** Callback when an option is selected */
   onSelectOption: (stepId: StepId, optionId: OptionId) => void;
 
+  /** Callback when an option is cleared (deselected) */
+  onClearOption: (stepId: StepId) => void;
+
   /** Callback when step accordion is toggled */
   onSetCurrentStep: (stepId: StepId) => void;
 
@@ -61,6 +64,7 @@ export function Sidebar({
   config,
   currentStep,
   onSelectOption,
+  onClearOption,
   onSetCurrentStep,
   className = "",
 }: SidebarProps) {
@@ -94,7 +98,9 @@ export function Sidebar({
               isOpen={currentStep === step.id}
               selectedOptionId={config[step.id] ?? null}
               config={config}
+              modelId={model.id}
               onSelect={(optionId) => onSelectOption(step.id, optionId)}
+              onClear={() => onClearOption(step.id)}
               onToggle={() => onSetCurrentStep(step.id)}
             />
           ))}

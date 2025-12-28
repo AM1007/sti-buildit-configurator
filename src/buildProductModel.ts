@@ -16,32 +16,7 @@
 //
 // ============================================================================
 
-import type { ModelDefinition, ProductModelSchema } from "./types";
-
-// ============================================================================
-// TYPES
-// ============================================================================
-
-/**
- * Configuration state - map of stepId to selected optionId
- */
-export type ConfigurationState = Record<string, string | null>;
-
-/**
- * Result of building a product model
- */
-export interface ProductModelResult {
-  /** Base code prefix (e.g., "SS2", "SS3-", "WSS3") */
-  baseCode: string;
-  /** Map of stepId to code value */
-  parts: Record<string, string>;
-  /** Full assembled product code */
-  fullCode: string;
-  /** Whether all required steps are selected */
-  isComplete: boolean;
-  /** List of missing required steps */
-  missingSteps: string[];
-}
+import type { ModelDefinition, Configuration, ProductModel } from "./types";
 
 // ============================================================================
 // HELPER FUNCTIONS
@@ -80,10 +55,12 @@ function isStepRequired(model: ModelDefinition, stepId: string): boolean {
  * Gets the separator to use BEFORE a step's code.
  */
 function getSeparator(
-  schema: ProductModelSchema,
+  model: ModelDefinition,
   stepId: string,
   code: string
 ): string {
+  const { productModelSchema: schema } = model;
+  
   // If code is empty, no separator needed
   if (!code) {
     return "";
@@ -110,11 +87,11 @@ function getSeparator(
 // ============================================================================
 
 /**
- * Builds a ProductModelResult from configuration and model definition.
+ * Builds a ProductModel from configuration and model definition.
  *
  * @param config - Current user configuration (stepId → optionId map)
  * @param model - Model definition with steps and schema
- * @returns ProductModelResult with full code and completion status
+ * @returns ProductModel with full code and completion status
  *
  * @example
  * // Stopper Stations
@@ -123,19 +100,11 @@ function getSeparator(
  *   stopperStationsModel
  * );
  * // → { fullCode: "SS2024NT-EN", isComplete: true, ... }
- *
- * @example
- * // Indoor Push Buttons with Custom Label
- * buildProductModel(
- *   { colour: "1", buttonColour: "R", pushButtonType: "0", electrical: "4", label: "CL" },
- *   indoorPushButtonsModel
- * );
- * // → { fullCode: "SS3-1R04-CL", isComplete: true, ... }
  */
 export function buildProductModel(
-  config: ConfigurationState,
+  config: Configuration,
   model: ModelDefinition
-): ProductModelResult {
+): ProductModel {
   const { productModelSchema: schema, stepOrder } = model;
 
   // Extract codes for each step
@@ -158,7 +127,7 @@ export function buildProductModel(
 
   for (const stepId of schema.partsOrder) {
     const code = parts[stepId] ?? "";
-    const separator = getSeparator(schema, stepId, code);
+    const separator = getSeparator(model, stepId, code);
     fullCode += separator + code;
   }
 
@@ -191,7 +160,7 @@ export function buildProductModel(
 export function parseProductModel(
   modelCode: string,
   model: ModelDefinition
-): ConfigurationState | null {
+): Configuration | null {
   const { productModelSchema: schema } = model;
 
   // Validate baseCode prefix
@@ -217,13 +186,6 @@ export function parseProductModel(
  *
  * @param modelCode - Full product code
  * @returns Model ID or null if not recognized
- *
- * Prefix patterns:
- * - WSS3- → waterproof-push-buttons
- * - WRP2- → waterproof-reset-call-point
- * - SS3-  → indoor-push-buttons OR key-switches (ambiguous, needs context)
- * - SS2   → stopper-stations
- * - RP-   → reset-call-points
  */
 export function identifyModel(modelCode: string): string | null {
   // Order matters: check longer prefixes first
@@ -234,16 +196,11 @@ export function identifyModel(modelCode: string): string | null {
     return "waterproof-reset-call-point";
   }
   if (modelCode.startsWith("SS3-")) {
-    // ASSUMPTION: Cannot distinguish Indoor Push Buttons from Key Switches
-    // by prefix alone. Need additional context or code structure analysis.
-    // Key Switches has 2-char colour codes (10, 30, etc.)
-    // Indoor Push Buttons has 1-char colour codes (1, 3, etc.)
+    // Cannot distinguish Indoor Push Buttons from Key Switches by prefix alone
     const afterPrefix = modelCode.slice(4);
     if (afterPrefix.length > 0 && afterPrefix[1] >= "0" && afterPrefix[1] <= "9") {
-      // Second char is digit → Key Switches (2-char colour code like "10")
       return "key-switches";
     }
-    // Otherwise → Indoor Push Buttons
     return "indoor-push-buttons";
   }
   if (modelCode.startsWith("SS2")) {
