@@ -124,10 +124,6 @@ export function getOptionFromModel(
   return step?.options.find((o) => o.id === optionId);
 }
 
-// ============================================================================
-// RE-EXPORTS
-// ============================================================================
-
 export { stopperStationsModel } from "./stopperStations";
 export { indoorPushButtonsModel } from "./indoorPushButtons";
 export { keySwitchesModel } from "./keySwitches";

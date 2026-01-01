@@ -1,46 +1,15 @@
-// ============================================================================
-// SHARE MENU COMPONENT
-// ============================================================================
-//
-// Dropdown menu with sharing/export options (per Панель_кнопок.pdf):
-// - Email: Open mail client with pre-filled template
-// - Save PDF: Download configuration as PDF
-// - Print: Browser print dialog
-// - Copy URL: Copy shareable URL to clipboard
-// - Copy Model ID: Copy article code to clipboard
-//
-// ============================================================================
-
 import { useEffect, useRef } from "react";
 import type { ProductModel, ModelId } from "../types";
 
-// ============================================================================
-// TYPES
-// ============================================================================
-
 interface ShareMenuProps {
-  /** Generated product model with full code */
   productModel: ProductModel;
-
-  /** Current model ID (for URL generation) */
   modelId?: ModelId;
-
-  /** Callback to close the menu */
   onClose: () => void;
 }
 
-// ============================================================================
-// COMPONENT
-// ============================================================================
-
-/**
- * Dropdown menu with sharing and export options.
- * Closes on click outside or Escape key.
- */
 export function ShareMenu({ productModel, modelId, onClose }: ShareMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null);
 
-  // Close on Escape key
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -52,37 +21,25 @@ export function ShareMenu({ productModel, modelId, onClose }: ShareMenuProps) {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [onClose]);
 
-  // Focus trap - focus first item on open
   useEffect(() => {
     const firstButton = menuRef.current?.querySelector("button");
     firstButton?.focus();
   }, []);
 
-  /**
-   * Copy text to clipboard with fallback
-   */
   const copyToClipboard = async (text: string, successMessage: string) => {
     try {
       await navigator.clipboard.writeText(text);
-      // TODO: Replace with toast notification
       alert(successMessage);
     } catch {
-      // Fallback for older browsers
       prompt("Copy this:", text);
     }
     onClose();
   };
 
-  /**
-   * Copy model ID to clipboard
-   */
   const handleCopyModelId = () => {
     copyToClipboard(productModel.fullCode, "Model ID copied to clipboard!");
   };
 
-  /**
-   * Copy shareable URL to clipboard
-   */
   const handleCopyURL = () => {
     const baseUrl = `${window.location.origin}/configurator`;
     const params = new URLSearchParams({
@@ -93,9 +50,6 @@ export function ShareMenu({ productModel, modelId, onClose }: ShareMenuProps) {
     copyToClipboard(url, "URL copied to clipboard!");
   };
 
-  /**
-   * Open email client with pre-filled template
-   */
   const handleEmail = () => {
     const subject = encodeURIComponent(
       `Product Configuration: ${productModel.fullCode}`
@@ -112,26 +66,16 @@ export function ShareMenu({ productModel, modelId, onClose }: ShareMenuProps) {
     onClose();
   };
 
-  /**
-   * Open browser print dialog
-   */
   const handlePrint = () => {
     window.print();
     onClose();
   };
 
-  /**
-   * Save as PDF
-   * TODO: Implement PDF generation with jsPDF or html2pdf
-   * ASSUMPTION: For MVP, use Print → Save as PDF
-   */
   const handleSavePDF = () => {
-    // Trigger print dialog - user can "Save as PDF"
     window.print();
     onClose();
   };
 
-  // Menu items configuration
   const menuItems = [
     { icon: <EmailIcon />, label: "Email", onClick: handleEmail },
     { icon: <SaveIcon />, label: "Save PDF", onClick: handleSavePDF },
@@ -142,14 +86,12 @@ export function ShareMenu({ productModel, modelId, onClose }: ShareMenuProps) {
 
   return (
     <>
-      {/* Backdrop to close menu when clicking outside */}
       <div
         className="fixed inset-0 z-10"
         onClick={onClose}
         aria-hidden="true"
       />
 
-      {/* Dropdown menu */}
       <div
         ref={menuRef}
         className="absolute top-full right-0 mt-2 bg-white border border-gray-200 
@@ -176,10 +118,6 @@ export function ShareMenu({ productModel, modelId, onClose }: ShareMenuProps) {
     </>
   );
 }
-
-// ============================================================================
-// ICONS (inline SVG components)
-// ============================================================================
 
 function EmailIcon() {
   return (

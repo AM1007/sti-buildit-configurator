@@ -1,43 +1,8 @@
-// ============================================================================
-// RESET CALL POINTS MODEL DEFINITION
-// ============================================================================
-//
-// Source: 05_Конфигуратор_ReSet_Call_Points.md (VERIFIED)
-// BaseCode: RP
-// Format: RP-[colour]-[mounting]-[electrical][-CL]
-//
-// Example: RP-R-D2-01 (Red, Dual Mount, Conventional)
-// Example: RP-R-D2-01-CL (with Custom Label)
-//
-// Steps:
-// 1. COLOUR
-// 2. MOUNTING
-// 3. ELECTRICAL ARRANGEMENT
-// 4. LABEL
-//
-// CRITICAL: This model has MULTI-DIRECTIONAL dependencies:
-// - COLOUR ↔ ELECTRICAL ARRANGEMENT
-// - COLOUR ↔ LABEL
-// - ELECTRICAL ↔ LABEL
-//
-// Dependencies handled by constraint engine in src/rules/resetCallPointsRules.ts
-// ============================================================================
-
 import type { ModelDefinition, Step } from "../../types";
 
-// ============================================================================
-// IMAGE PATH CONSTANTS
-// ============================================================================
 const IMG = "/ReSet Call Points";
 
-// ============================================================================
-// STEPS DEFINITION (VERIFIED FROM MD 05)
-// ============================================================================
-
 const steps: Step[] = [
-  // ==========================================================================
-  // STEP 1: COLOUR
-  // ==========================================================================
   {
     id: "colour",
     title: "COLOUR",
@@ -52,11 +17,6 @@ const steps: Step[] = [
     ],
   },
 
-  // ==========================================================================
-  // STEP 2: MOUNTING
-  // ==========================================================================
-  // No dependencies - all options always available
-  // ==========================================================================
   {
     id: "mounting",
     title: "MOUNTING",
@@ -68,12 +28,6 @@ const steps: Step[] = [
     ],
   },
 
-  // ==========================================================================
-  // STEP 3: ELECTRICAL ARRANGEMENT
-  // ==========================================================================
-  // Bidirectional dependencies with COLOUR and LABEL.
-  // Handled by constraint engine.
-  // ==========================================================================
   {
     id: "electricalArrangement",
     title: "ELECTRICAL ARRANGEMENT",
@@ -86,12 +40,6 @@ const steps: Step[] = [
     ],
   },
 
-  // ==========================================================================
-  // STEP 4: LABEL
-  // ==========================================================================
-  // Bidirectional dependencies with COLOUR and ELECTRICAL.
-  // Only #CL adds code to Product Model.
-  // ==========================================================================
   {
     id: "label",
     title: "LABEL",
@@ -104,10 +52,6 @@ const steps: Step[] = [
     ],
   },
 ];
-
-// ============================================================================
-// MODEL DEFINITION
-// ============================================================================
 
 export const resetCallPointsModel: ModelDefinition = {
   id: "reset-call-points",

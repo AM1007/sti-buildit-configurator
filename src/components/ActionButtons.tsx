@@ -1,50 +1,14 @@
-// ============================================================================
-// ACTION BUTTONS COMPONENT
-// ============================================================================
-//
-// Row of action buttons shown when configuration is complete:
-// - Start over: Reset configuration
-// - Where to Buy: Placeholder link
-// - Share: Dropdown menu with export options
-// - Star (My List): Add to saved configurations
-//
-// Per Панель_кнопок.pdf specification.
-//
-// ============================================================================
-
 import { useState } from "react";
 import type { ProductModel } from "../types";
 import { ShareMenu } from "./ShareMenu";
 
-// ============================================================================
-// TYPES
-// ============================================================================
-
 interface ActionButtonsProps {
-  /** Generated product model */
   productModel: ProductModel;
-
-  /** Callback to reset configuration */
   onReset: () => void;
-
-  /** Callback to add current config to My List */
   onAddToMyList: () => void;
-
-  /** Whether current config is already in My List */
   isInMyList?: boolean;
 }
 
-// ============================================================================
-// COMPONENT
-// ============================================================================
-
-/**
- * Action buttons row for completed configuration.
- *
- * Layout:
- * - Mobile: Wrap to multiple rows
- * - Desktop: Single row
- */
 export function ActionButtons({
   productModel,
   onReset,
@@ -53,18 +17,12 @@ export function ActionButtons({
 }: ActionButtonsProps) {
   const [showShareMenu, setShowShareMenu] = useState(false);
 
-  /**
-   * Handle "Where to Buy" click
-   * TODO: Implement actual navigation or modal
-   */
   const handleWhereToBuy = () => {
-    // ASSUMPTION: Will link to external distributor page or modal
     window.open("https://example.com/where-to-buy", "_blank");
   };
 
   return (
     <div className="flex items-center gap-2 md:gap-3 flex-wrap">
-      {/* Start Over Button */}
       <button
         type="button"
         onClick={onReset}
@@ -75,7 +33,6 @@ export function ActionButtons({
         <span>Start over</span>
       </button>
 
-      {/* Where to Buy Button */}
       <button
         type="button"
         onClick={handleWhereToBuy}
@@ -85,7 +42,6 @@ export function ActionButtons({
         Where to Buy
       </button>
 
-      {/* Share Button with Dropdown */}
       <div className="relative">
         <button
           type="button"
@@ -107,7 +63,6 @@ export function ActionButtons({
         )}
       </div>
 
-      {/* My List (Star) Button */}
       <button
         type="button"
         onClick={onAddToMyList}
@@ -130,10 +85,6 @@ export function ActionButtons({
     </div>
   );
 }
-
-// ============================================================================
-// ICONS (inline SVG components)
-// ============================================================================
 
 function RefreshIcon() {
   return (

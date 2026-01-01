@@ -1,8 +1,3 @@
-// ============================================================================
-// RULES MODULE - PUBLIC API
-// ============================================================================
-
-// Types
 export type {
   ConstraintMatrix,
   StepConstraint,
@@ -15,7 +10,6 @@ export type {
   StepAvailability,
 } from "./types";
 
-// Engine
 export {
   createConstraintEngine,
   getStepAvailability,
@@ -23,7 +17,6 @@ export {
   formatBlockReasons,
 } from "./constraintEngine";
 
-// Model-specific constraints
 export { STOPPER_STATIONS_CONSTRAINTS } from "./stopperStationsRules";
 export { INDOOR_PUSH_BUTTONS_CONSTRAINTS } from "./indoorPushButtonsRules";
 export { KEY_SWITCHES_CONSTRAINTS } from "./keySwitchesRules";

@@ -1,40 +1,8 @@
-// ============================================================================
-// INDOOR PUSH BUTTONS MODEL DEFINITION
-// ============================================================================
-//
-// Source: 02_Конфигуратор_StopperSwitches_Indoor_Push_Buttons.md (VERIFIED)
-// BaseCode: SS3-
-// Format: SS3-[colour][buttonColour][pushButtonType][electrical][-CL]
-//
-// Example: SS3-1R04 (Red housing, Red button, Key-to-Reset, Multi-Functional)
-// Example: SS3-1R04-CL (with Custom Label)
-//
-// Steps:
-// 1. COLOUR (housing colour)
-// 2. BUTTON COLOUR
-// 3. PUSH BUTTON TYPE
-// 4. ELECTRICAL ARRANGEMENTS
-// 5. LABEL
-//
-// CRITICAL: This model has BI-DIRECTIONAL dependencies between COLOUR and BUTTON COLOUR.
-// Dependencies handled by constraint engine in src/rules/indoorPushButtonsRules.ts
-// ============================================================================
-
 import type { ModelDefinition, Step } from "../../types";
 
-// ============================================================================
-// IMAGE PATH CONSTANTS
-// ============================================================================
 const IMG = "/Indoor Push Buttons";
 
-// ============================================================================
-// STEPS DEFINITION (VERIFIED FROM MD 02)
-// ============================================================================
-
 const steps: Step[] = [
-  // ==========================================================================
-  // STEP 1: COLOUR (Housing Colour)
-  // ==========================================================================
   {
     id: "colour",
     title: "COLOUR",
@@ -49,12 +17,6 @@ const steps: Step[] = [
     ],
   },
 
-  // ==========================================================================
-  // STEP 2: BUTTON COLOUR
-  // ==========================================================================
-  // Bidirectional dependencies with COLOUR step.
-  // Handled by constraint engine - no availableFor here.
-  // ==========================================================================
   {
     id: "buttonColour",
     title: "BUTTON COLOUR",
@@ -69,11 +31,6 @@ const steps: Step[] = [
     ],
   },
 
-  // ==========================================================================
-  // STEP 3: PUSH BUTTON TYPE
-  // ==========================================================================
-  // No dependencies - all options always available
-  // ==========================================================================
   {
     id: "pushButtonType",
     title: "PUSH BUTTON TYPE",
@@ -91,11 +48,6 @@ const steps: Step[] = [
     ],
   },
 
-  // ==========================================================================
-  // STEP 4: ELECTRICAL ARRANGEMENTS
-  // ==========================================================================
-  // No dependencies - all options always available
-  // ==========================================================================
   {
     id: "electricalArrangements",
     title: "ELECTRICAL ARRANGEMENTS",
@@ -106,11 +58,6 @@ const steps: Step[] = [
     ],
   },
 
-  // ==========================================================================
-  // STEP 5: LABEL
-  // ==========================================================================
-  // Only #CL adds code to Product Model
-  // ==========================================================================
   {
     id: "label",
     title: "LABEL",
@@ -131,10 +78,6 @@ const steps: Step[] = [
     ],
   },
 ];
-
-// ============================================================================
-// MODEL DEFINITION
-// ============================================================================
 
 export const indoorPushButtonsModel: ModelDefinition = {
   id: "indoor-push-buttons",

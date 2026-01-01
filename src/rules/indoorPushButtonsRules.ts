@@ -74,14 +74,12 @@ const BUTTON_COLOUR_TO_COLOUR: ConstraintMatrix = {
 export const INDOOR_PUSH_BUTTONS_CONSTRAINTS: ModelConstraints = {
   modelId: "indoor-push-buttons",
   constraints: [
-    // Forward: COLOUR → BUTTON COLOUR
     {
       sourceStep: "colour",
       targetStep: "buttonColour",
       matrix: COLOUR_TO_BUTTON_COLOUR,
     },
     
-    // Reverse: BUTTON COLOUR → COLOUR
     {
       sourceStep: "buttonColour",
       targetStep: "colour",
@@ -89,10 +87,6 @@ export const INDOOR_PUSH_BUTTONS_CONSTRAINTS: ModelConstraints = {
     },
   ],
 };
-
-// ============================================================================
-// EXPORTS FOR TESTING / DEBUGGING
-// ============================================================================
 
 export const DEBUG_MATRICES = {
   COLOUR_TO_BUTTON_COLOUR,

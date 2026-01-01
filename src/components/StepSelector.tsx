@@ -1,103 +1,28 @@
-// ============================================================================
-// STEP SELECTOR COMPONENT
-// ============================================================================
-//
-// Accordion-style step that shows:
-// - Step title (COLOUR, COVER, etc.)
-// - Current selection or "NO SELECTION"
-// - Expandable grid of option cards
-//
-// Behavior:
-// - Click header to toggle open/close
-// - Click option to select; click again to deselect (toggle)
-// - When option selected, parent auto-advances to next step
-// - Unavailable options shown as disabled with reason
-//
-// Animation:
-// - CSS Grid trick for smooth height: auto animation
-// - grid-template-rows: 0fr → 1fr
-//
-// Responsive:
-// - Mobile: 1-2 columns depending on option count
-// - Desktop: 2-4 columns depending on option count
-//
-// ============================================================================
-
 import type { Step, OptionId, Configuration, ModelId } from "../types";
 import { OptionCard } from "./OptionCard";
 import { getOptionsWithAvailability } from "../filterOptions";
 
-// ============================================================================
-// TYPES
-// ============================================================================
-
 interface StepSelectorProps {
-  /** Step definition with options */
   step: Step;
-
-  /** Whether this step's accordion is currently open */
   isOpen: boolean;
-
-  /** Currently selected option ID (or null) */
   selectedOptionId: OptionId | null;
-
-  /** Full configuration (for option availability checks) */
   config: Configuration;
-
-  /** Model ID for constraint engine lookup */
   modelId: ModelId;
-
-  /** Callback when an option is selected */
   onSelect: (optionId: OptionId) => void;
-
-  /** Callback when selection is cleared */
   onClear: () => void;
-
-  /** Callback to toggle accordion open/close */
   onToggle: () => void;
 }
 
-// ============================================================================
-// HELPERS
-// ============================================================================
-
-/**
- * Determines grid columns based on option count.
- * Returns Tailwind classes for responsive grid.
- */
 function getGridClasses(optionCount: number): string {
-  if (optionCount <= 2) {
-    return "grid-cols-2";
+  if (optionCount <= 3) {
+    return "grid-cols-3";
   }
   if (optionCount <= 4) {
-    return "grid-cols-2 md:grid-cols-4";
+    return "grid-cols-3 lg:grid-cols-4";
   }
-  if (optionCount <= 6) {
-    return "grid-cols-2 md:grid-cols-3";
-  }
-  // Many options: 2 on mobile, 4 on desktop
-  return "grid-cols-2 md:grid-cols-4";
+  return "grid-cols-3 lg:grid-cols-4";
 }
 
-// ============================================================================
-// COMPONENT
-// ============================================================================
-
-/**
- * Accordion step component with collapsible options grid.
- *
- * Layout:
- * - Header: Step title + current selection + chevron icon
- * - Body (when open): Responsive grid of OptionCards
- *
- * Animation:
- * - Uses CSS Grid trick (grid-template-rows: 0fr → 1fr)
- * - Smooth transition without JavaScript height calculations
- *
- * Selection:
- * - Click option to select
- * - Click selected option again to deselect (toggle)
- */
 export function StepSelector({
   step,
   isOpen,
@@ -108,25 +33,10 @@ export function StepSelector({
   onClear,
   onToggle,
 }: StepSelectorProps) {
-  // Find the currently selected option for display
   const selectedOption = step.options.find((o) => o.id === selectedOptionId);
-
-  // Get options with availability status using constraint engine
   const optionsWithStatus = getOptionsWithAvailability(step, config, modelId);
-
-  // Count available options
-  const availableCount = optionsWithStatus.filter(
-    ({ availability }) => availability.available
-  ).length;
-
-  // Determine grid layout
   const gridClasses = getGridClasses(step.options.length);
 
-  /**
-   * Handle option click with toggle logic:
-   * - If clicking selected option → clear selection
-   * - If clicking different option → select it
-   */
   const handleOptionClick = (optionId: OptionId) => {
     if (optionId === selectedOptionId) {
       onClear();
@@ -136,69 +46,48 @@ export function StepSelector({
   };
 
   return (
-    <div className="border-b border-white/20 pb-4">
-      {/* Accordion Header */}
+    <div
+      className={`
+        box-border border-2 border-solid p-4 lg:p-5 transition-all duration-300
+        ${isOpen ? "border-black bg-white" : "border-transparent border-b-white"}
+      `}
+    >
       <button
         type="button"
-        className="w-full flex justify-between items-center text-left py-2 hover:bg-white/5 rounded transition-colors"
+        className={`
+          w-full flex flex-col gap-2 text-left focus-visible:outline-0
+          ${isOpen ? "text-black" : "text-white"}
+        `}
         onClick={onToggle}
         aria-expanded={isOpen}
         aria-controls={`step-${step.id}-content`}
       >
-        <div className="flex-1 min-w-0">
-          {/* Step title with required indicator */}
-          <h2 className="text-lg font-bold uppercase tracking-wide flex items-center gap-2">
+        <div className="flex w-full items-center justify-between gap-4">
+          <h4 className="font-bold text-lg lg:text-2xl text-inherit transition-all duration-300">
             {step.title}
-            {step.required && !selectedOptionId && (
-              <span className="text-xs font-normal text-red-200">*</span>
-            )}
-          </h2>
-
-          {/* Current selection or "NO SELECTION" */}
-          {selectedOption ? (
-            <p className="text-sm text-white/80 mt-0.5 truncate">
-              {selectedOption.label}
-            </p>
-          ) : (
-            <p className="text-sm text-white/50 mt-0.5">
-              NO SELECTION
-              {availableCount < step.options.length && availableCount > 0 && (
-                <span className="ml-2 text-white/40">
-                  ({availableCount} available)
-                </span>
-              )}
-            </p>
-          )}
+          </h4>
+          <span
+            className={`
+              inline-grid text-lg leading-none text-inherit transition-all duration-300
+              ${isOpen ? "rotate-180" : ""}
+            `}
+          >
+            <ChevronIcon />
+          </span>
         </div>
-
-        {/* Chevron icon - rotates when open */}
-        <svg
-          className={`w-5 h-5 shrink-0 transition-transform duration-200 ${
-            isOpen ? "rotate-180" : ""
-          }`}
-          fill="currentColor"
-          viewBox="0 0 20 20"
-          aria-hidden="true"
-        >
-          <path
-            fillRule="evenodd"
-            d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-            clipRule="evenodd"
-          />
-        </svg>
+        <p className="font-normal text-base lg:text-md block w-full text-start text-inherit transition-all duration-300">
+          {selectedOption ? selectedOption.label : "NO SELECTION"}
+        </p>
       </button>
 
-      {/* Accordion Body - Animated Container */}
       <div
-        className={`
-          grid transition-[grid-template-rows] duration-200 ease-out
-          ${isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}
-        `}
+        className="overflow-hidden text-sm transition-all"
+        style={{ display: isOpen ? "block" : "none" }}
       >
-        <div className="overflow-hidden min-h-0">
+        <div className="mt-4 p-0">
           <div
             id={`step-${step.id}-content`}
-            className={`grid ${gridClasses} gap-3 pt-4`}
+            className={`grid ${gridClasses} gap-x-2.5 gap-y-3`}
             role="listbox"
             aria-label={`${step.title} options`}
           >
@@ -216,5 +105,24 @@ export function StepSelector({
         </div>
       </div>
     </div>
+  );
+}
+
+function ChevronIcon() {
+  return (
+    <svg
+      width="1em"
+      height="1em"
+      viewBox="0 0 47 48"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M24.9441 33.6786L24.944 33.6787C24.3784 34.244 23.6356 34.5274 22.8944 34.5274C22.1535 34.5274 21.4108 34.2447 20.8448 33.6792L20.8447 33.679L6.11333 18.9473C6.1133 18.9473 6.11327 18.9473 6.11324 18.9472C4.98046 17.8149 4.98034 15.979 6.11322 14.8469L24.9441 33.6786ZM24.9441 33.6786L39.6757 18.9468C40.808 17.8145 40.8082 15.9785 39.6757 14.8464C38.5437 13.7144 36.7081 13.7145 35.5757 14.8463L35.5756 14.8464L22.8944 27.5284L10.2131 14.8469L10.213 14.8468C9.08074 13.715 7.2454 13.7148 6.1134 14.8467L24.9441 33.6786Z"
+        fill="currentColor"
+        stroke="currentColor"
+        strokeLinecap="round"
+      />
+    </svg>
   );
 }

@@ -1,31 +1,8 @@
-// ============================================================================
-// STOPPER STATIONS MODEL DEFINITION
-// ============================================================================
-//
-// Source: 01_Конфигуратор_Stopper®_Stations.pdf
-// BaseCode: SS2
-// Format: SS2[colour][cover][activation][text]-[language][installationOptions]
-//
-// Example: SS2024NT-EN, SS2021EM-EN&KIT-71101B-R
-//
-// IMAGE PATHS: /public/Stopper® Stations/[STEP]/[filename].webp
-// ============================================================================
-
 import type { ModelDefinition, Step } from "../../types";
 
-// ============================================================================
-// IMAGE PATH CONSTANTS
-// ============================================================================
 const IMG = "/Stopper® Stations";
 
-// ============================================================================
-// STEPS DEFINITION
-// ============================================================================
-
 const steps: Step[] = [
-  // ==========================================================================
-  // STEP 1: COLOUR
-  // ==========================================================================
   {
     id: "colour",
     title: "COLOUR",
@@ -40,9 +17,6 @@ const steps: Step[] = [
     ],
   },
 
-  // ==========================================================================
-  // STEP 2: COVER
-  // ==========================================================================
   {
     id: "cover",
     title: "COVER",
@@ -60,21 +34,6 @@ const steps: Step[] = [
       },
     ],
   },
-
-  // ==========================================================================
-  // STEP 3: ACTIVATION
-  // ==========================================================================
-  // CRITICAL: Options #6 and #7 have colour variants (red/green/blue)
-  // that share the same code but different IDs for filtering.
-  //
-  // Availability per colour (from PDF):
-  // - Red (0):    0,1,2,3,4,5, 6-red, 7-red, 8,9
-  // - Green (1):  0,1,2,3,4,5, 6-green, 7-green, 8,9
-  // - Yellow (2): 0,1,2,3,4,5, 6-red, 7-red, 8,9
-  // - White (3):  ALL options available
-  // - Blue (4):   0,1,2,3,4,5, 6-blue, 7-blue, 8,9
-  // - Orange (5): 1,2,3,4,5, 6-red, 7-red, 8,9 (NO #0 Key-to-Reset!)
-  // ==========================================================================
   {
     id: "activation",
     title: "ACTIVATION",
@@ -122,7 +81,6 @@ const steps: Step[] = [
         image: `${IMG}/ACTIVATION/5 Momentary Illuminates green, red or white..webp`,
         availableFor: ["0", "1", "2", "3", "4", "5"],
       },
-      // #6 Illuminated - colour variants
       {
         id: "6-red",
         label: "#6 Red Illuminated",
@@ -147,7 +105,6 @@ const steps: Step[] = [
         notes: "EXTENDED LEAD TIMES",
         availableFor: ["3", "4"],
       },
-      // #7 Weather Resistant Illuminated - colour variants
       {
         id: "7-red",
         label: "#7 Weather Resistant Momentary Illuminated Red",
@@ -191,9 +148,6 @@ const steps: Step[] = [
     ],
   },
 
-  // ==========================================================================
-  // STEP 4: TEXT
-  // ==========================================================================
   {
     id: "text",
     title: "TEXT",
@@ -215,9 +169,6 @@ const steps: Step[] = [
     ],
   },
 
-  // ==========================================================================
-  // STEP 5: LANGUAGE
-  // ==========================================================================
   {
     id: "language",
     title: "LANGUAGE",
@@ -230,14 +181,6 @@ const steps: Step[] = [
     ],
   },
 
-  // ==========================================================================
-  // STEP 6: INSTALLATION OPTIONS
-  // ==========================================================================
-  // CRITICAL: Mounting kits are colour-matched.
-  // Each colour only sees kits of the same colour, EXCEPT White (3) sees ALL.
-  //
-  // Kit naming: R=Red, G=Green, Y=Yellow, W=White, B=Blue, E=Orange
-  // ==========================================================================
   {
     id: "installationOptions",
     title: "INSTALLATION OPTIONS",
@@ -250,7 +193,6 @@ const steps: Step[] = [
         image: `${IMG}/INSTALLATION OPTIONS/No additional mounting.webp`,
         availableFor: ["0", "1", "2", "3", "4", "5"],
       },
-      // Back Box for Surface Mounting (KIT-71100A-*)
       {
         id: "&KIT-71100A-R",
         label: "#&KIT-71100A-R Red Back Box for Surface Mounting",
@@ -293,7 +235,6 @@ const steps: Step[] = [
         image: `${IMG}/INSTALLATION OPTIONS/KIT-71100A-E Orange Back Box for Surface Mounting.webp`,
         availableFor: ["3", "5"],
       },
-      // Back Box & Spacer Kit for Deep Surface Mounting (KIT-71101B-*)
       {
         id: "&KIT-71101B-R",
         label: "#&KIT-71101B-R Red Back Box & Spacer Kit for Deep Mounting",
@@ -340,10 +281,6 @@ const steps: Step[] = [
   },
 ];
 
-// ============================================================================
-// MODEL DEFINITION
-// ============================================================================
-
 export const stopperStationsModel: ModelDefinition = {
   id: "stopper-stations",
   name: "Stopper® Stations",
@@ -383,10 +320,6 @@ export const stopperStationsModel: ModelDefinition = {
   
   primaryDependencyStep: "colour",
 };
-
-// ============================================================================
-// HELPERS
-// ============================================================================
 
 export function getStepById(stepId: string): Step | undefined {
   return steps.find((step) => step.id === stepId);

@@ -1,28 +1,8 @@
-// ============================================================================
-// MY LIST PAGE
-// ============================================================================
-//
-// Page displaying saved configurations.
-// Features (per Панель_кнопок.pdf):
-// - List of saved configurations
-// - Copy URL / Copy Model ID for each item
-// - Remove individual items
-// - Clear all
-// - Load configuration back into configurator
-//
-// Route: /my-list
-//
-// ============================================================================
-
 import { Link, useNavigate } from "react-router-dom";
 import { useConfigurationStore, useMyList } from "../stores/configurationStore";
 import { getModelById } from "../data/models";
 import { MODEL_NAMES } from "../types";
 import type { SavedConfiguration } from "../types";
-
-// ============================================================================
-// COMPONENT
-// ============================================================================
 
 export function MyListPage() {
   const myList = useMyList();
@@ -32,7 +12,6 @@ export function MyListPage() {
   const clearMyList = useConfigurationStore((state) => state.clearMyList);
   const loadFromMyList = useConfigurationStore((state) => state.loadFromMyList);
 
-  // Handle load configuration
   const handleLoad = (item: SavedConfiguration) => {
     loadFromMyList(item.id);
     const model = getModelById(item.modelId);
@@ -41,7 +20,6 @@ export function MyListPage() {
     }
   };
 
-  // Handle copy to clipboard
   const handleCopy = async (text: string, type: string) => {
     try {
       await navigator.clipboard.writeText(text);
@@ -52,7 +30,6 @@ export function MyListPage() {
     }
   };
 
-  // Handle clear all with confirmation
   const handleClearAll = () => {
     if (window.confirm("Are you sure you want to clear all saved configurations?")) {
       clearMyList();
@@ -61,7 +38,6 @@ export function MyListPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
       <header className="bg-red-700 text-white py-6">
         <div className="max-w-4xl mx-auto px-4">
           <div className="flex items-center justify-between">
@@ -82,13 +58,11 @@ export function MyListPage() {
         </div>
       </header>
 
-      {/* Content */}
       <main className="max-w-4xl mx-auto px-4 py-8">
         {myList.length === 0 ? (
           <EmptyState />
         ) : (
           <>
-            {/* Actions bar */}
             <div className="flex items-center justify-between mb-6">
               <p className="text-gray-600">
                 {myList.length} saved configuration{myList.length !== 1 ? "s" : ""}
@@ -102,7 +76,6 @@ export function MyListPage() {
               </button>
             </div>
 
-            {/* List */}
             <div className="space-y-4">
               {myList.map((item) => (
                 <SavedConfigCard
@@ -126,10 +99,6 @@ export function MyListPage() {
   );
 }
 
-// ============================================================================
-// SAVED CONFIG CARD
-// ============================================================================
-
 interface SavedConfigCardProps {
   item: SavedConfiguration;
   onLoad: () => void;
@@ -151,7 +120,6 @@ function SavedConfigCard({
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
       <div className="flex flex-col md:flex-row md:items-center gap-4">
-        {/* Info */}
         <div className="flex-1 min-w-0">
           <p className="text-sm text-gray-500">{modelName}</p>
           <p className="font-mono font-bold text-lg text-gray-800 truncate">
@@ -162,8 +130,6 @@ function SavedConfigCard({
           )}
           <p className="text-xs text-gray-400 mt-1">Saved {savedDate}</p>
         </div>
-
-        {/* Actions */}
         <div className="flex items-center gap-2 flex-wrap">
           <button
             type="button"
@@ -200,10 +166,6 @@ function SavedConfigCard({
   );
 }
 
-// ============================================================================
-// EMPTY STATE
-// ============================================================================
-
 function EmptyState() {
   return (
     <div className="text-center py-16">
@@ -223,10 +185,6 @@ function EmptyState() {
     </div>
   );
 }
-
-// ============================================================================
-// ICONS
-// ============================================================================
 
 function TrashIcon() {
   return (

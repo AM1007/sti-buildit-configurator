@@ -1,42 +1,7 @@
-// ============================================================================
-// WATERPROOF RESET CALL POINT MODEL DEFINITION
-// ============================================================================
-//
-// Source: 06_Конфигуратор_Waterproof_ReSet_Call_Point.md (VERIFIED)
-// BaseCode: WRP2
-// Format: WRP2-[colour]-[electrical][-CL]
-//
-// Example: WRP2-R-01 (Red, Conventional Fire Model)
-// Example: WRP2-R-01-CL (with Custom Label)
-//
-// Steps:
-// 1. COLOUR
-// 2. ELECTRICAL ARRANGEMENT
-// 3. LABEL
-//
-// KEY DIFFERENCES FROM RESET CALL POINTS:
-// - No MOUNTING step (3 steps vs 4)
-// - No #05 Sav-wire option in ELECTRICAL
-// - BaseCode: WRP2 vs RP
-//
-// Dependencies handled by constraint engine in src/rules/waterproofResetCallPointRules.ts
-// ============================================================================
-
 import type { ModelDefinition, Step } from "../../types";
 
-// ============================================================================
-// IMAGE PATH CONSTANTS
-// ============================================================================
 const IMG = "/Waterproof ReSet Call Point";
-
-// ============================================================================
-// STEPS DEFINITION (VERIFIED FROM MD 06)
-// ============================================================================
-
 const steps: Step[] = [
-  // ==========================================================================
-  // STEP 1: COLOUR
-  // ==========================================================================
   {
     id: "colour",
     title: "COLOUR",
@@ -51,12 +16,6 @@ const steps: Step[] = [
     ],
   },
 
-  // ==========================================================================
-  // STEP 2: ELECTRICAL ARRANGEMENT
-  // ==========================================================================
-  // Only 3 options (ReSet Call Points has 4 with #05)
-  // Bidirectional dependencies with COLOUR and LABEL.
-  // ==========================================================================
   {
     id: "electricalArrangement",
     title: "ELECTRICAL ARRANGEMENT",
@@ -68,12 +27,6 @@ const steps: Step[] = [
     ],
   },
 
-  // ==========================================================================
-  // STEP 3: LABEL
-  // ==========================================================================
-  // Bidirectional dependencies with COLOUR and ELECTRICAL.
-  // Only #CL adds code to Product Model.
-  // ==========================================================================
   {
     id: "label",
     title: "LABEL",
@@ -86,10 +39,6 @@ const steps: Step[] = [
     ],
   },
 ];
-
-// ============================================================================
-// MODEL DEFINITION
-// ============================================================================
 
 export const waterproofResetCallPointModel: ModelDefinition = {
   id: "waterproof-reset-call-point",

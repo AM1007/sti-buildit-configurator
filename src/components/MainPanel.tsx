@@ -1,206 +1,35 @@
-// ============================================================================
-// MAIN PANEL COMPONENT
-// ============================================================================
-//
-// Right panel of the configurator containing:
-// - Tab switcher (Edit Selections / Product Preview)
-// - Product Preview (tiles showing selections)
-// - Product Model Display (article code visualization)
-// - Action Buttons (shown when configuration is complete)
-//
-// Interaction:
-// - Click on preview tile Ã¢â€ â€™ opens corresponding step in sidebar
-//
-// Responsive:
-// - Desktop: Fills remaining space next to sidebar
-// - Mobile: Full width below header
-//
-// ============================================================================
-
 import { useState } from "react";
 import type { Configuration, ProductModel, ModelDefinition, StepId } from "../types";
 import { ProductPreview } from "./ProductPreview";
 import { ProductModelDisplay } from "./ProductModelDisplay";
 import { ActionButtons } from "./ActionButtons";
-import { CompletedDevicePreview } from "./CompletedDevicePreview";
 import { getCompletedDeviceImage } from "../utils/getCompletedDeviceImage";
-
-// ============================================================================
-// CONSTANTS
-// ============================================================================
 
 type TabId = "edit" | "preview";
 
-// ASSUMPTION: Typo "AVALIABLE" preserved from MD specification (line 272)
-
-// ============================================================================
-// TYPES
-// ============================================================================
-
 interface MainPanelProps {
-  /** Current model definition */
   model: ModelDefinition;
-
-  /** Current configuration state */
   config: Configuration;
-
-  /** Generated product model */
   productModel: ProductModel;
-
-  /** Callback to reset configuration */
-  onReset: () => void;
-
-  /** Callback to add to My List */
-  onAddToMyList: () => void;
-
-  /** Callback when user clicks tile to edit step */
   onEditStep: (stepId: StepId) => void;
-
-  /** Optional: additional CSS classes */
+  onReset: () => void;
+  onAddToMyList: () => void;
+  isInMyList?: boolean;
   className?: string;
 }
 
-// ============================================================================
-// COMPONENT
-// ============================================================================
-
-/**
- * Right panel with product preview, model display, and actions.
- *
- * Layout:
- * - Flexible width (fills remaining space)
- * - Grey background
- * - Scrollable content
- * - Centered content with max-width
- *
- * Interaction:
- * - Click preview tile Ã¢â€ â€™ onEditStep Ã¢â€ â€™ opens step in sidebar
- */
 export function MainPanel({
   model,
   config,
   productModel,
+  onEditStep,
   onReset,
   onAddToMyList,
-  onEditStep,
+  isInMyList = false,
   className = "",
 }: MainPanelProps) {
   const [activeTab, setActiveTab] = useState<TabId>("edit");
 
-  return (
-    <main className={`flex-1 bg-gray-100 overflow-y-auto ${className}`}>
-      <div className="max-w-4xl mx-auto p-4 md:p-8">
-        {/* Tabs: Edit Selections / Product Preview */}
-        <div className="flex gap-4 mb-6 border-b border-gray-300">
-          <TabButton 
-            active={activeTab === "edit"} 
-            onClick={() => setActiveTab("edit")}
-          >
-            Edit Selections
-          </TabButton>
-          <TabButton 
-            active={activeTab === "preview"} 
-            onClick={() => setActiveTab("preview")}
-          >
-            Product Preview
-          </TabButton>
-        </div>
-
-        {/* Tab Content */}
-        {activeTab === "edit" ? (
-          <>
-            {/* Product Preview Grid (Edit mode - shows tiles) */}
-            <ProductPreview 
-              model={model} 
-              config={config} 
-              onEditStep={onEditStep}
-            />
-
-            {/* Product Model Code Display */}
-            <ProductModelDisplay model={model} productModel={productModel} />
-
-            {/* Action Buttons - only shown when configuration is complete */}
-            {productModel.isComplete && (
-              <ActionButtons
-                productModel={productModel}
-                onReset={onReset}
-                onAddToMyList={onAddToMyList}
-              />
-            )}
-
-            {/* Incomplete configuration hint */}
-            {!productModel.isComplete && productModel.missingSteps && (
-              <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                <p className="text-sm text-yellow-800">
-                  Complete all required selections to see action buttons.
-                </p>
-                <p className="text-xs text-yellow-600 mt-1">
-                  Missing:{" "}
-                  {productModel.missingSteps
-                    .map((stepId) => {
-                      const step = model.steps.find((s) => s.id === stepId);
-                      return step?.title ?? stepId;
-                    })
-                    .join(", ")}
-                </p>
-              </div>
-            )}
-          </>
-        ) : (
-          /* Product Preview Tab */
-          <ProductPreviewTab
-            model={model}
-            config={config}
-            productModel={productModel}
-            onReset={onReset}
-            onAddToMyList={onAddToMyList}
-          />
-        )}
-      </div>
-    </main>
-  );
-}
-
-// ============================================================================
-// PRODUCT PREVIEW TAB (internal component)
-// ============================================================================
-
-interface ProductPreviewTabProps {
-  /** Current model definition */
-  model: ModelDefinition;
-  
-  /** Current configuration state */
-  config: Configuration;
-  
-  /** Generated product model */
-  productModel: ProductModel;
-  
-  /** Callback to reset configuration */
-  onReset: () => void;
-  
-  /** Callback to add to My List */
-  onAddToMyList: () => void;
-}
-
-/**
- * Content for Product Preview tab.
- * 
- * Shows completed device image if available, otherwise placeholder.
- * Image availability depends on:
- * - Model: currently only stopper-stations
- * - Colour: currently only RED (colour = "0")
- * - Language: ZL variants have no images
- * 
- * Action buttons shown only when configuration is complete.
- */
-function ProductPreviewTab({ 
-  model,
-  config,
-  productModel, 
-  onReset, 
-  onAddToMyList 
-}: ProductPreviewTabProps) {
-  // Determine image path using utility function
   const { imagePath, reason } = getCompletedDeviceImage({
     fullCode: productModel.fullCode,
     modelId: model.id,
@@ -209,55 +38,149 @@ function ProductPreviewTab({
   });
 
   return (
-    <div className="flex flex-col items-center">
-      {/* Completed Device Image or Placeholder */}
-      <CompletedDevicePreview
-        imagePath={imagePath}
-        productCode={productModel.fullCode}
-        reason={reason}
-      />
+    <div className={`hidden h-full w-full lg:block ${className}`}>
+      <div className="sticky top-0 flex h-fit flex-col gap-16 p-5 lg:p-10 xl:gap-20 xl:p-16">
+        <div className="min-h-144 w-full">
+          <div className="inline-flex items-center justify-center h-auto gap-6 rounded-none bg-white p-0 text-black xl:gap-10">
+            <button
+              type="button"
+              onClick={() => setActiveTab("edit")}
+              className={`
+                inline-flex items-center justify-center whitespace-nowrap px-3 py-1.5
+                text-sm font-medium transition-all focus-visible:outline-none
+                rounded-none bg-white p-0 shadow-none outline-0 ring-0
+                ${activeTab === "edit" ? "text-red-600" : "text-black"}
+              `}
+            >
+              <span className="font-bold text-sm lg:text-lg">Edit Selections</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab("preview")}
+              className={`
+                inline-flex items-center justify-center whitespace-nowrap px-3 py-1.5
+                text-sm font-medium transition-all focus-visible:outline-none
+                rounded-none bg-white p-0 shadow-none outline-0 ring-0
+                ${activeTab === "preview" ? "text-red-600" : "text-black"}
+              `}
+            >
+              <span className="font-bold text-sm lg:text-lg">Product Preview</span>
+            </button>
+          </div>
 
-      {/* Action Buttons - only when configuration is complete */}
-      {productModel.isComplete && (
-        <ActionButtons
+          {activeTab === "edit" && (
+            <div className="mt-10">
+              <ProductPreview
+                model={model}
+                config={config}
+                onEditStep={onEditStep}
+              />
+            </div>
+          )}
+
+          {activeTab === "preview" && (
+            <div className="mt-10">
+              {imagePath ? (
+                <ProductPreviewContent
+                  imagePath={imagePath}
+                  productCode={productModel.fullCode}
+                  isComplete={productModel.isComplete}
+                  productModel={productModel}
+                  onReset={onReset}
+                  onAddToMyList={onAddToMyList}
+                  isInMyList={isInMyList}
+                />
+              ) : (
+                <div className="flex w-full flex-col items-center gap-11 py-16 text-center text-gray-500">
+                  <p className="font-medium text-base lg:text-md">
+                    PREVIEW<br />NOT AVAILABLE
+                  </p>
+                  <p className="font-normal text-base lg:text-md">
+                    {reason || "Please complete build it selections"}
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        <ProductModelDisplay
+          model={model}
           productModel={productModel}
-          onReset={onReset}
-          onAddToMyList={onAddToMyList}
+          onEditStep={onEditStep}
         />
-      )}
+
+        {productModel.isComplete && activeTab === "edit" && (
+          <ActionButtons
+            productModel={productModel}
+            onReset={onReset}
+            onAddToMyList={onAddToMyList}
+            isInMyList={isInMyList}
+          />
+        )}
+      </div>
     </div>
   );
 }
 
-// ============================================================================
-// TAB BUTTON (internal component)
-// ============================================================================
-
-interface TabButtonProps {
-  children: React.ReactNode;
-  active: boolean;
-  onClick?: () => void;
+interface ProductPreviewContentProps {
+  imagePath: string;
+  productCode: string;
+  isComplete: boolean;
+  productModel: ProductModel;
+  onReset: () => void;
+  onAddToMyList: () => void;
+  isInMyList: boolean;
 }
 
-/**
- * Tab button for Edit Selections / Product Preview toggle.
- * TODO: Implement actual tab switching when Product Preview images are ready.
- */
-function TabButton({ children, active, onClick }: TabButtonProps) {
+function ProductPreviewContent({
+  imagePath,
+  productCode,
+  isComplete,
+  productModel,
+  onReset,
+  onAddToMyList,
+  isInMyList,
+}: ProductPreviewContentProps) {
+  const [hasError, setHasError] = useState(false);
+
+  if (hasError) {
+    return (
+      <div className="flex w-full flex-col items-center gap-11 py-16 text-center text-gray-500">
+        <p className="font-medium text-base lg:text-md">
+          PREVIEW<br />NOT AVAILABLE
+        </p>
+        <p className="font-normal text-base lg:text-md">
+          Image failed to load
+        </p>
+      </div>
+    );
+  }
+
   return (
-    <button
-      type="button"
-      className={`
-        pb-2 px-1 text-sm font-medium transition-colors
-        ${
-          active
-            ? "text-red-600 border-b-2 border-red-600"
-            : "text-gray-500 hover:text-gray-700"
-        }
-      `}
-      onClick={onClick}
-    >
-      {children}
-    </button>
+    <div className="flex w-full flex-col gap-10 py-5">
+      <div className="mx-auto max-w-120 flex-1">
+        <img
+          alt={`Image of ${productCode}`}
+          loading="lazy"
+          width="600"
+          height="600"
+          className="select-none object-contain w-full h-auto"
+          src={imagePath}
+          onError={() => setHasError(true)}
+        />
+      </div>
+
+      {isComplete && (
+        <div className="flex w-full flex-wrap items-center justify-center gap-2 md:items-start md:gap-6">
+          <ActionButtons
+            productModel={productModel}
+            onReset={onReset}
+            onAddToMyList={onAddToMyList}
+            isInMyList={isInMyList}
+          />
+        </div>
+      )}
+    </div>
   );
 }

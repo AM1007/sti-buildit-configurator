@@ -1,46 +1,8 @@
-// ============================================================================
-// WATERPROOF PUSH BUTTONS MODEL DEFINITION
-// ============================================================================
-//
-// Source: 04_Конфигуратор_StopperSwitches_Waterproof_Push_Buttons.md (VERIFIED)
-// BaseCode: WSS3
-// Format: WSS3-[housing][buttonColour][buttonType][electrical][-CL]
-//
-// Example: WSS3-1R04 (Red housing, Red button, Latching, Multi-Functional)
-// Example: WSS3-1R04-CL (with Custom Label)
-//
-// Steps:
-// 1. HOUSING COLOUR & MOUNTING
-// 2. BUTTON COLOUR
-// 3. BUTTON TYPE
-// 4. ELECTRICAL ARRANGEMENTS
-// 5. LABEL
-//
-// KEY DIFFERENCES FROM INDOOR PUSH BUTTONS:
-// - BaseCode: WSS3 vs SS3-
-// - All housing options are "Surface Mount" (not "Dual Mount")
-// - BUTTON TYPE: 2 options (#0, #1) vs 3 options (#0, #1, #6)
-// - ELECTRICAL: Only 1 option (#4) vs 2 options (#0, #4)
-// - Different HOUSING → BUTTON COLOUR compatibility matrix
-//
-// Dependencies handled by constraint engine in src/rules/waterproofPushButtonsRules.ts
-// ============================================================================
-
 import type { ModelDefinition, Step } from "../../types";
 
-// ============================================================================
-// IMAGE PATH CONSTANTS
-// ============================================================================
 const IMG = "/Waterproof Push Buttons";
 
-// ============================================================================
-// STEPS DEFINITION (VERIFIED FROM MD 04)
-// ============================================================================
-
 const steps: Step[] = [
-  // ==========================================================================
-  // STEP 1: HOUSING COLOUR & MOUNTING
-  // ==========================================================================
   {
     id: "housingColour",
     title: "HOUSING COLOUR & MOUNTING",
@@ -54,13 +16,6 @@ const steps: Step[] = [
       { id: "E", label: "#E Orange (Surface Mount)", code: "E", image: `${IMG}/HOUSING COLOUR & MOUNTING/E-Orange (Surface Mount).webp` },
     ],
   },
-
-  // ==========================================================================
-  // STEP 2: BUTTON COLOUR
-  // ==========================================================================
-  // Bidirectional dependencies with HOUSING COLOUR.
-  // Handled by constraint engine.
-  // ==========================================================================
   {
     id: "buttonColour",
     title: "BUTTON COLOUR",
@@ -75,12 +30,6 @@ const steps: Step[] = [
     ],
   },
 
-  // ==========================================================================
-  // STEP 3: BUTTON TYPE
-  // ==========================================================================
-  // Only 2 options (Indoor has 3 with #6 Pneumatic)
-  // No dependencies
-  // ==========================================================================
   {
     id: "buttonType",
     title: "BUTTON TYPE",
@@ -91,12 +40,6 @@ const steps: Step[] = [
     ],
   },
 
-  // ==========================================================================
-  // STEP 4: ELECTRICAL ARRANGEMENTS
-  // ==========================================================================
-  // Only 1 option (Indoor has 2: #0 and #4)
-  // No dependencies
-  // ==========================================================================
   {
     id: "electricalArrangements",
     title: "ELECTRICAL ARRANGEMENTS",
@@ -106,9 +49,6 @@ const steps: Step[] = [
     ],
   },
 
-  // ==========================================================================
-  // STEP 5: LABEL
-  // ==========================================================================
   {
     id: "label",
     title: "LABEL",
@@ -129,10 +69,6 @@ const steps: Step[] = [
     ],
   },
 ];
-
-// ============================================================================
-// MODEL DEFINITION
-// ============================================================================
 
 export const waterproofPushButtonsModel: ModelDefinition = {
   id: "waterproof-push-buttons",

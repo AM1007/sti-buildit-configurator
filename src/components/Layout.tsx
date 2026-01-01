@@ -1,31 +1,9 @@
-// ============================================================================
-// LAYOUT COMPONENT
-// ============================================================================
-//
-// Shared layout wrapper for pages with:
-// - Header (logo + navigation)
-// - Main content area
-// - Footer (placeholder)
-//
-// Used by: HomePage, MyListPage
-// NOT used by: ConfiguratorPage (has its own full-screen layout)
-//
-// ============================================================================
-
 import { Link } from "react-router-dom";
 import { useMyListCount } from "../stores/configurationStore";
-
-// ============================================================================
-// TYPES
-// ============================================================================
 
 interface LayoutProps {
   children: React.ReactNode;
 }
-
-// ============================================================================
-// COMPONENT
-// ============================================================================
 
 export function Layout({ children }: LayoutProps) {
   return (
@@ -37,10 +15,6 @@ export function Layout({ children }: LayoutProps) {
   );
 }
 
-// ============================================================================
-// HEADER
-// ============================================================================
-
 function Header() {
   const myListCount = useMyListCount();
 
@@ -48,12 +22,9 @@ function Header() {
     <header className="bg-white border-b border-gray-200">
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
           <Link to="/" className="text-2xl font-bold text-gray-800 hover:text-red-600">
             Build <span className="bg-red-600 text-white px-1">it</span>
           </Link>
-
-          {/* Navigation */}
           <nav className="flex items-center gap-6">
             <Link
               to="/"
@@ -79,26 +50,19 @@ function Header() {
   );
 }
 
-// ============================================================================
-// FOOTER
-// ============================================================================
-
 function Footer() {
   return (
     <footer className="bg-gray-800 text-gray-400 py-8">
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-          {/* Logo */}
           <div className="text-xl font-bold text-white">
             Build <span className="bg-red-600 px-1">it</span>
           </div>
 
-          {/* Copyright */}
           <p className="text-sm">
             © {new Date().getFullYear()} Product Configurator. All rights reserved.
           </p>
 
-          {/* Links placeholder */}
           <div className="flex gap-4 text-sm">
             <a href="#" className="hover:text-white">
               Privacy

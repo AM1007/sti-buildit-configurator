@@ -1,57 +1,20 @@
-// ============================================================================
-// KEY SWITCHES MODEL DEFINITION
-// ============================================================================
-//
-// Source: 03_Конфигуратор_StopperSwitches_Key_Switches.pdf (VERIFIED)
-// BaseCode: SS3-
-// Format: SS3-[colourMounting][switchType][electrical][-CL]
-//
-// Example: SS3-1020 (Red Dual Mount, Switch Type #2, Single Pole)
-// Example: SS3-1020-CL (with Custom Label)
-//
-// Steps:
-// 1. COLOUR & MOUNTING
-// 2. SWITCH TYPE
-// 3. ELECTRICAL ARRANGEMENT
-// 4. LABEL
-//
-// CRITICAL: This model has BI-DIRECTIONAL dependencies between
-// SWITCH TYPE and ELECTRICAL ARRANGEMENT.
-// ============================================================================
-
 import type { ModelDefinition, Step } from "../../types";
 
-// ============================================================================
-// COMPATIBILITY MATRICES (from PDF pages with dependencies)
-// ============================================================================
-
-// SWITCH TYPE → ELECTRICAL ARRANGEMENT availability
 const SWITCH_TO_ELECTRICAL: Record<string, string[]> = {
-  "2": ["0"],           // Switch Type #2 → Single Pole only
-  "3": ["0", "1", "2"], // Switch Type #3 → Single Pole, Double Pole NO, Double Pole NC
-  "4": ["1", "2"],      // Switch Type #4 → Double Pole NO, Double Pole NC
-  "5": ["3"],           // Switch Type #5 → Position Key Switch only
+  "2": ["0"],           
+  "3": ["0", "1", "2"], 
+  "4": ["1", "2"],      
+  "5": ["3"],           
 };
 
-// ELECTRICAL ARRANGEMENT → SWITCH TYPE availability (reverse mapping)
 const ELECTRICAL_TO_SWITCH: Record<string, string[]> = {
-  "0": ["2", "3"],      // Single Pole → Switch Type #2, #3
-  "1": ["3", "4"],      // Double Pole NO → Switch Type #3, #4
-  "2": ["3", "4"],      // Double Pole NC → Switch Type #3, #4
-  "3": ["5"],           // Position Key Switch → Switch Type #5 only
+  "0": ["2", "3"],      
+  "1": ["3", "4"],      
+  "2": ["3", "4"],      
+  "3": ["5"],           
 };
-
-// ============================================================================
-// STEPS DEFINITION (VERIFIED FROM PDF 03)
-// ============================================================================
 
 const steps: Step[] = [
-  // ==========================================================================
-  // STEP 1: COLOUR & MOUNTING
-  // ==========================================================================
-  // No dependencies - all options always available
-  // Note: Codes are 2 characters (e.g., "10", "30", "E0")
-  // ==========================================================================
   {
     id: "colourMounting",
     title: "COLOUR & MOUNTING",
@@ -66,12 +29,6 @@ const steps: Step[] = [
     ],
   },
 
-  // ==========================================================================
-  // STEP 2: SWITCH TYPE
-  // ==========================================================================
-  // No dependencies on COLOUR & MOUNTING
-  // But has dependencies TO ELECTRICAL ARRANGEMENT
-  // ==========================================================================
   {
     id: "switchType",
     title: "SWITCH TYPE",
@@ -84,13 +41,6 @@ const steps: Step[] = [
     ],
   },
 
-  // ==========================================================================
-  // STEP 3: ELECTRICAL ARRANGEMENT
-  // ==========================================================================
-  // Bidirectional dependencies with SWITCH TYPE step.
-  // Forward: SWITCH TYPE → ELECTRICAL (defined in availableFor)
-  // Reverse: ELECTRICAL → SWITCH TYPE (needs rule engine support)
-  // ==========================================================================
   {
     id: "electricalArrangement",
     title: "ELECTRICAL ARRANGEMENT",
@@ -100,7 +50,7 @@ const steps: Step[] = [
         id: "0",
         label: "#0 Single Pole Changeover",
         code: "0",
-        availableFor: ["2", "3"], // From ELECTRICAL_TO_SWITCH
+        availableFor: ["2", "3"], 
         dependsOn: "switchType",
       },
       {
@@ -121,17 +71,12 @@ const steps: Step[] = [
         id: "3",
         label: "#3 Position Key Switch Arrangement",
         code: "3",
-        availableFor: ["5"], // Only Switch Type #5
+        availableFor: ["5"], 
         dependsOn: "switchType",
       },
     ],
   },
 
-  // ==========================================================================
-  // STEP 4: LABEL
-  // ==========================================================================
-  // Only #CL adds code to Product Model
-  // ==========================================================================
   {
     id: "label",
     title: "LABEL",
@@ -140,20 +85,16 @@ const steps: Step[] = [
       {
         id: "SAK",
         label: "# Self-Assemble Label Kit",
-        code: "", // No code in Product Model
+        code: "", 
       },
       {
         id: "CL",
         label: "#CL Custom Label",
-        code: "CL", // Adds "-CL" section to Product Model
+        code: "CL", 
       },
     ],
   },
 ];
-
-// ============================================================================
-// MODEL DEFINITION
-// ============================================================================
 
 export const keySwitchesModel: ModelDefinition = {
   id: "key-switches",
@@ -177,38 +118,18 @@ export const keySwitchesModel: ModelDefinition = {
       "electricalArrangement",
       "label",
     ],
-    separator: "none", // Parts are concatenated without separator
-    // Format: SS3-[colourMounting][switchType][electrical][-CL]
-    // Note: label code is only added if CL is selected, with dash prefix
+    separator: "none", 
     separatorMap: {
       colourMounting: "",
       switchType: "",
       electricalArrangement: "",
-      label: "-", // Dash before CL if present
+      label: "-", 
     },
   },
   
-  // IMPORTANT: This model's primary dependency is switchType → electricalArrangement
-  // Not colour-based like other models
   primaryDependencyStep: "switchType",
 };
 
-// ============================================================================
-// BIDIRECTIONAL DEPENDENCY IMPLEMENTATION NOTES
-// ============================================================================
-//
-// This model differs from others:
-// - COLOUR & MOUNTING has NO dependencies (all always available)
-// - Dependencies exist between SWITCH TYPE ↔ ELECTRICAL ARRANGEMENT
-//
-// Current implementation: SWITCH TYPE → ELECTRICAL (forward only)
-// TODO: Implement reverse filtering (ELECTRICAL → SWITCH TYPE)
-//
-// The rule engine needs special handling for this model because
-// primaryDependencyStep is "switchType" not "colour"
-// ============================================================================
-
-// Export compatibility matrices for rule engine
 export const keySwitchesCompatibility = {
   switchToElectrical: SWITCH_TO_ELECTRICAL,
   electricalToSwitch: ELECTRICAL_TO_SWITCH,
