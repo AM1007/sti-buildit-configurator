@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { Configuration, ProductModel, ModelDefinition, StepId } from "../types";
 import { ProductPreview } from "./ProductPreview";
 import { ProductModelDisplay } from "./ProductModelDisplay";
@@ -29,6 +29,15 @@ export function MainPanel({
   className = "",
 }: MainPanelProps) {
   const [activeTab, setActiveTab] = useState<TabId>("edit");
+
+  // Auto-switch tabs based on configuration completion
+  useEffect(() => {
+    if (productModel.isComplete) {
+      setActiveTab("preview");
+    } else {
+      setActiveTab("edit");
+    }
+  }, [productModel.isComplete]);
 
   const { imagePath, reason } = getCompletedDeviceImage({
     fullCode: productModel.fullCode,
@@ -109,15 +118,6 @@ export function MainPanel({
           productModel={productModel}
           onEditStep={onEditStep}
         />
-
-        {productModel.isComplete && activeTab === "edit" && (
-          <ActionButtons
-            productModel={productModel}
-            onReset={onReset}
-            onAddToMyList={onAddToMyList}
-            isInMyList={isInMyList}
-          />
-        )}
       </div>
     </div>
   );

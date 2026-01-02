@@ -1,22 +1,3 @@
-// ============================================================================
-// CONFIGURATION STORE (ZUSTAND)
-// ============================================================================
-//
-// Global state management for configurator.
-// Handles:
-// - Current model selection
-// - Configuration state per model
-// - My List (saved configurations)
-// - Cascade reset of dependent options
-//
-// Why Zustand over Redux:
-// - Simpler API, less boilerplate
-// - Built-in TypeScript support
-// - Easy persist middleware for localStorage
-// - Sufficient for this app's complexity
-//
-// ============================================================================
-
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type {
@@ -37,107 +18,116 @@ import {
 import { buildProductModel } from "../buildProductModel";
 
 // ============================================================================
-// TYPES
+// PER-MODEL LOCALSTORAGE PERSISTENCE
 // ============================================================================
 
-interface ConfigurationState {
-  // ---------------------------------------------------------------------------
-  // Current Model & Configuration
-  // ---------------------------------------------------------------------------
-  
-  /** Currently active model ID */
-  currentModelId: ModelId | null;
-  
-  /** Configuration state for the current model */
-  config: Configuration;
-  
-  /** Currently open accordion step */
-  currentStep: StepId | null;
+interface StoredModelConfiguration {
+  modelId: ModelId;
+  productCode: string;
+  configuration: Configuration;
+  savedAt: number;
+}
 
-  // ---------------------------------------------------------------------------
-  // My List (Saved Configurations)
-  // ---------------------------------------------------------------------------
-  
-  /** List of saved configurations */
-  myList: SavedConfiguration[];
+function getLocalStorageKey(modelId: ModelId): string {
+  return `config-${modelId}`;
+}
 
-  // ---------------------------------------------------------------------------
-  // Actions: Model Selection
-  // ---------------------------------------------------------------------------
+function saveModelToLocalStorage(
+  modelId: ModelId,
+  productCode: string,
+  configuration: Configuration
+): void {
+  const data: StoredModelConfiguration = {
+    modelId,
+    productCode,
+    configuration,
+    savedAt: Date.now(),
+  };
   
-  /** Set the active model (resets configuration) */
-  setModel: (modelId: ModelId) => void;
-  
-  /** Clear current model (return to home) */
-  clearModel: () => void;
+  try {
+    localStorage.setItem(getLocalStorageKey(modelId), JSON.stringify(data));
+  } catch (error) {
+    console.error(`Failed to save configuration for ${modelId}:`, error);
+  }
+}
 
-  // ---------------------------------------------------------------------------
-  // Actions: Configuration
-  // ---------------------------------------------------------------------------
-  
-  /** Select an option for a step */
-  selectOption: (stepId: StepId, optionId: OptionId) => void;
-  
-  /** Clear selection for a step */
-  clearSelection: (stepId: StepId) => void;
-  
-  /** Reset configuration to initial state */
-  resetConfiguration: () => void;
-  
-  /** Set current accordion step */
-  setCurrentStep: (stepId: StepId) => void;
+function loadModelFromLocalStorage(modelId: ModelId): StoredModelConfiguration | null {
+  try {
+    const raw = localStorage.getItem(getLocalStorageKey(modelId));
+    if (!raw) return null;
+    
+    const data = JSON.parse(raw) as StoredModelConfiguration;
+    
+    // Validate structure
+    if (data.modelId !== modelId || !data.configuration) {
+      return null;
+    }
+    
+    return data;
+  } catch (error) {
+    console.error(`Failed to load configuration for ${modelId}:`, error);
+    return null;
+  }
+}
 
-  // ---------------------------------------------------------------------------
-  // Actions: My List
-  // ---------------------------------------------------------------------------
-  
-  /** Add current configuration to My List */
-  addToMyList: (name?: string) => void;
-  
-  /** Remove item from My List */
-  removeFromMyList: (id: string) => void;
-  
-  /** Clear entire My List */
-  clearMyList: () => void;
-  
-  /** Load a saved configuration */
-  loadFromMyList: (id: string) => void;
-
-  // ---------------------------------------------------------------------------
-  // Computed Getters
-  // ---------------------------------------------------------------------------
-  
-  /** Get current model definition */
-  getModel: () => ModelDefinition | null;
-  
-  /** Check if configuration is complete */
-  isComplete: () => boolean;
-  
-  /** Get missing required steps */
-  getMissingSteps: () => StepId[];
-  
-  /** Get full product code */
-  getProductCode: () => string | null;
+function clearModelFromLocalStorage(modelId: ModelId): void {
+  try {
+    localStorage.removeItem(getLocalStorageKey(modelId));
+  } catch (error) {
+    console.error(`Failed to clear configuration for ${modelId}:`, error);
+  }
 }
 
 // ============================================================================
-// STORE IMPLEMENTATION
+// URL HELPERS
 // ============================================================================
+
+export function buildProductModelUrl(modelId: ModelId, productCode: string): string {
+  // Encode product code: replace special characters, ensure + is encoded as %2B
+  const encodedProductModel = encodeURIComponent(productCode)
+    .replace(/%2D/g, "-"); // Keep dashes readable
+  
+  return `?model=${modelId}&productModel=${encodedProductModel}#build-it`;
+}
+
+export function getStoredConfiguration(modelId: ModelId): StoredModelConfiguration | null {
+  return loadModelFromLocalStorage(modelId);
+}
+
+// ============================================================================
+// ZUSTAND STORE
+// ============================================================================
+
+interface ConfigurationState {
+  currentModelId: ModelId | null;
+  config: Configuration;
+  currentStep: StepId | null;
+  myList: SavedConfiguration[];
+  setModel: (modelId: ModelId) => void;
+  clearModel: () => void;
+  selectOption: (stepId: StepId, optionId: OptionId) => void;
+  clearSelection: (stepId: StepId) => void;
+  resetConfiguration: () => void;
+  setCurrentStep: (stepId: StepId) => void;
+  addToMyList: (name?: string) => void;
+  removeFromMyList: (id: string) => void;
+  clearMyList: () => void;
+  loadFromMyList: (id: string) => void;
+  getModel: () => ModelDefinition | null;
+  isComplete: () => boolean;
+  getMissingSteps: () => StepId[];
+  getProductCode: () => string | null;
+  saveCompletedConfiguration: () => void;
+}
 
 export const useConfigurationStore = create<ConfigurationState>()(
   persist(
     (set, get) => ({
-      // -----------------------------------------------------------------------
-      // Initial State
-      // -----------------------------------------------------------------------
       currentModelId: null,
       config: {},
       currentStep: null,
       myList: [],
-
-      // -----------------------------------------------------------------------
-      // Model Selection
-      // -----------------------------------------------------------------------
+      
       setModel: (modelId) => {
         const model = getModelById(modelId);
         if (!model) {
@@ -145,6 +135,26 @@ export const useConfigurationStore = create<ConfigurationState>()(
           return;
         }
 
+        // Try to load saved configuration from LocalStorage
+        const saved = loadModelFromLocalStorage(modelId);
+        
+        if (saved && saved.configuration) {
+          // Validate saved config matches current model structure
+          const isValid = model.stepOrder.every(
+            (stepId) => stepId in saved.configuration
+          );
+          
+          if (isValid) {
+            set({
+              currentModelId: modelId,
+              config: saved.configuration,
+              currentStep: model.stepOrder[model.stepOrder.length - 1],
+            });
+            return;
+          }
+        }
+
+        // No valid saved config — start fresh
         set({
           currentModelId: modelId,
           config: createEmptyConfiguration(model),
@@ -160,25 +170,16 @@ export const useConfigurationStore = create<ConfigurationState>()(
         });
       },
 
-      // -----------------------------------------------------------------------
-      // Configuration Actions
-      // -----------------------------------------------------------------------
       selectOption: (stepId, optionId) => {
         const { currentModelId, config } = get();
         const model = currentModelId ? getModelById(currentModelId) : null;
         
         if (!model) return;
-
-        // Update config with new selection
         const newConfig = { ...config, [stepId]: optionId };
-
-        // Find and reset any dependent selections that are now invalid
         const toReset = getSelectionsToReset(model, stepId, newConfig);
         for (const resetStepId of toReset) {
           newConfig[resetStepId] = null;
         }
-
-        // Auto-advance to next step
         const currentIndex = model.stepOrder.indexOf(stepId);
         const nextStep =
           currentIndex < model.stepOrder.length - 1
@@ -189,6 +190,13 @@ export const useConfigurationStore = create<ConfigurationState>()(
           config: newConfig,
           currentStep: nextStep,
         });
+
+        // Auto-save if configuration is now complete
+        const isNowComplete = isConfigurationComplete(model, newConfig);
+        if (isNowComplete && currentModelId) {
+          const productModel = buildProductModel(newConfig, model);
+          saveModelToLocalStorage(currentModelId, productModel.fullCode, newConfig);
+        }
       },
 
       clearSelection: (stepId) => {
@@ -198,8 +206,6 @@ export const useConfigurationStore = create<ConfigurationState>()(
         if (!model) return;
 
         const newConfig = { ...config, [stepId]: null };
-
-        // Reset dependent selections
         const toReset = getSelectionsToReset(model, stepId, newConfig);
         for (const resetStepId of toReset) {
           newConfig[resetStepId] = null;
@@ -214,6 +220,11 @@ export const useConfigurationStore = create<ConfigurationState>()(
         
         if (!model) return;
 
+        // Clear LocalStorage for this model
+        if (currentModelId) {
+          clearModelFromLocalStorage(currentModelId);
+        }
+
         set({
           config: createEmptyConfiguration(model),
           currentStep: model.stepOrder[0],
@@ -224,9 +235,6 @@ export const useConfigurationStore = create<ConfigurationState>()(
         set({ currentStep: stepId });
       },
 
-      // -----------------------------------------------------------------------
-      // My List Actions
-      // -----------------------------------------------------------------------
       addToMyList: (name) => {
         const { currentModelId, config, myList } = get();
         
@@ -283,13 +291,10 @@ export const useConfigurationStore = create<ConfigurationState>()(
         set({
           currentModelId: saved.modelId,
           config: { ...saved.configuration },
-          currentStep: model.stepOrder[model.stepOrder.length - 1], // Go to last step
+          currentStep: model.stepOrder[model.stepOrder.length - 1],
         });
       },
 
-      // -----------------------------------------------------------------------
-      // Computed Getters
-      // -----------------------------------------------------------------------
       getModel: () => {
         const { currentModelId } = get();
         return currentModelId ? getModelById(currentModelId) ?? null : null;
@@ -317,45 +322,40 @@ export const useConfigurationStore = create<ConfigurationState>()(
 
         return buildProductModel(config, model).fullCode;
       },
+
+      saveCompletedConfiguration: () => {
+        const { currentModelId, config } = get();
+        const model = currentModelId ? getModelById(currentModelId) : null;
+        
+        if (!model || !currentModelId) return;
+        
+        if (!isConfigurationComplete(model, config)) {
+          console.warn("Cannot save incomplete configuration");
+          return;
+        }
+
+        const productModel = buildProductModel(config, model);
+        saveModelToLocalStorage(currentModelId, productModel.fullCode, config);
+      },
     }),
     {
       name: "configurator-storage",
-      // Only persist myList to localStorage, not current session state
       partialize: (state) => ({ myList: state.myList }),
     }
   )
 );
 
-// ============================================================================
-// SELECTOR HOOKS (for performance optimization)
-// ============================================================================
-
-/**
- * Select only the current model ID.
- */
 export const useCurrentModelId = () =>
   useConfigurationStore((state) => state.currentModelId);
 
-/**
- * Select current configuration.
- */
 export const useConfig = () =>
   useConfigurationStore((state) => state.config);
 
-/**
- * Select current step.
- */
 export const useCurrentStep = () =>
   useConfigurationStore((state) => state.currentStep);
 
-/**
- * Select My List.
- */
 export const useMyList = () =>
   useConfigurationStore((state) => state.myList);
 
-/**
- * Select My List count.
- */
 export const useMyListCount = () =>
   useConfigurationStore((state) => state.myList.length);

@@ -1,17 +1,16 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useEffect, useCallback, useMemo } from "react";
 import type {
   Configuration,
   StepId,
   OptionId,
   ModelDefinition,
 } from "../types";
-import { createEmptyConfiguration } from "../types";
 import {
-  getSelectionsToReset,
   isConfigurationComplete,
   getMissingRequiredSteps,
   getCompletionPercentage,
 } from "../filterOptions";
+import { useConfigurationStore } from "../stores/configurationStore";
 
 export interface UseConfigurationReturn {
   config: Configuration;
@@ -28,79 +27,52 @@ export interface UseConfigurationReturn {
 
 export function useConfiguration(
   model: ModelDefinition,
-  initialConfig?: Configuration
+  _initialConfig?: Configuration
 ): UseConfigurationReturn {
-  const [config, setConfig] = useState<Configuration>(
-    initialConfig ?? createEmptyConfiguration(model)
-  );
-
-  const [currentStep, setCurrentStep] = useState<StepId | null>(model.stepOrder[0]);
-  const [lastChangedStep, setLastChangedStep] = useState<StepId | null>(null);
-
-  useEffect(() => {
-    if (!lastChangedStep) {
-      return;
-    }
-
-    const toReset = getSelectionsToReset(model, lastChangedStep, config);
-
-    if (toReset.length > 0) {
-      setConfig((prev) => {
-        const newConfig = { ...prev };
-        for (const stepId of toReset) {
-          newConfig[stepId] = null;
-        }
-        return newConfig;
-      });
-    }
-
-    setLastChangedStep(null);
-  }, [lastChangedStep, model, config]);
+  const config = useConfigurationStore((state) => state.config);
+  const currentStep = useConfigurationStore((state) => state.currentStep);
+  const currentModelId = useConfigurationStore((state) => state.currentModelId);
+  const storeSetModel = useConfigurationStore((state) => state.setModel);
+  const storeSelectOption = useConfigurationStore((state) => state.selectOption);
+  const storeClearSelection = useConfigurationStore((state) => state.clearSelection);
+  const storeResetConfiguration = useConfigurationStore((state) => state.resetConfiguration);
+  const storeSetCurrentStep = useConfigurationStore((state) => state.setCurrentStep);
 
   useEffect(() => {
-    setConfig(createEmptyConfiguration(model));
-    setCurrentStep(model.stepOrder[0]);
-    setLastChangedStep(null);
-  }, [model.id]); 
+    if (currentModelId !== model.id) {
+      storeSetModel(model.id);
+    }
+  }, [model.id, currentModelId, storeSetModel]);
 
   const selectOption = useCallback(
     (stepId: StepId, optionId: OptionId) => {
-      setConfig((prev) => ({
-        ...prev,
-        [stepId]: optionId,
-      }));
-
-      setLastChangedStep(stepId);
-
-      const currentIndex = model.stepOrder.indexOf(stepId);
-      if (currentIndex < model.stepOrder.length - 1) {
-        setCurrentStep(model.stepOrder[currentIndex + 1]);
-      }
+      storeSelectOption(stepId, optionId);
     },
-    [model.stepOrder]
+    [storeSelectOption]
   );
 
   const clearSelection = useCallback(
     (stepId: StepId) => {
-      setConfig((prev) => ({
-        ...prev,
-        [stepId]: null,
-      }));
-
-      setLastChangedStep(stepId);
+      storeClearSelection(stepId);
     },
-    []
+    [storeClearSelection]
   );
 
   const resetConfiguration = useCallback(() => {
-    setConfig(createEmptyConfiguration(model));
-    setCurrentStep(model.stepOrder[0]);
-    setLastChangedStep(null);
-  }, [model]);
+    storeResetConfiguration();
+  }, [storeResetConfiguration]);
 
-  const handleSetCurrentStep = useCallback((stepId: StepId) => {
-    setCurrentStep((prev) => (prev === stepId ? null : stepId));
-  }, []);
+  const handleSetCurrentStep = useCallback(
+    (stepId: StepId) => {
+      const current = useConfigurationStore.getState().currentStep;
+      if (current === stepId) {
+        storeSetCurrentStep(stepId);
+      } else {
+        storeSetCurrentStep(stepId);
+      }
+    },
+    [storeSetCurrentStep]
+  );
 
   const isComplete = useMemo(
     () => isConfigurationComplete(model, config),

@@ -1,7 +1,8 @@
+import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { getAllModels, getModelBySlug } from "../data/models";
 import { BuildItCalculator } from "../components/BuildItCalculator";
-import { useConfigurationStore } from "../stores/configurationStore";
+import { useConfigurationStore, buildProductModelUrl } from "../stores/configurationStore";
 
 const DEFAULT_MODEL_SLUG = "stopper-stations";
 
@@ -14,6 +15,34 @@ export function HomePage() {
   
   const addToMyList = useConfigurationStore((state) => state.addToMyList);
   const setModel = useConfigurationStore((state) => state.setModel);
+  const config = useConfigurationStore((state) => state.config);
+  const currentModelId = useConfigurationStore((state) => state.currentModelId);
+
+  // Sync URL when configuration completes
+  useEffect(() => {
+    const state = useConfigurationStore.getState();
+    const isComplete = state.isComplete();
+    const productCode = state.getProductCode();
+
+    if (isComplete && productCode && currentModelId === activeModel.id) {
+      // Build URL with productModel parameter
+      const urlParams = buildProductModelUrl(activeModel.id, productCode);
+      
+      // Parse the URL params to use with setSearchParams
+      const url = new URL(urlParams, window.location.origin);
+      const newParams: Record<string, string> = {};
+      url.searchParams.forEach((value, key) => {
+        newParams[key] = value;
+      });
+
+      setSearchParams(newParams, { replace: true });
+      
+      // Set hash anchor for scroll position
+      if (window.location.hash !== "#build-it") {
+        window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}#build-it`);
+      }
+    }
+  }, [config, currentModelId, activeModel.id, activeModel.slug, setSearchParams]);
 
   const handleSelectModel = (slug: string) => {
     setSearchParams({ model: slug });
@@ -64,7 +93,7 @@ export function HomePage() {
       </section>
 
       <section id="configurator" className="bg-white border-t border-gray-200">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-8xl mx-auto">
           <div className="px-4 py-6 border-b border-gray-200">
             <h2 className="text-xl md:text-2xl font-bold text-gray-800">
               Configure: {activeModel.name}

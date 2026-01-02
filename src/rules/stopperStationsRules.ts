@@ -266,37 +266,24 @@ const INSTALLATION_TO_ACTIVATION: ConstraintMatrix = {
   ],
 };
 
-// ============================================================================
-// INSTALLATION OPTIONS → COLOUR (reverse)
-// ============================================================================
-// Derived from COLOUR_TO_INSTALLATION by inverting
-// ============================================================================
-
 const INSTALLATION_TO_COLOUR: ConstraintMatrix = {
-  // "none" → all colours
   "none": ["0", "1", "2", "3", "4", "5"],
   
-  // Red kits → Red or White
   "&KIT-71100A-R": ["0"],
   "&KIT-71101B-R": ["0"],
   
-  // Green kits → Green or White
   "&KIT-71100A-G": ["1"],
   "&KIT-71101B-G": ["1"],
   
-  // Yellow kits → Yellow or White
   "&KIT-71100A-Y": ["2"],
   "&KIT-71101B-Y": ["2"],
   
-  // White kits → White only
   "&KIT-71100A-W": ["3"],
   "&KIT-71101B-W": ["3"],
   
-  // Blue kits → Blue or White
   "&KIT-71100A-B": [ "4"],
   "&KIT-71101B-B": [ "4"],
-  
-  // Orange kits → Orange or White
+
   "&KIT-71100A-E": [ "5"],
   "&KIT-71101B-E": [ "5"],
 };
@@ -304,7 +291,6 @@ const INSTALLATION_TO_COLOUR: ConstraintMatrix = {
 export const STOPPER_STATIONS_CONSTRAINTS: ModelConstraints = {
   modelId: "stopper-stations",
   constraints: [
-    // Forward constraints
     {
       sourceStep: "colour",
       targetStep: "activation",
@@ -320,8 +306,6 @@ export const STOPPER_STATIONS_CONSTRAINTS: ModelConstraints = {
       targetStep: "installationOptions",
       matrix: ACTIVATION_TO_INSTALLATION,
     },
-    
-    // Reverse constraints (bidirectional)
     {
       sourceStep: "activation",
       targetStep: "colour",
@@ -339,10 +323,6 @@ export const STOPPER_STATIONS_CONSTRAINTS: ModelConstraints = {
     },
   ],
 };
-
-// ============================================================================
-// EXPORTS FOR TESTING / DEBUGGING
-// ============================================================================
 
 export const DEBUG_MATRICES = {
   COLOUR_TO_ACTIVATION,

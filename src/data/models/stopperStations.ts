@@ -184,7 +184,7 @@ const steps: Step[] = [
   {
     id: "installationOptions",
     title: "INSTALLATION OPTIONS",
-    required: false,
+    required: true,
     options: [
       {
         id: "none",
