@@ -290,3 +290,9 @@ export const useMyList = () =>
 
 export const useMyListCount = () =>
   useConfigurationStore((state) => state.myList.length);
+
+export const useIsProductInMyList = (productCode: string | null) =>
+  useConfigurationStore((state) => {
+    if (!productCode) return false;
+    return state.myList.some((item) => item.productCode === productCode);
+  });

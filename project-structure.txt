@@ -1241,10 +1241,13 @@
     📄 ActionButtons.tsx
     📄 BuildItCalculator.tsx
     📄 CompletedDevicePreview.tsx
+    📄 CustomTextDisplay.tsx
+    📄 CustomTextForm.tsx
     📄 Layout.tsx
     📄 MainPanel.tsx
     📄 OptionCard.tsx
     📄 PreviewTile.tsx
+    📄 ProductCard.tsx
     📄 ProductModelDisplay.tsx
     📄 ProductPreview.tsx
     📄 ShareMenu.tsx
@@ -1284,6 +1287,7 @@
   📄 types.ts
   📁 utils
     📄 buildProductModel.ts
+    📄 customTextHelpers.ts
     📄 filterOptions.ts
     📄 getCompletedDeviceImage.ts
 📄 tsconfig.app.json

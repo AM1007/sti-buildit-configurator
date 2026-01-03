@@ -3,7 +3,7 @@ import { useConfiguration } from "../hooks/useConfiguration";
 import { buildProductModel } from "../buildProductModel";
 import { Sidebar } from "./Sidebar";
 import { MainPanel } from "./MainPanel";
-import { useCustomText, useConfigurationStore } from "../stores/configurationStore";
+import { useCustomText, useConfigurationStore, useIsProductInMyList } from "../stores/configurationStore";
 
 interface BuildItCalculatorProps {
   model: ModelDefinition;
@@ -28,6 +28,7 @@ export function BuildItCalculator({
   const setCustomText = useConfigurationStore((state) => state.setCustomText);
 
   const productModel = buildProductModel(config, model);
+  const isInMyList = useIsProductInMyList(productModel.isComplete ? productModel.fullCode : null);
 
   const handleEditStep = (stepId: string) => {
     setCurrentStep(stepId);
@@ -72,6 +73,7 @@ export function BuildItCalculator({
         onReset={handleReset}
         onAddToMyList={handleAddToMyList}
         onCustomTextSubmit={handleCustomTextSubmit}
+        isInMyList={isInMyList}
       />
     </div>
   );
