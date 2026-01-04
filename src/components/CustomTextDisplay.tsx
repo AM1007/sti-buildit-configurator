@@ -8,7 +8,7 @@ export function CustomTextDisplay({ customText }: CustomTextDisplayProps) {
   return (
     <div className="mt-2 border-2 border-black bg-white p-4 lg:p-5">
       <h4 className="mb-2 text-lg font-bold text-black lg:text-2xl">Custom Text</h4>
-      <p className="text-base font-normal text-red-600 lg:text-lg">
+      <p className="text-base font-normal text-brand-600 lg:text-lg">
         NON-RETURNABLE
       </p>
 
@@ -17,7 +17,7 @@ export function CustomTextDisplay({ customText }: CustomTextDisplayProps) {
           <li>
             <div>
               <div className="relative mb-1">
-                <span className="absolute left-0 top-1/2 inline-block h-2 w-2 -translate-y-1/2 rounded-full bg-red-600" />
+                <span className="absolute left-0 top-1/2 inline-block h-2 w-2 -translate-y-1/2 rounded-full bg-brand-600" />
                 <span className="ml-4 text-sm font-bold text-black lg:text-base">Label</span>
               </div>
               <div className="grid grid-cols-1 gap-1">

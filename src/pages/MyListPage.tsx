@@ -31,7 +31,7 @@ export function MyListPage() {
               <div className="flex gap-3">
                 <button
                   type="button"
-                  className="cursor-pointer inline-flex items-center justify-center relative ring-offset-0 transition-all duration-300 ease-in-out focus-visible:outline-none box-border font-bold text-sm gap-1 px-4.5 py-0.5 min-h-9 border-4 lg:gap-1.5 lg:px-6 lg:py-1 lg:min-h-11 lg:text-base bg-red-600 border-red-600 text-white hover:bg-red-700 hover:border-red-700 h-max w-full basis-1/2 text-nowrap"
+                  className="cursor-pointer inline-flex items-center justify-center relative ring-offset-0 transition-all duration-300 ease-in-out focus-visible:outline-none box-border font-bold text-sm gap-1 px-4.5 py-0.5 min-h-9 border-4 lg:gap-1.5 lg:px-6 lg:py-1 lg:min-h-11 lg:text-base bg-brand-600 border-brand-600 text-white hover:bg-brand-700 hover:border-brand-700 h-max w-full basis-1/2 text-nowrap"
                 >
                   Send My List
                 </button>
@@ -85,7 +85,7 @@ function EmptyState() {
         </p>
         <Link
           to="/"
-          className="cursor-pointer inline-flex items-center justify-center font-bold text-sm gap-1 px-4.5 py-0.5 min-h-9 border-4 lg:gap-1.5 lg:px-6 lg:py-1 lg:min-h-11 lg:text-base bg-red-600 border-red-600 text-white hover:bg-red-700 hover:border-red-700 transition-all duration-300"
+          className="cursor-pointer inline-flex items-center justify-center font-bold text-sm gap-1 px-4.5 py-0.5 min-h-9 border-4 lg:gap-1.5 lg:px-6 lg:py-1 lg:min-h-11 lg:text-base bg-brand-600 border-brand-600 text-white hover:bg-brand-700 hover:border-brand-700 transition-all duration-300"
         >
           Start Configuring
         </Link>

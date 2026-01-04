@@ -31,7 +31,7 @@ export function Sidebar({
   const showCustomTextDisplay = hasSubmittedCustomText(model.id, config, customText);
 
   return (
-    <aside className={`bg-red-600 text-white flex flex-col h-full ${className}`}>
+    <aside className={`bg-brand-600 text-white flex flex-col h-full ${className}`}>
       <div className="p-5 lg:p-10 xl:p-16">
         <h3 className="mb-6">
           <span className="inline-block h-fit w-fit bg-black p-4 text-5xl font-bold text-white lg:text-7xl lg:-tracking-[0.175rem] 2xl:text-9xl">

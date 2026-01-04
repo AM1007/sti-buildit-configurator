@@ -86,7 +86,7 @@ export function CustomTextForm({ variant, maxLength, onSubmit, initialData }: Cu
                       checked={selectedLineCount === 1}
                       onChange={() => handleLineCountChange(1)}
                       className="size-4 appearance-none rounded-full border border-solid border-gray-400 
-                                 checked:border-[5px] checked:border-red-600"
+                                 checked:border-[5px] checked:border-brand-600"
                     />
                     <span>1 Line</span>
                   </label>
@@ -99,7 +99,7 @@ export function CustomTextForm({ variant, maxLength, onSubmit, initialData }: Cu
                       checked={selectedLineCount === 2}
                       onChange={() => handleLineCountChange(2)}
                       className="size-4 appearance-none rounded-full border border-solid border-gray-400 
-                                 checked:border-[5px] checked:border-red-600"
+                                 checked:border-[5px] checked:border-brand-600"
                     />
                     <span>2 Lines</span>
                   </label>
@@ -149,7 +149,7 @@ export function CustomTextForm({ variant, maxLength, onSubmit, initialData }: Cu
               </span>
 
               {errors.length > 0 && (
-                <div className="mt-2 text-center text-sm text-red-600">
+                <div className="mt-2 text-center text-sm text-brand-600">
                   {errors.map((error, i) => (
                     <p key={i}>{error}</p>
                   ))}
@@ -161,15 +161,15 @@ export function CustomTextForm({ variant, maxLength, onSubmit, initialData }: Cu
           <div className="mt-10 flex w-full flex-col items-center gap-2 lg:gap-4">
             <button
               type="submit"
-              className="inline-flex min-h-9 items-center justify-center border-4 border-red-600 
-                         bg-red-600 px-4.5 py-0.5 text-sm font-bold text-white 
-                         transition-all duration-300 hover:border-red-700 hover:bg-red-700 
+              className="inline-flex min-h-9 items-center justify-center border-4 border-brand-600 
+                         bg-brand-600 px-4.5 py-0.5 text-sm font-bold text-white 
+                         transition-all duration-300 hover:border-brand-700 hover:bg-brand-700 
                          focus:border-red-300 lg:min-h-11 lg:px-6 lg:py-1 lg:text-base"
             >
               Submit
             </button>
 
-            <span className="block text-center text-sm text-red-600">
+            <span className="block text-center text-sm text-brand-600">
               CUSTOM PRODUCTS ARE NON-RETURNABLE
             </span>
           </div>

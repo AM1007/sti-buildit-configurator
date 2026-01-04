@@ -22,23 +22,23 @@ function Header() {
     <header className="bg-white border-b border-gray-200">
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          <Link to="/" className="text-2xl font-bold text-gray-800 hover:text-red-600">
-            Build <span className="bg-red-600 text-white px-1">it</span>
+          <Link to="/" className="text-2xl font-bold text-gray-800 hover:text-brand-600">
+            Build <span className="bg-brand-600 text-white px-1">it</span>
           </Link>
           <nav className="flex items-center gap-6">
             <Link
               to="/"
-              className="text-gray-600 hover:text-red-600 font-medium text-sm"
+              className="text-gray-600 hover:text-brand-600 font-medium text-sm"
             >
               Home
             </Link>
             <Link
               to="/my-list"
-              className="text-gray-600 hover:text-red-600 font-medium text-sm flex items-center gap-2"
+              className="text-gray-600 hover:text-brand-600 font-medium text-sm flex items-center gap-2"
             >
               My List
               {myListCount > 0 && (
-                <span className="bg-red-600 text-white text-xs px-2 py-0.5 rounded-full">
+                <span className="bg-brand-600 text-white text-xs px-2 py-0.5 rounded-full">
                   {myListCount}
                 </span>
               )}
@@ -56,7 +56,7 @@ function Footer() {
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="text-xl font-bold text-white">
-            Build <span className="bg-red-600 px-1">it</span>
+            Build <span className="bg-brand-600 px-1">it</span>
           </div>
 
           <p className="text-sm">

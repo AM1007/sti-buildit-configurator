@@ -52,7 +52,7 @@ export function ProductCard({ item, onRemove }: ProductCardProps) {
                     className="absolute right-3 top-2 flex w-[38%] items-center justify-center cursor-pointer"
                     aria-label="Remove from my list"
                   >
-                    <span className="inline-grid text-base text-red-600">
+                    <span className="inline-grid text-base text-brand-600">
                       <StarFilledIcon />
                     </span>
                   </button>
@@ -94,7 +94,7 @@ export function ProductCard({ item, onRemove }: ProductCardProps) {
           </div>
         </div>
 
-        <span className="cursor-pointer inline-flex items-center justify-center relative ring-offset-0 transition-all duration-300 ease-in-out focus-visible:outline-none box-border font-bold text-base gap-1.5 px-5 py-1 min-h-10 border-4 lg:gap-2.5 lg:px-7 lg:py-3 lg:min-h-14 lg:text-lg bg-red-600 border-red-600 text-white hover:bg-red-700 hover:border-red-700 w-full">
+        <span className="cursor-pointer inline-flex items-center justify-center relative ring-offset-0 transition-all duration-300 ease-in-out focus-visible:outline-none box-border font-bold text-base gap-1.5 px-5 py-1 min-h-10 border-4 lg:gap-2.5 lg:px-7 lg:py-3 lg:min-h-14 lg:text-lg bg-brand-600 border-brand-600 text-white hover:bg-brand-700 hover:border-brand-700 w-full">
           View Details
           <span className="inline-grid leading-none text-inherit">
             <ArrowRightIcon />

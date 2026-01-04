@@ -54,7 +54,7 @@ export function ActionButtons({
           e.preventDefault();
           handleWhereToBuy();
         }}
-        className="cursor-pointer inline-flex items-center justify-center gap-1 border-4 border-red-600 bg-red-600 px-4.5 py-0.5 text-sm font-bold text-white transition-all duration-300 hover:border-red-700 hover:bg-red-700 lg:gap-1.5 lg:px-6 lg:py-1 lg:text-base min-h-9 lg:min-h-11 whitespace-nowrap"
+        className="cursor-pointer inline-flex items-center justify-center gap-1 border-4 border-brand-600 bg-brand-600 px-4.5 py-0.5 text-sm font-bold text-white transition-all duration-300 hover:border-brand-700 hover:bg-brand-700 lg:gap-1.5 lg:px-6 lg:py-1 lg:text-base min-h-9 lg:min-h-11 whitespace-nowrap"
       >
         Where to Buy
       </a>
@@ -90,7 +90,7 @@ export function ActionButtons({
         title={starTitle}
       >
         <div className="flex items-center justify-start gap-3">
-          <span className="inline-grid text-lg text-red-600">
+          <span className="inline-grid text-lg text-brand-600">
             {isInMyList ? <StarFilledIcon /> : <StarOutlineIcon />}
           </span>
         </div>

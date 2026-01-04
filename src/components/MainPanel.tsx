@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { ClipLoader } from "react-spinners";
 import type { Configuration, ProductModel, ModelDefinition, StepId, CustomTextData } from "../types";
 import { ProductPreview } from "./ProductPreview";
 import { ProductModelDisplay } from "./ProductModelDisplay";
@@ -95,7 +96,7 @@ export function MainPanel({
                 inline-flex items-center justify-center whitespace-nowrap px-3 py-1.5
                 text-sm font-medium transition-all focus-visible:outline-none
                 rounded-none bg-white p-0 shadow-none outline-0 ring-0
-                ${activeTab === "edit" ? "text-red-600" : "text-black"}
+                ${activeTab === "edit" ? "text-brand-600" : "text-black"}
               `}
             >
               <span className="font-bold text-sm lg:text-lg">Edit Selections</span>
@@ -107,7 +108,7 @@ export function MainPanel({
                 inline-flex items-center justify-center whitespace-nowrap px-3 py-1.5
                 text-sm font-medium transition-all focus-visible:outline-none
                 rounded-none bg-white p-0 shadow-none outline-0 ring-0
-                ${activeTab === "preview" ? "text-red-600" : "text-black"}
+                ${activeTab === "preview" ? "text-brand-600" : "text-black"}
               `}
             >
               <span className="font-bold text-sm lg:text-lg">Product Preview</span>
@@ -149,11 +150,24 @@ export function MainPanel({
               ) : (
                 <div className="flex w-full flex-col items-center gap-11 py-16 text-center text-gray-500">
                   <p className="font-medium text-base lg:text-md">
-                    PREVIEW<br />NOT AVAILABLE
+                    PRODUCT PREVIEW<br />NOT AVAILABLE
                   </p>
                   <p className="font-normal text-base lg:text-md">
                     {reason || "Please complete build it selections"}
                   </p>
+                  
+                  {/* Show action buttons when ZL is selected (no preview but config is complete) */}
+                  {showActionButtons && (
+                    <div className="flex w-full flex-wrap items-center justify-center gap-2 md:items-start md:gap-6 mt-4">
+                      <ActionButtons
+                        productModel={productModel}
+                        onReset={onReset}
+                        onAddToMyList={onAddToMyList}
+                        onRemoveFromMyList={onRemoveFromMyList}
+                        isInMyList={isInMyList}
+                      />
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -192,6 +206,14 @@ function ProductPreviewContent({
   isInMyList,
 }: ProductPreviewContentProps) {
   const [hasError, setHasError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const [prevImagePath, setPrevImagePath] = useState(imagePath);
+  if (imagePath !== prevImagePath) {
+    setPrevImagePath(imagePath);
+    setIsLoading(true);
+    setHasError(false);
+  }
 
   return (
     <div className="flex w-full flex-col gap-10 py-5">
@@ -205,15 +227,24 @@ function ProductPreviewContent({
           </p>
         </div>
       ) : (
-        <div className="mx-auto max-w-120 flex-1">
+        <div className="mx-auto max-w-120 w-full min-h-[600px] flex items-center justify-center">
+          {isLoading && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <ClipLoader color="#c8102e" size={50} />
+            </div>
+          )}
           <img
             alt={`Image of ${productCode}`}
             loading="lazy"
             width="600"
             height="600"
-            className="select-none object-contain w-full h-auto"
+            className={`select-none object-contain w-full h-auto ${isLoading ? "opacity-0" : "opacity-100"}`}
             src={imagePath}
-            onError={() => setHasError(true)}
+            onLoad={() => setIsLoading(false)}
+            onError={() => {
+              setIsLoading(false);
+              setHasError(true);
+            }}
           />
         </div>
       )}
@@ -232,3 +263,4 @@ function ProductPreviewContent({
     </div>
   );
 }
+

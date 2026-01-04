@@ -61,7 +61,7 @@ export function HomePage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <section className="bg-red-700 text-white py-12 md:py-20">
+      <section className="bg-brand-700 text-white py-12 md:py-20">
         <div className="max-w-6xl mx-auto px-4">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-center mb-4">
             Build <span className="bg-white text-black px-2">it</span>
@@ -160,7 +160,7 @@ function ProductSelectorButton({
         group block w-full text-left bg-white rounded-xl shadow-md 
         transition-all duration-200 overflow-hidden border-2
         ${isActive 
-          ? "border-red-600 ring-2 ring-red-600 ring-offset-2" 
+          ? "border-brand-600 ring-2 ring-brand-600 ring-offset-2" 
           : "border-gray-100 hover:border-red-200 hover:shadow-xl hover:-translate-y-1"
         }
       `}
@@ -169,7 +169,7 @@ function ProductSelectorButton({
       <div className="bg-gray-800 p-6" />
 
       <div className="p-4">
-        <h3 className={`font-bold transition-colors ${isActive ? "text-red-600" : "text-gray-800 group-hover:text-red-600"}`}>
+        <h3 className={`font-bold transition-colors ${isActive ? "text-brand-600" : "text-gray-800 group-hover:text-brand-600"}`}>
           {name}
         </h3>
         <p className="text-sm text-gray-500 mt-1">
@@ -177,7 +177,7 @@ function ProductSelectorButton({
         </p>
 
         {isActive && (
-          <div className="mt-3 flex items-center text-red-600 text-sm font-medium">
+          <div className="mt-3 flex items-center text-brand-600 text-sm font-medium">
             <span>Currently configuring</span>
             <svg
               className="w-4 h-4 ml-1"
@@ -194,7 +194,7 @@ function ProductSelectorButton({
         )}
 
         {!isActive && (
-          <div className="mt-3 flex items-center text-red-600 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="mt-3 flex items-center text-brand-600 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity">
             <span>Configure</span>
             <svg
               className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform"
@@ -225,7 +225,7 @@ interface InfoCardProps {
 function InfoCard({ step, title, description }: InfoCardProps) {
   return (
     <div className="text-center">
-      <div className="w-12 h-12 bg-red-600 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
+      <div className="w-12 h-12 bg-brand-600 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
         {step}
       </div>
       <h3 className="font-bold text-gray-800 mb-2">{title}</h3>

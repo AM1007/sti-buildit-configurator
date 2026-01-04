@@ -58,7 +58,7 @@ export function BuildItCalculator({
   };
 
   return (
-    <div className="grid h-fit min-h-svh w-full grid-cols-1 lg:grid-cols-2 lg:border-4 lg:border-solid lg:border-red-600">
+    <div className="grid h-fit min-h-svh w-full grid-cols-1 lg:grid-cols-2 lg:border-4 lg:border-solid lg:border-brand-600">
       <Sidebar
         model={model}
         config={config}

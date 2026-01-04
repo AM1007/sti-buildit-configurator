@@ -84,6 +84,27 @@ export function isAllStepsCompleted(
   return true;
 }
 
+/**
+ * Checks if ZL (non-returnable language) is selected.
+ * ZL means custom language - no preview available, but no custom text form needed
+ * unless ZA/CL is also selected.
+ * 
+ * When ZL is selected WITHOUT ZA/CL:
+ * - Show placeholder instead of preview image
+ * - Show action buttons immediately (no form required)
+ */
+export function isNonReturnableLanguageSelected(
+  modelId: ModelId,
+  configuration: Configuration
+): boolean {
+  // Only stopper-stations has ZL language option
+  if (modelId !== "stopper-stations") {
+    return false;
+  }
+  
+  return configuration.language === "ZL";
+}
+
 export function shouldShowCustomTextForm(
   model: ModelDefinition,
   configuration: Configuration,

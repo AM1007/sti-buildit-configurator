@@ -50,7 +50,7 @@ export const toast = {
       position: "center",
       buttons: [
         [
-          "<button type='button' style='background:#dc2626;color:white;font-weight:bold;'>Confirm</button>",
+          "<button type='button' style='background:#c8102e;color:white;font-weight:bold;'>Confirm</button>",
           (instance, toastEl) => {
             instance.hide({ transitionOut: "fadeOut" }, toastEl, "button");
             onConfirm();
