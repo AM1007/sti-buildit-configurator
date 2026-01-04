@@ -66,6 +66,13 @@ export interface ProductModel {
   parts: Record<StepId, string>;
   fullCode: string;
   isComplete: boolean;
+  missingSteps?: StepId[];
+}
+
+export interface AvailabilityResult {
+  available: boolean;
+  reason?: string;
+  blockedBy?: StepId;
 }
 
 export interface SavedConfiguration {
@@ -103,4 +110,3 @@ export function createEmptyCustomText(): CustomTextData {
     submitted: false,
   };
 }
-
