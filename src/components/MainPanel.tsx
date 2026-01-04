@@ -5,7 +5,7 @@ import { ProductModelDisplay } from "./ProductModelDisplay";
 import { ActionButtons } from "./ActionButtons";
 import { CustomTextForm } from "./CustomTextForm";
 import { getCompletedDeviceImage } from "../utils/getCompletedDeviceImage";
-import { shouldShowCustomTextForm, getCustomTextConfig, getMaxLength, getEffectiveLineCount } from "../utils/customTextHelpers";
+import { shouldShowCustomTextForm, getCustomTextConfig, getMaxLength, getEffectiveLineCount, isConfigurationReadyForActions } from "../utils/customTextHelpers";
 
 type TabId = "edit" | "preview";
 
@@ -40,6 +40,7 @@ export function MainPanel({
 
   const showCustomTextForm = shouldShowCustomTextForm(model, config, customText);
   const customTextConfig = getCustomTextConfig(model.id);
+  const showActionButtons = productModel.isComplete && isConfigurationReadyForActions(model.id, config, customText);
 
   useEffect(() => {
     if (customText?.submitted) {
@@ -138,7 +139,7 @@ export function MainPanel({
                 <ProductPreviewContent
                   imagePath={imagePath}
                   productCode={productModel.fullCode}
-                  isComplete={productModel.isComplete}
+                  showActionButtons={showActionButtons}
                   productModel={productModel}
                   onReset={onReset}
                   onAddToMyList={onAddToMyList}
@@ -172,7 +173,7 @@ export function MainPanel({
 interface ProductPreviewContentProps {
   imagePath: string;
   productCode: string;
-  isComplete: boolean;
+  showActionButtons: boolean;
   productModel: ProductModel;
   onReset: () => void;
   onAddToMyList: () => void;
@@ -183,7 +184,7 @@ interface ProductPreviewContentProps {
 function ProductPreviewContent({
   imagePath,
   productCode,
-  isComplete,
+  showActionButtons,
   productModel,
   onReset,
   onAddToMyList,
@@ -217,7 +218,7 @@ function ProductPreviewContent({
         </div>
       )}
 
-      {isComplete && (
+      {showActionButtons && (
         <div className="flex w-full flex-wrap items-center justify-center gap-2 md:items-start md:gap-6">
           <ActionButtons
             productModel={productModel}

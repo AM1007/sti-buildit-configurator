@@ -52,6 +52,7 @@
       📄 3-Switch-Type.webp
       📄 4-Switch-Type.webp
       📄 5-Switch-Type.webp
+  📄 logo.svg
   📁 ReSet Call Points
     📁 COLOUR
       📄 B-Blue.webp
@@ -1189,7 +1190,6 @@
       📄 PX-PUSH-TO-EXIT.webp
       📄 XT-EXIT.webp
       📄 ZA-NON-RETURNABLE.webp
-  📄 vite.svg
   📁 Waterproof Push Buttons
     📁 BUTTON COLOUR
       📄 B-Blue-Button.webp

@@ -198,3 +198,15 @@ export function validateCustomText(
     errors,
   };
 }
+
+export function isConfigurationReadyForActions(
+  modelId: ModelId,
+  configuration: Configuration,
+  customText: CustomTextData | null
+): boolean {
+  if (!isCustomTextOptionSelected(modelId, configuration)) {
+    return true;
+  }
+
+  return customText?.submitted === true;
+}
