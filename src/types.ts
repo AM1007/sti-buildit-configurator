@@ -9,6 +9,8 @@ export type ModelId =
 export type StepId = string;
 export type OptionId = string;
 
+export type CustomTextVariant = "multiline-selectable" | "singleline" | "multiline-fixed";
+
 export const MODEL_NAMES: Record<ModelId, string> = {
   "stopper-stations": "Stopper® Stations",
   "indoor-push-buttons": "Indoor Push Buttons",
@@ -66,13 +68,6 @@ export interface ProductModel {
   parts: Record<StepId, string>;
   fullCode: string;
   isComplete: boolean;
-  missingSteps?: StepId[];
-}
-
-export interface AvailabilityResult {
-  available: boolean;
-  reason?: string;
-  blockedBy?: StepId;
 }
 
 export interface SavedConfiguration {
@@ -83,6 +78,14 @@ export interface SavedConfiguration {
   customText?: CustomTextData;
   savedAt: number;
   name?: string;
+}
+
+export interface CustomTextConfig {
+  stepId: StepId;
+  optionId: OptionId;
+  variant: CustomTextVariant;
+  maxLength: number | { oneLine: number; twoLines: number };
+  line2Required: boolean;
 }
 
 export function createEmptyConfiguration(model: ModelDefinition): Configuration {

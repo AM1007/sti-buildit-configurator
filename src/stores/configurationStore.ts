@@ -17,7 +17,7 @@ import {
   getMissingRequiredSteps,
 } from "../filterOptions";
 import { buildProductModel } from "../buildProductModel";
-import { shouldClearCustomText } from "../utils/customTextHelpers";
+import { shouldClearCustomText, getCustomTextTrigger } from "../utils/customTextHelpers";
 
 export function buildProductModelUrl(modelId: ModelId, productCode: string): string {
   const encodedProductModel = encodeURIComponent(productCode).replace(/%2D/g, "-");
@@ -35,7 +35,7 @@ interface ConfigurationState {
   selectOption: (stepId: StepId, optionId: OptionId) => void;
   clearSelection: (stepId: StepId) => void;
   resetConfiguration: () => void;
-  setCurrentStep: (stepId: StepId) => void;
+  setCurrentStep: (stepId: StepId | null) => void;
   setCustomText: (data: Omit<CustomTextData, "submitted">) => void;
   clearCustomText: () => void;
   addToMyList: (name?: string) => void;
@@ -60,7 +60,6 @@ export const useConfigurationStore = create<ConfigurationState>()(
       setModel: (modelId) => {
         const { currentModelId } = get();
         
-        // Идемпотентность: если модель уже установлена — не сбрасывать конфигурацию
         if (currentModelId === modelId) {
           return;
         }
@@ -92,8 +91,9 @@ export const useConfigurationStore = create<ConfigurationState>()(
         const { currentModelId, config, customText } = get();
         const model = currentModelId ? getModelById(currentModelId) : null;
 
-        if (!model) return;
+        if (!model || !currentModelId) return;
 
+        const prevOptionId = config[stepId] ?? null;
         const newConfig = { ...config, [stepId]: optionId };
         const toReset = getSelectionsToReset(model, stepId, newConfig);
         for (const resetStepId of toReset) {
@@ -107,12 +107,8 @@ export const useConfigurationStore = create<ConfigurationState>()(
             : stepId;
 
         let newCustomText = customText;
-        if (stepId === "text") {
-          const prevTextOption = config.text ?? null;
-          const newTextOption = optionId;
-          if (shouldClearCustomText(prevTextOption, newTextOption)) {
-            newCustomText = null;
-          }
+        if (shouldClearCustomText(currentModelId, stepId, prevOptionId, optionId)) {
+          newCustomText = null;
         }
 
         set({
@@ -126,8 +122,9 @@ export const useConfigurationStore = create<ConfigurationState>()(
         const { currentModelId, config, customText } = get();
         const model = currentModelId ? getModelById(currentModelId) : null;
 
-        if (!model) return;
+        if (!model || !currentModelId) return;
 
+        const prevOptionId = config[stepId] ?? null;
         const newConfig = { ...config, [stepId]: null };
         const toReset = getSelectionsToReset(model, stepId, newConfig);
         for (const resetStepId of toReset) {
@@ -135,7 +132,8 @@ export const useConfigurationStore = create<ConfigurationState>()(
         }
 
         let newCustomText = customText;
-        if (stepId === "text") {
+        const trigger = getCustomTextTrigger(currentModelId);
+        if (trigger && stepId === trigger.stepId && prevOptionId === trigger.optionId) {
           newCustomText = null;
         }
 

@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --container-8xl: 100rem;
+  --container-8xl: 102rem;
 }
 
 body {

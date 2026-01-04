@@ -1,18 +1,6 @@
 import type { ModelDefinition, Step } from "../../types";
 
-const SWITCH_TO_ELECTRICAL: Record<string, string[]> = {
-  "2": ["0"],           
-  "3": ["0", "1", "2"], 
-  "4": ["1", "2"],      
-  "5": ["3"],           
-};
-
-const ELECTRICAL_TO_SWITCH: Record<string, string[]> = {
-  "0": ["2", "3"],      
-  "1": ["3", "4"],      
-  "2": ["3", "4"],      
-  "3": ["5"],           
-};
+const IMG = "/Key Switches";
 
 const steps: Step[] = [
   {
@@ -20,12 +8,12 @@ const steps: Step[] = [
     title: "COLOUR & MOUNTING",
     required: true,
     options: [
-      { id: "10", label: "#10 Red (Dual Mount)", code: "10" },
-      { id: "30", label: "#30 Green (Dual Mount)", code: "30" },
-      { id: "50", label: "#50 Yellow (Dual Mount)", code: "50" },
-      { id: "70", label: "#70 White (Dual Mount)", code: "70" },
-      { id: "90", label: "#90 Blue (Dual Mount)", code: "90" },
-      { id: "E0", label: "#E0 Orange (Dual Mount)", code: "E0" },
+      { id: "10", label: "#10 Red (Dual Mount)", code: "10", image: `${IMG}/COLOUR & MOUNTING/10-Red (Dual-Mount).webp` },
+      { id: "30", label: "#30 Green (Dual Mount)", code: "30", image: `${IMG}/COLOUR & MOUNTING/30-Green(Dual-Mount).webp` },
+      { id: "50", label: "#50 Yellow (Dual Mount)", code: "50", image: `${IMG}/COLOUR & MOUNTING/50-Yellow-(Dual-Mount).webp` },
+      { id: "70", label: "#70 White (Dual Mount)", code: "70", image: `${IMG}/COLOUR & MOUNTING/70-White-(Dual-Mount).webp` },
+      { id: "90", label: "#90 Blue (Dual Mount)", code: "90", image: `${IMG}/COLOUR & MOUNTING/90-Blue-(Dual-Mount).webp` },
+      { id: "E0", label: "#E0 Orange (Dual Mount)", code: "E0", image: `${IMG}/COLOUR & MOUNTING/E0-Orange-(Dual-Mount).webp` },
     ],
   },
 
@@ -34,10 +22,10 @@ const steps: Step[] = [
     title: "SWITCH TYPE",
     required: true,
     options: [
-      { id: "2", label: "#2 Switch Type", code: "2" },
-      { id: "3", label: "#3 Switch Type", code: "3" },
-      { id: "4", label: "#4 Switch Type", code: "4" },
-      { id: "5", label: "#5 Switch Type", code: "5" },
+      { id: "2", label: "#2 Switch Type", code: "2", image: `${IMG}/SWITCH TYPE/2-Switch-Type.webp` },
+      { id: "3", label: "#3 Switch Type", code: "3", image: `${IMG}/SWITCH TYPE/3-Switch-Type.webp` },
+      { id: "4", label: "#4 Switch Type", code: "4", image: `${IMG}/SWITCH TYPE/4-Switch-Type.webp` },
+      { id: "5", label: "#5 Switch Type", code: "5", image: `${IMG}/SWITCH TYPE/5-Switch-Type.webp` },
     ],
   },
 
@@ -50,13 +38,15 @@ const steps: Step[] = [
         id: "0",
         label: "#0 Single Pole Changeover",
         code: "0",
-        availableFor: ["2", "3"], 
+        image: `${IMG}/ELECTRICAL ARRANGEMENT/0-Single-Pole-Changeover.webp`,
+        availableFor: ["2", "3"],
         dependsOn: "switchType",
       },
       {
         id: "1",
         label: "#1 Double Pole Normally Open",
         code: "1",
+        image: `${IMG}/ELECTRICAL ARRANGEMENT/1-Double-Pole-Normally-Open.webp`,
         availableFor: ["3", "4"],
         dependsOn: "switchType",
       },
@@ -64,6 +54,7 @@ const steps: Step[] = [
         id: "2",
         label: "#2 Double Pole Normally Closed",
         code: "2",
+        image: `${IMG}/ELECTRICAL ARRANGEMENT/2-Double-Pole-Normally-Closed.webp`,
         availableFor: ["3", "4"],
         dependsOn: "switchType",
       },
@@ -71,7 +62,8 @@ const steps: Step[] = [
         id: "3",
         label: "#3 Position Key Switch Arrangement",
         code: "3",
-        availableFor: ["5"], 
+        image: `${IMG}/ELECTRICAL ARRANGEMENT/3-Position-Key-Switch-Arrangement.webp`,
+        availableFor: ["5"],
         dependsOn: "switchType",
       },
     ],
@@ -85,12 +77,14 @@ const steps: Step[] = [
       {
         id: "SAK",
         label: "# Self-Assemble Label Kit",
-        code: "", 
+        code: "",
+        image: `${IMG}/LABEL/Self-Assemble-Label-Kit.webp`,
       },
       {
         id: "CL",
         label: "#CL Custom Label",
-        code: "CL", 
+        code: "CL",
+        image: `${IMG}/LABEL/CL-Custom-Label.webp`,
       },
     ],
   },
@@ -118,19 +112,14 @@ export const keySwitchesModel: ModelDefinition = {
       "electricalArrangement",
       "label",
     ],
-    separator: "none", 
+    separator: "none",
     separatorMap: {
       colourMounting: "",
       switchType: "",
       electricalArrangement: "",
-      label: "-", 
+      label: "-",
     },
   },
   
   primaryDependencyStep: "switchType",
-};
-
-export const keySwitchesCompatibility = {
-  switchToElectrical: SWITCH_TO_ELECTRICAL,
-  electricalToSwitch: ELECTRICAL_TO_SWITCH,
 };

@@ -66,7 +66,7 @@ export function useConfiguration(
     (stepId: StepId) => {
       const current = useConfigurationStore.getState().currentStep;
       if (current === stepId) {
-        storeSetCurrentStep(stepId);
+        storeSetCurrentStep(null);
       } else {
         storeSetCurrentStep(stepId);
       }

@@ -1,22 +1,32 @@
 import { useState } from "react";
-import type { CustomTextData } from "../types";
-import { getMaxLength, validateCustomText } from "../utils/customTextHelpers";
+import type { CustomTextData, CustomTextVariant } from "../types";
+import { getEffectiveLineCount } from "../utils/customTextHelpers";
 
 interface CustomTextFormProps {
+  variant: CustomTextVariant;
+  maxLength: number;
   onSubmit: (data: Omit<CustomTextData, "submitted">) => void;
   initialData?: CustomTextData;
 }
 
-export function CustomTextForm({ onSubmit, initialData }: CustomTextFormProps) {
-  const [lineCount, setLineCount] = useState<1 | 2>(initialData?.lineCount ?? 2);
+export function CustomTextForm({ variant, maxLength, onSubmit, initialData }: CustomTextFormProps) {
+  const getInitialLineCount = (): 1 | 2 => {
+    if (variant === "singleline") return 1;
+    if (variant === "multiline-fixed") return 2;
+    return initialData?.lineCount ?? 2;
+  };
+
+  const [selectedLineCount, setSelectedLineCount] = useState<1 | 2>(getInitialLineCount());
   const [line1, setLine1] = useState(initialData?.line1 ?? "");
   const [line2, setLine2] = useState(initialData?.line2 ?? "");
   const [errors, setErrors] = useState<string[]>([]);
 
-  const maxLength = getMaxLength(lineCount);
+  const effectiveLineCount = getEffectiveLineCount(variant, selectedLineCount);
+  const showLineCountSelector = variant === "multiline-selectable";
+  const showLine2 = effectiveLineCount === 2;
 
   const handleLineCountChange = (value: 1 | 2) => {
-    setLineCount(value);
+    setSelectedLineCount(value);
     if (value === 1) {
       setLine2("");
     }
@@ -26,15 +36,30 @@ export function CustomTextForm({ onSubmit, initialData }: CustomTextFormProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const data = { lineCount, line1, line2: lineCount === 2 ? line2 : "" };
-    const validation = validateCustomText(data);
+    const validationErrors: string[] = [];
 
-    if (!validation.valid) {
-      setErrors(validation.errors);
+    if (!line1.trim()) {
+      validationErrors.push("Line 1 is required");
+    }
+
+    if (line1.length > maxLength) {
+      validationErrors.push(`Line 1 exceeds ${maxLength} characters`);
+    }
+
+    if (showLine2 && line2.length > maxLength) {
+      validationErrors.push(`Line 2 exceeds ${maxLength} characters`);
+    }
+
+    if (validationErrors.length > 0) {
+      setErrors(validationErrors);
       return;
     }
 
-    onSubmit(data);
+    onSubmit({
+      lineCount: effectiveLineCount,
+      line1,
+      line2: showLine2 ? line2 : "",
+    });
   };
 
   return (
@@ -51,33 +76,35 @@ export function CustomTextForm({ onSubmit, initialData }: CustomTextFormProps) {
                 Label
               </p>
 
-              <div className="mb-3 flex items-center justify-center gap-3 lg:mb-4">
-                <label className="flex items-center justify-start gap-2 text-sm font-normal">
-                  <input
-                    type="radio"
-                    name="lineCount"
-                    value={1}
-                    checked={lineCount === 1}
-                    onChange={() => handleLineCountChange(1)}
-                    className="size-4 appearance-none rounded-full border border-solid border-gray-400 
-                               checked:border-[5px] checked:border-red-600"
-                  />
-                  <span>1 Line</span>
-                </label>
+              {showLineCountSelector && (
+                <div className="mb-3 flex items-center justify-center gap-3 lg:mb-4">
+                  <label className="flex items-center justify-start gap-2 text-sm font-normal">
+                    <input
+                      type="radio"
+                      name="lineCount"
+                      value={1}
+                      checked={selectedLineCount === 1}
+                      onChange={() => handleLineCountChange(1)}
+                      className="size-4 appearance-none rounded-full border border-solid border-gray-400 
+                                 checked:border-[5px] checked:border-red-600"
+                    />
+                    <span>1 Line</span>
+                  </label>
 
-                <label className="flex items-center justify-start gap-2 text-sm font-normal">
-                  <input
-                    type="radio"
-                    name="lineCount"
-                    value={2}
-                    checked={lineCount === 2}
-                    onChange={() => handleLineCountChange(2)}
-                    className="size-4 appearance-none rounded-full border border-solid border-gray-400 
-                               checked:border-[5px] checked:border-red-600"
-                  />
-                  <span>2 Lines</span>
-                </label>
-              </div>
+                  <label className="flex items-center justify-start gap-2 text-sm font-normal">
+                    <input
+                      type="radio"
+                      name="lineCount"
+                      value={2}
+                      checked={selectedLineCount === 2}
+                      onChange={() => handleLineCountChange(2)}
+                      className="size-4 appearance-none rounded-full border border-solid border-gray-400 
+                                 checked:border-[5px] checked:border-red-600"
+                    />
+                    <span>2 Lines</span>
+                  </label>
+                </div>
+              )}
 
               <div className="grid grid-cols-1 gap-3">
                 <div className="flex w-full flex-col gap-1">
@@ -97,7 +124,7 @@ export function CustomTextForm({ onSubmit, initialData }: CustomTextFormProps) {
                   />
                 </div>
 
-                {lineCount === 2 && (
+                {showLine2 && (
                   <div className="flex w-full flex-col gap-1">
                     <input
                       type="text"

@@ -5,7 +5,7 @@ import { ProductModelDisplay } from "./ProductModelDisplay";
 import { ActionButtons } from "./ActionButtons";
 import { CustomTextForm } from "./CustomTextForm";
 import { getCompletedDeviceImage } from "../utils/getCompletedDeviceImage";
-import { shouldShowCustomTextForm } from "../utils/customTextHelpers";
+import { shouldShowCustomTextForm, getCustomTextConfig, getMaxLength, getEffectiveLineCount } from "../utils/customTextHelpers";
 
 type TabId = "edit" | "preview";
 
@@ -39,6 +39,7 @@ export function MainPanel({
   const [activeTab, setActiveTab] = useState<TabId>("edit");
 
   const showCustomTextForm = shouldShowCustomTextForm(model, config, customText);
+  const customTextConfig = getCustomTextConfig(model.id);
 
   useEffect(() => {
     if (customText?.submitted) {
@@ -69,6 +70,17 @@ export function MainPanel({
     config,
     isComplete: productModel.isComplete,
   });
+
+  const getFormMaxLength = (): number => {
+    if (!customTextConfig) return 20;
+    
+    const effectiveLineCount = getEffectiveLineCount(
+      customTextConfig.variant,
+      customText?.lineCount ?? 2
+    );
+    
+    return getMaxLength(model.id, effectiveLineCount);
+  };
 
   return (
     <div className={`hidden h-full w-full lg:block ${className}`}>
@@ -103,8 +115,10 @@ export function MainPanel({
 
           {activeTab === "edit" && (
             <div className="mt-10">
-              {showCustomTextForm ? (
+              {showCustomTextForm && customTextConfig ? (
                 <CustomTextForm
+                  variant={customTextConfig.variant}
+                  maxLength={getFormMaxLength()}
                   onSubmit={handleCustomTextSubmit}
                   initialData={customText ?? undefined}
                 />

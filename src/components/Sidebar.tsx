@@ -28,7 +28,7 @@ export function Sidebar({
     .map((stepId) => model.steps.find((s) => s.id === stepId))
     .filter((step): step is NonNullable<typeof step> => step !== undefined);
 
-  const showCustomTextDisplay = hasSubmittedCustomText(config, customText);
+  const showCustomTextDisplay = hasSubmittedCustomText(model.id, config, customText);
 
   return (
     <aside className={`bg-red-600 text-white flex flex-col h-full ${className}`}>
