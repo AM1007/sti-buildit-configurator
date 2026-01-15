@@ -177,6 +177,7 @@ export function MainPanel({
         <ProductModelDisplay
           model={model}
           productModel={productModel}
+          config={config}
           onEditStep={onEditStep}
         />
       </div>

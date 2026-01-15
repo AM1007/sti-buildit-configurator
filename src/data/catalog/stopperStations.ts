@@ -6,6 +6,6 @@ export const stopperStationsMeta: ConfiguratorMeta = {
   name: "Stopper® Stations",
   description: "Customisable UL Listed Push Buttons and Key Switch",
   imagePath: "/Configurators/02_Stopper Stations.webp",
-  colours: ["yellow", "red", "white", "green", "blue"],
+  colours: ["yellow", "red", "white", "green", "blue", "orange"],
   isImplemented: true,
 };

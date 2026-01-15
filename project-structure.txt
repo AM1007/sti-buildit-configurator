@@ -6,34 +6,230 @@
 📄 postcss.config.js
 📄 project-structure.txt
 📁 public
+  📁 Alert Point
+    📁 COLOUR
+      📄 B Blue.webp
+      📄 G Green.webp
+      📄 R Red.webp
+      📄 W White.webp
+    📁 LABEL
+      📄 A 'A' Label.webp
+      📄 B 'B' Label.webp
+      📄 C 'C' Label.webp
+      📄 D 'D' Label.webp
+      📄 E 'E' Label.webp
+      📄 F 'F' Label.webp
+      📄 G 'G' Label.webp
+      📄 H 'H' Label.webp
+      📄 I 'I' Label.webp
+      📄 R 'R' Label.webp
+      📄 X Custom or No Label.webp
+    📁 SERIES
+      📄 1 Alert Point - Limited Stock - Contact sales for details.webp
+      📄 3 Alert Point with Beacon - Limited Stock - Contact sales for details.webp
+  📁 Call Point Stopper
+    📁 COLOUR
+      📄 B Blue.webp
+      📄 E Orange.webp
+      📄 G Green.webp
+      📄 Red.webp
+      📄 W White.webp
+      📄 Y Yellow.webp
+    📁 LABEL
+      📄 CL Custom Label.webp
+      📄 in case of emergency break glass.webp
+      📄 in case of emergency operate.webp
+      📄 in case of fire.webp
+      📄 plain no text.webp
+    📁 LANGUAGE
+      📄 DE German.webp
+      📄 English.webp
+      📄 ES Spanish.webp
+      📄 FR French.webp
+      📄 NL Dutch.webp
+    📁 MOUNTING
+      📄 0 Flush.webp
+      📄 1 Surface mount (35mm).webp
   📁 Configurators
-    📄 Alert Point.webp
-    📄 Call Point Stopper.webp
-    📄 Enviro Stopper.webp
-    📄 EnviroArmour.webp
-    📄 Euro Stopper.webp
-    📄 G3 Multipurpose Push Button.webp
-    📄 GF Fire Alarm Push Button.webp
-    📄 Global ReSet.webp
-    📄 Indoor Push Buttons.webp
-    📄 Key Switches.webp
-    📄 Low Profile Universal Stopper.webp
-    📄 ReSet Call Points.webp
-    📄 Stopper Stations.webp
-    📄 Universal Stopper.webp
-    📄 Waterproof Push Buttons.webp
-    📄 Waterproof ReSet Call Point.webp
+    📄 01_G3 Multipurpose Push Button.webp
+    📄 02_Stopper Stations.webp
+    📄 03_Universal Stopper.webp
+    📄 04_GF Fire Alarm Push Button.webp
+    📄 05_Low Profile Universal Stopper.webp
+    📄 06_Global ReSet.webp
+    📄 07_ReSet Call Points.webp
+    📄 08_Waterproof ReSet Call Point.webp
+    📄 09_Enviro Stopper.webp
+    📄 10_Indoor Push Buttons.webp
+    📄 11_Key Switches.webp
+    📄 12_Waterproof Push Buttons.webp
+    📄 13_Alert Point.webp
+    📄 14_Call Point Stopper.webp
+    📄 15_EnviroArmour.webp
+    📄 16_Euro Stopper.webp
+  📁 Enviro Stopper
+    📁 COLOUR & LABEL
+      📄 CB Blue custom label NON RETURNABLE.webp
+      📄 CG Green custom label NON RETURNABLE.webp
+      📄 CK Black custom label NON RETURNABLE.webp
+      📄 CR Red custom label NON RETURNABLE.webp
+      📄 CW White custom label NON RETURNABLE.webp
+      📄 CY Yellow Custom Label NON RETURNABLE.webp
+      📄 EG Green 'Emergency Exit' label.webp
+      📄 FR Red 'FIRE ALARM' label.webp
+      📄 NB Blue no label.webp
+      📄 NC Clear no label.webp
+      📄 NG Green no label.webp
+      📄 NK Black no label.webp
+      📄 NR Red no label.webp
+      📄 NW White no label.webp
+      📄 NY Yellow no label.webp
+    📁 COVER
+      📄 13 Dome cover.webp
+      📄 14 Low profile cover.webp
+    📁 HOOD_SOUNDER & WIRELESS
+      📄 00 No Label Hood.webp
+      📄 10 Label Hood without Sounder.webp
+      📄 20 Label Hood with Sounder.webp
+      📄 30 Label Hood with Sounder & Relay.webp
+    📁 LANGUAGE
+      📄 DE German.webp
+      📄 English.webp
+      📄 ES Spanish.webp
+      📄 FR French.webp
+      📄 NL Dutch.webp
+    📁 MOUNTING
+      📄 6 European Enclosed Back Box, 20mm Entry Point & Sealed Mounting Plate.webp
+      📄 7 European Enclosed Back Box, 20mm Entry Point & Open Mounting Plate.webp
+  📁 EnviroArmour
+    📁 MATERIAL
+      📄 S Fibreglass (Limited Stock).webp
+      📄 T Polycarbonate (Limited Stock).webp
+    📁 SIZE (INTERNAL)
+      📄 121005 274mm x 240mm x 124mm (Limited Stock).webp
+      📄 121006 291mm x 241mm x 129mm (Limited Stock).webp
+      📄 141007 331mm x 231mm x 159mm (Limited Stock).webp
+      📄 161608 366mm x 388mm x 181mm (Limited Stock).webp
+      📄 181408 462mm x 347mm x 179mm (Limited Stock).webp
+      📄 231609 565mm x 387mm x 211mm (Limited Stock).webp
+      📄 312312 762mm x 582mm x 276mm (Limited Stock).webp
+    📁 TYPE OF DOOR
+      📄 C Clear Door (Limited Stock).webp
+      📄 O Opaque Door (Limited Stock).webp
+  📁 Euro Stopper
+    📁 COLOUR & LABEL
+      📄 CB Blue custom label.webp
+      📄 CE Orange custom label.webp
+      📄 CG Green custom label.webp
+      📄 CK Black custom label.webp
+      📄 CR Red custom label.webp
+      📄 CW White custom label.webp
+      📄 CY Yellow custom label.webp
+      📄 NB Blue no label.webp
+      📄 NE Orange no label.webp
+      📄 NG Green no label.webp
+      📄 NK Black no label.webp
+      📄 NR Red no label.webp
+      📄 NW White no label.webp
+      📄 NY Yellow no label.webp
+    📁 MOUNTING
+      📄 0 Flush Mount.webp
+      📄 C Surface Mount 32mm Spacer.webp
+      📄 D Surface Mount 50mm Spacer.webp
+    📁 SOUNDER
+      📄 10 Label Hood without Sounder.webp
+      📄 20 Label Hood with Sounder.webp
+      📄 30 Label Hood with Sounder & Relay.webp
+  📁 G3 Multipurpose Push Button
+    📁 BUTTON TYPE
+      📄 2 Key-to-Reset.webp
+      📄 5 Momentary.webp
+      📄 9 Turn-to-Reset.webp
+    📁 COLOUR
+      📄 0 Red.webp
+      📄 1 Green.webp
+      📄 2 Yellow.webp
+      📄 3 white.webp
+      📄 4 Blue.webp
+      📄 5 Orange.webp
+    📁 COVER
+      📄 0 Contact Sales for More Options.png
+      📄 0 No Cover.webp
+      📄 2 Shield.webp
+    📁 LANGUAGE
+      📄 EN English.webp
+      📄 ES Spanish.webp
+      📄 FR French.webp
+      📄 ZL Custom.webp
+    📁 MODEL
+      📄 A No camera.webp
+      📄 C With camera (includes back box).webp
+    📁 TEXT
+      📄 AB ABORT.webp
+      📄 EM EMERGENCY.webp
+      📄 ES EMERGENCY STOP.webp
+      📄 EV EVACUATION.webp
+      📄 EX EMERGENCY EXIT.webp
+      📄 HV HVAC SHUT-DOWN.webp
+      📄 LD LOCKDOWN.webp
+      📄 NT NO TEXT.webp
+      📄 PL POLICE.webp
+      📄 PO EMERGENCY POWER OFF.webp
+      📄 PS FUEL PUMP SHUT-DOWN.webp
+      📄 PX PUSH TO EXIT.webp
+      📄 RM Running Man symbol.webp
+      📄 XT EXIT.webp
+      📄 ZA Custom text.webp
+  📁 GF Fire Alarm Push Button
+    📁 COVER
+      📄 0 Contact Sales for More Options.png
+      📄 0 No Cover.webp
+      📄 2 Shield.webp
+    📁 LANGUAGE
+      📄 EN English.webp
+      📄 ES Spanish.webp
+      📄 FR French.webp
+    📁 MODEL
+      📄 A No Camera.webp
+      📄 C With camera (includes back box).webp
+    📁 TEXT
+      📄 FR FIRE.webp
+      📄 HF FireHouseFlame Symbol.webp
+  📁 Global ReSet
+    📁 COLOUR
+      📄 0 red.webp
+      📄 1 green.webp
+      📄 2 yellow.webp
+      📄 3 white.webp
+      📄 4 blue.webp
+    📁 COVER
+      📄 01 no cover.webp
+      📄 21 shield.webp
+    📁 LANGUAGE
+      📄 EN English.webp
+      📄 ES Spanish.webp
+      📄 FR French.webp
+      📄 ZL NON-RETURNABLE other language.webp
+    📁 TEXT
+      📄 AB ABORT.webp
+      📄 EM EMERGENCY.webp
+      📄 ES EMERGENCY STOP.webp
+      📄 EV EVACUATION.webp
+      📄 EX EMERGENCY EXIT.webp
+      📄 HV HVAC SHUT-DOWN.webp
+      📄 LD LOCKDOWN.webp
+      📄 NT NO TEXT.webp
+      📄 PO EMERGENCY POWER OFF.webp
+      📄 PS FUEL PUMP SHUT-DOWN.webp
+      📄 PX PUSH TO EXIT.webp
+      📄 RM Running Man Logo.webp
+      📄 XT EXIT.webp
+      📄 ZA NON-RETURNABLE custom text.webp
   📁 icons
     📄 sound.webp
     📄 weather.webp
   📁 Indoor Push Buttons
     📁 BUTTON COLOUR
-      📄 #B Blue Button.webp
-      📄 #E Orange Button.webp
-      📄 #G Green Button.webp
-      📄 #R Red Button.webp
-      📄 #W White Button.webp
-      📄 #Y Yellow Button.webp
       📄 B-Blue-Button.webp
       📄 E-Orange-Button.webp
       📄 G-Green-Button.webp
@@ -41,12 +237,6 @@
       📄 W-White-Button.webp
       📄 Y-Yellow-Button.webp
     📁 COLOUR
-      📄 #1 Red (Dual Mount).webp
-      📄 #3 Green (Dual Mount).webp
-      📄 #5 Yellow (Dual Mount).webp
-      📄 #7 White (Dual Mount).webp
-      📄 #9 Blue (Dual Mount).webp
-      📄 #E Orange (Dual Mount).webp
       📄 1-Red-(Dual-Mount).webp
       📄 3-Green-(Dual-Mount).webp
       📄 5-Yellow-(Dual-Mount).webp
@@ -139,30 +329,17 @@
         📄 SS3-5Y60-CL.webp
         📄 SS3-5Y60.webp
     📁 ELECTRICAL ARRANGEMENTS
-      📄 #0 Single Pole Changeover.webp
-      📄 #4 Multi-Functional Signal (SPC & DPC).webp
       📄 0-Single-Pole-Changeover.webp
       📄 4-Multi-Functional-Signal-(SPC-&-DPC).webp
     📁 LABEL
-      📄 # Self-Assemble Label Kit.webp
-      📄 #CL Custom Label.webp
       📄 CL-Custom-Label.webp
       📄 Self-Assemble-Label-Kit.webp
     📁 PUSH BUTTON TYPE
-      📄 #0 Key-to-Reset.webp
-      📄 #1 Momentary.webp
-      📄 #6 Pneumatic EXTENDED LEAD TIMES.webp
       📄 0-Key-to-Reset.webp
       📄 1-Momentary.webp
       📄 6-Pneumatic-EXTENDED-LEAD-TIMES.webp
   📁 Key Switches
     📁 COLOUR & MOUNTING
-      📄 #10 Red (Dual Mount).webp
-      📄 #30 Green(Dual Mount).webp
-      📄 #50 Yellow (Dual Mount).webp
-      📄 #70 White (Dual Mount).webp
-      📄 #90 Blue (Dual Mount).webp
-      📄 #E0 Orange (Dual Mount).webp
       📄 10-Red (Dual-Mount).webp
       📄 30-Green(Dual-Mount).webp
       📄 50-Yellow-(Dual-Mount).webp
@@ -261,37 +438,54 @@
         📄 SS3-5053-CL.webp
         📄 SS3-5053.webp
     📁 ELECTRICAL ARRANGEMENT
-      📄 #0 Single Pole Changeover.webp
-      📄 #1 Double Pole Normally Open.webp
-      📄 #2 Double Pole Normally Closed.webp
-      📄 #3 Position Key Switch Arrangement.webp
       📄 0-Single-Pole-Changeover.webp
       📄 1-Double-Pole-Normally-Open.webp
       📄 2-Double-Pole-Normally-Closed.webp
       📄 3-Position-Key-Switch-Arrangement.webp
     📁 LABEL
-      📄 # Self-Assemble Label Kit.webp
-      📄 #CL Custom Label.webp
       📄 CL-Custom-Label.webp
       📄 Self-Assemble-Label-Kit.webp
     📁 SWITCH TYPE
-      📄 #2 Switch Type.webp
-      📄 #3 Switch Type.webp
-      📄 #4 Switch Type.webp
-      📄 #5 Switch Type.webp
       📄 2-Switch-Type.webp
       📄 3-Switch-Type.webp
       📄 4-Switch-Type.webp
       📄 5-Switch-Type.webp
   📄 logo.svg
+  📁 Low Profile Universal Stopper
+    📁 COLOUR & LABEL
+      📄 CB Blue custom label - NON RETURNABLE.webp
+      📄 CG Green custom label - NON RETURNABLE.webp
+      📄 CR Red custom label - NON RETURNABLE.webp
+      📄 CW White custom label - NON RETURNABLE.webp
+      📄 CY Yellow custom label - NON RETURNABLE.webp
+      📄 EG Green 'Emergency Exit' label.webp
+      📄 FR Red 'Fire Alarm' label.webp
+      📄 NB Blue no label.webp
+      📄 NC Clear no label.webp
+      📄 NG Green no label.webp
+      📄 NR Red no label.webp
+      📄 NW White no label.webp
+      📄 NY Yellow no label.webp
+    📁 COVER
+      📄 14 Low profile cover.webp
+    📁 HOUSING SHELL
+      📄 00 No Label Hood.webp
+      📄 10 Label Hood without Sounder.webp
+      📄 20 Label Hood with Sounder EXTENDED LEAD TIMES.webp
+      📄 30 Label Hood with Sounder and Relay Cable EXTENDED LEAD TIMES.webp
+    📁 LANGUAGE
+      📄 DE German.webp
+      📄 English.webp
+      📄 ES Spanish.webp
+      📄 FR French.webp
+      📄 NL Dutch.webp
+    📁 MOUNTING
+      📄 0 Flush Mount Open Backed.webp
+      📄 1 Surface Mount - ClearOpen Backed Spacer (Dual Mount).webp
+      📄 6 European Enclosed Back Box, 20mm Thread Point & Sealed Mounting Plate.webp
+      📄 7 European Enclosed Back Box, 20mm Thread Point & Open Mounting Plate.webp
   📁 ReSet Call Points
     📁 COLOUR
-      📄 #B Blue.webp
-      📄 #G Green.webp
-      📄 #O Orange.webp
-      📄 #R Red.webp
-      📄 #W White.webp
-      📄 #Y Yellow.webp
       📄 B-Blue.webp
       📄 G-Green.webp
       📄 O-Orange.webp
@@ -378,45 +572,21 @@
         📄 RP-YS2-11-CL.webp
         📄 RP-YS2-11.webp
     📁 ELECTRICAL ARRANGEMENT
-      📄 #01 Conventional Model with 470680 Ω Resistor Value, Series 01.webp
-      📄 #02 Single Pole Changeover, Series 02.webp
-      📄 #05 05 Sav-wire (2-wire) 470680 Ω Resistor Value & Diode, Series 05.webp
-      📄 #11 11 Double Pole Changeover, Series 11.webp
       📄 01-Conventional-Model-with-470680_Resistor-Value, Series 01.webp
       📄 02-Single-Pole-Changeover, Series 02.webp
       📄 05-05-Sav-wire (2-wire) 470680_Resistor Value_Diode, Series 05.webp
       📄 11-11-Double-Pole-Changeover, Series 11.webp
     📁 LABEL
-      📄 # 'House Flame' Logo.webp
-      📄 # 'Running Man' Logo.webp
-      📄 # Self-Assemble Label Kit.webp
-      📄 #CL Custom Label.webp
       📄 CL-Custom-Label.webp
       📄 House-Flame-Logo.webp
       📄 Running-Man-Logo.webp
       📄 Self-Assemble-Label-Kit.webp
     📁 MOUNTING
-      📄 #D2 Dual Mount (wall plate & back box) Previously 'S'.webp
-      📄 #F2 Flush Mounted - wall plate Previously 'F'.webp
-      📄 #S2 Surface Mounted - back box Previously 'S1'.webp
       📄 D2-Dual-Mount-(wall-plate-back-box)-Previously-S.webp
       📄 F2-Flush-Mounted-wall-plate-Previously-F.webp
       📄 S2-Surface-Mounted-back-box-Previously-S1.webp
   📁 Stopper Stations
     📁 ACTIVATION
-      📄 #0 Key-to-Reset.webp
-      📄 #1 Turn-to-Reset.webp
-      📄 #2 Key-to-Reset Illuminates green, red or white..webp
-      📄 #3 Key-to-Activate.webp
-      📄 #4 Momentary.webp
-      📄 #5 Momentary Illuminates green, red or white..webp
-      📄 #6 Blue Illuminated EXTENDED LEAD TIMES.webp
-      📄 #6 Red Illuminated EXTENDED LEAD TIMES.webp
-      📄 #7 Weather Resistant Blue Illuminated EXTENDED LEAD TIMES.webp
-      📄 #7 Weather Resistant Green Illuminated EXTENDED LEAD TIMES.webp
-      📄 #7 Weather Resistant Momentary Illuminated Red EXTENDED LEAD TIMES.webp
-      📄 #8 Pneumatic Illuminates green, red or white. NOT UL LISTED.webp
-      📄 #9 Turn-to-Reset Illuminates green, red or white. EXTENDED LEAD TIMES.webp
       📄 0 Key-to-Reset.webp
       📄 1 Turn-to-Reset.webp
       📄 2 Key-to-Reset Illuminates green, red or white.webp
@@ -432,12 +602,6 @@
       📄 8 Pneumatic Illuminates green, red or white. NOT UL LISTED.webp
       📄 9 Turn-to-Reset Illuminates green, red or white. EXTENDED LEAD TIMES.webp
     📁 COLOUR
-      📄 #0 Red.webp
-      📄 #1 Green.webp
-      📄 #2 Yellow.webp
-      📄 #3 White.webp
-      📄 #4 Blue.webp
-      📄 #5 Orange.webp
       📄 0-Red.webp
       📄 1-Green.webp
       📄 2-Yellow.webp
@@ -3127,26 +3291,10 @@
         📄 SS2209ZA-FR&KIT-71100A-Y.webp
         📄 SS2209ZA-FR.webp
     📁 COVER
-      📄 #0 Contact Sales for More Options.png
-      📄 #0 No Cover.webp
-      📄 #2 Shield.webp
       📄 0-Contact-Sales.png
       📄 0-No-Cover.webp
       📄 2-Shield.webp
     📁 INSTALLATION OPTIONS
-      📄 # No additional mounting accessories are required.webp
-      📄 #& KIT-71100A-B Blue Back Box for Surface Mounting.webp
-      📄 #&KIT-71100A-E Orange Back Box for Surface Mounting.webp
-      📄 #&KIT-71100A-G Green Back Box for Surface Mounting.webp
-      📄 #&KIT-71100A-R Red Back Box for Surface Mounting.webp
-      📄 #&KIT-71100A-W White Back Box for Surface Mounting.webp
-      📄 #&KIT-71100A-Y Yellow Back Box for Surface Mounting.webp
-      📄 #&KIT-71101B-B Blue Back Box & Spacer Kit for Deep Surface Mounting.webp
-      📄 #&KIT-71101B-E Orange Back Box & Spacer Kit for Deep Surface Mounting.webp
-      📄 #&KIT-71101B-G Green Back Box & Spacer Kit for Deep Surface Mounting.webp
-      📄 #&KIT-71101B-R Red Back Box & Spacer Kit for Deep Mounting.webp
-      📄 #&KIT-71101B-W White Back Box & Spacer Kit for Deep Surface Mounting.webp
-      📄 #&KIT-71101B-Y Yellow Back Box & Spacer Kit for Deep Surface Mounting.webp
       📄 KIT-71100A-B Blue Back Box for Surface Mounting.webp
       📄 KIT-71100A-E Orange Back Box for Surface Mounting.webp
       📄 KIT-71100A-G Green Back Box for Surface Mounting.webp
@@ -3161,28 +3309,11 @@
       📄 KIT-71101B-Y Yellow Back Box & Spacer Kit for Deep Surface Mounting.webp
       📄 No additional mounting.webp
     📁 LANGUAGE
-      📄 #EN English.webp
-      📄 #ES Spanish.webp
-      📄 #FR French.webp
-      📄 #ZL NON-RETURNABLE other language.webp
       📄 EN-English.webp
       📄 ES-Spanish.webp
       📄 FR-French.webp
       📄 ZL-NON-RETURNABLE.webp
     📁 TEXT
-      📄 #AB ABORT.webp
-      📄 #EM EMERGENCY.webp
-      📄 #ES EMERGENCY STOP.webp
-      📄 #EV EVACUATION.webp
-      📄 #EX EMERGENCY EXIT.webp
-      📄 #HV HVAC SHUT-DOWN.webp
-      📄 #LD LOCKDOWN.webp
-      📄 #NT NO TEXT, blank button andor cover.webp
-      📄 #PO EMERGENCY POWER OFF.webp
-      📄 #PS FUEL PUMP SHUT-DOWN.webp
-      📄 #PX PUSH TO EXIT.webp
-      📄 #XT EXIT.webp
-      📄 #ZA NON-RETURNABLE custom text.webp
       📄 AB-ABORT.webp
       📄 EM-EMERGENCY.webp
       📄 ES-EMERGENCY STOP.webp
@@ -3196,14 +3327,44 @@
       📄 PX-PUSH-TO-EXIT.webp
       📄 XT-EXIT.webp
       📄 ZA-NON-RETURNABLE.webp
+  📁 Universal Stopper
+    📁 COLOUR & LABEL
+      📄 CB Blue custom label NON RETURNABLE.webp
+      📄 CG Green custom label NON RETURNABLE.webp
+      📄 CK Black custom label NON RETURNABLE.webp
+      📄 CR Red custom label NON RETURNABLE.webp
+      📄 CW White custom label NON RETURNABLE.webp
+      📄 CY Yellow Custom Label NON RETURNABLE.webp
+      📄 EG Green 'Emergency Exit' label.webp
+      📄 FR Red 'FIRE ALARM' label.webp
+      📄 NB Blue no label.webp
+      📄 NC Clear no label.webp
+      📄 NG Green no label.webp
+      📄 NK Black no label.webp
+      📄 NR Red no label.webp
+      📄 NW White no label.webp
+      📄 NY Yellow no label.webp
+    📁 COVER
+      📄 13 Dome cover.webp
+      📄 14 Low profile cover.webp
+    📁 HOOD & SOUNDER
+      📄 00 No Label Hood.webp
+      📄 10 Label Hood without Sounder.webp
+      📄 20 Label Hood with Sounder.webp
+      📄 30 Label Hood with Sounder & Relay.webp
+    📁 LANGUAGE
+      📄 DE German.webp
+      📄 English.webp
+      📄 ES Spanish.webp
+      📄 FR French.webp
+      📄 NL Dutch.webp
+    📁 MOUNTING
+      📄 0 Flush Mount Open Backed.webp
+      📄 1 Surface Mount - ClearOpen Backed Spacer (Dual Mount).webp
+      📄 6 European Enclosed Back Box, 20mm Thread Point & Sealed Mounting Plate.webp
+      📄 7 European Enclosed Back Box, 20mm Thread Point & Open Mounting Plate.webp
   📁 Waterproof Push Buttons
     📁 BUTTON COLOUR
-      📄 #B Blue Button.webp
-      📄 #E Orange Button.webp
-      📄 #G Green Button.webp
-      📄 #R Red Button.webp
-      📄 #W White Button.webp
-      📄 #Y Yellow Button.webp
       📄 B-Blue-Button.webp
       📄 E-Orange-Button.webp
       📄 G-Green-Button.webp
@@ -3211,8 +3372,6 @@
       📄 W-White-Button.webp
       📄 Y-Yellow-Button.webp
     📁 BUTTON TYPE
-      📄 #0 Latching (Key-to-Reset).webp
-      📄 #1 Momentary.webp
       📄 0-Latching-(Key-to-Reset).webp
       📄 1-Momentary.webp
     📁 COMPLETED DEVICE
@@ -3277,15 +3436,8 @@
         📄 WSS3-5Y14-CL.webp
         📄 WSS3-5Y14.webp
     📁 ELECTRICAL ARRANGEMENTS
-      📄 #4 Multi-Functional Signal (SPC & DPC).webp
       📄 4-Multi-Functional-Signal-(SPC-DPC).webp
     📁 HOUSING COLOUR & MOUNTING
-      📄 #1 Red (Surface Mount).webp
-      📄 #3 Green (Surface Mount).webp
-      📄 #5 Yellow (Surface Mount).webp
-      📄 #7 White (Surface Mount).webp
-      📄 #9 Blue (Surface Mount).webp
-      📄 #E Orange (Surface Mount).webp
       📄 1-Red (Surface Mount).webp
       📄 3-Green (Surface Mount).webp
       📄 5-Yellow (Surface Mount).webp
@@ -3293,18 +3445,10 @@
       📄 9-Blue (Surface Mount).webp
       📄 E-Orange (Surface Mount).webp
     📁 LABEL
-      📄 # Self-Assemble Label Kit.webp
-      📄 #CL Custom Label.webp
       📄 CL Custom Label.webp
       📄 Self-Assemble Label Kit.webp
   📁 Waterproof ReSet Call Point
     📁 COLOUR
-      📄 #B Blue.webp
-      📄 #G Green.webp
-      📄 #O Orange.webp
-      📄 #R Red.webp
-      📄 #W White.webp
-      📄 #Y Yellow.webp
       📄 B-Blue.webp
       📄 G-Green.webp
       📄 O-Orange.webp
@@ -3341,17 +3485,10 @@
         📄 WRP2-Y-11-CL.webp
         📄 WRP2-Y-11.webp
     📁 ELECTRICAL ARRANGEMENT
-      📄 #01 Conventional Fire Model (EN54-11 approved).webp
-      📄 #02 Single Pole Changeover.webp
-      📄 #11 Double Pole Changeover.webp
       📄 01-Conventional-Fire-Model-(EN54-11-approved).webp
       📄 02-Single-Pole-Changeover.webp
       📄 11-Double-Pole-Changeover.webp
     📁 LABEL
-      📄 # 'House Flame' Logo.webp
-      📄 # 'Running Man' Logo.webp
-      📄 # Self-Assemble Label Kit.webp
-      📄 #CL Custom Label.webp
       📄 CL-Custom-Label.webp
       📄 House-Flame-Logo.webp
       📄 Running-Man-Logo.webp
@@ -3368,6 +3505,7 @@
     📄 ActionButtons.tsx
     📄 BuildItCalculator.tsx
     📄 CompletedDevicePreview.tsx
+    📄 ConfiguratorCard.tsx
     📄 CustomTextDisplay.tsx
     📄 CustomTextForm.tsx
     📄 Layout.tsx
@@ -3381,6 +3519,25 @@
     📄 Sidebar.tsx
     📄 StepSelector.tsx
   📁 data
+    📁 catalog
+      📄 alertPoint.ts
+      📄 callPointStopper.ts
+      📄 enviroArmour.ts
+      📄 enviroStopper.ts
+      📄 euroStopper.ts
+      📄 g3MultipurposePushButton.ts
+      📄 gfFireAlarmPushButton.ts
+      📄 globalReset.ts
+      📄 index.ts
+      📄 indoorPushButtons.ts
+      📄 keySwitches.ts
+      📄 lowProfileUniversalStopper.ts
+      📄 resetCallPoints.ts
+      📄 stopperStations.ts
+      📄 types.ts
+      📄 universalStopper.ts
+      📄 waterproofPushButtons.ts
+      📄 waterproofResetCallPoint.ts
     📁 models
       📄 index.ts
       📄 indoorPushButtons.ts
@@ -3396,8 +3553,11 @@
   📄 index.css
   📄 main.tsx
   📁 pages
+    📄 ConfiguratorPage.tsx
     📄 HomePage.tsx
+    📄 InDevelopmentPage.tsx
     📄 MyListPage.tsx
+    📄 NotFoundPage.tsx
   📁 rules
     📄 constraintEngine.ts
     📄 index.ts
@@ -3421,4 +3581,5 @@
 📄 tsconfig.app.json
 📄 tsconfig.json
 📄 tsconfig.node.json
+📄 vercel.json
 📄 vite.config.ts

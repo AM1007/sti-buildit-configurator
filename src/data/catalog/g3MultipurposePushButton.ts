@@ -6,6 +6,6 @@ export const g3MultipurposePushButtonMeta: ConfiguratorMeta = {
   name: "G3 Multipurpose Push Button",
   description: "Monitor And Prevent Unwanted Activations",
   imagePath: "/Configurators/01_G3 Multipurpose Push Button.webp",
-  colours: ["yellow", "red", "green", "blue"],
-  isImplemented: false,
+  colours: ["yellow", "red", "white", "green", "blue", "orange"],
+  isImplemented: true,
 };

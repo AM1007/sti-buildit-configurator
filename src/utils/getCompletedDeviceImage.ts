@@ -27,6 +27,25 @@ const MODEL_CONFIG: Record<string, {
   colourStep: string;
   clStep?: string;
 }> = {
+  "low-profile-universal-stopper": {
+    basePath: "/Low Profile Universal Stopper/COMPLETED DEVICE",
+    colourMap: {
+      "FR": "RED",
+      "NR": "RED",
+      "CR": "RED",
+      "EG": "GREEN",
+      "NG": "GREEN",
+      "CG": "GREEN",
+      "NC": "CLEAR",
+      "NB": "BLUE",
+      "CB": "BLUE",
+      "NW": "WHITE",
+      "CW": "WHITE",
+      "NY": "YELLOW",
+      "CY": "YELLOW",
+    },
+    colourStep: "colourLabel",
+  },
   "stopper-stations": {
     basePath: "/Stopper Stations/COMPLETED DEVICE",
     colourMap: STOPPER_COLOUR_TO_FOLDER,
@@ -96,6 +115,47 @@ const MODEL_CONFIG: Record<string, {
     },
     colourStep: "colour",
     clStep: "label",
+  },
+  "g3-multipurpose-push-button": {
+    basePath: "/G3 Multipurpose Push Button/COMPLETED DEVICE",
+    colourMap: {
+      "0": "RED",
+      "1": "GREEN",
+      "2": "YELLOW",
+      "3": "WHITE",
+      "4": "BLUE",
+      "5": "ORANGE",
+    },
+    colourStep: "colour",
+  },
+  "universal-stopper": {
+    basePath: "/Universal Stopper/COMPLETED DEVICE",
+    colourMap: {
+      "FR": "RED",
+      "NR": "RED",
+      "CR": "RED",
+      "EG": "GREEN",
+      "NG": "GREEN",
+      "CG": "GREEN",
+      "NC": "CLEAR",
+      "NK": "BLACK",
+      "CK": "BLACK",
+      "NB": "BLUE",
+      "CB": "BLUE",
+      "NW": "WHITE",
+      "CW": "WHITE",
+      "NY": "YELLOW",
+      "CY": "YELLOW",
+    },
+    colourStep: "colourLabel",
+  },
+  "gf-fire-alarm-push-button": {
+    basePath: "/GF Fire Alarm Push Button/COMPLETED DEVICE",
+    colourMap: {
+      "A": "RED",
+      "C": "RED",
+    },
+    colourStep: "model",
   },
 };
 

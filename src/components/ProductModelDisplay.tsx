@@ -1,14 +1,16 @@
-import type { ProductModel, ModelDefinition, StepId } from "../types";
+import type { ProductModel, ModelDefinition, StepId, Configuration } from "../types";
 
 interface ProductModelDisplayProps {
   model: ModelDefinition;
   productModel: ProductModel;
+  config: Configuration;
   onEditStep: (stepId: StepId) => void;
 }
 
 export function ProductModelDisplay({
   model,
   productModel,
+  config,
   onEditStep,
 }: ProductModelDisplayProps) {
   const { parts, baseCode } = productModel;
@@ -36,7 +38,16 @@ export function ProductModelDisplay({
             return null;
           }
 
-          const showSeparator = separator === "-" && index > 0;
+          const isUniversalStopperEnglish =
+            (model.id === "universal-stopper" || model.id === "low-profile-universal-stopper") &&
+            stepId === "language" &&
+            config.language === "EN";
+
+          if (isUniversalStopperEnglish) {
+            return null;
+          }
+
+          const showSeparator = separator === "-" && index > 0 && !isUniversalStopperEnglish;
 
           return (
             <div key={stepId} className="contents">

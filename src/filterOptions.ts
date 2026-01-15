@@ -15,6 +15,8 @@ import {
   WATERPROOF_PUSH_BUTTONS_CONSTRAINTS,
   RESET_CALL_POINTS_CONSTRAINTS,
   WATERPROOF_RESET_CALL_POINT_CONSTRAINTS,
+  UNIVERSAL_STOPPER_CONSTRAINTS,
+  LOW_PROFILE_UNIVERSAL_STOPPER_CONSTRAINTS,
   type IConstraintEngine,
   type ConstraintResult,
 } from "./rules";
@@ -27,6 +29,11 @@ function getConstraintEngine(modelId: string): IConstraintEngine | null {
   }
   
   switch (modelId) {
+    case "low-profile-universal-stopper": {
+      const engine = createConstraintEngine(LOW_PROFILE_UNIVERSAL_STOPPER_CONSTRAINTS);
+      engineCache.set(modelId, engine);
+      return engine;
+    }
     case "stopper-stations": {
       const engine = createConstraintEngine(STOPPER_STATIONS_CONSTRAINTS);
       engineCache.set(modelId, engine);
@@ -54,6 +61,11 @@ function getConstraintEngine(modelId: string): IConstraintEngine | null {
     }
     case "waterproof-reset-call-point": {
       const engine = createConstraintEngine(WATERPROOF_RESET_CALL_POINT_CONSTRAINTS);
+      engineCache.set(modelId, engine);
+      return engine;
+    }
+    case "universal-stopper": {
+      const engine = createConstraintEngine(UNIVERSAL_STOPPER_CONSTRAINTS);
       engineCache.set(modelId, engine);
       return engine;
     }

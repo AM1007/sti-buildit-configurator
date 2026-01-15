@@ -1,6 +1,13 @@
 import type { ModelId, ModelDefinition, Configuration, CustomTextData, CustomTextConfig, CustomTextVariant, StepId } from "../types";
 
 const MODEL_CUSTOM_TEXT_CONFIG: Partial<Record<ModelId, CustomTextConfig>> = {
+  "low-profile-universal-stopper": {
+    stepId: "colourLabel",
+    optionId: "C",
+    variant: "multiline-fixed",
+    maxLength: 30,
+    line2Required: false,
+  },
   "stopper-stations": {
     stepId: "text",
     optionId: "ZA",
@@ -43,6 +50,20 @@ const MODEL_CUSTOM_TEXT_CONFIG: Partial<Record<ModelId, CustomTextConfig>> = {
     maxLength: 10,
     line2Required: false,
   },
+  "g3-multipurpose-push-button": {
+    stepId: "text",
+    optionId: "ZA",
+    variant: "multiline-selectable",
+    maxLength: { oneLine: 13, twoLines: 20 },
+    line2Required: false,
+  },
+  "universal-stopper": {
+    stepId: "colourLabel",
+    optionId: "C",
+    variant: "multiline-fixed",
+    maxLength: 30,
+    line2Required: false,
+  },
 };
 
 export function getCustomTextConfig(modelId: ModelId): CustomTextConfig | null {
@@ -69,6 +90,12 @@ export function isCustomTextOptionSelected(modelId: ModelId, configuration: Conf
   if (!config) return false;
   
   const selectedOption = configuration[config.stepId];
+  if (!selectedOption) return false;
+  
+  if (modelId === "universal-stopper" || modelId === "low-profile-universal-stopper") {
+    return selectedOption.startsWith("C") && selectedOption !== "NC";
+  }
+  
   return selectedOption === config.optionId;
 }
 
@@ -84,20 +111,10 @@ export function isAllStepsCompleted(
   return true;
 }
 
-/**
- * Checks if ZL (non-returnable language) is selected.
- * ZL means custom language - no preview available, but no custom text form needed
- * unless ZA/CL is also selected.
- * 
- * When ZL is selected WITHOUT ZA/CL:
- * - Show placeholder instead of preview image
- * - Show action buttons immediately (no form required)
- */
 export function isNonReturnableLanguageSelected(
   modelId: ModelId,
   configuration: Configuration
 ): boolean {
-  // Only stopper-stations has ZL language option
   if (modelId !== "stopper-stations") {
     return false;
   }

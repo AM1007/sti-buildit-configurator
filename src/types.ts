@@ -4,7 +4,11 @@ export type ModelId =
   | "key-switches"
   | "waterproof-push-buttons"
   | "reset-call-points"
-  | "waterproof-reset-call-point";
+  | "waterproof-reset-call-point"
+  | "g3-multipurpose-push-button"
+  | "universal-stopper"
+  | "gf-fire-alarm-push-button"
+  | "low-profile-universal-stopper";
 
 export type StepId = string;
 export type OptionId = string;
@@ -18,6 +22,10 @@ export const MODEL_NAMES: Record<ModelId, string> = {
   "waterproof-push-buttons": "Waterproof Push Buttons",
   "reset-call-points": "ReSet Call Points",
   "waterproof-reset-call-point": "Waterproof ReSet Call Point",
+  "g3-multipurpose-push-button": "G3 Multipurpose Push Button",
+  "universal-stopper": "Universal Stopper",
+  "gf-fire-alarm-push-button": "GF Fire Alarm Push Button",
+  "low-profile-universal-stopper": "Low Profile Universal Stopper",
 };
 
 export interface Option {

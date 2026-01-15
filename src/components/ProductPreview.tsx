@@ -14,6 +14,15 @@ export function ProductPreview({ model, config, onEditStep }: ProductPreviewProp
         const step = model.steps.find((s) => s.id === stepId);
         if (!step) return null;
 
+        const isUniversalStopperEnglish =
+          (model.id === "universal-stopper" || model.id === "low-profile-universal-stopper") &&
+          stepId === "language" &&
+          config.language === "EN";
+
+        if (isUniversalStopperEnglish) {
+          return null;
+        }
+
         const selectedOptionId = config[stepId];
         const selectedOption = step.options.find((o) => o.id === selectedOptionId);
 
