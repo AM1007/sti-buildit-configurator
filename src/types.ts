@@ -8,12 +8,14 @@ export type ModelId =
   | "g3-multipurpose-push-button"
   | "universal-stopper"
   | "gf-fire-alarm-push-button"
-  | "low-profile-universal-stopper";
-
+  | "low-profile-universal-stopper"
+  | "global-reset"
+  | "enviro-stopper"
+  | "alert-point";
 export type StepId = string;
 export type OptionId = string;
 
-export type CustomTextVariant = "multiline-selectable" | "singleline" | "multiline-fixed";
+export type CustomTextVariant = "multiline-selectable" | "singleline" | "multiline-fixed" | "dual-block-three-line";
 
 export const MODEL_NAMES: Record<ModelId, string> = {
   "stopper-stations": "Stopper® Stations",
@@ -26,6 +28,9 @@ export const MODEL_NAMES: Record<ModelId, string> = {
   "universal-stopper": "Universal Stopper",
   "gf-fire-alarm-push-button": "GF Fire Alarm Push Button",
   "low-profile-universal-stopper": "Low Profile Universal Stopper",
+  "global-reset": "Global ReSet",
+  "enviro-stopper": "Enviro Stopper",
+  "alert-point": "Alert Point",
 };
 
 export interface Option {
@@ -63,9 +68,14 @@ export interface ModelDefinition {
 }
 
 export interface CustomTextData {
-  lineCount: 1 | 2;
+  lineCount: 1 | 2 | 3;
   line1: string;
   line2: string;
+  line3?: string;
+  coverLineCount?: 1 | 2 | 3;
+  coverLine1?: string;
+  coverLine2?: string;
+  coverLine3?: string;
   submitted: boolean;
 }
 
@@ -125,6 +135,11 @@ export function createEmptyCustomText(): CustomTextData {
     lineCount: 2,
     line1: "",
     line2: "",
+    line3: "",
+    coverLineCount: 2,
+    coverLine1: "",
+    coverLine2: "",
+    coverLine3: "",
     submitted: false,
   };
 }

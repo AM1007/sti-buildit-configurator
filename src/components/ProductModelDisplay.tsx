@@ -39,11 +39,20 @@ export function ProductModelDisplay({
           }
 
           const isUniversalStopperEnglish =
-            (model.id === "universal-stopper" || model.id === "low-profile-universal-stopper") &&
+            (model.id === "universal-stopper" || model.id === "low-profile-universal-stopper" || model.id === "enviro-stopper") &&
             stepId === "language" &&
             config.language === "EN";
 
           if (isUniversalStopperEnglish) {
+            return null;
+          }
+
+          const isGlobalResetShield =
+            model.id === "global-reset" &&
+            stepId === "colour" &&
+            config.cover === "21";
+
+          if (isGlobalResetShield) {
             return null;
           }
 

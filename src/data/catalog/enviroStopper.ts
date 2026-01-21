@@ -3,10 +3,10 @@ import type { ConfiguratorMeta } from "./types";
 export const enviroStopperMeta: ConfiguratorMeta = {
   id: "enviro-stopper",
   slug: "enviro-stopper",
-  name: "Enviro Stopper ®",
-  description: "IP66/56 Certified Cover for Use in Harsh Environments",
+  name: "Enviro Stopper®",
+  description: "IP Rated Cover Offering Robust Protection with European Mounting",
   imagePath: "/Configurators/09_Enviro Stopper.webp",
   features: ["weather", "sound"],
-  colours: ["red"],
-  isImplemented: false,
+  colours: ["clear", "yellow", "red", "white", "green", "blue"],
+  isImplemented: true,
 };

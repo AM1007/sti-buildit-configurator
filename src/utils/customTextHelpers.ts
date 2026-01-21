@@ -64,6 +64,27 @@ const MODEL_CUSTOM_TEXT_CONFIG: Partial<Record<ModelId, CustomTextConfig>> = {
     maxLength: 30,
     line2Required: false,
   },
+  "global-reset": {
+    stepId: "text",
+    optionId: "ZA",
+    variant: "dual-block-three-line",
+    maxLength: 20,
+    line2Required: false,
+  },
+  "enviro-stopper": {
+    stepId: "colourLabel",
+    optionId: "C",
+    variant: "multiline-fixed",
+    maxLength: 30,
+    line2Required: false,
+  },
+  "alert-point": {
+    stepId: "label",
+    optionId: "X",
+    variant: "multiline-fixed",
+    maxLength: 10,
+    line2Required: false,
+  },
 };
 
 export function getCustomTextConfig(modelId: ModelId): CustomTextConfig | null {
@@ -92,7 +113,7 @@ export function isCustomTextOptionSelected(modelId: ModelId, configuration: Conf
   const selectedOption = configuration[config.stepId];
   if (!selectedOption) return false;
   
-  if (modelId === "universal-stopper" || modelId === "low-profile-universal-stopper") {
+  if (modelId === "universal-stopper" || modelId === "low-profile-universal-stopper" || modelId === "enviro-stopper") {
     return selectedOption.startsWith("C") && selectedOption !== "NC";
   }
   
@@ -187,13 +208,15 @@ export function getMaxLength(modelId: ModelId, lineCount: 1 | 2): number {
   return lineCount === 1 ? config.maxLength.oneLine : config.maxLength.twoLines;
 }
 
-export function getEffectiveLineCount(variant: CustomTextVariant, selectedLineCount: 1 | 2): 1 | 2 {
+export function getEffectiveLineCount(variant: CustomTextVariant, selectedLineCount: 1 | 2 | 3): 1 | 2 | 3 {
   switch (variant) {
     case "singleline":
       return 1;
     case "multiline-fixed":
       return 2;
     case "multiline-selectable":
+      return selectedLineCount as 1 | 2;
+    case "dual-block-three-line":
       return selectedLineCount;
   }
 }
@@ -210,8 +233,40 @@ export function validateCustomText(
     return { valid: false, errors };
   }
   
+  if (config.variant === "dual-block-three-line") {
+    const maxLength = typeof config.maxLength === "number" ? config.maxLength : 20;
+    
+    if (!data.line1.trim()) {
+      errors.push("Label Line 1 is required");
+    }
+    if (data.line1.length > maxLength) {
+      errors.push(`Label Line 1 exceeds ${maxLength} characters`);
+    }
+    if (data.lineCount >= 2 && data.line2 && data.line2.length > maxLength) {
+      errors.push(`Label Line 2 exceeds ${maxLength} characters`);
+    }
+    if (data.lineCount >= 3 && data.line3 && data.line3.length > maxLength) {
+      errors.push(`Label Line 3 exceeds ${maxLength} characters`);
+    }
+    
+    if (!data.coverLine1?.trim()) {
+      errors.push("Cover Line 1 is required");
+    }
+    if (data.coverLine1 && data.coverLine1.length > maxLength) {
+      errors.push(`Cover Line 1 exceeds ${maxLength} characters`);
+    }
+    if (data.coverLineCount && data.coverLineCount >= 2 && data.coverLine2 && data.coverLine2.length > maxLength) {
+      errors.push(`Cover Line 2 exceeds ${maxLength} characters`);
+    }
+    if (data.coverLineCount && data.coverLineCount >= 3 && data.coverLine3 && data.coverLine3.length > maxLength) {
+      errors.push(`Cover Line 3 exceeds ${maxLength} characters`);
+    }
+    
+    return { valid: errors.length === 0, errors };
+  }
+  
   const effectiveLineCount = getEffectiveLineCount(config.variant, data.lineCount);
-  const maxLength = getMaxLength(modelId, effectiveLineCount);
+  const maxLength = getMaxLength(modelId, effectiveLineCount as 1 | 2);
 
   if (!data.line1.trim()) {
     errors.push("Line 1 is required");

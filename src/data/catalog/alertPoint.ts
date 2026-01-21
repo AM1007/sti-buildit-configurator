@@ -7,6 +7,6 @@ export const alertPointMeta: ConfiguratorMeta = {
   description: "Standalone Alarm Device Signals an Emergency",
   imagePath: "/Configurators/13_Alert Point.webp",
   features: ["sound"],
-  colours: ["red"],
-  isImplemented: false,
+  colours: ["red", "blue", "green", "white"],
+  isImplemented: true,
 };

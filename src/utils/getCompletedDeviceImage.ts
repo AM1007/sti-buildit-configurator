@@ -157,6 +157,48 @@ const MODEL_CONFIG: Record<string, {
     },
     colourStep: "model",
   },
+  "global-reset": {
+    basePath: "/Global ReSet/COMPLETED DEVICE",
+    colourMap: {
+      "0": "RED",
+      "1": "GREEN",
+      "2": "YELLOW",
+      "3": "WHITE",
+      "4": "BLUE",
+    },
+    colourStep: "colour",
+  },
+  "enviro-stopper": {
+    basePath: "/Enviro Stopper/COMPLETED DEVICE",
+    colourMap: {
+      "FR": "RED",
+      "NR": "RED",
+      "CR": "RED",
+      "EG": "GREEN",
+      "NG": "GREEN",
+      "CG": "GREEN",
+      "NK": "BLACK",
+      "CK": "BLACK",
+      "NC": "CLEAR",
+      "NB": "BLUE",
+      "CB": "BLUE",
+      "NW": "WHITE",
+      "CW": "WHITE",
+      "NY": "YELLOW",
+      "CY": "YELLOW",
+    },
+    colourStep: "colourLabel",
+  },
+  "alert-point": {
+    basePath: "/Alert Point/COMPLETED DEVICE",
+    colourMap: {
+      "R": "RED",
+      "B": "BLUE",
+      "G": "GREEN",
+      "W": "WHITE",
+    },
+    colourStep: "colour",
+  },
 };
 
 export function getCompletedDeviceImage({

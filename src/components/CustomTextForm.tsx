@@ -10,25 +10,54 @@ interface CustomTextFormProps {
 }
 
 export function CustomTextForm({ variant, maxLength, onSubmit, initialData }: CustomTextFormProps) {
-  const getInitialLineCount = (): 1 | 2 => {
+  const isDualBlock = variant === "dual-block-three-line";
+
+  const getInitialLineCount = (): 1 | 2 | 3 => {
     if (variant === "singleline") return 1;
     if (variant === "multiline-fixed") return 2;
+    if (variant === "dual-block-three-line") return initialData?.lineCount ?? 3;
     return initialData?.lineCount ?? 2;
   };
 
-  const [selectedLineCount, setSelectedLineCount] = useState<1 | 2>(getInitialLineCount());
+  const getInitialCoverLineCount = (): 1 | 2 | 3 => {
+    return initialData?.coverLineCount ?? 3;
+  };
+
+  const [selectedLineCount, setSelectedLineCount] = useState<1 | 2 | 3>(getInitialLineCount());
   const [line1, setLine1] = useState(initialData?.line1 ?? "");
   const [line2, setLine2] = useState(initialData?.line2 ?? "");
+  const [line3, setLine3] = useState(initialData?.line3 ?? "");
+
+  const [coverLineCount, setCoverLineCount] = useState<1 | 2 | 3>(getInitialCoverLineCount());
+  const [coverLine1, setCoverLine1] = useState(initialData?.coverLine1 ?? "");
+  const [coverLine2, setCoverLine2] = useState(initialData?.coverLine2 ?? "");
+  const [coverLine3, setCoverLine3] = useState(initialData?.coverLine3 ?? "");
+
   const [errors, setErrors] = useState<string[]>([]);
 
   const effectiveLineCount = getEffectiveLineCount(variant, selectedLineCount);
-  const showLineCountSelector = variant === "multiline-selectable";
-  const showLine2 = effectiveLineCount === 2;
+  const showLineCountSelector = variant === "multiline-selectable" || variant === "dual-block-three-line";
+  const showLine2 = effectiveLineCount >= 2;
+  const showLine3 = effectiveLineCount >= 3;
 
-  const handleLineCountChange = (value: 1 | 2) => {
+  const handleLineCountChange = (value: 1 | 2 | 3) => {
     setSelectedLineCount(value);
-    if (value === 1) {
+    if (value < 2) {
       setLine2("");
+      setLine3("");
+    } else if (value < 3) {
+      setLine3("");
+    }
+    setErrors([]);
+  };
+
+  const handleCoverLineCountChange = (value: 1 | 2 | 3) => {
+    setCoverLineCount(value);
+    if (value < 2) {
+      setCoverLine2("");
+      setCoverLine3("");
+    } else if (value < 3) {
+      setCoverLine3("");
     }
     setErrors([]);
   };
@@ -39,15 +68,37 @@ export function CustomTextForm({ variant, maxLength, onSubmit, initialData }: Cu
     const validationErrors: string[] = [];
 
     if (!line1.trim()) {
-      validationErrors.push("Line 1 is required");
+      validationErrors.push("Label Line 1 is required");
     }
 
     if (line1.length > maxLength) {
-      validationErrors.push(`Line 1 exceeds ${maxLength} characters`);
+      validationErrors.push(`Label Line 1 exceeds ${maxLength} characters`);
     }
 
     if (showLine2 && line2.length > maxLength) {
-      validationErrors.push(`Line 2 exceeds ${maxLength} characters`);
+      validationErrors.push(`Label Line 2 exceeds ${maxLength} characters`);
+    }
+
+    if (showLine3 && line3.length > maxLength) {
+      validationErrors.push(`Label Line 3 exceeds ${maxLength} characters`);
+    }
+
+    if (isDualBlock) {
+      if (!coverLine1.trim()) {
+        validationErrors.push("Cover Line 1 is required");
+      }
+
+      if (coverLine1.length > maxLength) {
+        validationErrors.push(`Cover Line 1 exceeds ${maxLength} characters`);
+      }
+
+      if (coverLineCount >= 2 && coverLine2.length > maxLength) {
+        validationErrors.push(`Cover Line 2 exceeds ${maxLength} characters`);
+      }
+
+      if (coverLineCount >= 3 && coverLine3.length > maxLength) {
+        validationErrors.push(`Cover Line 3 exceeds ${maxLength} characters`);
+      }
     }
 
     if (validationErrors.length > 0) {
@@ -56,11 +107,72 @@ export function CustomTextForm({ variant, maxLength, onSubmit, initialData }: Cu
     }
 
     onSubmit({
-      lineCount: effectiveLineCount,
+      lineCount: effectiveLineCount as 1 | 2 | 3,
       line1,
       line2: showLine2 ? line2 : "",
+      line3: showLine3 ? line3 : "",
+      coverLineCount: isDualBlock ? coverLineCount : undefined,
+      coverLine1: isDualBlock ? coverLine1 : undefined,
+      coverLine2: isDualBlock && coverLineCount >= 2 ? coverLine2 : undefined,
+      coverLine3: isDualBlock && coverLineCount >= 3 ? coverLine3 : undefined,
     });
   };
+
+  const renderLineCountSelector = (
+    name: string,
+    value: 1 | 2 | 3,
+    onChange: (val: 1 | 2 | 3) => void,
+    showThreeLine: boolean
+  ) => (
+    <div className="mb-3 flex items-center justify-center gap-3 lg:mb-4">
+      <label className="flex items-center justify-start gap-2 text-sm font-normal">
+        <input
+          type="radio"
+          name={name}
+          value={1}
+          checked={value === 1}
+          onChange={() => onChange(1)}
+          className="size-4 appearance-none rounded-full border border-solid border-gray-400 
+                     checked:border-[5px] checked:border-brand-600"
+        />
+        <span>1 Line</span>
+      </label>
+
+      <label className="flex items-center justify-start gap-2 text-sm font-normal">
+        <input
+          type="radio"
+          name={name}
+          value={2}
+          checked={value === 2}
+          onChange={() => onChange(2)}
+          className="size-4 appearance-none rounded-full border border-solid border-gray-400 
+                     checked:border-[5px] checked:border-brand-600"
+        />
+        <span>2 Line</span>
+      </label>
+
+      {showThreeLine && (
+        <label className="flex items-center justify-start gap-2 text-sm font-normal">
+          <input
+            type="radio"
+            name={name}
+            value={3}
+            checked={value === 3}
+            onChange={() => onChange(3)}
+            className="size-4 appearance-none rounded-full border border-solid border-gray-400 
+                       checked:border-[5px] checked:border-brand-600"
+          />
+          <span>3 Line</span>
+        </label>
+      )}
+    </div>
+  );
+
+  const inputClassName = `flex min-h-10 w-full items-center justify-start border border-solid 
+                          border-gray-300 bg-gray-100 px-3 py-1.5 text-sm font-normal 
+                          text-gray-800 placeholder:text-gray-500 
+                          hover:border-gray-500 focus:border-gray-500 focus:outline-none 
+                          lg:min-h-11 lg:py-2`;
 
   return (
     <div className="flex w-full justify-center">
@@ -71,39 +183,17 @@ export function CustomTextForm({ variant, maxLength, onSubmit, initialData }: Cu
 
         <form onSubmit={handleSubmit}>
           <div className="grid w-full grid-cols-1 gap-7">
+            {/* Label Block */}
             <div className="w-full">
               <p className="mb-4 text-center text-base font-bold lg:text-lg">
                 Label
               </p>
 
-              {showLineCountSelector && (
-                <div className="mb-3 flex items-center justify-center gap-3 lg:mb-4">
-                  <label className="flex items-center justify-start gap-2 text-sm font-normal">
-                    <input
-                      type="radio"
-                      name="lineCount"
-                      value={1}
-                      checked={selectedLineCount === 1}
-                      onChange={() => handleLineCountChange(1)}
-                      className="size-4 appearance-none rounded-full border border-solid border-gray-400 
-                                 checked:border-[5px] checked:border-brand-600"
-                    />
-                    <span>1 Line</span>
-                  </label>
-
-                  <label className="flex items-center justify-start gap-2 text-sm font-normal">
-                    <input
-                      type="radio"
-                      name="lineCount"
-                      value={2}
-                      checked={selectedLineCount === 2}
-                      onChange={() => handleLineCountChange(2)}
-                      className="size-4 appearance-none rounded-full border border-solid border-gray-400 
-                                 checked:border-[5px] checked:border-brand-600"
-                    />
-                    <span>2 Lines</span>
-                  </label>
-                </div>
+              {showLineCountSelector && renderLineCountSelector(
+                "lineCount",
+                selectedLineCount,
+                handleLineCountChange,
+                isDualBlock
               )}
 
               <div className="grid grid-cols-1 gap-3">
@@ -116,11 +206,7 @@ export function CustomTextForm({ variant, maxLength, onSubmit, initialData }: Cu
                     onChange={(e) => setLine1(e.target.value)}
                     maxLength={maxLength}
                     autoComplete="off"
-                    className="flex min-h-10 w-full items-center justify-start border border-solid 
-                               border-gray-300 bg-gray-100 px-3 py-1.5 text-sm font-normal 
-                               text-gray-800 placeholder:text-gray-500 
-                               hover:border-gray-500 focus:border-gray-500 focus:outline-none 
-                               lg:min-h-11 lg:py-2"
+                    className={inputClassName}
                   />
                 </div>
 
@@ -134,11 +220,22 @@ export function CustomTextForm({ variant, maxLength, onSubmit, initialData }: Cu
                       onChange={(e) => setLine2(e.target.value)}
                       maxLength={maxLength}
                       autoComplete="off"
-                      className="flex min-h-10 w-full items-center justify-start border border-solid 
-                                 border-gray-300 bg-gray-100 px-3 py-1.5 text-sm font-normal 
-                                 text-gray-800 placeholder:text-gray-500 
-                                 hover:border-gray-500 focus:border-gray-500 focus:outline-none 
-                                 lg:min-h-11 lg:py-2"
+                      className={inputClassName}
+                    />
+                  </div>
+                )}
+
+                {showLine3 && (
+                  <div className="flex w-full flex-col gap-1">
+                    <input
+                      type="text"
+                      name="line3"
+                      placeholder="Line 3"
+                      value={line3}
+                      onChange={(e) => setLine3(e.target.value)}
+                      maxLength={maxLength}
+                      autoComplete="off"
+                      className={inputClassName}
                     />
                   </div>
                 )}
@@ -147,16 +244,81 @@ export function CustomTextForm({ variant, maxLength, onSubmit, initialData }: Cu
               <span className="mt-1 block text-center text-sm text-gray-500">
                 {maxLength}-Character maximum for each line in any language
               </span>
-
-              {errors.length > 0 && (
-                <div className="mt-2 text-center text-sm text-brand-600">
-                  {errors.map((error, i) => (
-                    <p key={i}>{error}</p>
-                  ))}
-                </div>
-              )}
             </div>
+
+            {/* Cover Block (only for dual-block variant) */}
+            {isDualBlock && (
+              <div className="w-full">
+                <p className="mb-4 text-center text-base font-bold lg:text-lg">
+                  Cover
+                </p>
+
+                {renderLineCountSelector(
+                  "coverLineCount",
+                  coverLineCount,
+                  handleCoverLineCountChange,
+                  true
+                )}
+
+                <div className="grid grid-cols-1 gap-3">
+                  <div className="flex w-full flex-col gap-1">
+                    <input
+                      type="text"
+                      name="coverLine1"
+                      placeholder="Line 1"
+                      value={coverLine1}
+                      onChange={(e) => setCoverLine1(e.target.value)}
+                      maxLength={maxLength}
+                      autoComplete="off"
+                      className={inputClassName}
+                    />
+                  </div>
+
+                  {coverLineCount >= 2 && (
+                    <div className="flex w-full flex-col gap-1">
+                      <input
+                        type="text"
+                        name="coverLine2"
+                        placeholder="Line 2"
+                        value={coverLine2}
+                        onChange={(e) => setCoverLine2(e.target.value)}
+                        maxLength={maxLength}
+                        autoComplete="off"
+                        className={inputClassName}
+                      />
+                    </div>
+                  )}
+
+                  {coverLineCount >= 3 && (
+                    <div className="flex w-full flex-col gap-1">
+                      <input
+                        type="text"
+                        name="coverLine3"
+                        placeholder="Line 3"
+                        value={coverLine3}
+                        onChange={(e) => setCoverLine3(e.target.value)}
+                        maxLength={maxLength}
+                        autoComplete="off"
+                        className={inputClassName}
+                      />
+                    </div>
+                  )}
+                </div>
+
+                <span className="mt-1 block text-center text-sm text-gray-500">
+                  {maxLength}-Character maximum for each line in any language
+                </span>
+              </div>
+            )}
           </div>
+
+          {errors.length > 0 && (
+            <div className="mt-4 text-center text-sm text-brand-600">
+              {errors.map((error, i) => (
+                <p key={i}>{error}</p>
+              ))}
+            </div>
+          )}
 
           <div className="mt-10 flex w-full flex-col items-center gap-2 lg:gap-4">
             <button

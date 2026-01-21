@@ -106,6 +106,18 @@ export function identifyModel(modelCode: string): string | null {
   if (modelCode.startsWith("GF")) {
     return "gf-fire-alarm-push-button";
   }
+  if (modelCode.startsWith("GLR")) {
+    return "global-reset";
+  }
+  if (modelCode.startsWith("STI-")) {
+    return "universal-stopper";
+  }
+  if (modelCode.startsWith("G3")) {
+    return "g3-multipurpose-push-button";
+  }
+  if (modelCode.startsWith("GF")) {
+    return "gf-fire-alarm-push-button";
+  }
   if (modelCode.startsWith("STI-")) {
     return "universal-stopper";
   }

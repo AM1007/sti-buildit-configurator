@@ -17,6 +17,9 @@ import {
   WATERPROOF_RESET_CALL_POINT_CONSTRAINTS,
   UNIVERSAL_STOPPER_CONSTRAINTS,
   LOW_PROFILE_UNIVERSAL_STOPPER_CONSTRAINTS,
+  GLOBAL_RESET_CONSTRAINTS,
+  ENVIRO_STOPPER_CONSTRAINTS,
+  ALERT_POINT_CONSTRAINTS,
   type IConstraintEngine,
   type ConstraintResult,
 } from "./rules";
@@ -66,6 +69,21 @@ function getConstraintEngine(modelId: string): IConstraintEngine | null {
     }
     case "universal-stopper": {
       const engine = createConstraintEngine(UNIVERSAL_STOPPER_CONSTRAINTS);
+      engineCache.set(modelId, engine);
+      return engine;
+    }
+    case "global-reset": {
+      const engine = createConstraintEngine(GLOBAL_RESET_CONSTRAINTS);
+      engineCache.set(modelId, engine);
+      return engine;
+    }
+    case "enviro-stopper": {
+      const engine = createConstraintEngine(ENVIRO_STOPPER_CONSTRAINTS);
+      engineCache.set(modelId, engine);
+      return engine;
+    }
+    case "alert-point": {
+      const engine = createConstraintEngine(ALERT_POINT_CONSTRAINTS);
       engineCache.set(modelId, engine);
       return engine;
     }
