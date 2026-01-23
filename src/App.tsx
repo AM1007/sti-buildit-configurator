@@ -4,10 +4,12 @@ import { ConfiguratorPage } from "./pages/ConfiguratorPage";
 import { MyListPage } from "./pages/MyListPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 import { Layout } from "./components/Layout";
+import { ScrollToTop } from "./components/ScrollToTop";
 
 function App() {
   return (
     <BrowserRouter>
+    <ScrollToTop />
       <Routes>
         <Route
           path="/"

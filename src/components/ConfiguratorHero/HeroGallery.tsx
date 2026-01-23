@@ -81,7 +81,7 @@ export function HeroGallery({ media, productName }: HeroGalleryProps) {
   return (
     <>
       <div className="relative flex w-full flex-col gap-4 lg:flex-row lg:gap-8">
-        <div className={`order-2 w-full lg:order-1 lg:w-[5.5rem] ${getMaskClass()}`}>
+        <div className={`order-2 w-full lg:order-1 lg:w-22 ${getMaskClass()}`}>
           <Swiper
             modules={[FreeMode, Mousewheel]}
             direction="horizontal"
@@ -109,7 +109,7 @@ export function HeroGallery({ media, productName }: HeroGalleryProps) {
             {media.map((item, index) => (
               <SwiperSlide
                 key={index}
-                className="!h-12 !w-12 lg:!h-[5.5rem] lg:!w-full"
+                className="h-12! w-12! lg:h-22! lg:w-full!"
               >
                 <button
                   onClick={() => handleThumbnailClick(index)}

@@ -152,8 +152,6 @@ For the domed version of the Universal Stopper <a href="/configurator/universal-
       { type: "image", src: "/Indoor Push Buttons/HERO/02.webp", alt: "Indoor Push Buttons" },
       { type: "image", src: "/Indoor Push Buttons/HERO/03.webp", alt: "Indoor Push Buttons" },
       { type: "image", src: "/Indoor Push Buttons/HERO/04.webp", alt: "Indoor Push Buttons" },
-      { type: "image", src: "/Indoor Push Buttons/HERO/05.webp", alt: "Indoor Push Buttons" },
-      { type: "image", src: "/Indoor Push Buttons/HERO/06.webp", alt: "Indoor Push Buttons" },
     ],
   },
 
