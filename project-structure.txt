@@ -554,6 +554,8 @@
       📄 1 Surface Mount - ClearOpen Backed Spacer (Dual Mount).webp
       📄 6 European Enclosed Back Box, 20mm Thread Point & Sealed Mounting Plate.webp
       📄 7 European Enclosed Back Box, 20mm Thread Point & Open Mounting Plate.webp
+  📄 pdf-logo.png
+  📄 pdf-logo.svg
   📁 ReSet Call Points
     📁 COLOUR
       📄 B-Blue.webp
@@ -3631,6 +3633,7 @@
     📄 PreviewTile.tsx
     📄 ProductCard.tsx
     📄 ProductModelDisplay.tsx
+    📄 ProductPdfDocument.tsx
     📄 ProductPreview.tsx
     📄 ScrollToTop.tsx
     📄 ShareMenu.tsx
@@ -3712,7 +3715,9 @@
     📄 buildProductModel.ts
     📄 customTextHelpers.ts
     📄 filterOptions.ts
+    📄 generateProductPdf.ts
     📄 getCompletedDeviceImage.ts
+    📄 stripHtml.ts
     📄 toast.ts
 📄 tsconfig.app.json
 📄 tsconfig.json
