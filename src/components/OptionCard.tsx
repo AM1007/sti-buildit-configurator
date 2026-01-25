@@ -6,6 +6,7 @@ interface OptionCardProps {
   isAvailable: boolean;
   unavailableReason?: string;
   onSelect: () => void;
+  label?: string;
 }
 
 export function OptionCard({
@@ -14,7 +15,10 @@ export function OptionCard({
   isAvailable,
   unavailableReason,
   onSelect,
+  label,
 }: OptionCardProps) {
+  const displayLabel = label ?? option.label;
+
   return (
     <div
       className={`
@@ -32,7 +36,7 @@ export function OptionCard({
       {option.image && (
         <div className="max-h-[9.37rem]">
           <img
-            alt={option.label}
+            alt={displayLabel}
             loading="lazy"
             width="150"
             height="150"
@@ -45,7 +49,7 @@ export function OptionCard({
         </div>
       )}
       <span className="font-normal text-sm wrap-break-word text-center transition-all duration-0 text-black">
-        {option.label}
+        {displayLabel}
       </span>
       {option.notes && (
         <span className="text-xs text-yellow-600 text-center font-medium">

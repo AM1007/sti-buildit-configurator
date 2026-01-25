@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import type { ConfiguratorMeta, ColourId } from "../data/catalog";
+import { useTranslation } from "../i18n";
+import { useModelTranslations } from "../hooks/useModelTranslations";
 
 interface ConfiguratorCardProps {
   config: ConfiguratorMeta;
@@ -16,7 +18,11 @@ const COLOUR_MAP: Record<ColourId, string> = {
 };
 
 export function ConfiguratorCard({ config }: ConfiguratorCardProps) {
+  const { t } = useTranslation();
+  const { meta } = useModelTranslations(config.slug);
   const href = `/configurator/${config.slug}`;
+
+  const displayDescription = meta?.heroTitle ?? config.description;
 
   return (
     <Link to={href} aria-label={config.name} className="block">
@@ -40,13 +46,13 @@ export function ConfiguratorCard({ config }: ConfiguratorCardProps) {
             </h3>
 
             <span className="font-normal text-sm lg:text-base line-clamp-2 min-h-12 text-left text-gray-500">
-              {config.description}
+              {displayDescription}
             </span>
 
             <div className="grid grid-cols-1 gap-0.5 text-gray-500">
               {config.features && config.features.length > 0 && (
                 <div className="flex items-center justify-start gap-2 py-0.5">
-                  <span className="font-normal text-sm">Features:</span>
+                  <span className="font-normal text-sm">{t("card.features")}:</span>
                   <div className="flex gap-2">
                     {config.features.map((feature) => (
                       <img
@@ -65,7 +71,7 @@ export function ConfiguratorCard({ config }: ConfiguratorCardProps) {
 
               {config.colours && config.colours.length > 0 && (
                 <div className="font-normal text-sm flex items-center justify-start gap-2 py-0.5">
-                  Colours:
+                  {t("card.colours")}:
                   <div className="flex items-center gap-1">
                     {config.colours.map((colour) => (
                       <div
@@ -83,7 +89,7 @@ export function ConfiguratorCard({ config }: ConfiguratorCardProps) {
         </div>
 
         <span className="cursor-pointer inline-flex items-center justify-center relative ring-offset-0 transition-all duration-300 ease-in-out focus-visible:outline-none box-border font-bold text-base gap-1.5 px-5 py-1 min-h-10 border-4 lg:gap-2.5 lg:px-7 lg:py-3 lg:min-h-14 lg:text-lg bg-brand-600 border-brand-600 text-white hover:bg-brand-700 hover:border-brand-700 w-full">
-          Build Your Model
+          {t("card.buildYourModel")}
           <span className="inline-grid leading-none text-inherit">
             <ArrowRightIcon />
           </span>

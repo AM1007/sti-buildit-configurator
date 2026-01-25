@@ -1,0 +1,92 @@
+{
+  "meta": {
+    "name": "Stopper® Stations",
+    "description": "Customisable UL Listed Push Buttons and Key Switches",
+    "heroTitle": "Customisable UL Listed Push Buttons and Key Switch",
+    "heroDescription": "Build this UL listed, ADA Compliant, multipurpose push buttons to your specifications. The unique, patented design for the push buttons help dramatically stop accidental activation. Available in six colours, ten button activation choices, with or without a protective cover and in any language to accommodate most applications. All Stopper Stations are supplied with a Universal Mounting Plate as standard. For certain button activations, additional surface back box kits are required."
+  },
+  "steps": {
+    "colour": {
+      "title": "COLOUR",
+      "options": {
+        "0": "#0 Red",
+        "1": "#1 Green",
+        "2": "#2 Yellow",
+        "3": "#3 White",
+        "4": "#4 Blue",
+        "5": "#5 Orange"
+      }
+    },
+    "cover": {
+      "title": "COVER",
+      "options": {
+        "0": "#0 No Cover",
+        "2": "#2 Shield"
+      }
+    },
+    "activation": {
+      "title": "ACTIVATION",
+      "options": {
+        "0": "#0 Key-to-Reset",
+        "1": "#1 Turn-to-Reset",
+        "2": "#2 Key-to-Reset Illuminates green, red or white",
+        "3": "#3 Key-to-Activate",
+        "4": "#4 Momentary",
+        "5": "#5 Momentary Illuminates green, red or white",
+        "6-red": "#6 Red Illuminated",
+        "6-green": "#6 Green Illuminated",
+        "6-blue": "#6 Blue Illuminated",
+        "7-red": "#7 Weather Resistant Momentary Illuminated Red",
+        "7-green": "#7 Weather Resistant Green Illuminated",
+        "7-blue": "#7 Weather Resistant Blue Illuminated",
+        "8": "#8 Pneumatic Illuminates green, red or white",
+        "9": "#9 Turn-to-Reset Illuminates green, red or white"
+      }
+    },
+    "text": {
+      "title": "TEXT",
+      "options": {
+        "AB": "#AB ABORT",
+        "EM": "#EM EMERGENCY",
+        "EX": "#EX EMERGENCY EXIT",
+        "PO": "#PO EMERGENCY POWER OFF",
+        "ES": "#ES EMERGENCY STOP",
+        "EV": "#EV EVACUATION",
+        "XT": "#XT EXIT",
+        "PS": "#PS FUEL PUMP SHUT-DOWN",
+        "HV": "#HV HVAC SHUT-DOWN",
+        "LD": "#LD LOCKDOWN",
+        "PX": "#PX PUSH TO EXIT",
+        "NT": "#NT NO TEXT, blank button and/or cover",
+        "ZA": "#ZA NON-RETURNABLE custom text"
+      }
+    },
+    "language": {
+      "title": "LANGUAGE",
+      "options": {
+        "EN": "#EN English",
+        "ES": "#ES Spanish",
+        "FR": "#FR French",
+        "ZL": "#ZL NON-RETURNABLE other language"
+      }
+    },
+    "installationOptions": {
+      "title": "INSTALLATION OPTIONS",
+      "options": {
+        "none": "# No additional mounting accessories are required",
+        "&KIT-71100A-R": "#&KIT-71100A-R Red Back Box for Surface Mounting",
+        "&KIT-71100A-G": "#&KIT-71100A-G Green Back Box for Surface Mounting",
+        "&KIT-71100A-Y": "#&KIT-71100A-Y Yellow Back Box for Surface Mounting",
+        "&KIT-71100A-W": "#&KIT-71100A-W White Back Box for Surface Mounting",
+        "&KIT-71100A-B": "#&KIT-71100A-B Blue Back Box for Surface Mounting",
+        "&KIT-71100A-E": "#&KIT-71100A-E Orange Back Box for Surface Mounting",
+        "&KIT-71101B-R": "#&KIT-71101B-R Red Back Box & Spacer Kit for Deep Mounting",
+        "&KIT-71101B-G": "#&KIT-71101B-G Green Back Box & Spacer Kit for Deep Surface Mounting",
+        "&KIT-71101B-Y": "#&KIT-71101B-Y Yellow Back Box & Spacer Kit for Deep Surface Mounting",
+        "&KIT-71101B-W": "#&KIT-71101B-W White Back Box & Spacer Kit for Deep Surface Mounting",
+        "&KIT-71101B-B": "#&KIT-71101B-B Blue Back Box & Spacer Kit for Deep Surface Mounting",
+        "&KIT-71101B-E": "#&KIT-71101B-E Orange Back Box & Spacer Kit for Deep Surface Mounting"
+      }
+    }
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "meta": {
+    "name": "Enviro Stopper®",
+    "description": "Protective cover for outdoor use",
+    "heroTitle": "IP66/56 Certified Cover for Use in Harsh Environments",
+    "heroDescription": "IP rated protective cover is ideal for extending the life and reliability of devices exposed to harsh environments such as wash down areas. The Enviro Stopper offers protection to manual call points and switches against dust and water ingress, both outside and inside, as well as preventing tampering, vandalism and damage from accidental or malicious operation."
+  },
+  "steps": {
+    "cover": {
+      "title": "COVER",
+      "options": {
+        "13": "#13 Dome Cover",
+        "14": "#14 Low Profile Cover"
+      }
+    },
+    "hoodSounder": {
+      "title": "HOOD, SOUNDER & WIRELESS",
+      "options": {
+        "00": "#00 No Label Hood",
+        "10": "#10 Label Hood without Sounder",
+        "20": "#20 Label Hood with Sounder",
+        "30": "#30 Label Hood with Sounder and Relay"
+      }
+    },
+    "colourLabel": {
+      "title": "COLOUR & LABEL",
+      "options": {
+        "FR": "#FR Red 'FIRE ALARM' label",
+        "NR": "#NR Red no label",
+        "CR": "#CR Red custom label (NON-RETURNABLE)",
+        "EG": "#EG Green 'Emergency Exit' label",
+        "NG": "#NG Green no label",
+        "CG": "#CG Green custom label (NON-RETURNABLE)",
+        "NC": "#NC Clear no label",
+        "NK": "#NK Black no label",
+        "CK": "#CK Black custom label (NON-RETURNABLE)",
+        "NB": "#NB Blue no label",
+        "CB": "#CB Blue custom label (NON-RETURNABLE)",
+        "NW": "#NW White no label",
+        "CW": "#CW White custom label (NON-RETURNABLE)",
+        "NY": "#NY Yellow no label",
+        "CY": "#CY Yellow custom label (NON-RETURNABLE)"
+      }
+    },
+    "language": {
+      "title": "LANGUAGE",
+      "options": {
+        "EN": "#EN English",
+        "ES": "#ES Spanish",
+        "FR": "#FR French",
+        "DE": "#DE German",
+        "NL": "#NL Dutch"
+      }
+    },
+    "mounting": {
+      "title": "MOUNTING",
+      "options": {
+        "6": "#6 European Enclosed Back Box, 20mm Entry Point, Sealed Mounting Plate",
+        "7": "#7 European Enclosed Back Box, 20mm Entry Point, Open Mounting Plate"
+      }
+    }
+  }
+}

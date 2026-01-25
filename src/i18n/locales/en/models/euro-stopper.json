@@ -1,0 +1,45 @@
+{
+  "meta": {
+    "name": "Euro Stopper®",
+    "description": "European protective cover for buttons",
+    "heroTitle": "Low Profile Protective Cover with Optional Alarm",
+    "heroDescription": "Protective call point covers that help prevent malicious or accidental activation. The Euro Stopper consists of a clear, tamper proof, tough UV-stabilised polycarbonate cover and frame that retrofits over the break glass call point.\n\nThe Glow Guide, a unique material that is embedded in the perimeter of the frame, illuminates in the dark creating a radiant glow around the manual call point making it easier to locate in dark areas. Ideal for schools, colleges, hospitals, nursing homes, hotels and all public buildings where there is a history or a threat of false activation."
+  },
+  "steps": {
+    "colourLabel": {
+      "title": "COLOUR & LABEL",
+      "options": {
+        "NR": "#NR Red, no label",
+        "CR": "#CR Red, custom label",
+        "NG": "#NG Green, no label",
+        "CG": "#CG Green, custom label",
+        "NY": "#NY Yellow, no label",
+        "CY": "#CY Yellow, custom label",
+        "NW": "#NW White, no label",
+        "CW": "#CW White, custom label",
+        "NB": "#NB Blue, no label",
+        "CB": "#CB Blue, custom label",
+        "NE": "#NE Orange, no label",
+        "CE": "#CE Orange, custom label",
+        "NK": "#NK Black, no label",
+        "CK": "#CK Black, custom label"
+      }
+    },
+    "sounder": {
+      "title": "SOUNDER",
+      "options": {
+        "10": "#10 Label Hood without Sounder",
+        "20": "#20 Label Hood with Sounder",
+        "30": "#30 Label Hood with Sounder and Relay"
+      }
+    },
+    "mounting": {
+      "title": "MOUNTING",
+      "options": {
+        "0": "#0 Flush Mount",
+        "C": "#C Surface Mount, 32mm Spacer",
+        "D": "#D Surface Mount, 50mm Spacer"
+      }
+    }
+  }
+}

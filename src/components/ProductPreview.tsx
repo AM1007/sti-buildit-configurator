@@ -1,5 +1,6 @@
 import type { Configuration, ModelDefinition, StepId } from "../types";
 import { PreviewTile } from "./PreviewTile";
+import { useModelTranslations } from "../hooks/useModelTranslations";
 
 interface ProductPreviewProps {
   model: ModelDefinition;
@@ -8,6 +9,8 @@ interface ProductPreviewProps {
 }
 
 export function ProductPreview({ model, config, onEditStep }: ProductPreviewProps) {
+  const { getStepTitle } = useModelTranslations(model.id);
+
   return (
     <div className="grid grid-cols-1 gap-5 lg:grid-cols-2 lg:gap-6 xl:grid-cols-3 xl:gap-8 2xl:grid-cols-4">
       {model.stepOrder.map((stepId) => {
@@ -51,7 +54,7 @@ export function ProductPreview({ model, config, onEditStep }: ProductPreviewProp
           <PreviewTile
             key={stepId}
             stepId={stepId}
-            label={step.title}
+            label={getStepTitle(stepId)}
             image={selectedOption?.image}
             isSelected={!!selectedOptionId}
             onEdit={onEditStep}

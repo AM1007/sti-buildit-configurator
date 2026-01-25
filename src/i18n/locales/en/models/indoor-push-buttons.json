@@ -1,0 +1,54 @@
+{
+  "meta": {
+    "name": "Indoor Push Buttons",
+    "description": "Push buttons for indoor use",
+    "heroTitle": "Diverse Range of Push Buttons with Many Applications",
+    "heroDescription": "A highly versatile range of attractive indoor Push Buttons combining unique design, quality and value. These aesthetically appealing, low/high voltage switches fit any standard UK-type switch socket box, and are quick and easy to install."
+  },
+  "steps": {
+    "colour": {
+      "title": "COLOUR",
+      "options": {
+        "1": "#1 Red (Dual Mount)",
+        "3": "#3 Green (Dual Mount)",
+        "5": "#5 Yellow (Dual Mount)",
+        "7": "#7 White (Dual Mount)",
+        "9": "#9 Blue (Dual Mount)",
+        "E": "#E Orange (Dual Mount)"
+      }
+    },
+    "buttonColour": {
+      "title": "BUTTON COLOUR",
+      "options": {
+        "R": "#R Red Button",
+        "G": "#G Green Button",
+        "Y": "#Y Yellow Button",
+        "W": "#W White Button",
+        "B": "#B Blue Button",
+        "E": "#E Orange Button"
+      }
+    },
+    "buttonType": {
+      "title": "BUTTON TYPE",
+      "options": {
+        "0": "#0 Key-to-Reset",
+        "1": "#1 Momentary",
+        "6": "#6 Pneumatic (EXTENDED LEAD TIMES)"
+      }
+    },
+    "electricalArrangement": {
+      "title": "ELECTRICAL ARRANGEMENT",
+      "options": {
+        "0": "#0 Single Pole Changeover",
+        "4": "#4 Multi Signal (SPC and DPC)"
+      }
+    },
+    "label": {
+      "title": "LABEL",
+      "options": {
+        "SELF_ASSEMBLE": "Self Assemble Label Kit",
+        "CL": "Custom Label (NON-RETURNABLE)"
+      }
+    }
+  }
+}

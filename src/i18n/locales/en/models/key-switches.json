@@ -1,0 +1,46 @@
+{
+  "meta": {
+    "name": "Key Switches",
+    "description": "Key switches for access control systems",
+    "heroTitle": "Diverse Range of Key Switches with Many Applications",
+    "heroDescription": "A highly versatile range of attractive key switches combining unique design, quality and value, with or without a protective cover or pre-alarm. These aesthetically appealing, low/high voltage switches fit any standard UK-type switch socket box, and are quick and easy to install. Models are supplied as a Dual Mount – designed to fit either flush or surface installations (35mm black surface black back box included.) All models are available in a variety of colours with space for function marking or operating instructions.\n\n<strong>Not suitable for outdoor use. Not compatible with the Enviro Stopper.</strong>"
+  },
+  "steps": {
+    "colourMounting": {
+      "title": "COLOUR & MOUNTING",
+      "options": {
+        "10": "#10 Red (Dual Mount)",
+        "30": "#30 Green (Dual Mount)",
+        "50": "#50 Yellow (Dual Mount)",
+        "70": "#70 White (Dual Mount)",
+        "90": "#90 Blue (Dual Mount)",
+        "E0": "#E0 Orange (Dual Mount)"
+      }
+    },
+    "switchType": {
+      "title": "SWITCH TYPE",
+      "options": {
+        "2": "#2 Switch Type 2",
+        "3": "#3 Switch Type 3",
+        "4": "#4 Switch Type 4",
+        "5": "#5 Switch Type 5"
+      }
+    },
+    "electricalArrangement": {
+      "title": "ELECTRICAL ARRANGEMENT",
+      "options": {
+        "0": "#0 Single Pole Changeover",
+        "1": "#1 Double Pole Normally Open",
+        "2": "#2 Double Pole Normally Closed",
+        "3": "#3 3-Position Key Switch Wiring"
+      }
+    },
+    "label": {
+      "title": "LABEL",
+      "options": {
+        "SELF_ASSEMBLE": "Self Assemble Label Kit",
+        "CL": "Custom Label (NON-RETURNABLE)"
+      }
+    }
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "meta": {
+    "name": "Low Profile Universal Stopper®",
+    "description": "Low profile protective cover for buttons and switches",
+    "heroTitle": "IP Rated Slimline Cover Offering Robust Protection",
+    "heroDescription": "The Low Profile Universal Stopper is suitable for internal or external installation; these polycarbonate covers can be used as a manual call point protector, or can protect a range of devices such as push buttons and key switches etc., from damage and misuse without hindering use in an emergency. These reliable covers offer outstanding protection against damage to the protected devices (both intentional and accidental), dust and grime as well as difficult environments inside and out, mounting options 0, 1 & 7 are designed to meet the requirements of IP 56, with mounting option 6 designed to meet IP 66. The protection these call point protector covers can offer can help to deter malicious activation of devices and can save valuable time and money for businesses and public buildings. The newly designed sounder cartridge for the Low Profile Universal Stopper comes with a built in LED light that activates along with the audio alarm for an extra visual deterrent.\n\nFor the domed version of the Universal Stopper <a href=\"/configurator/universal-stopper\" class=\"text-primary underline hover:text-primary/80\">click here</a>."
+  },
+  "steps": {
+    "cover": {
+      "title": "COVER",
+      "options": {
+        "14": "#14 Low Profile Cover"
+      }
+    },
+    "hoodSounder": {
+      "title": "HOOD & SOUNDER",
+      "options": {
+        "00": "#00 No Label Hood",
+        "10": "#10 Label Hood without Sounder",
+        "20": "#20 Label Hood with Sounder (EXTENDED LEAD TIMES)",
+        "30": "#30 Label Hood with Sounder and Relay Cable (EXTENDED LEAD TIMES)"
+      }
+    },
+    "colourLabel": {
+      "title": "COLOUR & LABEL",
+      "options": {
+        "FR": "#FR Red 'Fire Alarm' label",
+        "NR": "#NR Red no label",
+        "CR": "#CR Red custom label (NON-RETURNABLE)",
+        "EG": "#EG Green 'Emergency Exit' label",
+        "NG": "#NG Green no label",
+        "CG": "#CG Green custom label (NON-RETURNABLE)",
+        "NC": "#NC Clear no label",
+        "NB": "#NB Blue no label",
+        "CB": "#CB Blue custom label (NON-RETURNABLE)",
+        "NW": "#NW White no label",
+        "CW": "#CW White custom label (NON-RETURNABLE)",
+        "NY": "#NY Yellow no label",
+        "CY": "#CY Yellow custom label (NON-RETURNABLE)"
+      }
+    },
+    "language": {
+      "title": "LANGUAGE",
+      "options": {
+        "EN": "#EN English",
+        "ES": "#ES Spanish",
+        "FR": "#FR French",
+        "DE": "#DE German",
+        "NL": "#NL Dutch"
+      }
+    },
+    "mounting": {
+      "title": "MOUNTING",
+      "options": {
+        "0": "#0 Flush Mount Open Backed",
+        "1": "#1 Surface Mount - Clear Spacer (Dual Mount)",
+        "6": "#6 European Enclosed Back Box, 20mm Thread Point, Sealed Mounting Plate",
+        "7": "#7 European Enclosed Back Box, 20mm Thread Point, Open Mounting Plate"
+      }
+    }
+  }
+}

@@ -1,0 +1,117 @@
+{
+  "common": {
+    "home": "Головна",
+    "myList": "Мій список",
+    "reset": "Скинути",
+    "save": "Зберегти",
+    "cancel": "Скасувати",
+    "confirm": "Підтвердити",
+    "close": "Закрити",
+    "copy": "Копіювати",
+    "copied": "Скопійовано",
+    "download": "Завантажити",
+    "share": "Поділитися",
+    "edit": "Редагувати",
+    "delete": "Видалити",
+    "clear": "Очистити",
+    "clearAll": "Очистити все",
+    "loading": "Завантаження...",
+    "error": "Помилка",
+    "success": "Успішно",
+    "noResults": "Нічого не знайдено",
+    "required": "Обов'язково",
+    "optional": "Опціонально",
+    "back": "Назад",
+    "next": "Далі",
+    "submit": "Надіслати",
+    "privacy": "Конфіденційність",
+    "terms": "Умови",
+    "contact": "Контакти",
+    "allRightsReserved": "Усі права захищені"
+  },
+
+  "header": {
+    "logo": "Build it"
+  },
+
+  "footer": {
+    "copyright": "© {year} Product Configurator. Усі права захищені."
+  },
+
+  "home": {
+    "heroTitle": "Конфігуратор продуктів",
+    "heroSubtitle": "Створіть свій ідеальний пристрій",
+    "configuratorsTitle": "Оберіть конфігуратор",
+    "inDevelopment": "В розробці"
+  },
+
+  "configurator": {
+    "editSelections": "Редагувати вибір",
+    "productPreview": "Попередній перегляд",
+    "productModel": "Модель продукту",
+    "previewNotAvailable": "ПОПЕРЕДНІЙ ПЕРЕГЛЯД\nНЕДОСТУПНИЙ",
+    "completeSelections": "Будь ласка, завершіть вибір опцій",
+    "imageFailedToLoad": "Не вдалося завантажити зображення",
+    "missingSelections": "Відсутні вибори",
+    "configurationComplete": "Конфігурацію завершено",
+    "addToMyList": "Додати до мого списку",
+    "removeFromMyList": "Видалити зі списку",
+    "inMyList": "У моєму списку",
+    "copyProductModel": "Копіювати артикул",
+    "copyUrl": "Копіювати посилання",
+    "downloadPdf": "Завантажити PDF",
+    "resetConfiguration": "Скинути конфігурацію",
+    "selectOption": "Оберіть опцію",
+    "optionDisabled": "Опція недоступна",
+    "extendedLeadTimes": "ПОДОВЖЕНІ ТЕРМІНИ ПОСТАВКИ",
+    "notUlListed": "НЕ СЕРТИФІКОВАНО UL",
+    "nonReturnable": "БЕЗ ПОВЕРНЕННЯ",
+    "customText": "Власний текст",
+    "enterCustomText": "Введіть власний текст",
+    "lineCount": "Кількість рядків",
+    "lines": "рядків",
+    "maxCharacters": "Максимум символів",
+    "charactersRemaining": "Залишилось символів",
+    "textPreview": "Попередній перегляд тексту",
+    "submitCustomText": "Застосувати текст"
+  },
+
+  "myList": {
+    "title": "Мій список",
+    "emptyTitle": "Ваш список порожній",
+    "emptyDescription": "Додайте конфігурації продуктів до свого списку для швидкого доступу",
+    "browseConfigurators": "Переглянути конфігуратори",
+    "itemsCount": "{count} позицій",
+    "savedAt": "Збережено",
+    "loadConfiguration": "Завантажити конфігурацію",
+    "removeItem": "Видалити",
+    "clearList": "Очистити список",
+    "clearListConfirm": "Ви впевнені, що хочете очистити весь список?",
+    "exportXlsx": "Експорт в Excel",
+    "copyAllModels": "Копіювати всі артикули"
+  },
+
+  "share": {
+    "menuTitle": "Поділитися",
+    "copyUrl": "Копіювати посилання",
+    "copyProductModel": "Копіювати артикул",
+    "downloadPdf": "Завантажити PDF",
+    "urlCopied": "Посилання скопійовано",
+    "modelCopied": "Артикул скопійовано",
+    "pdfGenerated": "PDF створено"
+  },
+
+  "validation": {
+    "requiredField": "Це поле обов'язкове",
+    "maxLength": "Максимальна довжина: {max} символів",
+    "invalidCharacters": "Недопустимі символи"
+  },
+
+  "toast": {
+    "addedToMyList": "Додано до мого списку",
+    "removedFromMyList": "Видалено зі списку",
+    "configurationReset": "Конфігурацію скинуто",
+    "copiedToClipboard": "Скопійовано в буфер обміну",
+    "errorOccurred": "Сталася помилка"
+  }
+}

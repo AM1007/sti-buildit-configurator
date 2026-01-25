@@ -3627,6 +3627,7 @@
       📄 VideoModal.tsx
     📄 CustomTextDisplay.tsx
     📄 CustomTextForm.tsx
+    📄 LanguageSwitcher.tsx
     📄 Layout.tsx
     📄 MainPanel.tsx
     📄 OptionCard.tsx
@@ -3682,6 +3683,52 @@
   📄 filterOptions.ts
   📁 hooks
     📄 useConfiguration.ts
+    📄 useModelTranslations.ts
+  📁 i18n
+    📄 i18nContext.tsx
+    📄 index.ts
+    📁 locales
+      📁 en
+        📄 common.json
+        📁 models
+          📄 alert-point.json
+          📄 call-point-stopper.json
+          📄 enviro-armour.json
+          📄 enviro-stopper.json
+          📄 euro-stopper.json
+          📄 g3-multipurpose-push-button.json
+          📄 gf-fire-alarm-push-button.json
+          📄 global-reset.json
+          📄 indoor-push-buttons.json
+          📄 key-switches.json
+          📄 low-profile-universal-stopper.json
+          📄 reset-call-points.json
+          📄 stopper-stations.json
+          📄 universal-stopper.json
+          📄 waterproof-push-buttons.json
+          📄 waterproof-reset-call-point.json
+      📄 en.json
+      📁 uk
+        📄 common.json
+        📁 models
+          📄 alert-point.json
+          📄 call-point-stopper.json
+          📄 enviro-armour.json
+          📄 enviro-stopper.json
+          📄 euro-stopper.json
+          📄 g3-multipurpose-push-button.json
+          📄 gf-fire-alarm-push-button.json
+          📄 global-reset.json
+          📄 indoor-push-buttons.json
+          📄 key-switches.json
+          📄 low-profile-universal-stopper.json
+          📄 reset-call-points.json
+          📄 stopper-stations.json
+          📄 universal-stopper.json
+          📄 waterproof-push-buttons.json
+          📄 waterproof-reset-call-point.json
+      📄 uk.json
+    📄 types.ts
   📄 index.css
   📄 main.tsx
   📁 pages
@@ -3716,6 +3763,7 @@
     📄 configSerializer.ts
     📄 customTextHelpers.ts
     📄 filterOptions.ts
+    📄 generateMyListXlsx.ts
     📄 generateProductPdf.ts
     📄 getCompletedDeviceImage.ts
     📄 stripHtml.ts

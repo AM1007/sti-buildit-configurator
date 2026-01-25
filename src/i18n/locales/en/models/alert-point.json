@@ -1,0 +1,42 @@
+{
+  "meta": {
+    "name": "Alert Point",
+    "description": "Alert point with optional beacon",
+    "heroTitle": "Standalone Alarm Device Signals an Emergency",
+    "heroDescription": "Powered with a 9V alkaline battery, the Alert Point includes an integral sounder and resettable call point. Once activated, it emits a 102 dB alarm, an activation flag drops into view and the built-in LED will flash red. Any external connected devices will be activated. It can be easily reset with a key, ensuring the unit is quickly operational again. An override facility can silence the alarm until the Alert Point can be reset. Please note: Larger quantities may require a longer lead time."
+  },
+  "steps": {
+    "series": {
+      "title": "SERIES",
+      "options": {
+        "1": "#1 Alert Point (limited stock - contact sales)",
+        "3": "#3 Alert Point with Beacon (limited stock - contact sales)"
+      }
+    },
+    "colour": {
+      "title": "COLOUR",
+      "options": {
+        "R": "#R Red",
+        "G": "#G Green",
+        "B": "#B Blue",
+        "W": "#W White"
+      }
+    },
+    "label": {
+      "title": "LABEL",
+      "options": {
+        "A": "#A Label 'A'",
+        "B": "#B Label 'B'",
+        "C": "#C Label 'C'",
+        "D": "#D Label 'D'",
+        "E": "#E Label 'E'",
+        "F": "#F Label 'F'",
+        "G": "#G Label 'G'",
+        "H": "#H Label 'H'",
+        "I": "#I Label 'I'",
+        "R": "#R Label 'R'",
+        "X": "#X Custom or no label"
+      }
+    }
+  }
+}

@@ -1,4 +1,5 @@
 import type { StepId } from "../types";
+import { useTranslation } from "../i18n";
 
 interface PreviewTileProps {
   stepId: StepId;
@@ -15,6 +16,8 @@ export function PreviewTile({
   isSelected = false,
   onEdit,
 }: PreviewTileProps) {
+  const { t } = useTranslation();
+
   return (
     <div
       className={`
@@ -41,7 +44,7 @@ export function PreviewTile({
       <div className="edit-box absolute inset-0 z-20 flex h-full w-full items-center justify-center bg-black/20 opacity-0 transition-all duration-300">
         <span className="flex items-center gap-1 bg-white px-1 py-0.5 text-sm font-bold md:px-2 lg:text-sm">
           <EditIcon />
-          Edit
+          {t("common.edit")}
         </span>
       </div>
     </div>

@@ -1,0 +1,48 @@
+{
+  "meta": {
+    "name": "Call Point Stopper",
+    "description": "Protective cover for call points",
+    "heroTitle": "Inexpensive Cover with Spring Loaded Hinge",
+    "heroDescription": "The Call Point Stopper is a UV-stabilised polycarbonate cover which protects a wide range of electrical switches and call points, without restricting legitimate operation. The Call Point Stopper is ideal for shopping centres, hotels, schools, colleges, hospitals, nursing homes and all public buildings where there is a risk of accidental activation."
+  },
+  "steps": {
+    "colour": {
+      "title": "COLOUR",
+      "options": {
+        "R": "#R Red",
+        "G": "#G Green",
+        "Y": "#Y Yellow",
+        "W": "#W White",
+        "B": "#B Blue",
+        "E": "#E Orange"
+      }
+    },
+    "label": {
+      "title": "LABEL",
+      "options": {
+        "FIRE": "In Case of Fire",
+        "EMERGENCY_BREAK": "In Emergency Break Glass",
+        "EMERGENCY_OPERATE": "In Emergency Operate",
+        "PLAIN": "Plain, no text",
+        "CL": "Custom Label (NON-RETURNABLE)"
+      }
+    },
+    "language": {
+      "title": "LANGUAGE",
+      "options": {
+        "EN": "#EN English",
+        "ES": "#ES Spanish",
+        "FR": "#FR French",
+        "DE": "#DE German",
+        "NL": "#NL Dutch"
+      }
+    },
+    "mounting": {
+      "title": "MOUNTING",
+      "options": {
+        "0": "#0 Flush",
+        "1": "#1 Surface Mount (35mm)"
+      }
+    }
+  }
+}

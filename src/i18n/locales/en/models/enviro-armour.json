@@ -1,0 +1,36 @@
+{
+  "meta": {
+    "name": "EnviroArmour",
+    "description": "Protective enclosure for outdoor equipment",
+    "heroTitle": "IP 54 Protection for Equipment Against Damage and Ingress",
+    "heroDescription": "Sturdy lockable polycarbonate and fibreglass enclosures. The weatherproof non-metallic enclosures are designed to prolong the operating life of electronic equipment that requires protection from harsh environments and damage, whether accidental or malicious. These enclosures can protect a range of devices such as remote annunciators, fire alarm control panels or other electronic products that are at risk of damage from vandalism or ingress. The series is IP54 rated making them suitable for indoor and outdoor applications. Models are supplied with a mounting plate allowing for ease of installation. These weatherproof enclosures are available in a range of sizes to suit a variety of applications."
+  },
+  "steps": {
+    "material": {
+      "title": "MATERIAL",
+      "options": {
+        "S": "#S Fibreglass (limited stock)",
+        "T": "#T Polycarbonate (limited stock)"
+      }
+    },
+    "size": {
+      "title": "SIZE (INTERNAL)",
+      "options": {
+        "121005": "#121005 274mm x 240mm x 124mm (limited stock)",
+        "121006": "#121006 291mm x 241mm x 129mm (limited stock)",
+        "141007": "#141007 331mm x 231mm x 159mm (limited stock)",
+        "161608": "#161608 366mm x 388mm x 181mm (limited stock)",
+        "181408": "#181408 462mm x 347mm x 179mm (limited stock)",
+        "231609": "#231609 565mm x 387mm x 211mm (limited stock)",
+        "312312": "#312312 762mm x 582mm x 276mm (limited stock)"
+      }
+    },
+    "doorType": {
+      "title": "DOOR TYPE",
+      "options": {
+        "C": "#C Clear Door (limited stock)",
+        "O": "#O Opaque Door (limited stock)"
+      }
+    }
+  }
+}

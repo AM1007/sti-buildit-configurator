@@ -4,6 +4,7 @@ import { toast } from "../utils/toast";
 import { downloadProductPdf, printProductPdf } from "../utils/generateProductPdf";
 import { stripHtml } from "../utils/stripHtml";
 import { buildShareableUrl } from "../utils/configSerializer";
+import { useTranslation } from "../i18n";
 import type { ProductPdfData } from "./ProductPdfDocument";
 
 interface ShareMenuProps {
@@ -12,7 +13,6 @@ interface ShareMenuProps {
   config: Configuration;
   customText?: CustomTextData | null;
   onClose: () => void;
-  // PDF data
   productName?: string;
   productDescription?: string;
   productImageUrl?: string | null;
@@ -28,6 +28,7 @@ export function ShareMenu({
   productDescription,
   productImageUrl,
 }: ShareMenuProps) {
+  const { t } = useTranslation();
   const menuRef = useRef<HTMLDivElement>(null);
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
 
@@ -58,25 +59,25 @@ export function ShareMenu({
   };
 
   const handleCopyModelId = () => {
-    copyToClipboard(productModel.fullCode, "Model ID copied to clipboard!");
+    copyToClipboard(productModel.fullCode, t("share.modelCopied"));
   };
 
   const handleCopyURL = () => {
     if (!modelId) {
-      toast.error("Cannot generate URL: model ID is missing");
+      toast.error(t("share.urlError"));
       return;
     }
 
     const baseUrl = `${window.location.origin}/configurator/${modelId}`;
     const url = buildShareableUrl(baseUrl, modelId, config, customText);
-    copyToClipboard(url, "URL copied to clipboard!");
+    copyToClipboard(url, t("share.urlCopied"));
   };
 
   const getPdfData = (): ProductPdfData => {
     const logoUrl = `${window.location.origin}/pdf-logo.png`;
     
     return {
-      productName: productName ?? "Product Configuration",
+      productName: productName ?? t("share.defaultProductName"),
       modelNumber: productModel.fullCode,
       description: productDescription ? stripHtml(productDescription) : "",
       imageUrl: productImageUrl ? `${window.location.origin}${productImageUrl}` : null,
@@ -91,10 +92,10 @@ export function ShareMenu({
     try {
       const pdfData = getPdfData();
       await downloadProductPdf(pdfData);
-      toast.success("PDF downloaded successfully!");
+      toast.success(t("share.pdfDownloaded"));
     } catch (error) {
       console.error("PDF generation failed:", error);
-      toast.error("Failed to generate PDF. Please try again.");
+      toast.error(t("share.pdfError"));
     } finally {
       setIsGeneratingPdf(false);
       onClose();
@@ -110,7 +111,7 @@ export function ShareMenu({
       await printProductPdf(pdfData);
     } catch (error) {
       console.error("PDF generation failed:", error);
-      toast.error("Failed to generate PDF. Please try again.");
+      toast.error(t("share.pdfError"));
     } finally {
       setIsGeneratingPdf(false);
       onClose();
@@ -118,10 +119,30 @@ export function ShareMenu({
   };
 
   const menuItems = [
-    { icon: <SaveIcon />, label: isGeneratingPdf ? "Generating..." : "Save PDF", onClick: handleSavePDF, disabled: isGeneratingPdf },
-    { icon: <PrintIcon />, label: "Print", onClick: handlePrint, disabled: isGeneratingPdf },
-    { icon: <LinkIcon />, label: "Copy URL", onClick: handleCopyURL, disabled: false },
-    { icon: <CopyIcon />, label: "Copy Model ID", onClick: handleCopyModelId, disabled: false },
+    { 
+      icon: <SaveIcon />, 
+      label: isGeneratingPdf ? t("share.generating") : t("share.savePdf"), 
+      onClick: handleSavePDF, 
+      disabled: isGeneratingPdf 
+    },
+    { 
+      icon: <PrintIcon />, 
+      label: t("share.print"), 
+      onClick: handlePrint, 
+      disabled: isGeneratingPdf 
+    },
+    { 
+      icon: <LinkIcon />, 
+      label: t("share.copyUrl"), 
+      onClick: handleCopyURL, 
+      disabled: false 
+    },
+    { 
+      icon: <CopyIcon />, 
+      label: t("share.copyModelId"), 
+      onClick: handleCopyModelId, 
+      disabled: false 
+    },
   ];
 
   return (
@@ -137,11 +158,11 @@ export function ShareMenu({
         className="absolute top-full right-0 mt-2 bg-white border border-gray-200 
                    rounded-lg shadow-lg py-1 w-44 z-20"
         role="menu"
-        aria-label="Share options"
+        aria-label={t("share.menuTitle")}
       >
         {menuItems.map((item, index) => (
           <button
-            key={item.label}
+            key={index}
             type="button"
             className="w-full text-left px-3 py-2 hover:bg-gray-100 
                        text-sm text-gray-700 flex items-center gap-3

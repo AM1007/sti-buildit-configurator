@@ -1,6 +1,7 @@
 import type { ConfiguratorHeroData } from "./types";
 import { HeroGallery } from "./HeroGallery";
 import { HeroContent } from "./HeroContent";
+import { useModelTranslations } from "../../hooks/useModelTranslations";
 
 interface ConfiguratorHeroProps {
   data: ConfiguratorHeroData;
@@ -8,6 +9,11 @@ interface ConfiguratorHeroProps {
 }
 
 export function ConfiguratorHero({ data, productName }: ConfiguratorHeroProps) {
+  const { meta } = useModelTranslations(data.modelId);
+
+  const title = meta?.heroTitle ?? data.title;
+  const description = meta?.heroDescription ?? data.description;
+
   return (
     <section className="bg-white py-6 lg:py-10">
       <div className="container mx-auto px-4">
@@ -18,9 +24,9 @@ export function ConfiguratorHero({ data, productName }: ConfiguratorHeroProps) {
 
           <div className="w-full lg:w-1/2">
             <HeroContent
-              productName={productName}
-              title={data.title}
-              description={data.description}
+              productName={meta?.name ?? productName}
+              title={title}
+              description={description}
             />
           </div>
         </div>

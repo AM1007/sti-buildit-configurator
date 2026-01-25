@@ -1,7 +1,9 @@
 import { Link, useParams } from "react-router-dom";
 import { getConfiguratorBySlug } from "../data/catalog";
+import { useTranslation } from "../i18n";
 
 export function InDevelopmentPage() {
+  const { t } = useTranslation();
   const { slug } = useParams<{ slug: string }>();
   const config = slug ? getConfiguratorBySlug(slug) : undefined;
 
@@ -26,18 +28,18 @@ export function InDevelopmentPage() {
           </div>
 
           <h1 className="text-2xl font-bold text-gray-800 mb-2">
-            Page is in development
+            {t("inDevelopment.title")}
           </h1>
 
           {config && (
             <p className="text-gray-600 mb-6">
-              The configurator for <span className="font-semibold">{config.name}</span> is coming soon.
+              {t("inDevelopment.descriptionWithName", { name: config.name })}
             </p>
           )}
 
           {!config && (
             <p className="text-gray-600 mb-6">
-              This configurator is coming soon.
+              {t("inDevelopment.description")}
             </p>
           )}
 
@@ -45,7 +47,7 @@ export function InDevelopmentPage() {
             to="/"
             className="inline-flex items-center justify-center px-6 py-3 bg-brand-600 text-white font-bold rounded hover:bg-brand-700 transition-colors"
           >
-            Back to Home
+            {t("notFound.backHome")}
           </Link>
         </div>
       </div>

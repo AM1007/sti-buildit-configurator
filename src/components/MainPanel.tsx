@@ -8,6 +8,7 @@ import { CustomTextForm } from "./CustomTextForm";
 import { getCompletedDeviceImage } from "../utils/getCompletedDeviceImage";
 import { shouldShowCustomTextForm, getCustomTextConfig, getMaxLength, getEffectiveLineCount, isConfigurationReadyForActions } from "../utils/customTextHelpers";
 import { getHeroContent } from "../data/heroContent";
+import { useTranslation } from "../i18n";
 
 type TabId = "edit" | "preview";
 
@@ -40,13 +41,13 @@ export function MainPanel({
   isInMyList = false,
   className = "",
 }: MainPanelProps) {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<TabId>("edit");
 
   const showCustomTextForm = shouldShowCustomTextForm(model, config, customText);
   const customTextConfig = getCustomTextConfig(model.id);
   const showActionButtons = productModel.isComplete && isConfigurationReadyForActions(model.id, config, customText);
 
-  // Get hero content for PDF description
   const heroContent = getHeroContent(model.id);
 
   useEffect(() => {
@@ -105,7 +106,7 @@ export function MainPanel({
                 ${activeTab === "edit" ? "text-brand-600" : "text-black"}
               `}
             >
-              <span className="font-bold text-sm lg:text-lg">Edit Selections</span>
+              <span className="font-bold text-sm lg:text-lg">{t("configurator.editSelections")}</span>
             </button>
             <button
               type="button"
@@ -117,7 +118,7 @@ export function MainPanel({
                 ${activeTab === "preview" ? "text-brand-600" : "text-black"}
               `}
             >
-              <span className="font-bold text-sm lg:text-lg">Product Preview</span>
+              <span className="font-bold text-sm lg:text-lg">{t("configurator.productPreview")}</span>
             </button>
           </div>
 
@@ -159,33 +160,20 @@ export function MainPanel({
                   productDescription={heroContent?.description}
                 />
               ) : (
-                <div className="flex w-full flex-col items-center gap-11 py-16 text-center text-gray-500">
-                  <p className="font-medium text-base lg:text-md">
-                    PRODUCT PREVIEW<br />NOT AVAILABLE
-                  </p>
-                  <p className="font-normal text-base lg:text-md">
-                    {reason || "Please complete build it selections"}
-                  </p>
-                  
-                  {/* Show action buttons when ZL is selected (no preview but config is complete) */}
-                  {showActionButtons && (
-                    <div className="flex w-full flex-wrap items-center justify-center gap-2 md:items-start md:gap-6 mt-4">
-                      <ActionButtons
-                        productModel={productModel}
-                        modelId={model.id}
-                        config={config}
-                        customText={customText}
-                        onReset={onReset}
-                        onAddToMyList={onAddToMyList}
-                        onRemoveFromMyList={onRemoveFromMyList}
-                        isInMyList={isInMyList}
-                        productName={productName}
-                        productDescription={heroContent?.description}
-                        productImageUrl={null}
-                      />
-                    </div>
-                  )}
-                </div>
+                <NoPreviewContent
+                  reason={reason}
+                  showActionButtons={showActionButtons}
+                  productModel={productModel}
+                  modelId={model.id}
+                  config={config}
+                  customText={customText}
+                  onReset={onReset}
+                  onAddToMyList={onAddToMyList}
+                  onRemoveFromMyList={onRemoveFromMyList}
+                  isInMyList={isInMyList}
+                  productName={productName}
+                  productDescription={heroContent?.description}
+                />
               )}
             </div>
           )}
@@ -198,6 +186,67 @@ export function MainPanel({
           onEditStep={onEditStep}
         />
       </div>
+    </div>
+  );
+}
+
+interface NoPreviewContentProps {
+  reason?: string;
+  showActionButtons: boolean;
+  productModel: ProductModel;
+  modelId: ModelId;
+  config: Configuration;
+  customText?: CustomTextData | null;
+  onReset: () => void;
+  onAddToMyList: () => void;
+  onRemoveFromMyList: () => void;
+  isInMyList: boolean;
+  productName: string;
+  productDescription?: string;
+}
+
+function NoPreviewContent({
+  reason,
+  showActionButtons,
+  productModel,
+  modelId,
+  config,
+  customText,
+  onReset,
+  onAddToMyList,
+  onRemoveFromMyList,
+  isInMyList,
+  productName,
+  productDescription,
+}: NoPreviewContentProps) {
+  const { t } = useTranslation();
+
+  return (
+    <div className="flex w-full flex-col items-center gap-11 py-16 text-center text-gray-500">
+      <p className="font-medium text-base lg:text-md whitespace-pre-line">
+        {t("configurator.previewNotAvailable")}
+      </p>
+      <p className="font-normal text-base lg:text-md">
+        {reason || t("configurator.completeSelections")}
+      </p>
+      
+      {showActionButtons && (
+        <div className="flex w-full flex-wrap items-center justify-center gap-2 md:items-start md:gap-6 mt-4">
+          <ActionButtons
+            productModel={productModel}
+            modelId={modelId}
+            config={config}
+            customText={customText}
+            onReset={onReset}
+            onAddToMyList={onAddToMyList}
+            onRemoveFromMyList={onRemoveFromMyList}
+            isInMyList={isInMyList}
+            productName={productName}
+            productDescription={productDescription}
+            productImageUrl={null}
+          />
+        </div>
+      )}
     </div>
   );
 }
@@ -233,6 +282,7 @@ function ProductPreviewContent({
   productName,
   productDescription,
 }: ProductPreviewContentProps) {
+  const { t } = useTranslation();
   const [hasError, setHasError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -247,11 +297,11 @@ function ProductPreviewContent({
     <div className="flex w-full flex-col gap-10 py-5">
       {hasError ? (
         <div className="flex w-full flex-col items-center gap-11 py-16 text-center text-gray-500">
-          <p className="font-medium text-base lg:text-md">
-            PREVIEW<br />NOT AVAILABLE
+          <p className="font-medium text-base lg:text-md whitespace-pre-line">
+            {t("configurator.previewNotAvailable")}
           </p>
           <p className="font-normal text-base lg:text-md">
-            Image failed to load
+            {t("configurator.imageFailedToLoad")}
           </p>
         </div>
       ) : (

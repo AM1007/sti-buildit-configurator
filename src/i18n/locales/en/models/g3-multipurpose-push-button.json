@@ -1,0 +1,72 @@
+{
+  "meta": {
+    "name": "G3 Multipurpose Push Button",
+    "description": "G3 multipurpose push button with optional camera",
+    "heroTitle": "Monitor And Prevent Unwanted Activations",
+    "heroDescription": "The UL-listed G3 multipurpose push button is a versatile signalling device designed to meet the diverse needs of various applications. This innovative button features an optional camera and a unique design. The camera is designed to capture video of an individual interacting with the button, as well as their movements before and after activating the unit.\n\nOperation types include Key-to-Reset, Momentary and Turn-to-Reset, allowing flexibility for any application. If needed, the button type can be reconfigured to suit application needs (a new button cap may be required to depict operational movement.)\n\nG3 choices include six shell colours, standard or custom wording (in any language), protective covers, and an IP camera for added identification.\n\nTo view the GF Fire Alarm Push Button, please <a href=\"/configurator/gf-fire-alarm-push-button\" class=\"text-primary underline hover:text-primary/80\">click here</a>."
+  },
+  "steps": {
+    "model": {
+      "title": "MODEL",
+      "options": {
+        "A": "#A Without Camera",
+        "C": "#C With Camera (includes back box)"
+      }
+    },
+    "colour": {
+      "title": "COLOUR",
+      "options": {
+        "0": "#0 Red",
+        "1": "#1 Green",
+        "2": "#2 Yellow",
+        "3": "#3 White",
+        "4": "#4 Blue",
+        "5": "#5 Orange"
+      }
+    },
+    "buttonType": {
+      "title": "BUTTON TYPE",
+      "options": {
+        "2": "#2 Key-to-Reset",
+        "5": "#5 Momentary",
+        "9": "#9 Turn-to-Reset"
+      }
+    },
+    "cover": {
+      "title": "COVER",
+      "options": {
+        "0": "#0 No Cover",
+        "2": "#2 Shield"
+      }
+    },
+    "text": {
+      "title": "TEXT",
+      "options": {
+        "AB": "#AB ABORT",
+        "EM": "#EM EMERGENCY",
+        "ES": "#ES EMERGENCY STOP",
+        "EV": "#EV EVACUATION",
+        "EX": "#EX EMERGENCY EXIT",
+        "HV": "#HV HVAC SHUT-DOWN",
+        "LD": "#LD LOCKDOWN",
+        "NT": "#NT NO TEXT",
+        "PL": "#PL POLICE",
+        "PO": "#PO EMERGENCY POWER OFF",
+        "PS": "#PS FUEL PUMP SHUT-DOWN",
+        "PX": "#PX PUSH TO EXIT",
+        "RM": "#RM Running Man Symbol",
+        "XT": "#XT EXIT",
+        "ZA": "#ZA Custom text (NON-RETURNABLE)"
+      }
+    },
+    "language": {
+      "title": "LANGUAGE",
+      "options": {
+        "EN": "#EN English",
+        "ES": "#ES Spanish",
+        "FR": "#FR French",
+        "ZL": "#ZL Other language (NON-RETURNABLE)"
+      }
+    }
+  }
+}

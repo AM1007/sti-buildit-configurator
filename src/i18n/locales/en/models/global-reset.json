@@ -1,0 +1,55 @@
+{
+  "meta": {
+    "name": "Global ReSet®",
+    "description": "Resettable call point",
+    "heroTitle": "Large Re-settable Manual Call Point for Global Use",
+    "heroDescription": "A re-settable UL fire alarm call point that simulates break glass activation with no broken glass. Versatile mounting plate fits to U.S., European (GLR models only), double-gang and single-gang mounting boxes, making it quick and easy to install. When activated an indicator drops into view. Simple reset with the provided key for immediate re-use. Housing is available in five colours for the fire alarm call point. Key-to-Reset DPDT with 2 Form C contacts.\n\n<strong>MOUNTING</strong> - Global Resets (GLR models only) are supplied as flush mount only. Back boxes are available for surface mount applications."
+  },
+  "steps": {
+    "colour": {
+      "title": "COLOUR",
+      "options": {
+        "0": "#0 Red",
+        "1": "#1 Green",
+        "2": "#2 Yellow",
+        "3": "#3 White",
+        "4": "#4 Blue"
+      }
+    },
+    "cover": {
+      "title": "COVER",
+      "options": {
+        "01": "#01 No Cover",
+        "21": "#21 Shield"
+      }
+    },
+    "text": {
+      "title": "TEXT",
+      "options": {
+        "AB": "#AB ABORT",
+        "EM": "#EM EMERGENCY",
+        "ES": "#ES EMERGENCY STOP",
+        "EV": "#EV EVACUATION",
+        "EX": "#EX EMERGENCY EXIT",
+        "HV": "#HV HVAC SHUT-DOWN",
+        "LD": "#LD LOCKDOWN",
+        "NT": "#NT NO TEXT",
+        "PO": "#PO EMERGENCY POWER OFF",
+        "PS": "#PS FUEL PUMP SHUT-DOWN",
+        "PX": "#PX PUSH TO EXIT",
+        "RM": "#RM Running Man Logo",
+        "XT": "#XT EXIT",
+        "ZA": "#ZA Custom text (NON-RETURNABLE)"
+      }
+    },
+    "language": {
+      "title": "LANGUAGE",
+      "options": {
+        "EN": "#EN English",
+        "ES": "#ES Spanish",
+        "FR": "#FR French",
+        "ZL": "#ZL Other language (NON-RETURNABLE)"
+      }
+    }
+  }
+}

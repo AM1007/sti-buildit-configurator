@@ -1,0 +1,180 @@
+{
+  "common": {
+    "home": "Home",
+    "myList": "My List",
+    "reset": "Reset",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "close": "Close",
+    "copy": "Copy",
+    "copied": "Copied",
+    "download": "Download",
+    "share": "Share",
+    "edit": "Edit",
+    "delete": "Delete",
+    "clear": "Clear",
+    "clearAll": "Clear All",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "noResults": "No results found",
+    "required": "Required",
+    "optional": "Optional",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "contact": "Contact",
+    "allRightsReserved": "All rights reserved"
+  },
+
+  "header": {
+    "logo": "Build it"
+  },
+
+  "footer": {
+    "copyright": "© {year} Product Configurator. All rights reserved."
+  },
+
+  "home": {
+    "heroTitle": "Build It Configurators",
+    "heroDescription": "STI's Build It Configurator collection brings together customizable push buttons, call points, protective covers, enclosures, and other activation and protection devices for fire, security, and access-control applications. Each product series includes an interactive configurator that lets you tailor materials, activation methods, mounting options, and protective features to fit your exact requirements.",
+    "heroSubtitle": "Build your perfect device",
+    "configuratorsTitle": "Choose a configurator",
+    "inDevelopment": "In Development"
+  },
+
+  "configurator": {
+    "editSelections": "Edit Selections",
+    "productPreview": "Product Preview",
+    "productModel": "Product Model",
+    "previewNotAvailable": "PRODUCT PREVIEW\nNOT AVAILABLE",
+    "completeSelections": "Please complete build it selections",
+    "imageFailedToLoad": "Image failed to load",
+    "missingSelections": "Missing selections",
+    "configurationComplete": "Configuration complete",
+    "addToMyList": "Add to My List",
+    "removeFromMyList": "Remove from List",
+    "inMyList": "In My List",
+    "copyProductModel": "Copy Product Model",
+    "copyUrl": "Copy URL",
+    "downloadPdf": "Download PDF",
+    "resetConfiguration": "Reset Configuration",
+    "whereToBuy": "Where to Buy",
+    "selectOption": "Select an option",
+    "optionDisabled": "Option unavailable",
+    "extendedLeadTimes": "EXTENDED LEAD TIMES",
+    "notUlListed": "NOT UL LISTED",
+    "nonReturnable": "NON-RETURNABLE",
+    "customText": "Custom Text",
+    "enterCustomText": "Enter custom text",
+    "lineCount": "Number of lines",
+    "lines": "lines",
+    "maxCharacters": "Max characters",
+    "charactersRemaining": "Characters remaining",
+    "textPreview": "Text preview",
+    "submitCustomText": "Apply text",
+    "noSelection": "NO SELECTION"
+  },
+
+  "myList": {
+    "title": "My List",
+    "description": "Add products to your list by clicking the star icon on product pages or listings. Once added, your list of products can be easily emailed to one of our distributors or anyone of your choosing.",
+    "emptyTitle": "Your list is empty",
+    "emptyDescription": "Configure a product and add it to your list to save it for later.",
+    "browseConfigurators": "Browse Configurators",
+    "startConfiguring": "Start Configuring",
+    "itemsCount": "{count} items",
+    "savedAt": "Saved",
+    "loadConfiguration": "Load Configuration",
+    "removeItem": "Remove",
+    "clearList": "Clear My List",
+    "clearListConfirm": "Are you sure you want to clear all saved configurations?",
+    "downloadList": "Download My List",
+    "exportXlsx": "Export to Excel",
+    "copyAllModels": "Copy All Models"
+  },
+
+  "share": {
+    "menuTitle": "Share",
+    "copyUrl": "Copy URL",
+    "copyModelId": "Copy Model ID",
+    "savePdf": "Save PDF",
+    "print": "Print",
+    "generating": "Generating...",
+    "urlCopied": "URL copied to clipboard",
+    "modelCopied": "Model ID copied to clipboard",
+    "pdfDownloaded": "PDF downloaded successfully",
+    "pdfGenerated": "PDF generated",
+    "pdfError": "Failed to generate PDF. Please try again.",
+    "urlError": "Cannot generate URL: model ID is missing",
+    "defaultProductName": "Product Configuration"
+  },
+
+  "validation": {
+    "requiredField": "This field is required",
+    "maxLength": "Maximum length: {max} characters",
+    "invalidCharacters": "Invalid characters"
+  },
+
+  "toast": {
+    "addedToMyList": "Added to My List",
+    "removedFromMyList": "Removed from list",
+    "configurationReset": "Configuration reset",
+    "copiedToClipboard": "Copied to clipboard",
+    "errorOccurred": "An error occurred"
+  },
+
+  "notFound": {
+    "title": "Page not found",
+    "description": "The page you are looking for does not exist or has been moved.",
+    "backHome": "Back to Home"
+  },
+
+  "inDevelopment": {
+    "title": "Page is in development",
+    "description": "This configurator is coming soon.",
+    "descriptionWithName": "The configurator for {name} is coming soon."
+  },
+
+  "customText": {
+    "enterLabel": "ENTER A CUSTOM LABEL FOR YOUR DEVICE",
+    "label": "Label",
+    "cover": "Cover",
+    "lineCount": "{count} Line",
+    "linePlaceholder": "Line {line}",
+    "maxCharacters": "{max}-Character maximum for each line in any language",
+    "labelLine1Required": "Label Line 1 is required",
+    "coverLine1Required": "Cover Line 1 is required",
+    "lineExceedsMax": "Label Line {line} exceeds {max} characters",
+    "coverLineExceedsMax": "Cover Line {line} exceeds {max} characters",
+    "nonReturnable": "CUSTOM PRODUCTS ARE NON-RETURNABLE"
+  },
+
+  "card": {
+    "features": "Features",
+    "colours": "Colours",
+    "buildYourModel": "Build Your Model",
+    "inDevelopment": "In Development"
+  },
+
+  "productCard": {
+    "noPreview": "No preview",
+    "customBuilt": "Custom built product",
+    "viewDetails": "View Details"
+  },
+
+  "customTextDisplay": {
+    "title": "Custom Text",
+    "nonReturnable": "NON-RETURNABLE",
+    "line": "Line {num}"
+  },
+
+  "notes": {
+    "EXTENDED_LEAD_TIMES": "EXTENDED LEAD TIMES",
+    "NOT_UL_LISTED": "NOT UL LISTED",
+    "NON-RETURNABLE": "NON-RETURNABLE"
+  }
+}

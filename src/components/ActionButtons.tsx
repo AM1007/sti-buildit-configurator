@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { ProductModel, ModelId, Configuration, CustomTextData } from "../types";
 import { ShareMenu } from "./ShareMenu";
+import { useTranslation } from "../i18n";
 
 interface ActionButtonsProps {
   productModel: ProductModel;
@@ -29,11 +30,8 @@ export function ActionButtons({
   productDescription,
   productImageUrl,
 }: ActionButtonsProps) {
+  const { t } = useTranslation();
   const [showShareMenu, setShowShareMenu] = useState(false);
-
-  const handleWhereToBuy = () => {
-    window.open("https://example.com/where-to-buy", "_blank");
-  };
 
   const handleStarClick = () => {
     if (isInMyList) {
@@ -43,42 +41,32 @@ export function ActionButtons({
     }
   };
 
-  const starTitle = isInMyList ? "Remove from My List" : "Add to My List";
+  const starTitle = isInMyList 
+    ? t("configurator.removeFromMyList") 
+    : t("configurator.addToMyList");
 
   return (
-        <div className="flex w-full flex-wrap items-center justify-center gap-2 md:items-start md:gap-6">
-          <button
-            type="button"
-            onClick={onReset}
-            className="cursor-pointer inline-flex items-center justify-center gap-1 border-4 border-gray-500 bg-gray-500 px-4.5 py-0.5 text-sm font-bold text-white transition-all duration-300 hover:border-gray-600 hover:bg-gray-600 lg:gap-1.5 lg:px-6 lg:py-1 lg:text-base min-h-9 lg:min-h-11"
+    <div className="flex w-full flex-wrap items-center justify-center gap-2 md:items-start md:gap-6">
+      <button
+        type="button"
+        onClick={onReset}
+        className="cursor-pointer inline-flex items-center justify-center gap-1 border-4 border-gray-500 bg-gray-500 px-4.5 py-0.5 text-sm font-bold text-white transition-all duration-300 hover:border-gray-600 hover:bg-gray-600 lg:gap-1.5 lg:px-6 lg:py-1 lg:text-base min-h-9 lg:min-h-11 min-w-28 lg:min-w-32"
       >
-            <span className="inline-grid text-lg leading-none">
-              <RefreshIcon />
-            </span>
-          <span>Start over</span>
+        <span className="inline-grid text-lg leading-none">
+          <RefreshIcon />
+        </span>
+        <span>{t("common.reset")}</span>
       </button>
 
-      <a
-        href="https://example.com/where-to-buy"
-        target="_blank"
-        rel="noopener noreferrer"
-        onClick={(e) => {
-          e.preventDefault();
-          handleWhereToBuy();
-        }}
-        className="cursor-pointer inline-flex items-center justify-center gap-1 border-4 border-brand-600 bg-brand-600 px-4.5 py-0.5 text-sm font-bold text-white transition-all duration-300 hover:border-brand-700 hover:bg-brand-700 lg:gap-1.5 lg:px-6 lg:py-1 lg:text-base min-h-9 lg:min-h-11 whitespace-nowrap"
-      >
-        Where to Buy
-      </a>
       <div className="relative">
         <button
           type="button"
           onClick={() => setShowShareMenu((prev) => !prev)}
-          className="cursor-pointer inline-flex items-center justify-center gap-1 border-4 border-gray-500 bg-gray-500 px-4.5 py-0.5 text-sm font-bold text-white transition-all duration-300 hover:border-gray-600 hover:bg-gray-600 lg:gap-1.5 lg:px-6 lg:py-1 lg:text-base min-h-9 lg:min-h-11"
+          className="cursor-pointer inline-flex items-center justify-center gap-1 border-4 border-gray-500 bg-gray-500 px-4.5 py-0.5 text-sm font-bold text-white transition-all duration-300 hover:border-gray-600 hover:bg-gray-600 lg:gap-1.5 lg:px-6 lg:py-1 lg:text-base min-h-9 lg:min-h-11 min-w-28 lg:min-w-32"
           aria-expanded={showShareMenu}
           aria-haspopup="true"
         >
-          <span>Share</span>
+          <span>{t("common.share")}</span>
           <span className="inline-grid text-lg leading-none">
             <ShareIcon />
           </span>
@@ -112,7 +100,7 @@ export function ActionButtons({
           </span>
         </div>
       </button>
-        </div>
+    </div>
   )
 }
 
@@ -195,5 +183,3 @@ function StarFilledIcon() {
     </svg>
   );
 }
-
-

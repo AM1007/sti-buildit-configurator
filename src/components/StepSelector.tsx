@@ -1,6 +1,7 @@
 import type { Step, OptionId, Configuration, ModelId } from "../types";
 import { OptionCard } from "./OptionCard";
 import { getOptionsWithAvailability } from "../filterOptions";
+import { useTranslation } from "../i18n";
 
 interface StepSelectorProps {
   step: Step;
@@ -11,6 +12,8 @@ interface StepSelectorProps {
   onSelect: (optionId: OptionId) => void;
   onClear: () => void;
   onToggle: () => void;
+  getStepTitle?: (stepId: string) => string;
+  getOptionLabel?: (stepId: string, optionId: string) => string;
 }
 
 function getGridClasses(optionCount: number): string {
@@ -32,7 +35,10 @@ export function StepSelector({
   onSelect,
   onClear,
   onToggle,
+  getStepTitle,
+  getOptionLabel,
 }: StepSelectorProps) {
+  const { t } = useTranslation();
   const selectedOption = step.options.find((o) => o.id === selectedOptionId);
   const optionsWithStatus = getOptionsWithAvailability(step, config, modelId);
   const gridClasses = getGridClasses(step.options.length);
@@ -44,6 +50,11 @@ export function StepSelector({
       onSelect(optionId);
     }
   };
+
+  const title = getStepTitle ? getStepTitle(step.id) : step.title;
+  const selectedLabel = selectedOption
+    ? (getOptionLabel ? getOptionLabel(step.id, selectedOption.id) : selectedOption.label)
+    : t("configurator.noSelection");
 
   return (
     <div
@@ -64,7 +75,7 @@ export function StepSelector({
       >
         <div className="flex w-full items-center justify-between gap-4">
           <h4 className="font-bold text-lg lg:text-2xl text-inherit transition-all duration-300">
-            {step.title}
+            {title}
           </h4>
           <span
             className={`
@@ -76,7 +87,7 @@ export function StepSelector({
           </span>
         </div>
         <p className="font-normal text-base lg:text-md block w-full text-start text-inherit transition-all duration-300">
-          {selectedOption ? selectedOption.label : "NO SELECTION"}
+          {selectedLabel}
         </p>
       </button>
 
@@ -89,7 +100,7 @@ export function StepSelector({
             id={`step-${step.id}-content`}
             className={`grid ${gridClasses} gap-x-2.5 gap-y-3`}
             role="listbox"
-            aria-label={`${step.title} options`}
+            aria-label={`${title} options`}
           >
             {optionsWithStatus.map(({ option, availability }) => (
               <OptionCard
@@ -99,6 +110,7 @@ export function StepSelector({
                 isAvailable={availability.available}
                 unavailableReason={availability.reason}
                 onSelect={() => handleOptionClick(option.id)}
+                label={getOptionLabel ? getOptionLabel(step.id, option.id) : option.label}
               />
             ))}
           </div>

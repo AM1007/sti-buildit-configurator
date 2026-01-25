@@ -1,0 +1,65 @@
+{
+  "meta": {
+    "name": "Universal Stopper®",
+    "description": "Protective cover for buttons and switches",
+    "heroTitle": "IP Rated Cover Offering Robust Protection",
+    "heroDescription": "The Universal Stopper is an indoor and outdoor, low profile or dome polycarbonate covers that protects devices such as manual call points, emergency buttons and dual action pull stations etc., without restricting legitimate operation.\n\nThe versatile cover can serve as a push button, pull station, electrical device or call point cover. The Universal Stopper offers excellent protection against physical damage (both accidental and intentional), dust and grime as well as harsh environments inside and out. Mounting options 0 & 1 are designed to meet the requirements of IP54, option 6 & 7 IP56 (Sealed Mounting Plate with option 6 provides IP66 protection)."
+  },
+  "steps": {
+    "cover": {
+      "title": "COVER",
+      "options": {
+        "13": "#13 Dome Cover",
+        "14": "#14 Low Profile Cover"
+      }
+    },
+    "hoodSounder": {
+      "title": "HOOD & SOUNDER",
+      "options": {
+        "00": "#00 No Label Hood",
+        "10": "#10 Label Hood without Sounder",
+        "20": "#20 Label Hood with Sounder",
+        "30": "#30 Label Hood with Sounder and Relay"
+      }
+    },
+    "colourLabel": {
+      "title": "COLOUR & LABEL",
+      "options": {
+        "FR": "#FR Red 'FIRE ALARM' label",
+        "NR": "#NR Red no label",
+        "CR": "#CR Red custom label (NON-RETURNABLE)",
+        "EG": "#EG Green 'Emergency Exit' label",
+        "NG": "#NG Green no label",
+        "CG": "#CG Green custom label (NON-RETURNABLE)",
+        "NC": "#NC Clear no label",
+        "NK": "#NK Black no label",
+        "CK": "#CK Black custom label (NON-RETURNABLE)",
+        "NB": "#NB Blue no label",
+        "CB": "#CB Blue custom label (NON-RETURNABLE)",
+        "NW": "#NW White no label",
+        "CW": "#CW White custom label (NON-RETURNABLE)",
+        "NY": "#NY Yellow no label",
+        "CY": "#CY Yellow custom label (NON-RETURNABLE)"
+      }
+    },
+    "language": {
+      "title": "LANGUAGE",
+      "options": {
+        "EN": "#EN English",
+        "ES": "#ES Spanish",
+        "FR": "#FR French",
+        "DE": "#DE German",
+        "NL": "#NL Dutch"
+      }
+    },
+    "mounting": {
+      "title": "MOUNTING",
+      "options": {
+        "0": "#0 Flush Mount Open Backed",
+        "1": "#1 Surface Mount - Clear Spacer (Dual Mount)",
+        "6": "#6 European Enclosed Back Box, 20mm Thread Point, Sealed Mounting Plate",
+        "7": "#7 European Enclosed Back Box, 20mm Thread Point, Open Mounting Plate"
+      }
+    }
+  }
+}

@@ -1,0 +1,180 @@
+{
+  "common": {
+    "home": "Головна",
+    "myList": "Мій список",
+    "reset": "Скинути",
+    "save": "Зберегти",
+    "cancel": "Скасувати",
+    "confirm": "Підтвердити",
+    "close": "Закрити",
+    "copy": "Копіювати",
+    "copied": "Скопійовано",
+    "download": "Завантажити",
+    "share": "Поділитися",
+    "edit": "Редагувати",
+    "delete": "Видалити",
+    "clear": "Очистити",
+    "clearAll": "Очистити все",
+    "loading": "Завантаження...",
+    "error": "Помилка",
+    "success": "Успішно",
+    "noResults": "Нічого не знайдено",
+    "required": "Обов'язково",
+    "optional": "Опціонально",
+    "back": "Назад",
+    "next": "Далі",
+    "submit": "Надіслати",
+    "privacy": "Конфіденційність",
+    "terms": "Умови",
+    "contact": "Контакти",
+    "allRightsReserved": "Усі права захищені"
+  },
+
+  "header": {
+    "logo": "Build it"
+  },
+
+  "footer": {
+    "copyright": "© {year} Product Configurator. Усі права захищені."
+  },
+
+  "home": {
+    "heroTitle": "Build It Конфігуратори",
+    "heroDescription": "Колекція конфігураторів STI Build It об'єднує настроювані кнопки, точки виклику, захисні кришки, корпуси та інші пристрої активації та захисту для пожежних, охоронних систем та систем контролю доступу. Кожна серія продуктів включає інтерактивний конфігуратор, який дозволяє підібрати матеріали, методи активації, варіанти монтажу та захисні функції відповідно до ваших вимог.",
+    "heroSubtitle": "Створіть свій ідеальний пристрій",
+    "configuratorsTitle": "Оберіть конфігуратор",
+    "inDevelopment": "В розробці"
+  },
+
+  "configurator": {
+    "editSelections": "Редагувати вибір",
+    "productPreview": "Попередній перегляд",
+    "productModel": "Модель продукту",
+    "previewNotAvailable": "ПОПЕРЕДНІЙ ПЕРЕГЛЯД\nНЕДОСТУПНИЙ",
+    "completeSelections": "Будь ласка, завершіть вибір опцій",
+    "imageFailedToLoad": "Не вдалося завантажити зображення",
+    "missingSelections": "Відсутні вибори",
+    "configurationComplete": "Конфігурацію завершено",
+    "addToMyList": "Додати до мого списку",
+    "removeFromMyList": "Видалити зі списку",
+    "inMyList": "У моєму списку",
+    "copyProductModel": "Копіювати артикул",
+    "copyUrl": "Копіювати посилання",
+    "downloadPdf": "Завантажити PDF",
+    "resetConfiguration": "Скинути конфігурацію",
+    "whereToBuy": "Де придбати",
+    "selectOption": "Оберіть опцію",
+    "optionDisabled": "Опція недоступна",
+    "extendedLeadTimes": "ПОДОВЖЕНІ ТЕРМІНИ ПОСТАВКИ",
+    "notUlListed": "НЕ СЕРТИФІКОВАНО UL",
+    "nonReturnable": "БЕЗ ПОВЕРНЕННЯ",
+    "customText": "Власний текст",
+    "enterCustomText": "Введіть власний текст",
+    "lineCount": "Кількість рядків",
+    "lines": "рядків",
+    "maxCharacters": "Максимум символів",
+    "charactersRemaining": "Залишилось символів",
+    "textPreview": "Попередній перегляд тексту",
+    "submitCustomText": "Застосувати текст",
+    "noSelection": "НЕ ВИБРАНО"
+  },
+
+  "myList": {
+    "title": "Мій список",
+    "description": "Додавайте продукти до списку, натискаючи іконку зірки на сторінках продуктів. Після додавання ваш список можна легко надіслати електронною поштою дистриб'ютору або будь-кому на ваш вибір.",
+    "emptyTitle": "Ваш список порожній",
+    "emptyDescription": "Налаштуйте продукт та додайте його до списку, щоб зберегти на потім.",
+    "browseConfigurators": "Переглянути конфігуратори",
+    "startConfiguring": "Почати налаштування",
+    "itemsCount": "{count} позицій",
+    "savedAt": "Збережено",
+    "loadConfiguration": "Завантажити конфігурацію",
+    "removeItem": "Видалити",
+    "clearList": "Очистити список",
+    "clearListConfirm": "Ви впевнені, що хочете очистити всі збережені конфігурації?",
+    "downloadList": "Завантажити список",
+    "exportXlsx": "Експорт в Excel",
+    "copyAllModels": "Копіювати всі артикули"
+  },
+
+  "share": {
+    "menuTitle": "Поділитися",
+    "copyUrl": "Копіювати посилання",
+    "copyModelId": "Копіювати артикул",
+    "savePdf": "Зберегти PDF",
+    "print": "Друк",
+    "generating": "Генерація...",
+    "urlCopied": "Посилання скопійовано",
+    "modelCopied": "Артикул скопійовано",
+    "pdfDownloaded": "PDF успішно завантажено",
+    "pdfGenerated": "PDF створено",
+    "pdfError": "Не вдалося створити PDF. Спробуйте ще раз.",
+    "urlError": "Неможливо створити URL: відсутній ID моделі",
+    "defaultProductName": "Конфігурація продукту"
+  },
+
+  "validation": {
+    "requiredField": "Це поле обов'язкове",
+    "maxLength": "Максимальна довжина: {max} символів",
+    "invalidCharacters": "Недопустимі символи"
+  },
+
+  "toast": {
+    "addedToMyList": "Додано до мого списку",
+    "removedFromMyList": "Видалено зі списку",
+    "configurationReset": "Конфігурацію скинуто",
+    "copiedToClipboard": "Скопійовано в буфер обміну",
+    "errorOccurred": "Сталася помилка"
+  },
+
+  "notFound": {
+    "title": "Сторінку не знайдено",
+    "description": "Сторінка, яку ви шукаєте, не існує або була переміщена.",
+    "backHome": "Повернутися на головну"
+  },
+
+  "inDevelopment": {
+    "title": "Сторінка в розробці",
+    "description": "Цей конфігуратор незабаром буде доступний.",
+    "descriptionWithName": "Конфігуратор для {name} незабаром буде доступний."
+  },
+
+  "customText": {
+    "enterLabel": "ВВЕДІТЬ ВЛАСНИЙ НАПИС ДЛЯ ВАШОГО ПРИСТРОЮ",
+    "label": "Напис",
+    "cover": "Кришка",
+    "lineCount": "{count} рядок",
+    "linePlaceholder": "Рядок {line}",
+    "maxCharacters": "Максимум {max} символів для кожного рядка будь-якою мовою",
+    "labelLine1Required": "Рядок 1 напису обов'язковий",
+    "coverLine1Required": "Рядок 1 кришки обов'язковий",
+    "lineExceedsMax": "Рядок {line} напису перевищує {max} символів",
+    "coverLineExceedsMax": "Рядок {line} кришки перевищує {max} символів",
+    "nonReturnable": "ПРОДУКЦІЯ З ВЛАСНИМ НАПИСОМ НЕ ПІДЛЯГАЄ ПОВЕРНЕННЮ"
+  },
+
+  "card": {
+    "features": "Функції",
+    "colours": "Кольори",
+    "buildYourModel": "Створіть свою модель",
+    "inDevelopment": "В розробці"
+  },
+
+  "productCard": {
+    "noPreview": "Попередній перегляд недоступний",
+    "customBuilt": "Індивідуальна збірка",
+    "viewDetails": "Переглянути деталі"
+  },
+
+  "customTextDisplay": {
+    "title": "Власний текст",
+    "nonReturnable": "НЕ ПІДЛЯГАЄ ПОВЕРНЕННЮ",
+    "line": "Рядок {num}"
+  },
+
+  "notes": {
+    "EXTENDED_LEAD_TIMES": "ПОДОВЖЕНІ ТЕРМІНИ ВИКОНАННЯ",
+    "NOT_UL_LISTED": "НЕ СЕРТИФІКОВАНО UL",
+    "NON-RETURNABLE": "НЕ ПІДЛЯГАЄ ПОВЕРНЕННЮ"
+  }
+}

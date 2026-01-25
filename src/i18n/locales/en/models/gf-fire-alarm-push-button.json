@@ -1,0 +1,39 @@
+{
+  "meta": {
+    "name": "GF Fire Alarm Push Button",
+    "description": "GF fire alarm push button with optional camera",
+    "heroTitle": "Helps Stop Unwanted Fire Alarm Activation",
+    "heroDescription": "The UL-listed GF Fire Alarm Push Button with an optional IP camera incorporates an innovative design to help identify individuals upon button activation. The IP camera helps assist in the identification of the person activating the fire alarm. A choice of optional covers (with or without sound) is available and provides additional protection to help prevent vandalism or accidental activation. The GF is designed specifically to complement fire alarm systems.\n\nOperation includes Push-to-Activate and Key-to-Reset configuration.\n\nTo view the G3 Multipurpose Push Button, please <a href=\"/configurator/g3-multipurpose-push-button\" class=\"text-primary underline hover:text-primary/80\">click here</a>."
+  },
+  "steps": {
+    "model": {
+      "title": "MODEL",
+      "options": {
+        "A": "#A No Camera",
+        "C": "#C With camera (includes back box)"
+      }
+    },
+    "cover": {
+      "title": "COVER",
+      "options": {
+        "0": "#0 No Cover",
+        "2": "#2 Shield"
+      }
+    },
+    "text": {
+      "title": "TEXT",
+      "options": {
+        "FR": "#FR FIRE",
+        "HF": "#HF FireHouseFlame Symbol"
+      }
+    },
+    "language": {
+      "title": "LANGUAGE",
+      "options": {
+        "EN": "#EN English",
+        "ES": "#ES Spanish",
+        "FR": "#FR French"
+      }
+    }
+  }
+}

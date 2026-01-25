@@ -4,6 +4,7 @@ import { MODEL_NAMES } from "../types";
 import { getModelById } from "../data/models";
 import { getCompletedDeviceImage } from "../utils/getCompletedDeviceImage";
 import { buildShareableUrl } from "../utils/configSerializer";
+import { useTranslation } from "../i18n";
 
 interface ProductCardProps {
   item: SavedConfiguration;
@@ -11,6 +12,7 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ item, onRemove }: ProductCardProps) {
+  const { t } = useTranslation();
   const model = getModelById(item.modelId);
   const modelName = MODEL_NAMES[item.modelId] ?? item.modelId;
 
@@ -56,7 +58,7 @@ export function ProductCard({ item, onRemove }: ProductCardProps) {
                     type="button"
                     onClick={handleRemoveClick}
                     className="absolute right-3 top-2 flex w-[38%] items-center justify-center cursor-pointer"
-                    aria-label="Remove from my list"
+                    aria-label={t("myList.removeItem")}
                   >
                     <span className="inline-grid text-base text-brand-600">
                       <StarFilledIcon />
@@ -80,13 +82,13 @@ export function ProductCard({ item, onRemove }: ProductCardProps) {
                   />
                 ) : (
                   <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
-                    <span className="text-gray-400 text-sm text-center px-4">No preview</span>
+                    <span className="text-gray-400 text-sm text-center px-4">{t("productCard.noPreview")}</span>
                   </div>
                 )}
               </div>
             </div>
             <div className="absolute bottom-0 -left-0.5 block bg-gray-700/85 py-0.5 pl-5 pr-2 text-white">
-              <span className="font-normal text-xs">Custom built product</span>
+              <span className="font-normal text-xs">{t("productCard.customBuilt")}</span>
             </div>
           </div>
 
@@ -101,7 +103,7 @@ export function ProductCard({ item, onRemove }: ProductCardProps) {
         </div>
 
         <span className="cursor-pointer inline-flex items-center justify-center relative ring-offset-0 transition-all duration-300 ease-in-out focus-visible:outline-none box-border font-bold text-base gap-1.5 px-5 py-1 min-h-10 border-4 lg:gap-2.5 lg:px-7 lg:py-3 lg:min-h-14 lg:text-lg bg-brand-600 border-brand-600 text-white hover:bg-brand-700 hover:border-brand-700 w-full">
-          View Details
+          {t("productCard.viewDetails")}
           <span className="inline-grid leading-none text-inherit">
             <ArrowRightIcon />
           </span>
@@ -141,4 +143,3 @@ function ArrowRightIcon() {
     </svg>
   );
 }
-

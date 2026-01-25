@@ -2,6 +2,7 @@ import type { Configuration, StepId, OptionId, ModelDefinition, CustomTextData }
 import { StepSelector } from "./StepSelector";
 import { CustomTextDisplay } from "./CustomTextDisplay";
 import { hasSubmittedCustomText } from "../utils/customTextHelpers";
+import { useModelTranslations } from "../hooks/useModelTranslations";
 
 interface SidebarProps {
   model: ModelDefinition;
@@ -24,6 +25,8 @@ export function Sidebar({
   onSetCurrentStep,
   className = "",
 }: SidebarProps) {
+  const { getStepTitle, getOptionLabel } = useModelTranslations(model.id);
+
   const orderedSteps = model.stepOrder
     .map((stepId) => model.steps.find((s) => s.id === stepId))
     .filter((step): step is NonNullable<typeof step> => step !== undefined);
@@ -56,6 +59,8 @@ export function Sidebar({
               onSelect={(optionId) => onSelectOption(step.id, optionId)}
               onClear={() => onClearOption(step.id)}
               onToggle={() => onSetCurrentStep(step.id)}
+              getStepTitle={getStepTitle}
+              getOptionLabel={getOptionLabel}
             />
           ))}
 

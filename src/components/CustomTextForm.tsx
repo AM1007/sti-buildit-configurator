@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { CustomTextData, CustomTextVariant } from "../types";
 import { getEffectiveLineCount } from "../utils/customTextHelpers";
+import { useTranslation } from "../i18n";
 
 interface CustomTextFormProps {
   variant: CustomTextVariant;
@@ -10,6 +11,7 @@ interface CustomTextFormProps {
 }
 
 export function CustomTextForm({ variant, maxLength, onSubmit, initialData }: CustomTextFormProps) {
+  const { t } = useTranslation();
   const isDualBlock = variant === "dual-block-three-line";
 
   const getInitialLineCount = (): 1 | 2 | 3 => {
@@ -68,36 +70,36 @@ export function CustomTextForm({ variant, maxLength, onSubmit, initialData }: Cu
     const validationErrors: string[] = [];
 
     if (!line1.trim()) {
-      validationErrors.push("Label Line 1 is required");
+      validationErrors.push(t("customText.labelLine1Required"));
     }
 
     if (line1.length > maxLength) {
-      validationErrors.push(`Label Line 1 exceeds ${maxLength} characters`);
+      validationErrors.push(t("customText.lineExceedsMax", { line: "1", max: maxLength.toString() }));
     }
 
     if (showLine2 && line2.length > maxLength) {
-      validationErrors.push(`Label Line 2 exceeds ${maxLength} characters`);
+      validationErrors.push(t("customText.lineExceedsMax", { line: "2", max: maxLength.toString() }));
     }
 
     if (showLine3 && line3.length > maxLength) {
-      validationErrors.push(`Label Line 3 exceeds ${maxLength} characters`);
+      validationErrors.push(t("customText.lineExceedsMax", { line: "3", max: maxLength.toString() }));
     }
 
     if (isDualBlock) {
       if (!coverLine1.trim()) {
-        validationErrors.push("Cover Line 1 is required");
+        validationErrors.push(t("customText.coverLine1Required"));
       }
 
       if (coverLine1.length > maxLength) {
-        validationErrors.push(`Cover Line 1 exceeds ${maxLength} characters`);
+        validationErrors.push(t("customText.coverLineExceedsMax", { line: "1", max: maxLength.toString() }));
       }
 
       if (coverLineCount >= 2 && coverLine2.length > maxLength) {
-        validationErrors.push(`Cover Line 2 exceeds ${maxLength} characters`);
+        validationErrors.push(t("customText.coverLineExceedsMax", { line: "2", max: maxLength.toString() }));
       }
 
       if (coverLineCount >= 3 && coverLine3.length > maxLength) {
-        validationErrors.push(`Cover Line 3 exceeds ${maxLength} characters`);
+        validationErrors.push(t("customText.coverLineExceedsMax", { line: "3", max: maxLength.toString() }));
       }
     }
 
@@ -135,7 +137,7 @@ export function CustomTextForm({ variant, maxLength, onSubmit, initialData }: Cu
           className="size-4 appearance-none rounded-full border border-solid border-gray-400 
                      checked:border-[5px] checked:border-brand-600"
         />
-        <span>1 Line</span>
+        <span>{t("customText.lineCount", { count: "1" })}</span>
       </label>
 
       <label className="flex items-center justify-start gap-2 text-sm font-normal">
@@ -148,7 +150,7 @@ export function CustomTextForm({ variant, maxLength, onSubmit, initialData }: Cu
           className="size-4 appearance-none rounded-full border border-solid border-gray-400 
                      checked:border-[5px] checked:border-brand-600"
         />
-        <span>2 Line</span>
+        <span>{t("customText.lineCount", { count: "2" })}</span>
       </label>
 
       {showThreeLine && (
@@ -162,7 +164,7 @@ export function CustomTextForm({ variant, maxLength, onSubmit, initialData }: Cu
             className="size-4 appearance-none rounded-full border border-solid border-gray-400 
                        checked:border-[5px] checked:border-brand-600"
           />
-          <span>3 Line</span>
+          <span>{t("customText.lineCount", { count: "3" })}</span>
         </label>
       )}
     </div>
@@ -178,15 +180,14 @@ export function CustomTextForm({ variant, maxLength, onSubmit, initialData }: Cu
     <div className="flex w-full justify-center">
       <div className="max-w-126 flex-1">
         <p className="mb-5 text-center text-base font-normal lg:mb-7 lg:text-lg">
-          ENTER A CUSTOM LABEL FOR YOUR DEVICE
+          {t("customText.enterLabel")}
         </p>
 
         <form onSubmit={handleSubmit}>
           <div className="grid w-full grid-cols-1 gap-7">
-            {/* Label Block */}
             <div className="w-full">
               <p className="mb-4 text-center text-base font-bold lg:text-lg">
-                Label
+                {t("customText.label")}
               </p>
 
               {showLineCountSelector && renderLineCountSelector(
@@ -201,7 +202,7 @@ export function CustomTextForm({ variant, maxLength, onSubmit, initialData }: Cu
                   <input
                     type="text"
                     name="line1"
-                    placeholder="Line 1"
+                    placeholder={t("customText.linePlaceholder", { line: "1" })}
                     value={line1}
                     onChange={(e) => setLine1(e.target.value)}
                     maxLength={maxLength}
@@ -215,7 +216,7 @@ export function CustomTextForm({ variant, maxLength, onSubmit, initialData }: Cu
                     <input
                       type="text"
                       name="line2"
-                      placeholder="Line 2"
+                      placeholder={t("customText.linePlaceholder", { line: "2" })}
                       value={line2}
                       onChange={(e) => setLine2(e.target.value)}
                       maxLength={maxLength}
@@ -230,7 +231,7 @@ export function CustomTextForm({ variant, maxLength, onSubmit, initialData }: Cu
                     <input
                       type="text"
                       name="line3"
-                      placeholder="Line 3"
+                      placeholder={t("customText.linePlaceholder", { line: "3" })}
                       value={line3}
                       onChange={(e) => setLine3(e.target.value)}
                       maxLength={maxLength}
@@ -242,15 +243,14 @@ export function CustomTextForm({ variant, maxLength, onSubmit, initialData }: Cu
               </div>
 
               <span className="mt-1 block text-center text-sm text-gray-500">
-                {maxLength}-Character maximum for each line in any language
+                {t("customText.maxCharacters", { max: maxLength.toString() })}
               </span>
             </div>
 
-            {/* Cover Block (only for dual-block variant) */}
             {isDualBlock && (
               <div className="w-full">
                 <p className="mb-4 text-center text-base font-bold lg:text-lg">
-                  Cover
+                  {t("customText.cover")}
                 </p>
 
                 {renderLineCountSelector(
@@ -265,7 +265,7 @@ export function CustomTextForm({ variant, maxLength, onSubmit, initialData }: Cu
                     <input
                       type="text"
                       name="coverLine1"
-                      placeholder="Line 1"
+                      placeholder={t("customText.linePlaceholder", { line: "1" })}
                       value={coverLine1}
                       onChange={(e) => setCoverLine1(e.target.value)}
                       maxLength={maxLength}
@@ -279,7 +279,7 @@ export function CustomTextForm({ variant, maxLength, onSubmit, initialData }: Cu
                       <input
                         type="text"
                         name="coverLine2"
-                        placeholder="Line 2"
+                        placeholder={t("customText.linePlaceholder", { line: "2" })}
                         value={coverLine2}
                         onChange={(e) => setCoverLine2(e.target.value)}
                         maxLength={maxLength}
@@ -294,7 +294,7 @@ export function CustomTextForm({ variant, maxLength, onSubmit, initialData }: Cu
                       <input
                         type="text"
                         name="coverLine3"
-                        placeholder="Line 3"
+                        placeholder={t("customText.linePlaceholder", { line: "3" })}
                         value={coverLine3}
                         onChange={(e) => setCoverLine3(e.target.value)}
                         maxLength={maxLength}
@@ -306,7 +306,7 @@ export function CustomTextForm({ variant, maxLength, onSubmit, initialData }: Cu
                 </div>
 
                 <span className="mt-1 block text-center text-sm text-gray-500">
-                  {maxLength}-Character maximum for each line in any language
+                  {t("customText.maxCharacters", { max: maxLength.toString() })}
                 </span>
               </div>
             )}
@@ -328,11 +328,11 @@ export function CustomTextForm({ variant, maxLength, onSubmit, initialData }: Cu
                          transition-all duration-300 hover:border-brand-700 hover:bg-brand-700 
                          focus:border-red-300 lg:min-h-11 lg:px-6 lg:py-1 lg:text-base"
             >
-              Submit
+              {t("common.submit")}
             </button>
 
             <span className="block text-center text-sm text-brand-600">
-              CUSTOM PRODUCTS ARE NON-RETURNABLE
+              {t("customText.nonReturnable")}
             </span>
           </div>
         </form>

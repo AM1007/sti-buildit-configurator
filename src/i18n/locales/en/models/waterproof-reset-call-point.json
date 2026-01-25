@@ -1,0 +1,38 @@
+{
+  "meta": {
+    "name": "Waterproof ReSet Call Point",
+    "description": "Waterproof call point with resettable function",
+    "heroTitle": "IP 67 Manual Call Point With Resettable Operating Element",
+    "heroDescription": "The Waterproof ReSet call point is compatible with most conventional fire alarm systems, it is a unique manual call point that simulates break glass activation whilst offering the user the benefits of a re-settable operating element. An activation indicator drops into view on activation. The unit is then simply reset with a key and is ready for immediate re-use."
+  },
+  "steps": {
+    "colour": {
+      "title": "COLOUR",
+      "options": {
+        "R": "#R Red",
+        "G": "#G Green",
+        "Y": "#Y Yellow",
+        "W": "#W White",
+        "B": "#B Blue",
+        "O": "#O Orange"
+      }
+    },
+    "label": {
+      "title": "LABEL",
+      "options": {
+        "HOUSE_FLAME": "House Flame Logo",
+        "RUNNING_MAN": "Running Man Logo",
+        "SELF_ASSEMBLE": "Self Assemble Label Kit",
+        "CL": "Custom Label (NON-RETURNABLE)"
+      }
+    },
+    "electricalArrangement": {
+      "title": "ELECTRICAL ARRANGEMENT",
+      "options": {
+        "01": "#01 Conventional Fire Model (EN54-11 approved)",
+        "02": "#02 Single Pole Changeover",
+        "11": "#11 Double Pole Changeover"
+      }
+    }
+  }
+}
