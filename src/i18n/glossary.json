@@ -1,0 +1,603 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "source": "STI.xlsx price list (FortiSec Ukraine)",
+    "created": "2025-01-26",
+    "description": "Brand terminology glossary for STI product configurator localization"
+  },
+
+  "colors": {
+    "red": {
+      "en": "Red",
+      "uk_m": "червоний",
+      "uk_f": "червона",
+      "context": "uk_m для 'корпус', uk_f для 'кнопка'"
+    },
+    "green": {
+      "en": "Green",
+      "uk_m": "зелений",
+      "uk_f": "зелена"
+    },
+    "yellow": {
+      "en": "Yellow",
+      "uk_m": "жовтий",
+      "uk_f": "жовта"
+    },
+    "white": {
+      "en": "White",
+      "uk_m": "білий",
+      "uk_f": "біла"
+    },
+    "blue": {
+      "en": "Blue",
+      "uk_m": "синій",
+      "uk_f": "синя"
+    },
+    "orange": {
+      "en": "Orange",
+      "uk_m": "помаранчевий",
+      "uk_f": "помаранчева"
+    },
+    "clear": {
+      "en": "Clear",
+      "uk_m": "прозорий",
+      "uk_f": "прозора"
+    },
+    "grey": {
+      "en": "Grey",
+      "uk_m": "сірий",
+      "uk_f": "сіра"
+    },
+    "black": {
+      "en": "Black",
+      "uk_m": "чорний",
+      "uk_f": "чорна"
+    }
+  },
+
+  "activation": {
+    "push": {
+      "en": "Push activation",
+      "en_alt": ["Push-to-Activate", "push to activate"],
+      "uk": "активація натисканням"
+    },
+    "key": {
+      "en": "Key activation",
+      "uk": "активація ключем"
+    },
+    "turn": {
+      "en": "Turn activation",
+      "uk": "активація обертанням"
+    }
+  },
+
+  "reset": {
+    "key": {
+      "en": "Key reset",
+      "en_alt": ["Key-to-Reset", "key to reset"],
+      "uk": "відновлення ключем",
+      "note": "НЕ 'скидання' — це механізм кнопки"
+    },
+    "turn": {
+      "en": "Turn reset",
+      "en_alt": ["Turn-to-Reset", "turn to reset"],
+      "uk": "відновлення обертанням"
+    },
+    "momentary": {
+      "en": "Momentary reset",
+      "en_alt": ["Momentary"],
+      "uk": "моментальне відновлення"
+    },
+    "pneumatic": {
+      "en": "Pneumatic timer reset",
+      "uk": "відновлення за пневматичним таймером"
+    }
+  },
+
+  "mounting": {
+    "surface": {
+      "en": "Surface mount",
+      "en_alt": ["Surface Mount"],
+      "uk": "накладний монтаж"
+    },
+    "flush": {
+      "en": "Flush mount",
+      "en_alt": ["Flush Mount"],
+      "uk": "заглиблений монтаж"
+    },
+    "wall": {
+      "en": "Wall mount",
+      "uk": "настінний монтаж"
+    },
+    "indoor": {
+      "en": "Indoor",
+      "uk": "внутрішній"
+    },
+    "outdoor": {
+      "en": "Outdoor",
+      "uk": "вуличний"
+    },
+    "dual": {
+      "en": "Dual Mount",
+      "uk": "накладний/заглиблений монтаж"
+    },
+    "open_backed": {
+      "en": "Open Backed",
+      "uk": "відкрита задня частина"
+    },
+    "enclosed": {
+      "en": "Enclosed Back Box",
+      "uk": "закрита розподільча коробка"
+    },
+    "sealed_plate": {
+      "en": "Sealed Mounting Plate",
+      "uk": "герметична монтажна пластина"
+    },
+    "open_plate": {
+      "en": "Open Mounting Plate",
+      "uk": "відкрита монтажна пластина"
+    }
+  },
+
+  "materials": {
+    "polycarbonate": {
+      "en": "Polycarbonate",
+      "uk": "полікарбонат"
+    },
+    "reinforced_polycarbonate": {
+      "en": "Reinforced polycarbonate",
+      "uk": "посилений полікарбонат"
+    },
+    "stainless_steel": {
+      "en": "Stainless steel",
+      "uk": "н/ж сталь",
+      "uk_full": "нержавіюча сталь"
+    },
+    "fiberglass": {
+      "en": "Fiberglass",
+      "en_alt": ["Fibreglass"],
+      "uk": "склопластик"
+    },
+    "aluminum": {
+      "en": "Aluminum",
+      "en_alt": ["Aluminium"],
+      "uk": "алюміній"
+    },
+    "uv_stabilised": {
+      "en": "UV-stabilised",
+      "en_alt": ["UV stabilized", "UV-stabilized"],
+      "uk": "УФ-стійкий"
+    }
+  },
+
+  "contacts": {
+    "dry": {
+      "en": "Dry contacts",
+      "uk": "сухі контакти"
+    },
+    "spdt": {
+      "en": "SPDT",
+      "en_alt": ["Form C"],
+      "uk": "SPDT (Form C)",
+      "description": "1 перемикальний контакт"
+    },
+    "dpdt": {
+      "en": "DPDT",
+      "en_alt": ["2 Form C"],
+      "uk": "DPDT (2 Form C)",
+      "description": "2 перемикальні контакти"
+    },
+    "spst": {
+      "en": "SPST",
+      "uk": "SPST",
+      "description": "1 пара контактів"
+    },
+    "nc": {
+      "en": "NC",
+      "en_alt": ["Normally Closed"],
+      "uk": "НЗ",
+      "uk_full": "нормально замкнутий"
+    },
+    "no": {
+      "en": "NO",
+      "en_alt": ["Normally Open"],
+      "uk": "НВ",
+      "uk_full": "нормально відкритий"
+    }
+  },
+
+  "components": {
+    "protective_cover": {
+      "en": "Protective cover",
+      "uk": "захисний корпус"
+    },
+    "protective_shield": {
+      "en": "Protective shield",
+      "en_alt": ["Lift cover", "Cover"],
+      "uk": "захисний екран"
+    },
+    "back_box": {
+      "en": "Back box",
+      "en_alt": ["Junction box", "Backbox"],
+      "uk": "розподільча коробка"
+    },
+    "spacer": {
+      "en": "Spacer",
+      "uk": "спейсер"
+    },
+    "mounting_plate": {
+      "en": "Mounting plate",
+      "en_alt": ["Universal Mounting Plate"],
+      "uk": "монтажна пластина"
+    },
+    "sounder": {
+      "en": "Sounder",
+      "en_alt": ["Buzzer", "Alarm"],
+      "uk": "зумер"
+    },
+    "backlight": {
+      "en": "Backlight",
+      "en_alt": ["LED", "illumination"],
+      "uk": "підсвітка"
+    },
+    "relay": {
+      "en": "Relay",
+      "uk": "реле"
+    },
+    "tamper": {
+      "en": "Tamper",
+      "uk": "тампер"
+    },
+    "camera": {
+      "en": "Camera",
+      "en_alt": ["IP camera"],
+      "uk": "камера"
+    },
+    "dome_cover": {
+      "en": "Dome cover",
+      "en_alt": ["Dome"],
+      "uk": "купольний корпус"
+    },
+    "low_profile_cover": {
+      "en": "Low profile cover",
+      "en_alt": ["Low Profile"],
+      "uk": "низькопрофільний корпус"
+    },
+    "label_hood": {
+      "en": "Label hood",
+      "en_alt": ["Hood"],
+      "uk": "козирок з написом"
+    },
+    "thread_point": {
+      "en": "Thread Point",
+      "uk": "різьбовий ввід"
+    }
+  },
+
+  "labels": {
+    "fire": {
+      "en": "FIRE",
+      "en_alt": ["FIRE ALARM", "'FIRE ALARM' label"],
+      "uk": "напис FIRE"
+    },
+    "emergency": {
+      "en": "EMERGENCY",
+      "en_alt": ["'Emergency' label"],
+      "uk": "напис EMERGENCY"
+    },
+    "emergency_exit": {
+      "en": "EMERGENCY EXIT",
+      "en_alt": ["'Emergency Exit' label"],
+      "uk": "напис EMERGENCY EXIT"
+    },
+    "exit": {
+      "en": "EXIT",
+      "uk": "напис EXIT"
+    },
+    "lockdown": {
+      "en": "LOCK DOWN",
+      "en_alt": ["LOCKDOWN"],
+      "uk": "напис LOCK DOWN"
+    },
+    "abort": {
+      "en": "ABORT",
+      "uk": "напис ABORT"
+    },
+    "hvac": {
+      "en": "HVAC SHUT DOWN",
+      "uk": "напис HVAC SHUT DOWN"
+    },
+    "power_off": {
+      "en": "EMERGENCY POWER OFF",
+      "uk": "напис EMERGENCY POWER OFF"
+    },
+    "fuel_pump": {
+      "en": "FUEL PUMP SHUT DOWN",
+      "uk": "напис FUEL PUMP SHUT DOWN"
+    },
+    "push_to_exit": {
+      "en": "PUSH TO EXIT",
+      "uk": "напис PUSH TO EXIT"
+    },
+    "custom": {
+      "en": "Custom label",
+      "en_alt": ["custom label", "custom wording"],
+      "uk": "індивідуальний напис"
+    },
+    "no_label": {
+      "en": "No label",
+      "en_alt": ["no label"],
+      "uk": "без напису"
+    },
+    "fire_pictogram": {
+      "en": "Fire pictogram",
+      "uk": "піктограма пожежі"
+    },
+    "exit_pictogram": {
+      "en": "Emergency exit pictogram",
+      "uk": "піктограма аварійного виходу"
+    }
+  },
+
+  "protection": {
+    "ip54": {
+      "en": "IP54",
+      "uk": "IP54"
+    },
+    "ip56": {
+      "en": "IP56",
+      "uk": "IP56"
+    },
+    "ip66": {
+      "en": "IP66",
+      "uk": "IP66"
+    },
+    "ip67": {
+      "en": "IP67",
+      "uk": "IP67"
+    },
+    "tamper_proof": {
+      "en": "Tamper-proof",
+      "en_alt": ["tamper proof"],
+      "uk": "захист від несанкціонованого доступу"
+    }
+  },
+
+  "product_types": {
+    "push_button": {
+      "en": "Push button",
+      "uk": "кнопка"
+    },
+    "flagship_button": {
+      "en": "Flagship push button",
+      "uk": "флагманська кнопка"
+    },
+    "universal_button": {
+      "en": "Universal push button",
+      "uk": "універсальна кнопка"
+    },
+    "multipurpose_button": {
+      "en": "Multipurpose push button",
+      "uk": "багатоцільова кнопка"
+    },
+    "manual_call_point": {
+      "en": "Manual call point",
+      "en_alt": ["call point", "MCP"],
+      "uk": "ручний сповіщувач"
+    },
+    "indoor_call_point": {
+      "en": "Indoor manual call point",
+      "uk": "внутрішній ручний сповіщувач"
+    },
+    "waterproof_call_point": {
+      "en": "Waterproof manual call point",
+      "uk": "вологостійкий ручний сповіщувач"
+    },
+    "break_glass": {
+      "en": "Break glass call point",
+      "uk": "ручний сповіщувач з імітацією розбиття скла"
+    },
+    "protective_cover": {
+      "en": "Protective cover",
+      "en_alt": ["cover", "protector"],
+      "uk": "захисний корпус"
+    },
+    "key_switch": {
+      "en": "Key switch",
+      "uk": "перемикач з ключем"
+    },
+    "exit_button": {
+      "en": "Exit button",
+      "uk": "кнопка виходу"
+    },
+    "sounder_device": {
+      "en": "Sounder",
+      "en_alt": ["Alarm device", "Audio-visual device"],
+      "uk": "оповіщувач"
+    },
+    "sensor": {
+      "en": "Sensor",
+      "uk": "датчик"
+    },
+    "protective_grille": {
+      "en": "Protective grille",
+      "en_alt": ["Wire guard", "Cage"],
+      "uk": "захисна решітка"
+    },
+    "enclosure": {
+      "en": "Enclosure",
+      "uk": "корпус"
+    },
+    "pull_station": {
+      "en": "Pull station",
+      "en_alt": ["dual action pull station"],
+      "uk": "тягова станція"
+    }
+  },
+
+  "series": {
+    "gf_g3": {
+      "en": "GF/G3 Global Push Button",
+      "uk": "Серія GF/G3 Global Push Button"
+    },
+    "gf": {
+      "en": "GF Fire Alarm Push Button",
+      "uk": "Пожежна кнопка GF"
+    },
+    "g3": {
+      "en": "G3 Multipurpose Push Button",
+      "uk": "Багатоцільова кнопка G3"
+    },
+    "stopper_station": {
+      "en": "Stopper Station",
+      "uk": "Серія Stopper Station"
+    },
+    "universal_stopper": {
+      "en": "Universal Stopper",
+      "uk": "Серія Universal Stopper"
+    },
+    "low_profile_universal": {
+      "en": "Low Profile Universal Stopper",
+      "uk": "Низькопрофільна серія Universal Stopper"
+    },
+    "euro_stopper": {
+      "en": "Euro Stopper",
+      "uk": "Серія Euro Stopper"
+    },
+    "enviro_stopper": {
+      "en": "Enviro Stopper",
+      "uk": "Серія Enviro Stopper"
+    },
+    "call_point_stopper": {
+      "en": "Call Point Stopper",
+      "uk": "Серія Call Point Stopper"
+    },
+    "enviro_armour": {
+      "en": "Enviro Armour",
+      "uk": "Серія Enviro Armour"
+    },
+    "reset": {
+      "en": "ReSet",
+      "uk": "Серія ReSet"
+    },
+    "global_reset": {
+      "en": "Global ReSet",
+      "uk": "Серія Global ReSet"
+    },
+    "select_alert": {
+      "en": "Select Alert",
+      "uk": "Серія Select Alert"
+    },
+    "stopper_switch": {
+      "en": "Stopper Switch",
+      "uk": "Серія Stopper Switch"
+    },
+    "stopper_key": {
+      "en": "StopperKey",
+      "uk": "Серія StopperKey"
+    },
+    "stopper_latch": {
+      "en": "StopperLatch",
+      "uk": "Серія StopperLatch"
+    },
+    "stopper_push": {
+      "en": "StopperPush",
+      "uk": "Серія StopperPush"
+    }
+  },
+
+  "features": {
+    "built_in": {
+      "en": "Built-in",
+      "en_alt": ["integral", "integrated"],
+      "uk": "вбудований"
+    },
+    "reinforced": {
+      "en": "Reinforced",
+      "uk": "посилений"
+    },
+    "single_pole": {
+      "en": "Single pole",
+      "en_alt": ["SPC mechanism"],
+      "uk": "однополюсний"
+    },
+    "double_pole": {
+      "en": "Double pole",
+      "en_alt": ["DPC mechanism"],
+      "uk": "двополюсний"
+    },
+    "break_glass_sim": {
+      "en": "Break glass simulation",
+      "uk": "імітація розбиття скла"
+    },
+    "glow_guide": {
+      "en": "Glow Guide",
+      "uk": "світловий контур (Glow Guide)"
+    },
+    "ada_compliant": {
+      "en": "ADA Compliant",
+      "uk": "відповідає стандартам ADA"
+    }
+  },
+
+  "warnings": {
+    "non_returnable": {
+      "en": "NON-RETURNABLE",
+      "en_alt": ["non-returnable"],
+      "uk": "БЕЗ ПОВЕРНЕННЯ"
+    },
+    "extended_lead": {
+      "en": "Extended lead times",
+      "uk": "подовжені терміни поставки"
+    },
+    "not_ul": {
+      "en": "Not UL Listed",
+      "uk": "не сертифіковано UL"
+    },
+    "ul_listed": {
+      "en": "UL Listed",
+      "en_alt": ["UL-listed"],
+      "uk": "сертифіковано UL"
+    },
+    "not_outdoor": {
+      "en": "Not suitable for outdoor use",
+      "uk": "не призначено для вуличного використання"
+    }
+  },
+
+  "ui_actions": {
+    "reset_config": {
+      "en": "Reset configuration",
+      "uk": "Скинути конфігурацію",
+      "note": "UI дія, НЕ механізм кнопки"
+    },
+    "reset_button": {
+      "en": "Reset",
+      "uk": "Скинути",
+      "note": "UI кнопка"
+    }
+  },
+
+  "languages": {
+    "en": {
+      "en": "English",
+      "uk": "англійська"
+    },
+    "es": {
+      "en": "Spanish",
+      "uk": "іспанська"
+    },
+    "fr": {
+      "en": "French",
+      "uk": "французька"
+    },
+    "de": {
+      "en": "German",
+      "uk": "німецька"
+    },
+    "nl": {
+      "en": "Dutch",
+      "uk": "голландська"
+    }
+  }
+}
