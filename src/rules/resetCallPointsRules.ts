@@ -1,17 +1,3 @@
-// ============================================================================
-// RESET CALL POINTS - CONSTRAINT RULES
-// ============================================================================
-//
-// Source: 05_Конфигуратор_ReSet_Call_Points.md
-//
-// CRITICAL: This model has MULTI-DIRECTIONAL dependencies:
-// - COLOUR ↔ ELECTRICAL ARRANGEMENT (bidirectional)
-// - COLOUR ↔ LABEL (bidirectional)
-// - ELECTRICAL ↔ LABEL (bidirectional)
-// - MOUNTING: No dependencies
-//
-// ============================================================================
-
 import type { ModelConstraints, ConstraintMatrix } from "./types";
 
 const COLOUR_TO_ELECTRICAL: ConstraintMatrix = {

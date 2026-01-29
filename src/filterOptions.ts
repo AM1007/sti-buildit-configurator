@@ -22,6 +22,7 @@ import {
   ALERT_POINT_CONSTRAINTS,
   CALL_POINT_STOPPER_CONSTRAINTS,
   ENVIRO_ARMOUR_CONSTRAINTS,
+  G3_MULTIPURPOSE_PUSH_BUTTON_CONSTRAINTS,
   type IConstraintEngine,
   type ConstraintResult,
 } from "./rules";
@@ -34,6 +35,11 @@ function getConstraintEngine(modelId: string): IConstraintEngine | null {
   }
   
   switch (modelId) {
+    case "g3-multipurpose-push-button": {
+      const engine = createConstraintEngine(G3_MULTIPURPOSE_PUSH_BUTTON_CONSTRAINTS);
+      engineCache.set(modelId, engine);
+      return engine;
+    }
     case "low-profile-universal-stopper": {
       const engine = createConstraintEngine(LOW_PROFILE_UNIVERSAL_STOPPER_CONSTRAINTS);
       engineCache.set(modelId, engine);

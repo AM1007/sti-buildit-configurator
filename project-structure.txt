@@ -91,6 +91,8 @@
     📁 locales
       📁 en
         📄 common.json
+        📁 modelDescriptions
+          📄 g3-multipurpose-push-button.json
         📁 models
           📄 alert-point.json
           📄 call-point-stopper.json
@@ -111,6 +113,8 @@
       📄 en.json
       📁 uk
         📄 common.json
+        📁 modelDescriptions
+          📄 g3-multipurpose-push-button.json
         📁 models
           📄 alert-point.json
           📄 call-point-stopper.json
@@ -167,6 +171,7 @@
     📄 generateMyListXlsx.ts
     📄 generateProductPdf.ts
     📄 getCompletedDeviceImage.ts
+    📄 getModelDescription.ts
     📄 stripHtml.ts
     📄 toast.ts
 📄 tsconfig.app.json
