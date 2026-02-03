@@ -6,6 +6,11 @@ import {
   getValidOptionsForStep as getValidG3Options,
   type G3SelectionState,
 } from "./rules/G3multipurposepushbuttonrules";
+import { STOPPER_STATIONS_CONSTRAINTS } from "./rules/stopperStationsRules";
+import {
+  getValidSSOptionsForStep as getValidSSOptions,
+  type SSSelectionState,
+} from "./rules/stopperStationsRules";
 
 // ============================================================================
 // Constraints registry
@@ -13,7 +18,7 @@ import {
 
 const CONSTRAINTS_MAP: Record<string, ModelConstraints> = {
   "g3-multipurpose-push-button": G3_MULTIPURPOSE_PUSH_BUTTON_CONSTRAINTS,
-  // TODO: Add other models as they are migrated to allowlist validation
+  "stopper-stations": STOPPER_STATIONS_CONSTRAINTS,
 };
 
 function getModelConstraints(modelId: ModelId): ModelConstraints | null {
@@ -105,6 +110,108 @@ function getG3AllowlistValidOptions(
 }
 
 // ============================================================================
+// Allowlist validation for Stopper Stations model
+// ============================================================================
+
+function configToSSSelection(config: Configuration): SSSelectionState {
+  return {
+    colour: config.colour ?? undefined,
+    cover: config.cover ?? undefined,
+    activation: config.activation ?? undefined,
+    text: config.text ?? undefined,
+    language: config.language ?? undefined,
+  };
+}
+
+function isSSModel(modelId: ModelId): boolean {
+  return modelId === "stopper-stations";
+}
+
+/**
+ * Gets valid options for a step, applying allowlist validation for SS model.
+ * Returns Set of valid option IDs, or null if not applicable.
+ *
+ * ASSUMPTION: activation sub-variants (6-red, 6-green, 6-blue, 7-red,
+ * 7-green, 7-blue) share the same code digit ("6" or "7") in the model code.
+ * The allowlist stores raw codes, so getValidSSOptions returns "6"/"7".
+ * The UI option IDs are "6-red", "6-green", etc. We must map:
+ *   allowlist code "6" → UI options "6-red", "6-green", "6-blue"
+ *   allowlist code "7" → UI options "7-red", "7-green", "7-blue"
+ * For non-activation steps this mapping is identity (code === id).
+ */
+/** Steps that participate in allowlist validation (base model code).
+ *  installationOptions is NOT part of the base code — it uses constraint
+ *  matrices only and must be skipped here. */
+const SS_ALLOWLIST_STEPS: ReadonlySet<string> = new Set<keyof SSSelectionState>([
+  "colour", "cover", "activation", "text", "language",
+]);
+
+function getSSAllowlistValidOptions(
+  stepId: string,
+  config: Configuration
+): Set<string> | null {
+  // Steps outside the base model code are handled by constraint matrices only
+  if (!SS_ALLOWLIST_STEPS.has(stepId)) return null;
+
+  const ssSelection = configToSSSelection(config);
+
+  // Build "other" selections: all fields except the current step
+  const otherSelections: Partial<SSSelectionState> = {};
+  for (const key of Object.keys(ssSelection) as (keyof SSSelectionState)[]) {
+    if (key === stepId) continue;
+    otherSelections[key] = ssSelection[key];
+  }
+
+  // For activation step: convert UI option id (e.g. "6-red") to code ("6")
+  // before passing to allowlist lookup
+  if (otherSelections.activation) {
+    otherSelections.activation = normalizeActivationToCode(otherSelections.activation);
+  }
+
+  const validCodes = getValidSSOptions(
+    stepId as keyof SSSelectionState,
+    otherSelections as Omit<SSSelectionState, typeof stepId>
+  );
+
+  // For activation step: expand allowlist codes back to UI option IDs
+  // "6" → ["6-red", "6-green", "6-blue"], "7" → ["7-red", "7-green", "7-blue"]
+  if (stepId === "activation") {
+    const expandedIds = new Set<string>();
+    for (const code of validCodes) {
+      const uiIds = expandActivationCodeToIds(code);
+      for (const id of uiIds) {
+        expandedIds.add(id);
+      }
+    }
+    return expandedIds;
+  }
+
+  return new Set(validCodes);
+}
+
+/**
+ * Maps UI activation option ID to its model code digit.
+ * "6-red" → "6", "7-green" → "7", "0" → "0", etc.
+ */
+function normalizeActivationToCode(activationId: string): string {
+  if (activationId.startsWith("6-")) return "6";
+  if (activationId.startsWith("7-")) return "7";
+  return activationId;
+}
+
+/**
+ * Expands a single activation code to all possible UI option IDs.
+ * "6" → ["6-red", "6-green", "6-blue"]
+ * "7" → ["7-red", "7-green", "7-blue"]
+ * "0" → ["0"], etc.
+ */
+function expandActivationCodeToIds(code: string): string[] {
+  if (code === "6") return ["6-red", "6-green", "6-blue"];
+  if (code === "7") return ["7-red", "7-green", "7-blue"];
+  return [code];
+}
+
+// ============================================================================
 // Enhanced option availability with constraint engine + allowlist
 // ============================================================================
 
@@ -120,7 +227,7 @@ export interface OptionWithAvailability {
 
 /**
  * Gets all options for a step with their availability status.
- * Combines constraint matrix checks with allowlist validation for G3 model.
+ * Combines constraint matrix checks with allowlist validation for G3 and SS models.
  */
 export function getOptionsWithAvailability(
   step: Step,
@@ -141,9 +248,13 @@ export function getOptionsWithAvailability(
   const allOptionIds = step.options.map((o) => o.id);
   const stepAvailability = getStepAvailability(engine, step.id, allOptionIds, config);
   
-  // For G3 model, also apply allowlist validation
+  // Apply allowlist validation per model
   const g3AllowlistValid = isG3Model(modelId)
     ? getG3AllowlistValidOptions(step.id, config)
+    : null;
+
+  const ssAllowlistValid = isSSModel(modelId)
+    ? getSSAllowlistValidOptions(step.id, config)
     : null;
   
   return step.options.map((option) => {
@@ -164,6 +275,17 @@ export function getOptionsWithAvailability(
     
     // Check G3 allowlist (only if constraint passed)
     if (g3AllowlistValid && !g3AllowlistValid.has(option.id)) {
+      return {
+        option,
+        availability: {
+          available: false,
+          reason: "This option does not lead to a valid product model",
+        },
+      };
+    }
+
+    // Check SS allowlist (only if constraint passed)
+    if (ssAllowlistValid && !ssAllowlistValid.has(option.id)) {
       return {
         option,
         availability: {
@@ -290,6 +412,22 @@ export function getSelectionsToReset(
       if (!currentSelection) continue;
       
       const validOptions = getG3AllowlistValidOptions(stepId, newConfig);
+      if (validOptions && !validOptions.has(currentSelection)) {
+        toReset.push(stepId);
+      }
+    }
+  }
+
+  // For SS model, also check if selection leads to invalid model
+  if (isSSModel(model.id)) {
+    for (let i = changedStepIndex + 1; i < model.stepOrder.length; i++) {
+      const stepId = model.stepOrder[i];
+      if (toReset.includes(stepId)) continue;
+
+      const currentSelection = newConfig[stepId];
+      if (!currentSelection) continue;
+
+      const validOptions = getSSAllowlistValidOptions(stepId, newConfig);
       if (validOptions && !validOptions.has(currentSelection)) {
         toReset.push(stepId);
       }

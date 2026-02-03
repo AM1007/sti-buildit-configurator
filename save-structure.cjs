@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Получаем __dirname и __filename (уже доступны в CommonJS)
-const EXCLUDE_DIRS = ['node_modules', '.git', 'dist', 'build', 'public'];
+const EXCLUDE_DIRS = ['node_modules', '.git', 'dist', 'build'];
 
 const output = [];
 const INDENT = '  ';
