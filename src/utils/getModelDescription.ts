@@ -4,8 +4,6 @@ type Language = "en" | "uk";
 
 type ModelDescriptions = Record<string, string>;
 
-// Vite-compatible glob import for model descriptions
-// This statically analyzes all JSON files at build time
 const descriptionModules = import.meta.glob<{ default: ModelDescriptions }>(
   "../i18n/locales/*/modelDescriptions/*.json",
   { eager: false }
@@ -13,17 +11,14 @@ const descriptionModules = import.meta.glob<{ default: ModelDescriptions }>(
 
 const descriptionsCache = new Map<string, ModelDescriptions>();
 
-/**
- * Builds the glob path key for a given language and modelId
- */
 function buildGlobPath(lang: Language, modelId: string): string {
   return `../i18n/locales/${lang}/modelDescriptions/${modelId}.json`;
 }
 
-/**
- * Dynamically imports model descriptions JSON file for given modelId and language.
- * Returns cached version if already loaded.
- */
+function normalizeProductCode(productCode: string): string {
+  return productCode.split("&")[0];
+}
+
 async function loadModelDescriptions(
   modelId: ModelId,
   lang: Language
@@ -69,30 +64,15 @@ async function loadModelDescriptions(
   }
 }
 
-/**
- * Gets the description for a specific product code (SKU).
- * 
- * @param productCode - Full product code (e.g., "G3A209ZA-EN")
- * @param modelId - Model identifier (e.g., "g3-multipurpose-push-button")
- * @param lang - Language code ("en" or "uk")
- * @returns Description string or null if not found
- * 
- * @example
- * const description = await getModelDescription(
- *   "G3A209ZA-EN",
- *   "g3-multipurpose-push-button",
- *   "uk"
- * );
- */
 export async function getModelDescription(
   productCode: string,
   modelId: ModelId,
   lang: Language
 ): Promise<string | null> {
-  // Try requested language first
+  const normalizedCode = normalizeProductCode(productCode);
+  
   let descriptions = await loadModelDescriptions(modelId, lang);
   
-  // Fallback to English if requested language not found
   if (!descriptions && lang !== "en") {
     console.warn(
       `[getModelDescription] Falling back to EN for ${modelId}`
@@ -107,22 +87,17 @@ export async function getModelDescription(
     return null;
   }
 
-  const description = descriptions[productCode] ?? null;
+  const description = descriptions[normalizedCode] ?? null;
   
   if (!description) {
     console.warn(
-      `[getModelDescription] No description found for product code: ${productCode}`
+      `[getModelDescription] No description found for product code: ${productCode} (normalized: ${normalizedCode})`
     );
   }
 
   return description;
 }
 
-/**
- * Synchronous version that only checks cache.
- * Returns null if descriptions are not yet loaded.
- * Use getModelDescription() for async loading.
- */
 export function getModelDescriptionSync(
   productCode: string,
   modelId: ModelId,
@@ -135,13 +110,11 @@ export function getModelDescriptionSync(
     return null;
   }
 
-  return descriptions[productCode] ?? null;
+  const normalizedCode = normalizeProductCode(productCode);
+
+  return descriptions[normalizedCode] ?? null;
 }
 
-/**
- * Preloads model descriptions into cache.
- * Useful to call on page load to avoid delays later.
- */
 export async function preloadModelDescriptions(
   modelId: ModelId,
   lang: Language
@@ -149,18 +122,10 @@ export async function preloadModelDescriptions(
   await loadModelDescriptions(modelId, lang);
 }
 
-/**
- * Clears the descriptions cache.
- * Useful when language changes.
- */
 export function clearModelDescriptionsCache(): void {
   descriptionsCache.clear();
 }
 
-/**
- * Debug function to list all available description modules
- */
 export function listAvailableDescriptionModules(): string[] {
   return Object.keys(descriptionModules);
 }
-

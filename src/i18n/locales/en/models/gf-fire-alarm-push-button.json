@@ -30,9 +30,7 @@
     "language": {
       "title": "LANGUAGE",
       "options": {
-        "EN": "#EN English",
-        "ES": "#ES Spanish",
-        "FR": "#FR French"
+        "EN": "#EN English"
       }
     }
   }

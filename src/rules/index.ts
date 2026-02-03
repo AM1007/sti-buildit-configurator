@@ -31,3 +31,4 @@ export { ALERT_POINT_CONSTRAINTS } from "./alertPointRules";
 export { CALL_POINT_STOPPER_CONSTRAINTS } from "./callPointStopperRules";
 export { ENVIRO_ARMOUR_CONSTRAINTS } from "./enviroArmourRules";
 export { G3_MULTIPURPOSE_PUSH_BUTTON_CONSTRAINTS } from "./G3multipurposepushbuttonrules";
+export { GF_FIRE_ALARM_PUSH_BUTTON_CONSTRAINTS } from "./gfFireAlarmPushButtonRules";

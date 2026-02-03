@@ -20,7 +20,7 @@ const steps: Step[] = [
     options: [
       { id: "0", label: "#0 No Cover", code: "0", image: `${IMG}/COVER/0 No Cover.webp` },
       { id: "2", label: "#2 Shield", code: "2", image: `${IMG}/COVER/2 Shield.webp` },
-      { id: "contact-sales", label: "#0 Contact Sales for More Options", code: "0", image: `${IMG}/COVER/0 Contact Sales for More Options.png`, notes: "Contact sales for custom options" },
+      // { id: "contact-sales", label: "#0 Contact Sales for More Options", code: "0", image: `${IMG}/COVER/0 Contact Sales for More Options.png`, notes: "Contact sales for custom options" },
     ],
   },
 
@@ -40,8 +40,8 @@ const steps: Step[] = [
     required: true,
     options: [
       { id: "EN", label: "#EN English", code: "EN", image: `${IMG}/LANGUAGE/EN English.webp` },
-      { id: "ES", label: "#ES Spanish", code: "ES", image: `${IMG}/LANGUAGE/ES Spanish.webp` },
-      { id: "FR", label: "#FR French", code: "FR", image: `${IMG}/LANGUAGE/FR French.webp` },
+      // { id: "ES", label: "#ES Spanish", code: "ES", image: `${IMG}/LANGUAGE/ES Spanish.webp` },
+      // { id: "FR", label: "#FR French", code: "FR", image: `${IMG}/LANGUAGE/FR French.webp` },
     ],
   },
 ];

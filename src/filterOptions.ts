@@ -11,6 +11,11 @@ import {
   getValidSSOptionsForStep as getValidSSOptions,
   type SSSelectionState,
 } from "./rules/stopperStationsRules";
+import { GF_FIRE_ALARM_PUSH_BUTTON_CONSTRAINTS } from "./rules/gfFireAlarmPushButtonRules";
+import {
+  getValidGFOptionsForStep,
+  type GFSelectionState,
+} from "./rules/gfFireAlarmPushButtonRules";
 
 // ============================================================================
 // Constraints registry
@@ -19,6 +24,7 @@ import {
 const CONSTRAINTS_MAP: Record<string, ModelConstraints> = {
   "g3-multipurpose-push-button": G3_MULTIPURPOSE_PUSH_BUTTON_CONSTRAINTS,
   "stopper-stations": STOPPER_STATIONS_CONSTRAINTS,
+  "gf-fire-alarm-push-button": GF_FIRE_ALARM_PUSH_BUTTON_CONSTRAINTS,
 };
 
 function getModelConstraints(modelId: ModelId): ModelConstraints | null {
@@ -212,6 +218,44 @@ function expandActivationCodeToIds(code: string): string[] {
 }
 
 // ============================================================================
+// Allowlist validation for GF Fire Alarm Push Button model
+// ============================================================================
+
+function configToGFSelection(config: Configuration): GFSelectionState {
+  return {
+    model: config.model ?? undefined,
+    cover: config.cover ?? undefined,
+    text: config.text ?? undefined,
+    language: config.language ?? undefined,
+  };
+}
+
+function isGFModel(modelId: ModelId): boolean {
+  return modelId === "gf-fire-alarm-push-button";
+}
+
+/**
+ * Gets valid options for a step, applying allowlist validation for GF model.
+ * Returns Set of valid option IDs.
+ */
+function getGFAllowlistValidOptions(
+  stepId: string,
+  config: Configuration
+): Set<string> | null {
+  const gfSelection = configToGFSelection(config);
+
+  // Remove the current step from selections to get "other" selections
+  const { [stepId as keyof GFSelectionState]: _, ...otherSelections } = gfSelection;
+
+  const validOptions = getValidGFOptionsForStep(
+    stepId as keyof GFSelectionState,
+    otherSelections
+  );
+
+  return new Set(validOptions);
+}
+
+// ============================================================================
 // Enhanced option availability with constraint engine + allowlist
 // ============================================================================
 
@@ -227,7 +271,7 @@ export interface OptionWithAvailability {
 
 /**
  * Gets all options for a step with their availability status.
- * Combines constraint matrix checks with allowlist validation for G3 and SS models.
+ * Combines constraint matrix checks with allowlist validation for G3, SS, and GF models.
  */
 export function getOptionsWithAvailability(
   step: Step,
@@ -255,6 +299,10 @@ export function getOptionsWithAvailability(
 
   const ssAllowlistValid = isSSModel(modelId)
     ? getSSAllowlistValidOptions(step.id, config)
+    : null;
+
+  const gfAllowlistValid = isGFModel(modelId)
+    ? getGFAllowlistValidOptions(step.id, config)
     : null;
   
   return step.options.map((option) => {
@@ -286,6 +334,17 @@ export function getOptionsWithAvailability(
 
     // Check SS allowlist (only if constraint passed)
     if (ssAllowlistValid && !ssAllowlistValid.has(option.id)) {
+      return {
+        option,
+        availability: {
+          available: false,
+          reason: "This option does not lead to a valid product model",
+        },
+      };
+    }
+
+    // Check GF allowlist (only if constraint passed)
+    if (gfAllowlistValid && !gfAllowlistValid.has(option.id)) {
       return {
         option,
         availability: {
@@ -428,6 +487,22 @@ export function getSelectionsToReset(
       if (!currentSelection) continue;
 
       const validOptions = getSSAllowlistValidOptions(stepId, newConfig);
+      if (validOptions && !validOptions.has(currentSelection)) {
+        toReset.push(stepId);
+      }
+    }
+  }
+
+  // For GF model, also check if selection leads to invalid model
+  if (isGFModel(model.id)) {
+    for (let i = changedStepIndex + 1; i < model.stepOrder.length; i++) {
+      const stepId = model.stepOrder[i];
+      if (toReset.includes(stepId)) continue;
+
+      const currentSelection = newConfig[stepId];
+      if (!currentSelection) continue;
+
+      const validOptions = getGFAllowlistValidOptions(stepId, newConfig);
       if (validOptions && !validOptions.has(currentSelection)) {
         toReset.push(stepId);
       }

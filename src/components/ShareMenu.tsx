@@ -5,6 +5,7 @@ import { downloadProductPdf, printProductPdf } from "../utils/generateProductPdf
 import { stripHtml } from "../utils/stripHtml";
 import { buildShareableUrl } from "../utils/configSerializer";
 import { getModelDescription } from "../utils/getModelDescription";
+import { getHeroDescription } from "../utils/getHeroDescription";
 import { useTranslation, useLanguage } from "../i18n";
 import type { ProductPdfData } from "./ProductPdfDocument";
 
@@ -77,29 +78,30 @@ export function ShareMenu({
 
   const getPdfData = async (): Promise<ProductPdfData> => {
     const logoUrl = `${window.location.origin}/pdf-logo.png`;
+    const currentLang = lang as "en" | "uk";
     
-    // Fetch model description based on current language
     let modelDescription: string | null = null;
     if (modelId) {
       modelDescription = await getModelDescription(
         productModel.fullCode,
         modelId,
-        lang as "en" | "uk"
+        currentLang
       );
     }
 
-    // Get localized labels
     const descriptionLabel = t("pdf.descriptionLabel");
     const modelNumberLabel = t("pdf.modelNumberLabel");
     
-    // Get localized heroDescription from model translations
-    // Falls back to prop if translation key returns itself (not found)
-    const localizedHeroDescription = t("meta.heroDescription");
-    const heroDescription = localizedHeroDescription !== "meta.heroDescription" 
-      ? stripHtml(localizedHeroDescription)
-      : (productDescription ? stripHtml(productDescription) : "");
+    let heroDescription = "";
+    if (modelId) {
+      const localizedHeroDescription = await getHeroDescription(modelId, currentLang);
+      heroDescription = localizedHeroDescription 
+        ? stripHtml(localizedHeroDescription)
+        : (productDescription ? stripHtml(productDescription) : "");
+    } else {
+      heroDescription = productDescription ? stripHtml(productDescription) : "";
+    }
     
-    // Get localized product name
     const localizedProductName = t("meta.name");
     const finalProductName = localizedProductName !== "meta.name"
       ? localizedProductName
