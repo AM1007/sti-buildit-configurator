@@ -259,6 +259,13 @@
       📄 ZA Custom text.webp
   📁 GF Fire Alarm Push Button
     📁 COMPLETED DEVICE
+      📁 RED
+        📄 GFA0FR-EN.webp
+        📄 GFA0HF-EN.webp
+        📄 GFA2FR-EN.webp
+        📄 GFC0FR-EN.webp
+        📄 GFC0HF-EN.webp
+        📄 GFC2FR-EN.webp
     📁 COVER
       📄 0 Contact Sales for More Options.png
       📄 0 No Cover.webp
@@ -725,6 +732,140 @@
       📄 4-Blue.webp
       📄 5-Orange.webp
     📁 COMPLETED DEVICE
+      📁 BLUE
+        📄 SS2400EM-EN&KIT-71101B-B.webp
+        📄 SS2400EX-EN&KIT-71101B-B.webp
+        📄 SS2400LD-EN&KIT-71101B-B.webp
+        📄 SS2400NT-EN&KIT-71101B-B.webp
+        📄 SS2400ZA-EN&KIT-71101B-B.webp
+        📄 SS2401EM-EN&KIT-71101B-B.webp
+        📄 SS2401ES-EN&KIT-71101B-B.webp
+        📄 SS2401EX-EN&KIT-71101B-B.webp
+        📄 SS2401LD-EN&KIT-71101B-B.webp
+        📄 SS2401NT-EN&KIT-71101B-B.webp
+        📄 SS2401ZA-EN&KIT-71101B-B.webp
+        📄 SS2402EM-EN&KIT-71100A-B.webp
+        📄 SS2402EM-EN.webp
+        📄 SS2402LD-EN&KIT-71100A-B.webp
+        📄 SS2402LD-EN.webp
+        📄 SS2402NT-EN&KIT-71100A-B.webp
+        📄 SS2402NT-EN.webp
+        📄 SS2402ZA-EN&KIT-71100A-B.webp
+        📄 SS2402ZA-EN.webp
+        📄 SS2403LD-EN&KIT-71101B-B.webp
+        📄 SS2403NT-EN&KIT-71101B-B.webp
+        📄 SS2403ZA-EN&KIT-71101B-B.webp
+        📄 SS2404EM-EN&KIT-71101B-B.webp
+        📄 SS2404ES-EN&KIT-71101B-B.webp
+        📄 SS2404EX-EN&KIT-71101B-B.webp
+        📄 SS2404LD-EN&KIT-71101B-B.webp
+        📄 SS2404ZA-EN&KIT-71101B-B.webp
+        📄 SS2405EM-EN&KIT-71100A-B.webp
+        📄 SS2405EM-EN.webp
+        📄 SS2405LD-EN&KIT-71100A-B.webp
+        📄 SS2405LD-EN.webp
+        📄 SS2405ZA-EN&KIT-71100A-B.webp
+        📄 SS2405ZA-EN.webp
+        📄 SS2406EM-EN&KIT-71100A-B.webp
+        📄 SS2406EM-EN.webp
+        📄 SS2406LD-EN&KIT-71100A-B.webp
+        📄 SS2406LD-EN.webp
+        📄 SS2408EX-EN&KIT-71100A-B.webp
+        📄 SS2408EX-EN.webp
+        📄 SS2408NT-EN&KIT-71100A-B.webp
+        📄 SS2408NT-EN.webp
+        📄 SS2408PX-EN&KIT-71100A-B.webp
+        📄 SS2408PX-EN.webp
+        📄 SS2409EM-EN&KIT-71100A-B.webp
+        📄 SS2409EM-EN.webp
+        📄 SS2409EX-EN&KIT-71100A-B.webp
+        📄 SS2409EX-EN.webp
+        📄 SS2409LD-EN&KIT-71100A-B.webp
+        📄 SS2409LD-EN.webp
+        📄 SS2409NT-EN&KIT-71100A-B.webp
+        📄 SS2409NT-EN.webp
+        📄 SS2409ZA-EN&KIT-71100A-B.webp
+        📄 SS2409ZA-EN.webp
+      📁 GREEN
+        📄 SS2100EM-EN&KIT-71101B-G.webp
+        📄 SS2100EX-EN&KIT-71101B-G.webp
+        📄 SS2100NT-EN&KIT-71101B-G.webp
+        📄 SS2100ZA-EN&KIT-71101B-G.webp
+        📄 SS2101ES-EN&KIT-71101B-G.webp
+        📄 SS2101EV-EN&KIT-71101B-G.webp
+        📄 SS2101EX-EN&KIT-71101B-G.webp
+        📄 SS2101LD-EN&KIT-71101B-G.webp
+        📄 SS2101ZA-EN&KIT-71101B-G.webp
+        📄 SS2102EM-EN&KIT-71100A-G.webp
+        📄 SS2102EM-EN.webp
+        📄 SS2102EV-EN&KIT-71100A-G.webp
+        📄 SS2102EV-EN.webp
+        📄 SS2102EX-EN&KIT-71100A-G.webp
+        📄 SS2102EX-EN.webp
+        📄 SS2102HV-EN&KIT-71100A-G.webp
+        📄 SS2102HV-EN.webp
+        📄 SS2102LD-EN&KIT-71100A-G.webp
+        📄 SS2102LD-EN.webp
+        📄 SS2102NT-EN&KIT-71100A-G.webp
+        📄 SS2102NT-EN.webp
+        📄 SS2102XT-EN&KIT-71100A-G.webp
+        📄 SS2102XT-EN.webp
+        📄 SS2103AB-EN&KIT-71101B-G.webp
+        📄 SS2103NT-EN&KIT-71101B-G.webp
+        📄 SS2104EX-EN&KIT-71101B-G.webp
+        📄 SS2104NT-EN&KIT-71101B-G.webp
+        📄 SS2104PX-EN&KIT-71101B-G.webp
+        📄 SS2104XT-EN&KIT-71101B-G.webp
+        📄 SS2104ZA-EN&KIT-71101B-G.webp
+        📄 SS2105EX-EN&KIT-71100A-G.webp
+        📄 SS2105EX-EN.webp
+        📄 SS2105NT-EN&KIT-71100A-G.webp
+        📄 SS2105NT-EN.webp
+        📄 SS2105PX-EN&KIT-71100A-G.webp
+        📄 SS2105PX-EN.webp
+        📄 SS2105ZA-EN&KIT-71100A-G.webp
+        📄 SS2105ZA-EN.webp
+        📄 SS2106EX-EN&KIT-71100A-G.webp
+        📄 SS2106EX-EN.webp
+        📄 SS2106NT-EN&KIT-71100A-G.webp
+        📄 SS2106NT-EN.webp
+        📄 SS2106PX-EN&KIT-71100A-G.webp
+        📄 SS2106PX-EN.webp
+        📄 SS2106XT-EN&KIT-71100A-G.webp
+        📄 SS2106XT-EN.webp
+        📄 SS2106ZA-EN&KIT-71100A-G.webp
+        📄 SS2106ZA-EN.webp
+        📄 SS2107XT-EN&KIT-71100A-G.webp
+        📄 SS2107ZA-ZL&KIT-71100A-G.webp
+        📄 SS2108EM-EN&KIT-71100A-G.webp
+        📄 SS2108EM-EN.webp
+        📄 SS2108EX-EN&KIT-71100A-G.webp
+        📄 SS2108EX-EN.webp
+        📄 SS2108NT-EN&KIT-71100A-G.webp
+        📄 SS2108NT-EN.webp
+        📄 SS2108PX-EN&KIT-71100A-G.webp
+        📄 SS2108PX-EN.webp
+        📄 SS2108XT-EN&KIT-71100A-G.webp
+        📄 SS2108XT-EN.webp
+        📄 SS2109EV-EN&KIT-71100A-G.webp
+        📄 SS2109EV-EN.webp
+        📄 SS2109EX-EN&KIT-71100A-G.webp
+        📄 SS2109EX-EN.webp
+        📄 SS2109NT-EN&KIT-71100A-G.webp
+        📄 SS2109NT-EN.webp
+        📄 SS2109PX-EN&KIT-71100A-G.webp
+        📄 SS2109PX-EN.webp
+        📄 SS2109ZA-EN&KIT-71100A-G.webp
+        📄 SS2109ZA-EN.webp
+      📁 ORANGE
+        📄 SS2501LD-EN&KIT-71101B-E.webp
+        📄 SS2502EM-EN&KIT-71100A-E.webp
+        📄 SS2502EM-EN.webp
+        📄 SS2503ZA-EN&KIT-71101B-E.webp
+        📄 SS2509PO-EN&KIT-71100A-E.webp
+        📄 SS2509PO-EN.webp
+        📄 SS2509ZA-EN&KIT-71100A-E.webp
+        📄 SS2509ZA-EN.webp
       📁 RED
         📄 SS2000ES-EN&KIT-71101B-R.webp
         📄 SS2000NT-EN&KIT-71101B-R.webp
@@ -740,6 +881,178 @@
         📄 SS2001PO-EN&KIT-71101B-R.webp
         📄 SS2001PS-EN&KIT-71101B-R.webp
         📄 SS2001ZA-ZL&KIT-71101B-R.webp
+        📄 SS2002AB-EN&KIT-71100A-R.webp
+        📄 SS2002AB-EN.webp
+        📄 SS2002EM-EN&KIT-71100A-R.webp
+        📄 SS2002EM-EN.webp
+        📄 SS2002EX-EN&KIT-71100A-R.webp
+        📄 SS2002EX-EN.webp
+        📄 SS2002LD-EN&KIT-71100A-R.webp
+        📄 SS2002LD-EN.webp
+        📄 SS2002NT-EN&KIT-71100A-R.webp
+        📄 SS2002NT-EN.webp
+        📄 SS2002ZA-EN&KIT-71100A-R.webp
+        📄 SS2002ZA-EN.webp
+        📄 SS2003EM-EN&KIT-71101B-R.webp
+        📄 SS2003NT-EN&KIT-71101B-R.webp
+        📄 SS2004AB-EN&KIT-71101B-R.webp
+        📄 SS2004EM-EN&KIT-71101B-R.webp
+        📄 SS2004ES-EN&KIT-71101B-R.webp
+        📄 SS2004LD-EN&KIT-71101B-R.webp
+        📄 SS2004NT-EN&KIT-71101B-R.webp
+        📄 SS2004PS-EN&KIT-71101B-R.webp
+        📄 SS2004ZA-EN&KIT-71101B-R.webp
+        📄 SS2005ES-EN&KIT-71100A-R.webp
+        📄 SS2005ES-EN.webp
+        📄 SS2005NT-EN&KIT-71100A-R.webp
+        📄 SS2005NT-EN.webp
+        📄 SS2005ZA-EN&KIT-71100A-R.webp
+        📄 SS2005ZA-EN.webp
+        📄 SS2006EM-EN&KIT-71100A-R.webp
+        📄 SS2006EM-EN.webp
+        📄 SS2006NT-EN&KIT-71100A-R.webp
+        📄 SS2006NT-EN.webp
+        📄 SS2007AB-EN&KIT-71100A-R.webp
+        📄 SS2008EM-EN&KIT-71100A-R.webp
+        📄 SS2008EM-EN.webp
+        📄 SS2008EX-EN&KIT-71100A-R.webp
+        📄 SS2008EX-EN.webp
+        📄 SS2009AB-EN&KIT-71100A-R.webp
+        📄 SS2009AB-EN.webp
+        📄 SS2009EM-EN&KIT-71100A-R.webp
+        📄 SS2009EM-EN.webp
+        📄 SS2009EX-EN&KIT-71100A-R.webp
+        📄 SS2009EX-EN.webp
+        📄 SS2009LD-EN&KIT-71100A-R.webp
+        📄 SS2009LD-EN.webp
+        📄 SS2009PO-EN&KIT-71100A-R.webp
+        📄 SS2009PO-EN.webp
+        📄 SS2009PX-EN&KIT-71100A-R.webp
+        📄 SS2009PX-EN.webp
+        📄 SS2009ZA-EN&KIT-71100A-R.webp
+        📄 SS2009ZA-EN.webp
+      📁 WHITE
+        📄 SS2300EM-EN&KIT-71101B-W.webp
+        📄 SS2301AB-EN&KIT-71101B-W.webp
+        📄 SS2301EM-EN&KIT-71101B-W.webp
+        📄 SS2301ES-EN&KIT-71101B-W.webp
+        📄 SS2301HV-EN&KIT-71101B-W.webp
+        📄 SS2301LD-EN&KIT-71101B-W.webp
+        📄 SS2301NT-EN&KIT-71101B-W.webp
+        📄 SS2301ZA-EN&KIT-71101B-W.webp
+        📄 SS2302AB-EN&KIT-71100A-W.webp
+        📄 SS2302AB-EN.webp
+        📄 SS2302EM-EN&KIT-71100A-W.webp
+        📄 SS2302EM-EN.webp
+        📄 SS2302LD-EN&KIT-71100A-W.webp
+        📄 SS2302LD-EN.webp
+        📄 SS2302ZA-EN&KIT-71100A-W.webp
+        📄 SS2302ZA-EN.webp
+        📄 SS2303NT-EN&KIT-71101B-W.webp
+        📄 SS2304AB-EN&KIT-71101B-W.webp
+        📄 SS2304NT-EN&KIT-71101B-W.webp
+        📄 SS2304ZA-EN&KIT-71101B-W.webp
+        📄 SS2305ZA-EN&KIT-71100A-W.webp
+        📄 SS2305ZA-EN.webp
+        📄 SS2307ZA-EN&KIT-71100A-W.webp
+        📄 SS2308EX-EN&KIT-71100A-W.webp
+        📄 SS2308EX-EN.webp
+        📄 SS2308NT-EN&KIT-71100A-W.webp
+        📄 SS2308NT-EN.webp
+        📄 SS2308PX-EN&KIT-71100A-W.webp
+        📄 SS2308PX-EN.webp
+        📄 SS2309EM-EN&KIT-71100A-W.webp
+        📄 SS2309EM-EN.webp
+        📄 SS2309LD-EN&KIT-71100A-W.webp
+        📄 SS2309LD-EN.webp
+        📄 SS2309PO-EN&KIT-71100A-W.webp
+        📄 SS2309PO-EN.webp
+        📄 SS2309ZA-EN&KIT-71100A-W.webp
+        📄 SS2309ZA-EN.webp
+      📁 YELLOW
+        📄 SS2200EM-EN&KIT-71101B-Y.webp
+        📄 SS2200LD-EN&KIT-71101B-Y.webp
+        📄 SS2200PO-EN&KIT-71101B-Y.webp
+        📄 SS2200ZA-EN&KIT-71101B-Y.webp
+        📄 SS2201AB-EN&KIT-71101B-Y.webp
+        📄 SS2201EM-EN&KIT-71101B-Y.webp
+        📄 SS2201ES-EN&KIT-71101B-Y.webp
+        📄 SS2201EV-EN&KIT-71101B-Y.webp
+        📄 SS2201LD-EN&KIT-71101B-Y.webp
+        📄 SS2201NT-EN&KIT-71101B-Y.webp
+        📄 SS2201PO-EN&KIT-71101B-Y.webp
+        📄 SS2201PS-EN&KIT-71101B-Y.webp
+        📄 SS2201PX-EN&KIT-71101B-Y.webp
+        📄 SS2201ZA-EN&KIT-71101B-Y.webp
+        📄 SS2202AB-EN&KIT-71100A-Y.webp
+        📄 SS2202AB-EN.webp
+        📄 SS2202EM-EN&KIT-71100A-Y.webp
+        📄 SS2202EM-EN.webp
+        📄 SS2202ES-EN&KIT-71100A-Y.webp
+        📄 SS2202ES-EN.webp
+        📄 SS2202EX-EN&KIT-71100A-Y.webp
+        📄 SS2202EX-EN.webp
+        📄 SS2202HV-EN&KIT-71100A-Y.webp
+        📄 SS2202HV-EN.webp
+        📄 SS2202LD-EN&KIT-71100A-Y.webp
+        📄 SS2202LD-EN.webp
+        📄 SS2202NT-EN&KIT-71100A-Y.webp
+        📄 SS2202NT-EN.webp
+        📄 SS2202PO-EN&KIT-71100A-Y.webp
+        📄 SS2202PO-EN.webp
+        📄 SS2202PX-EN&KIT-71100A-Y.webp
+        📄 SS2202PX-EN.webp
+        📄 SS2202ZA-EN&KIT-71100A-Y.webp
+        📄 SS2202ZA-EN.webp
+        📄 SS2203NT-EN&KIT-71101B-Y.webp
+        📄 SS2203PO-EN&KIT-71101B-Y.webp
+        📄 SS2203ZA-EN&KIT-71101B-Y.webp
+        📄 SS2204AB-EN&KIT-71101B-Y.webp
+        📄 SS2204EM-EN&KIT-71101B-Y.webp
+        📄 SS2204ES-EN&KIT-71101B-Y.webp
+        📄 SS2204EV-EN&KIT-71101B-Y.webp
+        📄 SS2204LD-EN&KIT-71101B-Y.webp
+        📄 SS2204NT-EN&KIT-71101B-Y.webp
+        📄 SS2204PO-EN&KIT-71101B-Y.webp
+        📄 SS2204ZA-EN&KIT-71101B-Y.webp
+        📄 SS2205EM-EN&KIT-71100A-Y.webp
+        📄 SS2205EM-EN.webp
+        📄 SS2205ES-EN&KIT-71100A-Y.webp
+        📄 SS2205ES-EN.webp
+        📄 SS2205EX-EN&KIT-71100A-Y.webp
+        📄 SS2205EX-EN.webp
+        📄 SS2205LD-EN&KIT-71100A-Y.webp
+        📄 SS2205LD-EN.webp
+        📄 SS2205NT-EN&KIT-71100A-Y.webp
+        📄 SS2205NT-EN.webp
+        📄 SS2205PO-EN&KIT-71100A-Y.webp
+        📄 SS2205PO-EN.webp
+        📄 SS2205ZA-EN&KIT-71100A-Y.webp
+        📄 SS2205ZA-EN.webp
+        📄 SS2207AB-EN&KIT-71100A-Y.webp
+        📄 SS2207PO-EN&KIT-71100A-Y.webp
+        📄 SS2208NT-EN&KIT-71100A-Y.webp
+        📄 SS2208NT-EN.webp
+        📄 SS2208ZA-EN&KIT-71100A-Y.webp
+        📄 SS2208ZA-EN.webp
+        📄 SS2209EM-EN&KIT-71100A-Y.webp
+        📄 SS2209EM-EN.webp
+        📄 SS2209ES-EN&KIT-71100A-Y.webp
+        📄 SS2209ES-EN.webp
+        📄 SS2209EV-EN&KIT-71100A-Y.webp
+        📄 SS2209EV-EN.webp
+        📄 SS2209EX-EN&KIT-71100A-Y.webp
+        📄 SS2209EX-EN.webp
+        📄 SS2209LD-EN&KIT-71100A-Y.webp
+        📄 SS2209LD-EN.webp
+        📄 SS2209NT-EN&KIT-71100A-Y.webp
+        📄 SS2209NT-EN.webp
+        📄 SS2209PO-EN&KIT-71100A-Y.webp
+        📄 SS2209PO-EN.webp
+        📄 SS2209PS-EN&KIT-71100A-Y.webp
+        📄 SS2209PS-EN.webp
+        📄 SS2209ZA-EN&KIT-71100A-Y.webp
+        📄 SS2209ZA-EN.webp
     📁 COVER
       📄 0-Contact-Sales.png
       📄 0-No-Cover.webp
@@ -1064,6 +1377,7 @@
         📄 common.json
         📁 modelDescriptions
           📄 g3-multipurpose-push-button.json
+          📄 gf-fire-alarm-push-button.json
           📄 stopper-stations.json
         📁 models
           📄 alert-point.json
@@ -1087,6 +1401,7 @@
         📄 common.json
         📁 modelDescriptions
           📄 g3-multipurpose-push-button.json
+          📄 gf-fire-alarm-push-button.json
           📄 stopper-stations.json
         📁 models
           📄 alert-point.json
@@ -1122,6 +1437,7 @@
     📄 enviroArmourRules.ts
     📄 enviroStopperRules.ts
     📄 G3multipurposepushbuttonrules.ts
+    📄 gfFireAlarmPushButtonRules.ts
     📄 globalResetRules.ts
     📄 index.ts
     📄 indoorPushButtonsRules.ts
@@ -1145,6 +1461,7 @@
     📄 generateMyListXlsx.ts
     📄 generateProductPdf.ts
     📄 getCompletedDeviceImage.ts
+    📄 getHeroDescription.ts
     📄 getModelDescription.ts
     📄 stripHtml.ts
     📄 toast.ts

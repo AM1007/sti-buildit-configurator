@@ -16,6 +16,11 @@ import {
   getValidGFOptionsForStep,
   type GFSelectionState,
 } from "./rules/gfFireAlarmPushButtonRules";
+import { GLOBAL_RESET_CONSTRAINTS } from "./rules/globalResetRules";
+import {
+  getValidGLROptionsForStep,
+  type GLRSelectionState,
+} from "./rules/globalResetRules";
 
 // ============================================================================
 // Constraints registry
@@ -25,6 +30,7 @@ const CONSTRAINTS_MAP: Record<string, ModelConstraints> = {
   "g3-multipurpose-push-button": G3_MULTIPURPOSE_PUSH_BUTTON_CONSTRAINTS,
   "stopper-stations": STOPPER_STATIONS_CONSTRAINTS,
   "gf-fire-alarm-push-button": GF_FIRE_ALARM_PUSH_BUTTON_CONSTRAINTS,
+  "global-reset": GLOBAL_RESET_CONSTRAINTS,
 };
 
 function getModelConstraints(modelId: ModelId): ModelConstraints | null {
@@ -256,6 +262,57 @@ function getGFAllowlistValidOptions(
 }
 
 // ============================================================================
+// Allowlist validation for Global ReSet model
+// ============================================================================
+
+function configToGLRSelection(config: Configuration): GLRSelectionState {
+  return {
+    colour: config.colour ?? undefined,
+    cover: config.cover ?? undefined,
+    text: config.text ?? undefined,
+    language: config.language ?? undefined,
+  };
+}
+
+function isGLRModel(modelId: ModelId): boolean {
+  return modelId === "global-reset";
+}
+
+/** Steps that participate in allowlist validation for GLR.
+ *  Cover and Language are fixed (single option) but still validated. */
+const GLR_ALLOWLIST_STEPS: ReadonlySet<string> = new Set<keyof GLRSelectionState>([
+  "colour", "cover", "text", "language",
+]);
+
+/**
+ * Gets valid options for a step, applying allowlist validation for GLR model.
+ * Returns Set of valid option IDs, or null if not applicable.
+ */
+function getGLRAllowlistValidOptions(
+  stepId: string,
+  config: Configuration
+): Set<string> | null {
+  // Steps outside the base model code are handled by constraint matrices only
+  if (!GLR_ALLOWLIST_STEPS.has(stepId)) return null;
+
+  const glrSelection = configToGLRSelection(config);
+
+  // Build "other" selections: all fields except the current step
+  const otherSelections: Partial<GLRSelectionState> = {};
+  for (const key of Object.keys(glrSelection) as (keyof GLRSelectionState)[]) {
+    if (key === stepId) continue;
+    otherSelections[key] = glrSelection[key];
+  }
+
+  const validOptions = getValidGLROptionsForStep(
+    stepId as keyof GLRSelectionState,
+    otherSelections as Omit<GLRSelectionState, typeof stepId>
+  );
+
+  return new Set(validOptions);
+}
+
+// ============================================================================
 // Enhanced option availability with constraint engine + allowlist
 // ============================================================================
 
@@ -271,7 +328,7 @@ export interface OptionWithAvailability {
 
 /**
  * Gets all options for a step with their availability status.
- * Combines constraint matrix checks with allowlist validation for G3, SS, and GF models.
+ * Combines constraint matrix checks with allowlist validation for G3, SS, GF, and GLR models.
  */
 export function getOptionsWithAvailability(
   step: Step,
@@ -303,6 +360,10 @@ export function getOptionsWithAvailability(
 
   const gfAllowlistValid = isGFModel(modelId)
     ? getGFAllowlistValidOptions(step.id, config)
+    : null;
+
+  const glrAllowlistValid = isGLRModel(modelId)
+    ? getGLRAllowlistValidOptions(step.id, config)
     : null;
   
   return step.options.map((option) => {
@@ -345,6 +406,17 @@ export function getOptionsWithAvailability(
 
     // Check GF allowlist (only if constraint passed)
     if (gfAllowlistValid && !gfAllowlistValid.has(option.id)) {
+      return {
+        option,
+        availability: {
+          available: false,
+          reason: "This option does not lead to a valid product model",
+        },
+      };
+    }
+
+    // Check GLR allowlist (only if constraint passed)
+    if (glrAllowlistValid && !glrAllowlistValid.has(option.id)) {
       return {
         option,
         availability: {
@@ -503,6 +575,22 @@ export function getSelectionsToReset(
       if (!currentSelection) continue;
 
       const validOptions = getGFAllowlistValidOptions(stepId, newConfig);
+      if (validOptions && !validOptions.has(currentSelection)) {
+        toReset.push(stepId);
+      }
+    }
+  }
+
+  // For GLR model, also check if selection leads to invalid model
+  if (isGLRModel(model.id)) {
+    for (let i = changedStepIndex + 1; i < model.stepOrder.length; i++) {
+      const stepId = model.stepOrder[i];
+      if (toReset.includes(stepId)) continue;
+
+      const currentSelection = newConfig[stepId];
+      if (!currentSelection) continue;
+
+      const validOptions = getGLRAllowlistValidOptions(stepId, newConfig);
       if (validOptions && !validOptions.has(currentSelection)) {
         toReset.push(stepId);
       }
