@@ -17,30 +17,30 @@
         "O": "#O Orange"
       }
     },
-    "label": {
-      "title": "LABEL",
-      "options": {
-        "HOUSE_FLAME": "House Flame Logo",
-        "RUNNING_MAN": "Running Man Logo",
-        "SELF_ASSEMBLE": "Self Assemble Label Kit",
-        "CL": "Custom Label (NON-RETURNABLE)"
-      }
-    },
-    "electricalArrangement": {
-      "title": "ELECTRICAL ARRANGEMENT",
-      "options": {
-        "01": "#01 Conventional Fire Model with 470/680 Ohm Resistor, Series 01",
-        "02": "#02 Single Pole Changeover, Series 02",
-        "05": "#05 Sav-wire (2-wire) with 470/680 Ohm Resistor and Diode, Series 05",
-        "11": "#11 Double Pole Changeover, Series 11"
-      }
-    },
     "mounting": {
       "title": "MOUNTING",
       "options": {
         "D2": "#D2 Dual Mount (Wall Plate + Back Box)",
         "F2": "#F2 Flush Mount (Wall Plate)",
         "S2": "#S2 Surface Mount (Back Box)"
+      }
+    },
+    "electricalArrangement": {
+      "title": "ELECTRICAL ARRANGEMENT",
+      "options": {
+        "01": "#01 Conventional Fire Model with 470/680Ω Resistor, Series 01",
+        "02": "#02 Single Pole Changeover, Series 02",
+        "05": "#05 Sav-wire (2-wire) with 470/680Ω Resistor and Diode, Series 05",
+        "11": "#11 Double Pole Changeover, Series 11"
+      }
+    },
+    "label": {
+      "title": "LABEL",
+      "options": {
+        "HF": "House Flame Logo",
+        "RM": "Running Man Logo",
+        "SAK": "Self-Assemble Label Kit",
+        "CL": "Custom Label (NON-RETURNABLE)"
       }
     }
   }

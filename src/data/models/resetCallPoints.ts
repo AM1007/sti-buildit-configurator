@@ -33,9 +33,9 @@ const steps: Step[] = [
     title: "ELECTRICAL ARRANGEMENT",
     required: true,
     options: [
-      { id: "01", label: "#01 Conventional Model with 470/680 Î© Resistor Value, Series 01", code: "01", image: `${IMG}/ELECTRICAL ARRANGEMENT/01-Conventional-Model-with-470680_Resistor-Value, Series 01.webp` },
+      { id: "01", label: "#01 Conventional Model with 470/680 Ω Resistor Value, Series 01", code: "01", image: `${IMG}/ELECTRICAL ARRANGEMENT/01-Conventional-Model-with-470680_Resistor-Value, Series 01.webp` },
       { id: "02", label: "#02 Single Pole Changeover, Series 02", code: "02", image: `${IMG}/ELECTRICAL ARRANGEMENT/02-Single-Pole-Changeover, Series 02.webp` },
-      { id: "05", label: "#05 Sav-wire (2-wire) 470/680 Î© Resistor Value & Diode, Series 05", code: "05", image: `${IMG}/ELECTRICAL ARRANGEMENT/05-05-Sav-wire (2-wire) 470680_Resistor Value_Diode, Series 05.webp` },
+      { id: "05", label: "#05 Sav-wire (2-wire) 470/680 Ω Resistor Value & Diode, Series 05", code: "05", image: `${IMG}/ELECTRICAL ARRANGEMENT/05-05-Sav-wire (2-wire) 470680_Resistor Value_Diode, Series 05.webp` },
       { id: "11", label: "#11 Double Pole Changeover, Series 11", code: "11", image: `${IMG}/ELECTRICAL ARRANGEMENT/11-11-Double-Pole-Changeover, Series 11.webp` },
     ],
   },
@@ -57,16 +57,16 @@ export const resetCallPointsModel: ModelDefinition = {
   id: "reset-call-points",
   name: "ReSet Call Points",
   slug: "reset-call-points",
-  
+
   steps,
-  
+
   stepOrder: [
     "colour",
     "mounting",
     "electricalArrangement",
     "label",
   ],
-  
+
   productModelSchema: {
     baseCode: "RP",
     partsOrder: [
@@ -78,11 +78,11 @@ export const resetCallPointsModel: ModelDefinition = {
     separator: "dash",
     separatorMap: {
       colour: "-",
-      mounting: "-",
+      mounting: "",
       electricalArrangement: "-",
       label: "-",
     },
   },
-  
+
   primaryDependencyStep: "colour",
 };

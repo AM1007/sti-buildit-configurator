@@ -21,6 +21,11 @@ import {
   getValidGLROptionsForStep,
   type GLRSelectionState,
 } from "./rules/globalResetRules";
+import { RESET_CALL_POINTS_CONSTRAINTS } from "./rules/resetCallPointsRules";
+import {
+  getValidRPOptionsForStep,
+  type RPSelectionState,
+} from "./rules/resetCallPointsRules";
 
 // ============================================================================
 // Constraints registry
@@ -31,6 +36,7 @@ const CONSTRAINTS_MAP: Record<string, ModelConstraints> = {
   "stopper-stations": STOPPER_STATIONS_CONSTRAINTS,
   "gf-fire-alarm-push-button": GF_FIRE_ALARM_PUSH_BUTTON_CONSTRAINTS,
   "global-reset": GLOBAL_RESET_CONSTRAINTS,
+  "reset-call-points": RESET_CALL_POINTS_CONSTRAINTS,
 };
 
 function getModelConstraints(modelId: ModelId): ModelConstraints | null {
@@ -313,6 +319,58 @@ function getGLRAllowlistValidOptions(
 }
 
 // ============================================================================
+// Allowlist validation for ReSet Call Points model
+// ============================================================================
+
+function configToRPSelection(config: Configuration): RPSelectionState {
+  return {
+    colour: config.colour ?? undefined,
+    mounting: config.mounting ?? undefined,
+    electricalArrangement: config.electricalArrangement ?? undefined,
+    label: config.label ?? undefined,
+  };
+}
+
+function isRPModel(modelId: ModelId): boolean {
+  return modelId === "reset-call-points";
+}
+
+/** All RP steps participate in allowlist validation. */
+const RP_ALLOWLIST_STEPS: ReadonlySet<string> = new Set<keyof RPSelectionState>([
+  "colour", "mounting", "electricalArrangement", "label",
+]);
+
+/**
+ * Gets valid options for a step, applying allowlist validation for RP model.
+ * Returns Set of valid option IDs, or null if not applicable.
+ *
+ * This closes the 14 false positives that pass pairwise constraint matrices
+ * but are absent from the 50-model whitelist (e.g. RP-RS2-11, RP-GF2-11-CL).
+ */
+function getRPAllowlistValidOptions(
+  stepId: string,
+  config: Configuration
+): Set<string> | null {
+  if (!RP_ALLOWLIST_STEPS.has(stepId)) return null;
+
+  const rpSelection = configToRPSelection(config);
+
+  // Build "other" selections: all fields except the current step
+  const otherSelections: Partial<RPSelectionState> = {};
+  for (const key of Object.keys(rpSelection) as (keyof RPSelectionState)[]) {
+    if (key === stepId) continue;
+    otherSelections[key] = rpSelection[key];
+  }
+
+  const validOptions = getValidRPOptionsForStep(
+    stepId as keyof RPSelectionState,
+    otherSelections as Omit<RPSelectionState, typeof stepId>
+  );
+
+  return new Set(validOptions);
+}
+
+// ============================================================================
 // Enhanced option availability with constraint engine + allowlist
 // ============================================================================
 
@@ -328,7 +386,7 @@ export interface OptionWithAvailability {
 
 /**
  * Gets all options for a step with their availability status.
- * Combines constraint matrix checks with allowlist validation for G3, SS, GF, and GLR models.
+ * Combines constraint matrix checks with allowlist validation for G3, SS, GF, GLR, and RP models.
  */
 export function getOptionsWithAvailability(
   step: Step,
@@ -364,6 +422,10 @@ export function getOptionsWithAvailability(
 
   const glrAllowlistValid = isGLRModel(modelId)
     ? getGLRAllowlistValidOptions(step.id, config)
+    : null;
+
+  const rpAllowlistValid = isRPModel(modelId)
+    ? getRPAllowlistValidOptions(step.id, config)
     : null;
   
   return step.options.map((option) => {
@@ -417,6 +479,17 @@ export function getOptionsWithAvailability(
 
     // Check GLR allowlist (only if constraint passed)
     if (glrAllowlistValid && !glrAllowlistValid.has(option.id)) {
+      return {
+        option,
+        availability: {
+          available: false,
+          reason: "This option does not lead to a valid product model",
+        },
+      };
+    }
+
+    // Check RP allowlist (only if constraint passed)
+    if (rpAllowlistValid && !rpAllowlistValid.has(option.id)) {
       return {
         option,
         availability: {
@@ -591,6 +664,22 @@ export function getSelectionsToReset(
       if (!currentSelection) continue;
 
       const validOptions = getGLRAllowlistValidOptions(stepId, newConfig);
+      if (validOptions && !validOptions.has(currentSelection)) {
+        toReset.push(stepId);
+      }
+    }
+  }
+
+  // For RP model, also check if selection leads to invalid model
+  if (isRPModel(model.id)) {
+    for (let i = changedStepIndex + 1; i < model.stepOrder.length; i++) {
+      const stepId = model.stepOrder[i];
+      if (toReset.includes(stepId)) continue;
+
+      const currentSelection = newConfig[stepId];
+      if (!currentSelection) continue;
+
+      const validOptions = getRPAllowlistValidOptions(stepId, newConfig);
       if (validOptions && !validOptions.has(currentSelection)) {
         toReset.push(stepId);
       }

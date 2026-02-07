@@ -291,6 +291,25 @@
       📄 2 yellow.webp
       📄 3 white.webp
       📄 4 blue.webp
+    📁 COMPLETED DEVICE
+      📁 BLUE
+        📄 GLR401EM-EN.webp
+        📄 GLR401EV-EN.webp
+        📄 GLR401LD-EN.webp
+        📄 GLR401ZA-EN.webp
+      📁 GREEN
+        📄 GLR101EM-EN.webp
+        📄 GLR101EX-EN.webp
+        📄 GLR101RM-EN.webp
+      📁 RED
+        📄 GLR001ZA-EN.webp
+      📁 WHITE
+        📄 GLR301ZA-EN.webp
+      📁 YELLOW
+        📄 GLR201EX-EN.webp
+        📄 GLR201NT-EN.webp
+        📄 GLR201PS-EN.webp
+        📄 GLR201ZA-EN.webp
     📁 COVER
       📄 01 no cover.webp
       📄 21 shield.webp
@@ -1378,6 +1397,7 @@
         📁 modelDescriptions
           📄 g3-multipurpose-push-button.json
           📄 gf-fire-alarm-push-button.json
+          📄 global-reset.json
           📄 stopper-stations.json
         📁 models
           📄 alert-point.json
@@ -1402,6 +1422,7 @@
         📁 modelDescriptions
           📄 g3-multipurpose-push-button.json
           📄 gf-fire-alarm-push-button.json
+          📄 global-reset.json
           📄 stopper-stations.json
         📁 models
           📄 alert-point.json
