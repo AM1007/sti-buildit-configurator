@@ -88,7 +88,7 @@ const MODEL_CONFIG: Record<string, {
       "O": "ORANGE",
     },
     colourStep: "colour",
-    // No clStep — label CL already included in fullCode via buildProductModel (code: "CL")
+    // No clStep â€” label CL already included in fullCode via buildProductModel (code: "CL")
   },
   "waterproof-push-buttons": {
     basePath: "/Waterproof Push Buttons/COMPLETED DEVICE",
@@ -114,7 +114,7 @@ const MODEL_CONFIG: Record<string, {
       "O": "ORANGE",
     },
     colourStep: "colour",
-    clStep: "label",
+    // No clStep — label CL already included in fullCode via buildProductModel (code: "CL")
   },
   "g3-multipurpose-push-button": {
     basePath: "/G3 Multipurpose Push Button/COMPLETED DEVICE",

@@ -26,6 +26,11 @@ import {
   getValidRPOptionsForStep,
   type RPSelectionState,
 } from "./rules/resetCallPointsRules";
+import { WATERPROOF_RESET_CALL_POINT_CONSTRAINTS } from "./rules/waterproofResetCallPointRules";
+import {
+  getValidWRPOptionsForStep,
+  type WRPSelectionState,
+} from "./rules/waterproofResetCallPointRules";
 
 // ============================================================================
 // Constraints registry
@@ -37,6 +42,7 @@ const CONSTRAINTS_MAP: Record<string, ModelConstraints> = {
   "gf-fire-alarm-push-button": GF_FIRE_ALARM_PUSH_BUTTON_CONSTRAINTS,
   "global-reset": GLOBAL_RESET_CONSTRAINTS,
   "reset-call-points": RESET_CALL_POINTS_CONSTRAINTS,
+  "waterproof-reset-call-point": WATERPROOF_RESET_CALL_POINT_CONSTRAINTS,
 };
 
 function getModelConstraints(modelId: ModelId): ModelConstraints | null {
@@ -371,6 +377,57 @@ function getRPAllowlistValidOptions(
 }
 
 // ============================================================================
+// Allowlist validation for Waterproof ReSet Call Point model
+// ============================================================================
+
+function configToWRPSelection(config: Configuration): WRPSelectionState {
+  return {
+    colour: config.colour ?? undefined,
+    electricalArrangement: config.electricalArrangement ?? undefined,
+    label: config.label ?? undefined,
+  };
+}
+
+function isWRPModel(modelId: ModelId): boolean {
+  return modelId === "waterproof-reset-call-point";
+}
+
+/** All WRP steps participate in allowlist validation. */
+const WRP_ALLOWLIST_STEPS: ReadonlySet<string> = new Set<keyof WRPSelectionState>([
+  "colour", "electricalArrangement", "label",
+]);
+
+/**
+ * Gets valid options for a step, applying allowlist validation for WRP model.
+ * Returns Set of valid option IDs, or null if not applicable.
+ *
+ * This closes 1 false positive that passes pairwise constraint matrices
+ * but is absent from the 23-model whitelist: WRP2-R-02-CL.
+ */
+function getWRPAllowlistValidOptions(
+  stepId: string,
+  config: Configuration
+): Set<string> | null {
+  if (!WRP_ALLOWLIST_STEPS.has(stepId)) return null;
+
+  const wrpSelection = configToWRPSelection(config);
+
+  // Build "other" selections: all fields except the current step
+  const otherSelections: Partial<WRPSelectionState> = {};
+  for (const key of Object.keys(wrpSelection) as (keyof WRPSelectionState)[]) {
+    if (key === stepId) continue;
+    otherSelections[key] = wrpSelection[key];
+  }
+
+  const validOptions = getValidWRPOptionsForStep(
+    stepId as keyof WRPSelectionState,
+    otherSelections as Omit<WRPSelectionState, typeof stepId>,
+  );
+
+  return new Set(validOptions);
+}
+
+// ============================================================================
 // Enhanced option availability with constraint engine + allowlist
 // ============================================================================
 
@@ -386,7 +443,7 @@ export interface OptionWithAvailability {
 
 /**
  * Gets all options for a step with their availability status.
- * Combines constraint matrix checks with allowlist validation for G3, SS, GF, GLR, and RP models.
+ * Combines constraint matrix checks with allowlist validation for G3, SS, GF, GLR, RP, and WRP models.
  */
 export function getOptionsWithAvailability(
   step: Step,
@@ -426,6 +483,10 @@ export function getOptionsWithAvailability(
 
   const rpAllowlistValid = isRPModel(modelId)
     ? getRPAllowlistValidOptions(step.id, config)
+    : null;
+
+  const wrpAllowlistValid = isWRPModel(modelId)
+    ? getWRPAllowlistValidOptions(step.id, config)
     : null;
   
   return step.options.map((option) => {
@@ -490,6 +551,17 @@ export function getOptionsWithAvailability(
 
     // Check RP allowlist (only if constraint passed)
     if (rpAllowlistValid && !rpAllowlistValid.has(option.id)) {
+      return {
+        option,
+        availability: {
+          available: false,
+          reason: "This option does not lead to a valid product model",
+        },
+      };
+    }
+
+    // Check WRP allowlist (only if constraint passed)
+    if (wrpAllowlistValid && !wrpAllowlistValid.has(option.id)) {
       return {
         option,
         availability: {
@@ -680,6 +752,22 @@ export function getSelectionsToReset(
       if (!currentSelection) continue;
 
       const validOptions = getRPAllowlistValidOptions(stepId, newConfig);
+      if (validOptions && !validOptions.has(currentSelection)) {
+        toReset.push(stepId);
+      }
+    }
+  }
+
+  // For WRP model, also check if selection leads to invalid model
+  if (isWRPModel(model.id)) {
+    for (let i = changedStepIndex + 1; i < model.stepOrder.length; i++) {
+      const stepId = model.stepOrder[i];
+      if (toReset.includes(stepId)) continue;
+
+      const currentSelection = newConfig[stepId];
+      if (!currentSelection) continue;
+
+      const validOptions = getWRPAllowlistValidOptions(stepId, newConfig);
       if (validOptions && !validOptions.has(currentSelection)) {
         toReset.push(stepId);
       }

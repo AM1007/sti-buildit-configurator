@@ -21,7 +21,8 @@ const steps: Step[] = [
     title: "ELECTRICAL ARRANGEMENT",
     required: true,
     options: [
-      { id: "01", label: "#01 Conventional Fire Model (EN54-11 approved)", code: "01", image: `${IMG}/ELECTRICAL ARRANGEMENT/01-Conventional-Fire-Model-(EN54-11-approved).webp` },
+      // Option "01" (Conventional Fire Model) removed — absent from whitelist.
+      // No SKU in 08_Waterproof_ReSet_Call_Point.md uses electrical code "01".
       { id: "02", label: "#02 Single Pole Changeover", code: "02", image: `${IMG}/ELECTRICAL ARRANGEMENT/02-Single-Pole-Changeover.webp` },
       { id: "11", label: "#11 Double Pole Changeover", code: "11", image: `${IMG}/ELECTRICAL ARRANGEMENT/11-Double-Pole-Changeover.webp` },
     ],

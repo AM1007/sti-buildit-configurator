@@ -633,10 +633,7 @@
         📄 RP-BD2-02.webp
         📄 RP-BD2-11-CL.webp
         📄 RP-BD2-11.webp
-        📄 RP-BF2-02-CL.webp
         📄 RP-BF2-02.webp
-        📄 RP-BF2-11-CL.webp
-        📄 RP-BF2-11.webp
         📄 RP-BS2-02-CL.webp
         📄 RP-BS2-02.webp
         📄 RP-BS2-11-CL.webp
@@ -648,48 +645,26 @@
         📄 RP-GD2-11.webp
         📄 RP-GF2-02-CL.webp
         📄 RP-GF2-02.webp
-        📄 RP-GF2-11-CL.webp
         📄 RP-GF2-11.webp
-        📄 RP-GS2-02-CL.webp
         📄 RP-GS2-02.webp
-        📄 RP-GS2-11-CL.webp
         📄 RP-GS2-11.webp
       📁 ORANGE
         📄 RP-OD2-02-CL.webp
         📄 RP-OD2-02.webp
-        📄 RP-OD2-11-CL.webp
-        📄 RP-OD2-11.webp
         📄 RP-OF2-02-CL.webp
-        📄 RP-OF2-02.webp
-        📄 RP-OF2-11-CL.webp
         📄 RP-OF2-11.webp
         📄 RP-OS2-02-CL.webp
         📄 RP-OS2-02.webp
-        📄 RP-OS2-11-CL.webp
-        📄 RP-OS2-11.webp
       📁 RED
-        📄 RP-RD2-01-CL.webp
-        📄 RP-RD2-01.webp
-        📄 RP-RD2-05-CL.webp
-        📄 RP-RD2-05.webp
-        📄 RP-RF2-01-CL.webp
-        📄 RP-RF2-01.webp
-        📄 RP-RF2-05-CL.webp
-        📄 RP-RF2-05.webp
-        📄 RP-RS2-01-CL.webp
-        📄 RP-RS2-01.webp
-        📄 RP-RS2-05-CL.webp
-        📄 RP-RS2-05.webp
+        📄 RP-RD2-02.webp
+        📄 RP-RD2-11.webp
+        📄 RP-RS2-02.webp
       📁 WHITE
-        📄 RP-WD2-02-CL.webp
         📄 RP-WD2-02.webp
         📄 RP-WD2-11-CL.webp
         📄 RP-WD2-11.webp
-        📄 RP-WF2-02-CL.webp
         📄 RP-WF2-02.webp
-        📄 RP-WF2-11-CL.webp
         📄 RP-WF2-11.webp
-        📄 RP-WS2-02-CL.webp
         📄 RP-WS2-02.webp
         📄 RP-WS2-11-CL.webp
         📄 RP-WS2-11.webp
@@ -1398,6 +1373,7 @@
           📄 g3-multipurpose-push-button.json
           📄 gf-fire-alarm-push-button.json
           📄 global-reset.json
+          📄 reset-call-points.json
           📄 stopper-stations.json
         📁 models
           📄 alert-point.json
@@ -1423,6 +1399,7 @@
           📄 g3-multipurpose-push-button.json
           📄 gf-fire-alarm-push-button.json
           📄 global-reset.json
+          📄 reset-call-points.json
           📄 stopper-stations.json
         📁 models
           📄 alert-point.json
