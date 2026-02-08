@@ -62,7 +62,7 @@ const MODEL_CONFIG: Record<string, {
       "E": "ORANGE",
     },
     colourStep: "colour",
-    clStep: "label",
+    // No clStep — label CL already included in fullCode via buildProductModel (code: "CL", separator: "-")
   },
   "key-switches": {
     basePath: "/Key Switches/COMPLETED DEVICE",

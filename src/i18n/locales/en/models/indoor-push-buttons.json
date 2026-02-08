@@ -28,25 +28,25 @@
         "E": "#E Orange Button"
       }
     },
-    "buttonType": {
-      "title": "BUTTON TYPE",
+    "pushButtonType": {
+      "title": "PUSH BUTTON TYPE",
       "options": {
         "0": "#0 Key-to-Reset",
         "1": "#1 Momentary",
         "6": "#6 Pneumatic (EXTENDED LEAD TIMES)"
       }
     },
-    "electricalArrangement": {
-      "title": "ELECTRICAL ARRANGEMENT",
+    "electricalArrangements": {
+      "title": "ELECTRICAL ARRANGEMENTS",
       "options": {
         "0": "#0 Single Pole Changeover",
-        "4": "#4 Multi Signal (SPC and DPC)"
+        "4": "#4 Multi-Functional Signal (SPC & DPC)"
       }
     },
     "label": {
       "title": "LABEL",
       "options": {
-        "SELF_ASSEMBLE": "Self Assemble Label Kit",
+        "SAK": "Self-Assemble Label Kit",
         "CL": "Custom Label (NON-RETURNABLE)"
       }
     }

@@ -31,6 +31,11 @@ import {
   getValidWRPOptionsForStep,
   type WRPSelectionState,
 } from "./rules/waterproofResetCallPointRules";
+import { INDOOR_PUSH_BUTTONS_CONSTRAINTS } from "./rules/indoorPushButtonsRules";
+import {
+  getValidIPBOptionsForStep,
+  type IPBSelectionState,
+} from "./rules/indoorPushButtonsRules";
 
 // ============================================================================
 // Constraints registry
@@ -43,6 +48,7 @@ const CONSTRAINTS_MAP: Record<string, ModelConstraints> = {
   "global-reset": GLOBAL_RESET_CONSTRAINTS,
   "reset-call-points": RESET_CALL_POINTS_CONSTRAINTS,
   "waterproof-reset-call-point": WATERPROOF_RESET_CALL_POINT_CONSTRAINTS,
+  "indoor-push-buttons": INDOOR_PUSH_BUTTONS_CONSTRAINTS,
 };
 
 function getModelConstraints(modelId: ModelId): ModelConstraints | null {
@@ -428,6 +434,61 @@ function getWRPAllowlistValidOptions(
 }
 
 // ============================================================================
+// Allowlist validation for Indoor Push Buttons model
+// ============================================================================
+
+function configToIPBSelection(config: Configuration): IPBSelectionState {
+  return {
+    colour: config.colour ?? undefined,
+    buttonColour: config.buttonColour ?? undefined,
+    pushButtonType: config.pushButtonType ?? undefined,
+    electricalArrangements: config.electricalArrangements ?? undefined,
+    label: config.label ?? undefined,
+  };
+}
+
+function isIPBModel(modelId: ModelId): boolean {
+  return modelId === "indoor-push-buttons";
+}
+
+/** All IPB steps participate in allowlist validation.
+ *  pushButtonType and electricalArrangements have only one valid value
+ *  in the whitelist (1 and 4 respectively) — the allowlist blocks all others.
+ *  colour↔buttonColour dependency is handled by both matrices and allowlist.
+ *  label "CL" availability for specific colour+buttonColour combos is caught
+ *  only by the allowlist (2 false positives: SS3-1W14-CL, SS3-5G14-CL). */
+const IPB_ALLOWLIST_STEPS: ReadonlySet<string> = new Set<keyof IPBSelectionState>([
+  "colour", "buttonColour", "pushButtonType", "electricalArrangements", "label",
+]);
+
+/**
+ * Gets valid options for a step, applying allowlist validation for IPB model.
+ * Returns Set of valid option IDs, or null if not applicable.
+ */
+function getIPBAllowlistValidOptions(
+  stepId: string,
+  config: Configuration
+): Set<string> | null {
+  if (!IPB_ALLOWLIST_STEPS.has(stepId)) return null;
+
+  const ipbSelection = configToIPBSelection(config);
+
+  // Build "other" selections: all fields except the current step
+  const otherSelections: Partial<IPBSelectionState> = {};
+  for (const key of Object.keys(ipbSelection) as (keyof IPBSelectionState)[]) {
+    if (key === stepId) continue;
+    otherSelections[key] = ipbSelection[key];
+  }
+
+  const validOptions = getValidIPBOptionsForStep(
+    stepId as keyof IPBSelectionState,
+    otherSelections as Omit<IPBSelectionState, typeof stepId>,
+  );
+
+  return new Set(validOptions);
+}
+
+// ============================================================================
 // Enhanced option availability with constraint engine + allowlist
 // ============================================================================
 
@@ -443,7 +504,7 @@ export interface OptionWithAvailability {
 
 /**
  * Gets all options for a step with their availability status.
- * Combines constraint matrix checks with allowlist validation for G3, SS, GF, GLR, RP, and WRP models.
+ * Combines constraint matrix checks with allowlist validation for G3, SS, GF, GLR, RP, WRP, and IPB models.
  */
 export function getOptionsWithAvailability(
   step: Step,
@@ -487,6 +548,10 @@ export function getOptionsWithAvailability(
 
   const wrpAllowlistValid = isWRPModel(modelId)
     ? getWRPAllowlistValidOptions(step.id, config)
+    : null;
+
+  const ipbAllowlistValid = isIPBModel(modelId)
+    ? getIPBAllowlistValidOptions(step.id, config)
     : null;
   
   return step.options.map((option) => {
@@ -562,6 +627,17 @@ export function getOptionsWithAvailability(
 
     // Check WRP allowlist (only if constraint passed)
     if (wrpAllowlistValid && !wrpAllowlistValid.has(option.id)) {
+      return {
+        option,
+        availability: {
+          available: false,
+          reason: "This option does not lead to a valid product model",
+        },
+      };
+    }
+
+    // Check IPB allowlist (only if constraint passed)
+    if (ipbAllowlistValid && !ipbAllowlistValid.has(option.id)) {
       return {
         option,
         availability: {
@@ -768,6 +844,22 @@ export function getSelectionsToReset(
       if (!currentSelection) continue;
 
       const validOptions = getWRPAllowlistValidOptions(stepId, newConfig);
+      if (validOptions && !validOptions.has(currentSelection)) {
+        toReset.push(stepId);
+      }
+    }
+  }
+
+  // For IPB model, also check if selection leads to invalid model
+  if (isIPBModel(model.id)) {
+    for (let i = changedStepIndex + 1; i < model.stepOrder.length; i++) {
+      const stepId = model.stepOrder[i];
+      if (toReset.includes(stepId)) continue;
+
+      const currentSelection = newConfig[stepId];
+      if (!currentSelection) continue;
+
+      const validOptions = getIPBAllowlistValidOptions(stepId, newConfig);
       if (validOptions && !validOptions.has(currentSelection)) {
         toReset.push(stepId);
       }
