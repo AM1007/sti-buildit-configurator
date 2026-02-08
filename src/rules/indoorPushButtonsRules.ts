@@ -2,36 +2,35 @@ import type { ModelConstraints, ConstraintMatrix } from "./types";
 
 // ─────────────────────────────────────────────────────────────
 // ALLOWLIST: Valid Indoor Push Buttons model codes
-// Source: 10_Indoor_Push_Buttons.md (26 codes)
-// Format: SS3-{colour}{buttonColour}{pushButtonType}{electricalArrangements}[-CL]
-//
-// OBSERVATION: All 26 SKUs share pushButtonType=1 and
-// electricalArrangements=4. Options 0/6 for pushButtonType
-// and 0 for electricalArrangements exist in the step definitions
-// but have NO valid SKU. They will be blocked by the allowlist
-// layer, not by constraint matrices.
+// Source: 10_Indoor_Push_Buttons.md (26 codes, pushButtonType=1)
+//         11_Indoor_Push_Buttons.md  (9 codes, pushButtonType=6)
+// Format: SS3-[colour][buttonColour][pushButtonType][electricalArrangements]
+// Label "CL" appended as "-CL" by buildProductModel (code: "CL", separator: "-")
+// Label "SAK" has empty code — no suffix
 // ─────────────────────────────────────────────────────────────
 
 export const VALID_MODEL_CODES: readonly string[] = [
-  // ── Red housing (colour=1): 3 models ──
+  // ── StopperPush: Momentary (pushButtonType=1, electricalArrangements=4) ──
+
+  // Red housing (colour=1)
   "SS3-1R14",
   "SS3-1R14-CL",
   "SS3-1W14",
 
-  // ── Green housing (colour=3): 4 models ──
+  // Green housing (colour=3)
   "SS3-3G14",
   "SS3-3G14-CL",
   "SS3-3W14",
   "SS3-3W14-CL",
 
-  // ── Yellow housing (colour=5): 5 models ──
+  // Yellow housing (colour=5)
   "SS3-5Y14",
   "SS3-5Y14-CL",
   "SS3-5R14",
   "SS3-5R14-CL",
   "SS3-5G14",
 
-  // ── White housing (colour=7): 8 models ──
+  // White housing (colour=7)
   "SS3-7W14",
   "SS3-7W14-CL",
   "SS3-7B14",
@@ -41,15 +40,34 @@ export const VALID_MODEL_CODES: readonly string[] = [
   "SS3-7R14",
   "SS3-7R14-CL",
 
-  // ── Blue housing (colour=9): 4 models ──
+  // Blue housing (colour=9)
   "SS3-9B14",
   "SS3-9B14-CL",
   "SS3-9W14",
   "SS3-9W14-CL",
 
-  // ── Orange housing (colour=E): 2 models ──
+  // Orange housing (colour=E)
   "SS3-EE14",
   "SS3-EE14-CL",
+
+  // ── StopperLatch: Pneumatic (pushButtonType=6, electricalArrangements=0) ──
+
+  // Green housing (colour=3)
+  "SS3-3G60",
+  "SS3-3G60-CL",
+  "SS3-3W60",
+  "SS3-3W60-CL",
+
+  // Yellow housing (colour=5)
+  "SS3-5Y60",
+
+  // White housing (colour=7)
+  "SS3-7G60",
+  "SS3-7G60-CL",
+  "SS3-7R60",
+
+  // Blue housing (colour=9)
+  "SS3-9R60-CL",
 ] as const;
 
 const VALID_MODEL_SET = new Set(VALID_MODEL_CODES);
@@ -59,56 +77,29 @@ const VALID_MODEL_SET = new Set(VALID_MODEL_CODES);
 // ─────────────────────────────────────────────────────────────
 
 export interface IPBSelectionState {
-  colour?: string;                // 1, 3, 5, 7, 9, E
-  buttonColour?: string;          // R, G, Y, W, B, E
-  pushButtonType?: string;        // 0, 1, 6 (only 1 in whitelist)
-  electricalArrangements?: string; // 0, 4 (only 4 in whitelist)
-  label?: string;                 // SAK, CL
+  colour?: string;
+  buttonColour?: string;
+  pushButtonType?: string;
+  electricalArrangements?: string;
+  label?: string;
 }
 
 // ─────────────────────────────────────────────────────────────
 // Build model code from selections
+//
+// Label with code "CL" produces suffix "-CL" via buildProductModel
+// (separatorMap.label = "-"). Label "SAK" has code "" — no suffix.
+// We replicate this logic here for allowlist validation.
 // ─────────────────────────────────────────────────────────────
 
 export function buildIPBModelCode(selections: IPBSelectionState): string | null {
   const { colour, buttonColour, pushButtonType, electricalArrangements, label } = selections;
-
   if (!colour || !buttonColour || !pushButtonType || !electricalArrangements || !label) {
     return null;
   }
 
   const base = `SS3-${colour}${buttonColour}${pushButtonType}${electricalArrangements}`;
-
-  if (label === "CL") {
-    return `${base}-CL`;
-  }
-
-  // ASSUMPTION: label "SAK" produces no suffix.
-  // Any other label value also produces no suffix (defensive).
-  return base;
-}
-
-// ─────────────────────────────────────────────────────────────
-// Parse model code back to selections
-// ─────────────────────────────────────────────────────────────
-
-export function parseIPBModelCode(code: string): IPBSelectionState | null {
-  // SS3-{colour:1}{buttonColour:1}{pushButtonType:1}{electricalArrangements:1}[-CL]
-  const match = code.match(
-    /^SS3-([13579E])([RGYWBE])(\d)(\d)(?:-(CL))?$/
-  );
-
-  if (!match) {
-    return null;
-  }
-
-  return {
-    colour: match[1],
-    buttonColour: match[2],
-    pushButtonType: match[3],
-    electricalArrangements: match[4],
-    label: match[5] === "CL" ? "CL" : "SAK",
-  };
+  return label === "CL" ? `${base}-CL` : base;
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -116,11 +107,10 @@ export function parseIPBModelCode(code: string): IPBSelectionState | null {
 // ─────────────────────────────────────────────────────────────
 
 export function isValidIPBCombination(
-  selections: IPBSelectionState
+  selections: IPBSelectionState,
 ): { valid: true } | { valid: false; reason: string } {
   const modelCode = buildIPBModelCode(selections);
 
-  // Incomplete selection — allow user to continue picking
   if (!modelCode) return { valid: true };
 
   if (VALID_MODEL_SET.has(modelCode)) return { valid: true };
@@ -137,7 +127,7 @@ export function isValidIPBCombination(
 
 export function getValidIPBOptionsForStep(
   stepId: keyof IPBSelectionState,
-  currentSelections: Omit<IPBSelectionState, typeof stepId>
+  currentSelections: Omit<IPBSelectionState, typeof stepId>,
 ): string[] {
   const validOptions = new Set<string>();
 
@@ -163,44 +153,194 @@ export function getValidIPBOptionsForStep(
 }
 
 // ─────────────────────────────────────────────────────────────
+// Parse model code back to selection state
+// ─────────────────────────────────────────────────────────────
+
+export function parseIPBModelCode(code: string): IPBSelectionState | null {
+  // SS3-[colour:1][buttonColour:1][pushButtonType:1][electricalArrangements:1][-CL]?
+  const match = code.match(/^SS3-([1-9E])([RGYWBE])(\d)(\d)(?:-(CL))?$/);
+  if (!match) return null;
+
+  return {
+    colour: match[1],
+    buttonColour: match[2],
+    pushButtonType: match[3],
+    electricalArrangements: match[4],
+    label: match[5] ? "CL" : "SAK",
+  };
+}
+
+// ─────────────────────────────────────────────────────────────
 // CONSTRAINT MATRICES
 //
-// Only colour ↔ buttonColour has a real dependency.
-// pushButtonType and electricalArrangements are fixed at
-// single values in the whitelist (1 and 4 respectively).
-// The allowlist layer handles their blocking — no matrices
-// needed for those steps.
+// Derived from 35-model allowlist.
+// pushButtonType "0" (Key-to-Reset) has zero SKUs — blocked by
+// both matrices and allowlist. Option exists in UI but stays
+// disabled until future SKUs are added.
 //
-// False positives caught by allowlist (2):
-//   SS3-1W14-CL  (colour=1, buttonColour=W, label=CL)
-//   SS3-5G14-CL  (colour=5, buttonColour=G, label=CL)
-// These pass pairwise colour↔buttonColour but are absent
-// from the whitelist. The allowlist closes them.
+// Matrices where ALL values map to ALL values (no filtering)
+// are included for completeness and consistency with other
+// configurator rules files.
 // ─────────────────────────────────────────────────────────────
+
+// ── colour ↔ buttonColour ──
 
 const COLOUR_TO_BUTTONCOLOUR: ConstraintMatrix = {
   "1": ["R", "W"],
   "3": ["G", "W"],
-  "5": ["Y", "R", "G"],
-  "7": ["W", "B", "G", "R"],
-  "9": ["B", "W"],
+  "5": ["G", "R", "Y"],
+  "7": ["B", "G", "R", "W"],
+  "9": ["B", "R", "W"],
   "E": ["E"],
 };
 
 const BUTTONCOLOUR_TO_COLOUR: ConstraintMatrix = {
-  "R": ["1", "5", "7"],
-  "G": ["3", "5", "7"],
-  "Y": ["5"],
-  "W": ["1", "3", "7", "9"],
   "B": ["7", "9"],
   "E": ["E"],
+  "G": ["3", "5", "7"],
+  "R": ["1", "5", "7", "9"],
+  "W": ["1", "3", "7", "9"],
+  "Y": ["5"],
 };
+
+// ── colour ↔ pushButtonType ──
+
+const COLOUR_TO_PUSHBUTTONTYPE: ConstraintMatrix = {
+  "1": ["1"],
+  "3": ["1", "6"],
+  "5": ["1", "6"],
+  "7": ["1", "6"],
+  "9": ["1", "6"],
+  "E": ["1"],
+};
+
+const PUSHBUTTONTYPE_TO_COLOUR: ConstraintMatrix = {
+  "1": ["1", "3", "5", "7", "9", "E"],
+  "6": ["3", "5", "7", "9"],
+};
+
+// ── colour ↔ label ──
+
+const COLOUR_TO_LABEL: ConstraintMatrix = {
+  "1": ["CL", "SAK"],
+  "3": ["CL", "SAK"],
+  "5": ["CL", "SAK"],
+  "7": ["CL", "SAK"],
+  "9": ["CL", "SAK"],
+  "E": ["CL", "SAK"],
+};
+
+const LABEL_TO_COLOUR: ConstraintMatrix = {
+  "CL": ["1", "3", "5", "7", "9", "E"],
+  "SAK": ["1", "3", "5", "7", "9", "E"],
+};
+
+// ── buttonColour ↔ pushButtonType ──
+
+const BUTTONCOLOUR_TO_PUSHBUTTONTYPE: ConstraintMatrix = {
+  "B": ["1"],
+  "E": ["1"],
+  "G": ["1", "6"],
+  "R": ["1", "6"],
+  "W": ["1", "6"],
+  "Y": ["1", "6"],
+};
+
+const PUSHBUTTONTYPE_TO_BUTTONCOLOUR: ConstraintMatrix = {
+  "1": ["B", "E", "G", "R", "W", "Y"],
+  "6": ["G", "R", "W", "Y"],
+};
+
+// ── buttonColour ↔ label ──
+
+const BUTTONCOLOUR_TO_LABEL: ConstraintMatrix = {
+  "B": ["CL", "SAK"],
+  "E": ["CL", "SAK"],
+  "G": ["CL", "SAK"],
+  "R": ["CL", "SAK"],
+  "W": ["CL", "SAK"],
+  "Y": ["CL", "SAK"],
+};
+
+const LABEL_TO_BUTTONCOLOUR: ConstraintMatrix = {
+  "CL": ["B", "E", "G", "R", "W", "Y"],
+  "SAK": ["B", "E", "G", "R", "W", "Y"],
+};
+
+// ── pushButtonType ↔ electricalArrangements ──
+
+const PUSHBUTTONTYPE_TO_ELECTRICALARRANGEMENTS: ConstraintMatrix = {
+  "1": ["4"],
+  "6": ["0"],
+};
+
+const ELECTRICALARRANGEMENTS_TO_PUSHBUTTONTYPE: ConstraintMatrix = {
+  "0": ["6"],
+  "4": ["1"],
+};
+
+// ── pushButtonType ↔ label ──
+
+const PUSHBUTTONTYPE_TO_LABEL: ConstraintMatrix = {
+  "1": ["CL", "SAK"],
+  "6": ["CL", "SAK"],
+};
+
+const LABEL_TO_PUSHBUTTONTYPE: ConstraintMatrix = {
+  "CL": ["1", "6"],
+  "SAK": ["1", "6"],
+};
+
+// ── electricalArrangements ↔ label ──
+
+const ELECTRICALARRANGEMENTS_TO_LABEL: ConstraintMatrix = {
+  "0": ["CL", "SAK"],
+  "4": ["CL", "SAK"],
+};
+
+const LABEL_TO_ELECTRICALARRANGEMENTS: ConstraintMatrix = {
+  "CL": ["0", "4"],
+  "SAK": ["0", "4"],
+};
+
+// ─────────────────────────────────────────────────────────────
+// Exported constraints for constraintEngine
+// ─────────────────────────────────────────────────────────────
 
 export const INDOOR_PUSH_BUTTONS_CONSTRAINTS: ModelConstraints = {
   modelId: "indoor-push-buttons",
   constraints: [
+    // colour ↔ buttonColour
     { sourceStep: "colour", targetStep: "buttonColour", matrix: COLOUR_TO_BUTTONCOLOUR },
     { sourceStep: "buttonColour", targetStep: "colour", matrix: BUTTONCOLOUR_TO_COLOUR },
+
+    // colour ↔ pushButtonType
+    { sourceStep: "colour", targetStep: "pushButtonType", matrix: COLOUR_TO_PUSHBUTTONTYPE },
+    { sourceStep: "pushButtonType", targetStep: "colour", matrix: PUSHBUTTONTYPE_TO_COLOUR },
+
+    // colour ↔ label
+    { sourceStep: "colour", targetStep: "label", matrix: COLOUR_TO_LABEL },
+    { sourceStep: "label", targetStep: "colour", matrix: LABEL_TO_COLOUR },
+
+    // buttonColour ↔ pushButtonType
+    { sourceStep: "buttonColour", targetStep: "pushButtonType", matrix: BUTTONCOLOUR_TO_PUSHBUTTONTYPE },
+    { sourceStep: "pushButtonType", targetStep: "buttonColour", matrix: PUSHBUTTONTYPE_TO_BUTTONCOLOUR },
+
+    // buttonColour ↔ label
+    { sourceStep: "buttonColour", targetStep: "label", matrix: BUTTONCOLOUR_TO_LABEL },
+    { sourceStep: "label", targetStep: "buttonColour", matrix: LABEL_TO_BUTTONCOLOUR },
+
+    // pushButtonType ↔ electricalArrangements
+    { sourceStep: "pushButtonType", targetStep: "electricalArrangements", matrix: PUSHBUTTONTYPE_TO_ELECTRICALARRANGEMENTS },
+    { sourceStep: "electricalArrangements", targetStep: "pushButtonType", matrix: ELECTRICALARRANGEMENTS_TO_PUSHBUTTONTYPE },
+
+    // pushButtonType ↔ label
+    { sourceStep: "pushButtonType", targetStep: "label", matrix: PUSHBUTTONTYPE_TO_LABEL },
+    { sourceStep: "label", targetStep: "pushButtonType", matrix: LABEL_TO_PUSHBUTTONTYPE },
+
+    // electricalArrangements ↔ label
+    { sourceStep: "electricalArrangements", targetStep: "label", matrix: ELECTRICALARRANGEMENTS_TO_LABEL },
+    { sourceStep: "label", targetStep: "electricalArrangements", matrix: LABEL_TO_ELECTRICALARRANGEMENTS },
   ],
 };
 
@@ -211,5 +351,19 @@ export const INDOOR_PUSH_BUTTONS_CONSTRAINTS: ModelConstraints = {
 export const DEBUG_MATRICES = {
   COLOUR_TO_BUTTONCOLOUR,
   BUTTONCOLOUR_TO_COLOUR,
+  COLOUR_TO_PUSHBUTTONTYPE,
+  PUSHBUTTONTYPE_TO_COLOUR,
+  COLOUR_TO_LABEL,
+  LABEL_TO_COLOUR,
+  BUTTONCOLOUR_TO_PUSHBUTTONTYPE,
+  PUSHBUTTONTYPE_TO_BUTTONCOLOUR,
+  BUTTONCOLOUR_TO_LABEL,
+  LABEL_TO_BUTTONCOLOUR,
+  PUSHBUTTONTYPE_TO_ELECTRICALARRANGEMENTS,
+  ELECTRICALARRANGEMENTS_TO_PUSHBUTTONTYPE,
+  PUSHBUTTONTYPE_TO_LABEL,
+  LABEL_TO_PUSHBUTTONTYPE,
+  ELECTRICALARRANGEMENTS_TO_LABEL,
+  LABEL_TO_ELECTRICALARRANGEMENTS,
   VALID_MODEL_CODES,
 };

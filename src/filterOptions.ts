@@ -451,12 +451,7 @@ function isIPBModel(modelId: ModelId): boolean {
   return modelId === "indoor-push-buttons";
 }
 
-/** All IPB steps participate in allowlist validation.
- *  pushButtonType and electricalArrangements have only one valid value
- *  in the whitelist (1 and 4 respectively) — the allowlist blocks all others.
- *  colour↔buttonColour dependency is handled by both matrices and allowlist.
- *  label "CL" availability for specific colour+buttonColour combos is caught
- *  only by the allowlist (2 false positives: SS3-1W14-CL, SS3-5G14-CL). */
+/** All IPB steps participate in allowlist validation. */
 const IPB_ALLOWLIST_STEPS: ReadonlySet<string> = new Set<keyof IPBSelectionState>([
   "colour", "buttonColour", "pushButtonType", "electricalArrangements", "label",
 ]);
@@ -464,6 +459,9 @@ const IPB_ALLOWLIST_STEPS: ReadonlySet<string> = new Set<keyof IPBSelectionState
 /**
  * Gets valid options for a step, applying allowlist validation for IPB model.
  * Returns Set of valid option IDs, or null if not applicable.
+ *
+ * This closes 15 false positives that pass pairwise constraint matrices
+ * but are absent from the 35-model whitelist (e.g. SS3-5G60, SS3-9R60).
  */
 function getIPBAllowlistValidOptions(
   stepId: string,
@@ -504,7 +502,8 @@ export interface OptionWithAvailability {
 
 /**
  * Gets all options for a step with their availability status.
- * Combines constraint matrix checks with allowlist validation for G3, SS, GF, GLR, RP, WRP, and IPB models.
+ * Combines constraint matrix checks with allowlist validation for
+ * G3, SS, GF, GLR, RP, WRP, and IPB models.
  */
 export function getOptionsWithAvailability(
   step: Step,
