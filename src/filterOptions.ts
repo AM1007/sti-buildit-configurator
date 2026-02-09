@@ -41,6 +41,11 @@ import {
   getValidKSOptionsForStep,
   type KSSelectionState,
 } from "./rules/keySwitchesRules";
+import { WATERPROOF_PUSH_BUTTONS_CONSTRAINTS } from "./rules/waterproofPushButtonsRules";
+import {
+  getValidWPBOptionsForStep,
+  type WPBSelectionState,
+} from "./rules/waterproofPushButtonsRules";
 
 // ============================================================================
 // Constraints registry
@@ -55,6 +60,7 @@ const CONSTRAINTS_MAP: Record<string, ModelConstraints> = {
   "waterproof-reset-call-point": WATERPROOF_RESET_CALL_POINT_CONSTRAINTS,
   "indoor-push-buttons": INDOOR_PUSH_BUTTONS_CONSTRAINTS,
   "key-switches": KEY_SWITCHES_CONSTRAINTS,
+  "waterproof-push-buttons": WATERPROOF_PUSH_BUTTONS_CONSTRAINTS,
 };
 
 function getModelConstraints(modelId: ModelId): ModelConstraints | null {
@@ -171,12 +177,12 @@ function isSSModel(modelId: ModelId): boolean {
  * 7-green, 7-blue) share the same code digit ("6" or "7") in the model code.
  * The allowlist stores raw codes, so getValidSSOptions returns "6"/"7".
  * The UI option IDs are "6-red", "6-green", etc. We must map:
- *   allowlist code "6" â†’ UI options "6-red", "6-green", "6-blue"
- *   allowlist code "7" â†’ UI options "7-red", "7-green", "7-blue"
+ *   allowlist code "6" → UI options "6-red", "6-green", "6-blue"
+ *   allowlist code "7" → UI options "7-red", "7-green", "7-blue"
  * For non-activation steps this mapping is identity (code === id).
  */
 /** Steps that participate in allowlist validation (base model code).
- *  installationOptions is NOT part of the base code â€” it uses constraint
+ *  installationOptions is NOT part of the base code — it uses constraint
  *  matrices only and must be skipped here. */
 const SS_ALLOWLIST_STEPS: ReadonlySet<string> = new Set<keyof SSSelectionState>([
   "colour", "cover", "activation", "text", "language",
@@ -210,7 +216,7 @@ function getSSAllowlistValidOptions(
   );
 
   // For activation step: expand allowlist codes back to UI option IDs
-  // "6" â†’ ["6-red", "6-green", "6-blue"], "7" â†’ ["7-red", "7-green", "7-blue"]
+  // "6" → ["6-red", "6-green", "6-blue"], "7" → ["7-red", "7-green", "7-blue"]
   if (stepId === "activation") {
     const expandedIds = new Set<string>();
     for (const code of validCodes) {
@@ -227,7 +233,7 @@ function getSSAllowlistValidOptions(
 
 /**
  * Maps UI activation option ID to its model code digit.
- * "6-red" â†’ "6", "7-green" â†’ "7", "0" â†’ "0", etc.
+ * "6-red" → "6", "7-green" → "7", "0" → "0", etc.
  */
 function normalizeActivationToCode(activationId: string): string {
   if (activationId.startsWith("6-")) return "6";
@@ -237,9 +243,9 @@ function normalizeActivationToCode(activationId: string): string {
 
 /**
  * Expands a single activation code to all possible UI option IDs.
- * "6" â†’ ["6-red", "6-green", "6-blue"]
- * "7" â†’ ["7-red", "7-green", "7-blue"]
- * "0" â†’ ["0"], etc.
+ * "6" → ["6-red", "6-green", "6-blue"]
+ * "7" → ["7-red", "7-green", "7-blue"]
+ * "0" → ["0"], etc.
  */
 function expandActivationCodeToIds(code: string): string[] {
   if (code === "6") return ["6-red", "6-green", "6-blue"];
@@ -545,6 +551,59 @@ function getKSAllowlistValidOptions(
 }
 
 // ============================================================================
+// Allowlist validation for Waterproof Push Buttons model
+// ============================================================================
+
+function configToWPBSelection(config: Configuration): WPBSelectionState {
+  return {
+    housingColour: config.housingColour ?? undefined,
+    buttonColour: config.buttonColour ?? undefined,
+    buttonType: config.buttonType ?? undefined,
+    label: config.label ?? undefined,
+  };
+}
+
+function isWPBModel(modelId: ModelId): boolean {
+  return modelId === "waterproof-push-buttons";
+}
+
+/** Steps that participate in allowlist validation for WPB.
+ *  electricalArrangements excluded — single option "4", no variability. */
+const WPB_ALLOWLIST_STEPS: ReadonlySet<string> = new Set<keyof WPBSelectionState>([
+  "housingColour", "buttonColour", "buttonType", "label",
+]);
+
+/**
+ * Gets valid options for a step, applying allowlist validation for WPB model.
+ * Returns Set of valid option IDs, or null if not applicable.
+ *
+ * This closes 13 false positives that pass pairwise constraint matrices
+ * but are absent from the 36-model whitelist.
+ */
+function getWPBAllowlistValidOptions(
+  stepId: string,
+  config: Configuration
+): Set<string> | null {
+  if (!WPB_ALLOWLIST_STEPS.has(stepId)) return null;
+
+  const wpbSelection = configToWPBSelection(config);
+
+  // Build "other" selections: all fields except the current step
+  const otherSelections: Partial<WPBSelectionState> = {};
+  for (const key of Object.keys(wpbSelection) as (keyof WPBSelectionState)[]) {
+    if (key === stepId) continue;
+    otherSelections[key] = wpbSelection[key];
+  }
+
+  const validOptions = getValidWPBOptionsForStep(
+    stepId as keyof WPBSelectionState,
+    otherSelections as Omit<WPBSelectionState, typeof stepId>,
+  );
+
+  return new Set(validOptions);
+}
+
+// ============================================================================
 // Enhanced option availability with constraint engine + allowlist
 // ============================================================================
 
@@ -561,7 +620,7 @@ export interface OptionWithAvailability {
 /**
  * Gets all options for a step with their availability status.
  * Combines constraint matrix checks with allowlist validation for
- * G3, SS, GF, GLR, RP, WRP, and IPB models.
+ * G3, SS, GF, GLR, RP, WRP, IPB, KS, and WPB models.
  */
 export function getOptionsWithAvailability(
   step: Step,
@@ -613,6 +672,10 @@ export function getOptionsWithAvailability(
 
   const ksAllowlistValid = isKSModel(modelId)
     ? getKSAllowlistValidOptions(step.id, config)
+    : null;
+
+  const wpbAllowlistValid = isWPBModel(modelId)
+    ? getWPBAllowlistValidOptions(step.id, config)
     : null;
   
   return step.options.map((option) => {
@@ -710,6 +773,17 @@ export function getOptionsWithAvailability(
 
     // Check KS allowlist (only if constraint passed)
     if (ksAllowlistValid && !ksAllowlistValid.has(option.id)) {
+      return {
+        option,
+        availability: {
+          available: false,
+          reason: "This option does not lead to a valid product model",
+        },
+      };
+    }
+
+    // Check WPB allowlist (only if constraint passed)
+    if (wpbAllowlistValid && !wpbAllowlistValid.has(option.id)) {
       return {
         option,
         availability: {
@@ -948,6 +1022,22 @@ export function getSelectionsToReset(
       if (!currentSelection) continue;
 
       const validOptions = getKSAllowlistValidOptions(stepId, newConfig);
+      if (validOptions && !validOptions.has(currentSelection)) {
+        toReset.push(stepId);
+      }
+    }
+  }
+
+  // For WPB model, also check if selection leads to invalid model
+  if (isWPBModel(model.id)) {
+    for (let i = changedStepIndex + 1; i < model.stepOrder.length; i++) {
+      const stepId = model.stepOrder[i];
+      if (toReset.includes(stepId)) continue;
+
+      const currentSelection = newConfig[stepId];
+      if (!currentSelection) continue;
+
+      const validOptions = getWPBAllowlistValidOptions(stepId, newConfig);
       if (validOptions && !validOptions.has(currentSelection)) {
         toReset.push(stepId);
       }

@@ -3,7 +3,7 @@
     "name": "Waterproof Push Buttons",
     "description": "Waterproof push buttons for outdoor use",
     "heroTitle": "Waterproof Range of Push Buttons with Many Applications",
-    "heroDescription": "A highly versatile range of attractive Waterproof Push Buttons combining unique design, quality and value. These aesthetically appealing, low/high voltage switches are quick and easy to install. StopperPush – Models are for applications where momentary push and release activation is desired. StopperLatch – Models are for applications where repeat activation must be controlled. Once the switch has been manually activated, it can only be reset by inserting a special key. All models are available in a variety of colours with space for function marking and operating instructions. It is advisable to protect your StopperSwitches with an STI Universal Stopper. The Waterproof Push Button series is tested to IP67."
+    "heroDescription": "A highly versatile range of attractive Waterproof Push Buttons combining unique design, quality and value. These aesthetically appealing, low/high voltage switches are quick and easy to install. StopperPush — Models are for applications where momentary push and release activation is desired. StopperLatch — Models are for applications where repeat activation must be controlled. Once the switch has been manually activated, it can only be reset by inserting a special key. All models are available in a variety of colours with space for function marking and operating instructions. It is advisable to protect your StopperSwitches with an STI Universal Stopper. The Waterproof Push Button series is tested to IP67."
   },
   "steps": {
     "housingColour": {
@@ -35,17 +35,17 @@
         "1": "#1 Momentary"
       }
     },
-    "electricalArrangement": {
-      "title": "ELECTRICAL ARRANGEMENT",
+    "electricalArrangements": {
+      "title": "ELECTRICAL ARRANGEMENTS",
       "options": {
-        "4": "#4 Multi Signal (SPC-DPC)"
+        "4": "#4 Multi-Functional Signal (SPC & DPC)"
       }
     },
     "label": {
       "title": "LABEL",
       "options": {
-        "SELF_ASSEMBLE": "Self Assemble Label Kit",
-        "CL": "Custom Label (NON-RETURNABLE)"
+        "SAK": "# Self-Assemble Label Kit",
+        "CL": "#CL Custom Label (NON-RETURNABLE)"
       }
     }
   }

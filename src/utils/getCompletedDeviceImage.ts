@@ -101,7 +101,7 @@ const MODEL_CONFIG: Record<string, {
       "E": "ORANGE",
     },
     colourStep: "housingColour",
-    clStep: "label",
+    // No clStep — label CL already included in fullCode via buildProductModel (code: "CL", separator: "-")
   },
   "waterproof-reset-call-point": {
     basePath: "/Waterproof ReSet Call Point/COMPLETED DEVICE",
