@@ -75,7 +75,7 @@ const MODEL_CONFIG: Record<string, {
       "E0": "ORANGE",
     },
     colourStep: "colourMounting",
-    clStep: "label",
+    // No clStep — label CL already included in fullCode via buildProductModel (code: "CL", separator: "-")
   },
   "reset-call-points": {
     basePath: "/ReSet Call Points/COMPLETED DEVICE",

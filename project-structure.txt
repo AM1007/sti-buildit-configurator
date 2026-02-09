@@ -359,6 +359,47 @@
       📄 9-Blue-(Dual-Mount).webp
       📄 E-Orange-(Dual-Mount).webp
     📁 COMPLETED DEVICE
+      📁 BLUE
+        📄 SS3-9B14-CL.webp
+        📄 SS3-9B14.webp
+        📄 SS3-9R60-CL.webp
+        📄 SS3-9W14-CL.webp
+        📄 SS3-9W14.webp
+      📁 GREEN
+        📄 SS3-3G14-CL.webp
+        📄 SS3-3G14.webp
+        📄 SS3-3G60-CL.webp
+        📄 SS3-3G60.webp
+        📄 SS3-3W14-CL.webp
+        📄 SS3-3W14.webp
+        📄 SS3-3W60-CL.webp
+        📄 SS3-3W60.webp
+      📁 ORANGE
+        📄 SS3-EE14-CL.webp
+        📄 SS3-EE14.webp
+      📁 RED
+        📄 SS3-1R14-CL.webp
+        📄 SS3-1R14.webp
+        📄 SS3-1W14.webp
+      📁 WHITE
+        📄 SS3-7B14-CL.webp
+        📄 SS3-7B14.webp
+        📄 SS3-7G14-CL.webp
+        📄 SS3-7G14.webp
+        📄 SS3-7G60-CL.webp
+        📄 SS3-7G60.webp
+        📄 SS3-7R14-CL.webp
+        📄 SS3-7R14.webp
+        📄 SS3-7R60.webp
+        📄 SS3-7W14-CL.webp
+        📄 SS3-7W14.webp
+      📁 YELLOW
+        📄 SS3-5G14.webp
+        📄 SS3-5R14-CL.webp
+        📄 SS3-5R14.webp
+        📄 SS3-5Y14-CL.webp
+        📄 SS3-5Y14.webp
+        📄 SS3-5Y60.webp
     📁 ELECTRICAL ARRANGEMENTS
       📄 0-Single-Pole-Changeover.webp
       📄 4-Multi-Functional-Signal-(SPC-&-DPC).webp
@@ -1290,6 +1331,7 @@
           📄 g3-multipurpose-push-button.json
           📄 gf-fire-alarm-push-button.json
           📄 global-reset.json
+          📄 indoor-push-buttons.json
           📄 reset-call-points.json
           📄 stopper-stations.json
         📁 models
@@ -1316,6 +1358,7 @@
           📄 g3-multipurpose-push-button.json
           📄 gf-fire-alarm-push-button.json
           📄 global-reset.json
+          📄 indoor-push-buttons.json
           📄 reset-call-points.json
           📄 stopper-stations.json
         📁 models

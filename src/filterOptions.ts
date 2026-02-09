@@ -36,6 +36,11 @@ import {
   getValidIPBOptionsForStep,
   type IPBSelectionState,
 } from "./rules/indoorPushButtonsRules";
+import { KEY_SWITCHES_CONSTRAINTS } from "./rules/keySwitchesRules";
+import {
+  getValidKSOptionsForStep,
+  type KSSelectionState,
+} from "./rules/keySwitchesRules";
 
 // ============================================================================
 // Constraints registry
@@ -49,6 +54,7 @@ const CONSTRAINTS_MAP: Record<string, ModelConstraints> = {
   "reset-call-points": RESET_CALL_POINTS_CONSTRAINTS,
   "waterproof-reset-call-point": WATERPROOF_RESET_CALL_POINT_CONSTRAINTS,
   "indoor-push-buttons": INDOOR_PUSH_BUTTONS_CONSTRAINTS,
+  "key-switches": KEY_SWITCHES_CONSTRAINTS,
 };
 
 function getModelConstraints(modelId: ModelId): ModelConstraints | null {
@@ -165,12 +171,12 @@ function isSSModel(modelId: ModelId): boolean {
  * 7-green, 7-blue) share the same code digit ("6" or "7") in the model code.
  * The allowlist stores raw codes, so getValidSSOptions returns "6"/"7".
  * The UI option IDs are "6-red", "6-green", etc. We must map:
- *   allowlist code "6" → UI options "6-red", "6-green", "6-blue"
- *   allowlist code "7" → UI options "7-red", "7-green", "7-blue"
+ *   allowlist code "6" â†’ UI options "6-red", "6-green", "6-blue"
+ *   allowlist code "7" â†’ UI options "7-red", "7-green", "7-blue"
  * For non-activation steps this mapping is identity (code === id).
  */
 /** Steps that participate in allowlist validation (base model code).
- *  installationOptions is NOT part of the base code — it uses constraint
+ *  installationOptions is NOT part of the base code â€” it uses constraint
  *  matrices only and must be skipped here. */
 const SS_ALLOWLIST_STEPS: ReadonlySet<string> = new Set<keyof SSSelectionState>([
   "colour", "cover", "activation", "text", "language",
@@ -204,7 +210,7 @@ function getSSAllowlistValidOptions(
   );
 
   // For activation step: expand allowlist codes back to UI option IDs
-  // "6" → ["6-red", "6-green", "6-blue"], "7" → ["7-red", "7-green", "7-blue"]
+  // "6" â†’ ["6-red", "6-green", "6-blue"], "7" â†’ ["7-red", "7-green", "7-blue"]
   if (stepId === "activation") {
     const expandedIds = new Set<string>();
     for (const code of validCodes) {
@@ -221,7 +227,7 @@ function getSSAllowlistValidOptions(
 
 /**
  * Maps UI activation option ID to its model code digit.
- * "6-red" → "6", "7-green" → "7", "0" → "0", etc.
+ * "6-red" â†’ "6", "7-green" â†’ "7", "0" â†’ "0", etc.
  */
 function normalizeActivationToCode(activationId: string): string {
   if (activationId.startsWith("6-")) return "6";
@@ -231,9 +237,9 @@ function normalizeActivationToCode(activationId: string): string {
 
 /**
  * Expands a single activation code to all possible UI option IDs.
- * "6" → ["6-red", "6-green", "6-blue"]
- * "7" → ["7-red", "7-green", "7-blue"]
- * "0" → ["0"], etc.
+ * "6" â†’ ["6-red", "6-green", "6-blue"]
+ * "7" â†’ ["7-red", "7-green", "7-blue"]
+ * "0" â†’ ["0"], etc.
  */
 function expandActivationCodeToIds(code: string): string[] {
   if (code === "6") return ["6-red", "6-green", "6-blue"];
@@ -487,6 +493,58 @@ function getIPBAllowlistValidOptions(
 }
 
 // ============================================================================
+// Allowlist validation for Key Switches model
+// ============================================================================
+
+function configToKSSelection(config: Configuration): KSSelectionState {
+  return {
+    colourMounting: config.colourMounting ?? undefined,
+    switchType: config.switchType ?? undefined,
+    electricalArrangement: config.electricalArrangement ?? undefined,
+    label: config.label ?? undefined,
+  };
+}
+
+function isKSModel(modelId: ModelId): boolean {
+  return modelId === "key-switches";
+}
+
+/** All KS steps participate in allowlist validation.
+ *  Label availability depends on the full triplet (colourMounting + switchType +
+ *  electricalArrangement), not on any single step — the allowlist catches this.
+ *  25 false positives are closed by this level. */
+const KS_ALLOWLIST_STEPS: ReadonlySet<string> = new Set<keyof KSSelectionState>([
+  "colourMounting", "switchType", "electricalArrangement", "label",
+]);
+
+/**
+ * Gets valid options for a step, applying allowlist validation for KS model.
+ * Returns Set of valid option IDs, or null if not applicable.
+ */
+function getKSAllowlistValidOptions(
+  stepId: string,
+  config: Configuration
+): Set<string> | null {
+  if (!KS_ALLOWLIST_STEPS.has(stepId)) return null;
+
+  const ksSelection = configToKSSelection(config);
+
+  // Build "other" selections: all fields except the current step
+  const otherSelections: Partial<KSSelectionState> = {};
+  for (const key of Object.keys(ksSelection) as (keyof KSSelectionState)[]) {
+    if (key === stepId) continue;
+    otherSelections[key] = ksSelection[key];
+  }
+
+  const validOptions = getValidKSOptionsForStep(
+    stepId as keyof KSSelectionState,
+    otherSelections as Omit<KSSelectionState, typeof stepId>
+  );
+
+  return new Set(validOptions);
+}
+
+// ============================================================================
 // Enhanced option availability with constraint engine + allowlist
 // ============================================================================
 
@@ -551,6 +609,10 @@ export function getOptionsWithAvailability(
 
   const ipbAllowlistValid = isIPBModel(modelId)
     ? getIPBAllowlistValidOptions(step.id, config)
+    : null;
+
+  const ksAllowlistValid = isKSModel(modelId)
+    ? getKSAllowlistValidOptions(step.id, config)
     : null;
   
   return step.options.map((option) => {
@@ -637,6 +699,17 @@ export function getOptionsWithAvailability(
 
     // Check IPB allowlist (only if constraint passed)
     if (ipbAllowlistValid && !ipbAllowlistValid.has(option.id)) {
+      return {
+        option,
+        availability: {
+          available: false,
+          reason: "This option does not lead to a valid product model",
+        },
+      };
+    }
+
+    // Check KS allowlist (only if constraint passed)
+    if (ksAllowlistValid && !ksAllowlistValid.has(option.id)) {
       return {
         option,
         availability: {
@@ -859,6 +932,22 @@ export function getSelectionsToReset(
       if (!currentSelection) continue;
 
       const validOptions = getIPBAllowlistValidOptions(stepId, newConfig);
+      if (validOptions && !validOptions.has(currentSelection)) {
+        toReset.push(stepId);
+      }
+    }
+  }
+
+  // For KS model, also check if selection leads to invalid model
+  if (isKSModel(model.id)) {
+    for (let i = changedStepIndex + 1; i < model.stepOrder.length; i++) {
+      const stepId = model.stepOrder[i];
+      if (toReset.includes(stepId)) continue;
+
+      const currentSelection = newConfig[stepId];
+      if (!currentSelection) continue;
+
+      const validOptions = getKSAllowlistValidOptions(stepId, newConfig);
       if (validOptions && !validOptions.has(currentSelection)) {
         toReset.push(stepId);
       }
