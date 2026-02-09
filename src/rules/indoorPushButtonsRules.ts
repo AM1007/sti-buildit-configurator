@@ -2,8 +2,9 @@ import type { ModelConstraints, ConstraintMatrix } from "./types";
 
 // ─────────────────────────────────────────────────────────────
 // ALLOWLIST: Valid Indoor Push Buttons model codes
-// Source: 10_Indoor_Push_Buttons.md (26 codes, pushButtonType=1)
-//         11_Indoor_Push_Buttons.md  (9 codes, pushButtonType=6)
+// Source: 10_Indoor_Push_Buttons.md (26 codes, pushButtonType=1, ea=4)
+//         11_Indoor_Push_Buttons.md  (9 codes, pushButtonType=6, ea=0)
+//         12_Indoor_Push_Buttons.md (24 codes, pushButtonType=0, ea=4)
 // Format: SS3-[colour][buttonColour][pushButtonType][electricalArrangements]
 // Label "CL" appended as "-CL" by buildProductModel (code: "CL", separator: "-")
 // Label "SAK" has empty code — no suffix
@@ -11,6 +12,7 @@ import type { ModelConstraints, ConstraintMatrix } from "./types";
 
 export const VALID_MODEL_CODES: readonly string[] = [
   // ── StopperPush: Momentary (pushButtonType=1, electricalArrangements=4) ──
+  // Source: 10_Indoor_Push_Buttons.md — 26 SKU
 
   // Red housing (colour=1)
   "SS3-1R14",
@@ -51,6 +53,7 @@ export const VALID_MODEL_CODES: readonly string[] = [
   "SS3-EE14-CL",
 
   // ── StopperLatch: Pneumatic (pushButtonType=6, electricalArrangements=0) ──
+  // Source: 11_Indoor_Push_Buttons.md — 9 SKU
 
   // Green housing (colour=3)
   "SS3-3G60",
@@ -68,6 +71,45 @@ export const VALID_MODEL_CODES: readonly string[] = [
 
   // Blue housing (colour=9)
   "SS3-9R60-CL",
+
+  // ── StopperLatch: Key-to-Reset (pushButtonType=0, electricalArrangements=4) ──
+  // Source: 12_Indoor_Push_Buttons.md — 24 SKU
+
+  // Red housing (colour=1)
+  "SS3-1R04",
+  "SS3-1R04-CL",
+  "SS3-1W04",
+  "SS3-1W04-CL",
+
+  // Green housing (colour=3)
+  "SS3-3G04",
+  "SS3-3G04-CL",
+  "SS3-3W04",
+
+  // Yellow housing (colour=5)
+  "SS3-5Y04",
+  "SS3-5Y04-CL",
+  "SS3-5G04",
+  "SS3-5G04-CL",
+  "SS3-5R04",
+  "SS3-5R04-CL",
+
+  // White housing (colour=7)
+  "SS3-7W04",
+  "SS3-7W04-CL",
+  "SS3-7B04",
+  "SS3-7R04",
+  "SS3-7R04-CL",
+
+  // Blue housing (colour=9)
+  "SS3-9B04",
+  "SS3-9B04-CL",
+  "SS3-9W04",
+  "SS3-9W04-CL",
+  "SS3-9Y04-CL",
+
+  // Orange housing (colour=E)
+  "SS3-EE04",
 ] as const;
 
 const VALID_MODEL_SET = new Set(VALID_MODEL_CODES);
@@ -173,14 +215,13 @@ export function parseIPBModelCode(code: string): IPBSelectionState | null {
 // ─────────────────────────────────────────────────────────────
 // CONSTRAINT MATRICES
 //
-// Derived from 35-model allowlist.
-// pushButtonType "0" (Key-to-Reset) has zero SKUs — blocked by
-// both matrices and allowlist. Option exists in UI but stays
-// disabled until future SKUs are added.
+// Derived from 59-model allowlist (3 source files).
+// Three pushButtonType values are now active:
+//   0 (Key-to-Reset)  → electricalArrangements=4 only
+//   1 (Momentary)     → electricalArrangements=4 only
+//   6 (Pneumatic)     → electricalArrangements=0 only
 //
-// Matrices where ALL values map to ALL values (no filtering)
-// are included for completeness and consistency with other
-// configurator rules files.
+// 27 false positives are caught by allowlist validation.
 // ─────────────────────────────────────────────────────────────
 
 // ── colour ↔ buttonColour ──
@@ -190,7 +231,7 @@ const COLOUR_TO_BUTTONCOLOUR: ConstraintMatrix = {
   "3": ["G", "W"],
   "5": ["G", "R", "Y"],
   "7": ["B", "G", "R", "W"],
-  "9": ["B", "R", "W"],
+  "9": ["B", "R", "W", "Y"],
   "E": ["E"],
 };
 
@@ -200,23 +241,40 @@ const BUTTONCOLOUR_TO_COLOUR: ConstraintMatrix = {
   "G": ["3", "5", "7"],
   "R": ["1", "5", "7", "9"],
   "W": ["1", "3", "7", "9"],
-  "Y": ["5"],
+  "Y": ["5", "9"],
 };
 
 // ── colour ↔ pushButtonType ──
 
 const COLOUR_TO_PUSHBUTTONTYPE: ConstraintMatrix = {
-  "1": ["1"],
-  "3": ["1", "6"],
-  "5": ["1", "6"],
-  "7": ["1", "6"],
-  "9": ["1", "6"],
-  "E": ["1"],
+  "1": ["0", "1"],
+  "3": ["0", "1", "6"],
+  "5": ["0", "1", "6"],
+  "7": ["0", "1", "6"],
+  "9": ["0", "1", "6"],
+  "E": ["0", "1"],
 };
 
 const PUSHBUTTONTYPE_TO_COLOUR: ConstraintMatrix = {
+  "0": ["1", "3", "5", "7", "9", "E"],
   "1": ["1", "3", "5", "7", "9", "E"],
   "6": ["3", "5", "7", "9"],
+};
+
+// ── colour ↔ electricalArrangements ──
+
+const COLOUR_TO_ELECTRICALARRANGEMENTS: ConstraintMatrix = {
+  "1": ["4"],
+  "3": ["0", "4"],
+  "5": ["0", "4"],
+  "7": ["0", "4"],
+  "9": ["0", "4"],
+  "E": ["4"],
+};
+
+const ELECTRICALARRANGEMENTS_TO_COLOUR: ConstraintMatrix = {
+  "0": ["3", "5", "7", "9"],
+  "4": ["1", "3", "5", "7", "9", "E"],
 };
 
 // ── colour ↔ label ──
@@ -238,17 +296,34 @@ const LABEL_TO_COLOUR: ConstraintMatrix = {
 // ── buttonColour ↔ pushButtonType ──
 
 const BUTTONCOLOUR_TO_PUSHBUTTONTYPE: ConstraintMatrix = {
-  "B": ["1"],
-  "E": ["1"],
-  "G": ["1", "6"],
-  "R": ["1", "6"],
-  "W": ["1", "6"],
-  "Y": ["1", "6"],
+  "B": ["0", "1"],
+  "E": ["0", "1"],
+  "G": ["0", "1", "6"],
+  "R": ["0", "1", "6"],
+  "W": ["0", "1", "6"],
+  "Y": ["0", "1", "6"],
 };
 
 const PUSHBUTTONTYPE_TO_BUTTONCOLOUR: ConstraintMatrix = {
+  "0": ["B", "E", "G", "R", "W", "Y"],
   "1": ["B", "E", "G", "R", "W", "Y"],
   "6": ["G", "R", "W", "Y"],
+};
+
+// ── buttonColour ↔ electricalArrangements ──
+
+const BUTTONCOLOUR_TO_ELECTRICALARRANGEMENTS: ConstraintMatrix = {
+  "B": ["4"],
+  "E": ["4"],
+  "G": ["0", "4"],
+  "R": ["0", "4"],
+  "W": ["0", "4"],
+  "Y": ["0", "4"],
+};
+
+const ELECTRICALARRANGEMENTS_TO_BUTTONCOLOUR: ConstraintMatrix = {
+  "0": ["G", "R", "W", "Y"],
+  "4": ["B", "E", "G", "R", "W", "Y"],
 };
 
 // ── buttonColour ↔ label ──
@@ -270,25 +345,27 @@ const LABEL_TO_BUTTONCOLOUR: ConstraintMatrix = {
 // ── pushButtonType ↔ electricalArrangements ──
 
 const PUSHBUTTONTYPE_TO_ELECTRICALARRANGEMENTS: ConstraintMatrix = {
+  "0": ["4"],
   "1": ["4"],
   "6": ["0"],
 };
 
 const ELECTRICALARRANGEMENTS_TO_PUSHBUTTONTYPE: ConstraintMatrix = {
   "0": ["6"],
-  "4": ["1"],
+  "4": ["0", "1"],
 };
 
 // ── pushButtonType ↔ label ──
 
 const PUSHBUTTONTYPE_TO_LABEL: ConstraintMatrix = {
+  "0": ["CL", "SAK"],
   "1": ["CL", "SAK"],
   "6": ["CL", "SAK"],
 };
 
 const LABEL_TO_PUSHBUTTONTYPE: ConstraintMatrix = {
-  "CL": ["1", "6"],
-  "SAK": ["1", "6"],
+  "CL": ["0", "1", "6"],
+  "SAK": ["0", "1", "6"],
 };
 
 // ── electricalArrangements ↔ label ──
@@ -318,6 +395,10 @@ export const INDOOR_PUSH_BUTTONS_CONSTRAINTS: ModelConstraints = {
     { sourceStep: "colour", targetStep: "pushButtonType", matrix: COLOUR_TO_PUSHBUTTONTYPE },
     { sourceStep: "pushButtonType", targetStep: "colour", matrix: PUSHBUTTONTYPE_TO_COLOUR },
 
+    // colour ↔ electricalArrangements
+    { sourceStep: "colour", targetStep: "electricalArrangements", matrix: COLOUR_TO_ELECTRICALARRANGEMENTS },
+    { sourceStep: "electricalArrangements", targetStep: "colour", matrix: ELECTRICALARRANGEMENTS_TO_COLOUR },
+
     // colour ↔ label
     { sourceStep: "colour", targetStep: "label", matrix: COLOUR_TO_LABEL },
     { sourceStep: "label", targetStep: "colour", matrix: LABEL_TO_COLOUR },
@@ -325,6 +406,10 @@ export const INDOOR_PUSH_BUTTONS_CONSTRAINTS: ModelConstraints = {
     // buttonColour ↔ pushButtonType
     { sourceStep: "buttonColour", targetStep: "pushButtonType", matrix: BUTTONCOLOUR_TO_PUSHBUTTONTYPE },
     { sourceStep: "pushButtonType", targetStep: "buttonColour", matrix: PUSHBUTTONTYPE_TO_BUTTONCOLOUR },
+
+    // buttonColour ↔ electricalArrangements
+    { sourceStep: "buttonColour", targetStep: "electricalArrangements", matrix: BUTTONCOLOUR_TO_ELECTRICALARRANGEMENTS },
+    { sourceStep: "electricalArrangements", targetStep: "buttonColour", matrix: ELECTRICALARRANGEMENTS_TO_BUTTONCOLOUR },
 
     // buttonColour ↔ label
     { sourceStep: "buttonColour", targetStep: "label", matrix: BUTTONCOLOUR_TO_LABEL },
@@ -353,10 +438,14 @@ export const DEBUG_MATRICES = {
   BUTTONCOLOUR_TO_COLOUR,
   COLOUR_TO_PUSHBUTTONTYPE,
   PUSHBUTTONTYPE_TO_COLOUR,
+  COLOUR_TO_ELECTRICALARRANGEMENTS,
+  ELECTRICALARRANGEMENTS_TO_COLOUR,
   COLOUR_TO_LABEL,
   LABEL_TO_COLOUR,
   BUTTONCOLOUR_TO_PUSHBUTTONTYPE,
   PUSHBUTTONTYPE_TO_BUTTONCOLOUR,
+  BUTTONCOLOUR_TO_ELECTRICALARRANGEMENTS,
+  ELECTRICALARRANGEMENTS_TO_BUTTONCOLOUR,
   BUTTONCOLOUR_TO_LABEL,
   LABEL_TO_BUTTONCOLOUR,
   PUSHBUTTONTYPE_TO_ELECTRICALARRANGEMENTS,

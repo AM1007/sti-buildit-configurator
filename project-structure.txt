@@ -429,44 +429,23 @@
         📄 SS3-9020.webp
         📄 SS3-9030-CL.webp
         📄 SS3-9030.webp
-        📄 SS3-9031-CL.webp
         📄 SS3-9031.webp
-        📄 SS3-9032-CL.webp
-        📄 SS3-9032.webp
-        📄 SS3-9041-CL.webp
         📄 SS3-9041.webp
-        📄 SS3-9042-CL.webp
         📄 SS3-9042.webp
-        📄 SS3-9053-CL.webp
-        📄 SS3-9053.webp
       📁 GREEN
         📄 SS3-3020-CL.webp
         📄 SS3-3020.webp
-        📄 SS3-3030-CL.webp
         📄 SS3-3030.webp
-        📄 SS3-3031-CL.webp
         📄 SS3-3031.webp
-        📄 SS3-3032-CL.webp
         📄 SS3-3032.webp
         📄 SS3-3041-CL.webp
         📄 SS3-3041.webp
         📄 SS3-3042-CL.webp
         📄 SS3-3042.webp
-        📄 SS3-3053-CL.webp
-        📄 SS3-3053.webp
       📁 ORANGE
-        📄 SS3-E020-CL.webp
         📄 SS3-E020.webp
-        📄 SS3-E030-CL.webp
         📄 SS3-E030.webp
-        📄 SS3-E031-CL.webp
-        📄 SS3-E031.webp
-        📄 SS3-E032-CL.webp
         📄 SS3-E032.webp
-        📄 SS3-E041-CL.webp
-        📄 SS3-E041.webp
-        📄 SS3-E042-CL.webp
-        📄 SS3-E042.webp
         📄 SS3-E053-CL.webp
         📄 SS3-E053.webp
       📁 RED
@@ -475,26 +454,16 @@
         📄 SS3-1030-CL.webp
         📄 SS3-1030.webp
         📄 SS3-1031-CL.webp
-        📄 SS3-1031.webp
-        📄 SS3-1032-CL.webp
         📄 SS3-1032.webp
         📄 SS3-1041-CL.webp
         📄 SS3-1041.webp
-        📄 SS3-1042-CL.webp
         📄 SS3-1042.webp
-        📄 SS3-1053-CL.webp
         📄 SS3-1053.webp
       📁 WHITE
         📄 SS3-7020-CL.webp
         📄 SS3-7020.webp
-        📄 SS3-7030-CL.webp
         📄 SS3-7030.webp
-        📄 SS3-7031-CL.webp
         📄 SS3-7031.webp
-        📄 SS3-7032-CL.webp
-        📄 SS3-7032.webp
-        📄 SS3-7041-CL.webp
-        📄 SS3-7041.webp
         📄 SS3-7042-CL.webp
         📄 SS3-7042.webp
         📄 SS3-7053-CL.webp
@@ -502,13 +471,9 @@
       📁 YELLOW
         📄 SS3-5020-CL.webp
         📄 SS3-5020.webp
-        📄 SS3-5030-CL.webp
         📄 SS3-5030.webp
         📄 SS3-5031-CL.webp
         📄 SS3-5031.webp
-        📄 SS3-5032-CL.webp
-        📄 SS3-5032.webp
-        📄 SS3-5041-CL.webp
         📄 SS3-5041.webp
         📄 SS3-5042-CL.webp
         📄 SS3-5042.webp
@@ -1332,6 +1297,7 @@
           📄 gf-fire-alarm-push-button.json
           📄 global-reset.json
           📄 indoor-push-buttons.json
+          📄 key-switches.json
           📄 reset-call-points.json
           📄 stopper-stations.json
         📁 models
@@ -1359,6 +1325,7 @@
           📄 gf-fire-alarm-push-button.json
           📄 global-reset.json
           📄 indoor-push-buttons.json
+          📄 key-switches.json
           📄 reset-call-points.json
           📄 stopper-stations.json
         📁 models
