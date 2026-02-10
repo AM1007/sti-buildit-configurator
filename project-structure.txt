@@ -360,16 +360,16 @@
       📄 E-Orange-(Dual-Mount).webp
     📁 COMPLETED DEVICE
       📁 BLUE
-        📄 SS3-9B04-CL.webp
+        📄 1394a52e4c0b79b3d31f63759175964376e798ac-600x591.webp
+        📄 1a86a44370667cc15d4c29c6e008f7b121799e03-991x771.webp
+        📄 bb462be189dce020695e1cb9e9c90ab9dc87a4a1-600x591.webp
+        📄 ChatGPT Image 9 февр. 2026 г., 04_22_18.webp
         📄 SS3-9B04.webp
         📄 SS3-9B14-CL.webp
         📄 SS3-9B14.webp
         📄 SS3-9R60-CL.webp
-        📄 SS3-9W04-CL.webp
-        📄 SS3-9W04.webp
         📄 SS3-9W14-CL.webp
         📄 SS3-9W14.webp
-        📄 SS3-9Y04-CL.webp
       📁 GREEN
         📄 SS3-3G04-CL.webp
         📄 SS3-3G04.webp
@@ -383,7 +383,7 @@
         📄 SS3-3W60-CL.webp
         📄 SS3-3W60.webp
       📁 ORANGE
-        📄 SS3-EE04.webp
+        📄 a1ab2cc8614db7066a026db9b290ed9b33fb9da2-991x771.webp
         📄 SS3-EE14-CL.webp
         📄 SS3-EE14.webp
       📁 RED
@@ -1106,58 +1106,39 @@
         📄 WSS3-9B14.webp
         📄 WSS3-9W04-CL.webp
         📄 WSS3-9W04.webp
-        📄 WSS3-9W14-CL.webp
-        📄 WSS3-9W14.webp
       📁 GREEN
-        📄 WSS3-3G04-CL.webp
         📄 WSS3-3G04.webp
         📄 WSS3-3G14-CL.webp
         📄 WSS3-3G14.webp
-        📄 WSS3-3W04-CL.webp
+        📄 WSS3-3R04.webp
+        📄 WSS3-3R14-CL.webp
         📄 WSS3-3W04.webp
-        📄 WSS3-3W14-CL.webp
         📄 WSS3-3W14.webp
       📁 ORANGE
-        📄 WSS3-EE04-CL.webp
         📄 WSS3-EE04.webp
-        📄 WSS3-EE14-CL.webp
-        📄 WSS3-EE14.webp
       📁 RED
         📄 WSS3-1R04-CL.webp
         📄 WSS3-1R04.webp
-        📄 WSS3-1R14-CL.webp
         📄 WSS3-1R14.webp
-        📄 WSS3-1W04-CL.webp
-        📄 WSS3-1W04.webp
-        📄 WSS3-1W14-CL.webp
-        📄 WSS3-1W14.webp
       📁 WHITE
         📄 WSS3-7B04-CL.webp
         📄 WSS3-7B04.webp
-        📄 WSS3-7B14-CL.webp
         📄 WSS3-7B14.webp
-        📄 WSS3-7G04-CL.webp
         📄 WSS3-7G04.webp
+        📄 WSS3-7G14-CL.webp
+        📄 WSS3-7G14.webp
         📄 WSS3-7R04-CL.webp
         📄 WSS3-7R04.webp
-        📄 WSS3-7R14-CL.webp
         📄 WSS3-7R14.webp
         📄 WSS3-7W04-CL.webp
         📄 WSS3-7W04.webp
-        📄 WSS3-7W14-CL.webp
-        📄 WSS3-7W14.webp
       📁 YELLOW
-        📄 WSS3-5G04-CL.webp
-        📄 WSS3-5G04.webp
-        📄 WSS3-5G14-CL.webp
-        📄 WSS3-5G14.webp
         📄 WSS3-5R04-CL.webp
         📄 WSS3-5R04.webp
         📄 WSS3-5R14-CL.webp
         📄 WSS3-5R14.webp
         📄 WSS3-5Y04-CL.webp
         📄 WSS3-5Y04.webp
-        📄 WSS3-5Y14-CL.webp
         📄 WSS3-5Y14.webp
     📁 ELECTRICAL ARRANGEMENTS
       📄 4-Multi-Functional-Signal-(SPC-DPC).webp
@@ -1324,6 +1305,7 @@
           📄 key-switches.json
           📄 reset-call-points.json
           📄 stopper-stations.json
+          📄 waterproof-push-buttons.json
         📁 models
           📄 alert-point.json
           📄 call-point-stopper.json
@@ -1352,6 +1334,7 @@
           📄 key-switches.json
           📄 reset-call-points.json
           📄 stopper-stations.json
+          📄 waterproof-push-buttons.json
         📁 models
           📄 alert-point.json
           📄 call-point-stopper.json

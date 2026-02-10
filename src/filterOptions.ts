@@ -46,6 +46,11 @@ import {
   getValidWPBOptionsForStep,
   type WPBSelectionState,
 } from "./rules/waterproofPushButtonsRules";
+import { UNIVERSAL_STOPPER_CONSTRAINTS } from "./rules/universalStopperRules";
+import {
+  getValidUSOptionsForStep,
+  type USSelectionState,
+} from "./rules/universalStopperRules";
 
 // ============================================================================
 // Constraints registry
@@ -61,6 +66,7 @@ const CONSTRAINTS_MAP: Record<string, ModelConstraints> = {
   "indoor-push-buttons": INDOOR_PUSH_BUTTONS_CONSTRAINTS,
   "key-switches": KEY_SWITCHES_CONSTRAINTS,
   "waterproof-push-buttons": WATERPROOF_PUSH_BUTTONS_CONSTRAINTS,
+  "universal-stopper": UNIVERSAL_STOPPER_CONSTRAINTS,
 };
 
 function getModelConstraints(modelId: ModelId): ModelConstraints | null {
@@ -604,6 +610,57 @@ function getWPBAllowlistValidOptions(
 }
 
 // ============================================================================
+// Allowlist validation for Universal Stopper model
+// ============================================================================
+
+function configToUSSelection(config: Configuration): USSelectionState {
+  return {
+    mounting: config.mounting ?? undefined,
+    hoodSounder: config.hoodSounder ?? undefined,
+    colourLabel: config.colourLabel ?? undefined,
+  };
+}
+
+function isUSModel(modelId: ModelId): boolean {
+  return modelId === "universal-stopper";
+}
+
+/** All US steps participate in allowlist validation. */
+const US_ALLOWLIST_STEPS: ReadonlySet<string> = new Set<keyof USSelectionState>([
+  "mounting", "hoodSounder", "colourLabel",
+]);
+
+/**
+ * Gets valid options for a step, applying allowlist validation for US model.
+ * Returns Set of valid option IDs, or null if not applicable.
+ *
+ * This closes 23 false positives that pass pairwise constraint matrices
+ * but are absent from the 65-model whitelist.
+ */
+function getUSAllowlistValidOptions(
+  stepId: string,
+  config: Configuration
+): Set<string> | null {
+  if (!US_ALLOWLIST_STEPS.has(stepId)) return null;
+
+  const usSelection = configToUSSelection(config);
+
+  // Build "other" selections: all fields except the current step
+  const otherSelections: Partial<USSelectionState> = {};
+  for (const key of Object.keys(usSelection) as (keyof USSelectionState)[]) {
+    if (key === stepId) continue;
+    otherSelections[key] = usSelection[key];
+  }
+
+  const validOptions = getValidUSOptionsForStep(
+    stepId as keyof USSelectionState,
+    otherSelections as Omit<USSelectionState, typeof stepId>,
+  );
+
+  return new Set(validOptions);
+}
+
+// ============================================================================
 // Enhanced option availability with constraint engine + allowlist
 // ============================================================================
 
@@ -620,7 +677,7 @@ export interface OptionWithAvailability {
 /**
  * Gets all options for a step with their availability status.
  * Combines constraint matrix checks with allowlist validation for
- * G3, SS, GF, GLR, RP, WRP, IPB, KS, and WPB models.
+ * G3, SS, GF, GLR, RP, WRP, IPB, KS, WPB, and US models.
  */
 export function getOptionsWithAvailability(
   step: Step,
@@ -676,6 +733,10 @@ export function getOptionsWithAvailability(
 
   const wpbAllowlistValid = isWPBModel(modelId)
     ? getWPBAllowlistValidOptions(step.id, config)
+    : null;
+
+  const usAllowlistValid = isUSModel(modelId)
+    ? getUSAllowlistValidOptions(step.id, config)
     : null;
   
   return step.options.map((option) => {
@@ -784,6 +845,17 @@ export function getOptionsWithAvailability(
 
     // Check WPB allowlist (only if constraint passed)
     if (wpbAllowlistValid && !wpbAllowlistValid.has(option.id)) {
+      return {
+        option,
+        availability: {
+          available: false,
+          reason: "This option does not lead to a valid product model",
+        },
+      };
+    }
+
+    // Check US allowlist (only if constraint passed)
+    if (usAllowlistValid && !usAllowlistValid.has(option.id)) {
       return {
         option,
         availability: {
@@ -1038,6 +1110,22 @@ export function getSelectionsToReset(
       if (!currentSelection) continue;
 
       const validOptions = getWPBAllowlistValidOptions(stepId, newConfig);
+      if (validOptions && !validOptions.has(currentSelection)) {
+        toReset.push(stepId);
+      }
+    }
+  }
+
+  // For US model, also check if selection leads to invalid model
+  if (isUSModel(model.id)) {
+    for (let i = changedStepIndex + 1; i < model.stepOrder.length; i++) {
+      const stepId = model.stepOrder[i];
+      if (toReset.includes(stepId)) continue;
+
+      const currentSelection = newConfig[stepId];
+      if (!currentSelection) continue;
+
+      const validOptions = getUSAllowlistValidOptions(stepId, newConfig);
       if (validOptions && !validOptions.has(currentSelection)) {
         toReset.push(stepId);
       }

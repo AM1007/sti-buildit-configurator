@@ -4,24 +4,15 @@ const IMG = "/Universal Stopper";
 
 const steps: Step[] = [
   {
-    id: "cover",
-    title: "COVER",
-    required: true,
-    options: [
-      { id: "13", label: "#13 Dome cover", code: "13", image: `${IMG}/COVER/13 Dome cover.webp` },
-      { id: "14", label: "#14 Low profile cover", code: "14", image: `${IMG}/COVER/14 Low profile cover.webp` },
-    ],
-  },
-
-  {
     id: "mounting",
     title: "MOUNTING",
     required: true,
     options: [
       { id: "0", label: "#0 Flush Mount Open Backed", code: "0", image: `${IMG}/MOUNTING/0 Flush Mount Open Backed.webp` },
       { id: "1", label: "#1 Surface Mount - Clear/Open Backed Spacer (Dual Mount)", code: "1", image: `${IMG}/MOUNTING/1 Surface Mount - ClearOpen Backed Spacer (Dual Mount).webp` },
-      { id: "6", label: "#6 European Enclosed Back Box, 20mm Thread Point & Sealed Mounting Plate", code: "6", image: `${IMG}/MOUNTING/6 European Enclosed Back Box, 20mm Thread Point & Sealed Mounting Plate.webp` },
-      { id: "7", label: "#7 European Enclosed Back Box, 20mm Thread Point & Open Mounting Plate", code: "7", image: `${IMG}/MOUNTING/7 European Enclosed Back Box, 20mm Thread Point & Open Mounting Plate.webp` },
+      // ASSUMPTION: No dedicated image for mounting=2. Reusing mounting=1 image.
+      // TODO: Replace with correct image when available.
+      { id: "2", label: "#2 Surface Mount with Matching Coloured Frame", code: "2", image: `${IMG}/MOUNTING/1 Surface Mount - ClearOpen Backed Spacer (Dual Mount).webp` },
     ],
   },
 
@@ -49,7 +40,6 @@ const steps: Step[] = [
       { id: "NG", label: "#NG Green no label", code: "NG", image: `${IMG}/COLOUR & LABEL/NG Green no label.webp` },
       { id: "CG", label: "#CG Green custom label NON RETURNABLE", code: "CG", image: `${IMG}/COLOUR & LABEL/CG Green custom label NON RETURNABLE.webp` },
       { id: "NC", label: "#NC Clear no label", code: "NC", image: `${IMG}/COLOUR & LABEL/NC Clear no label.webp` },
-      { id: "NK", label: "#NK Black no label", code: "NK", image: `${IMG}/COLOUR & LABEL/NK Black no label.webp` },
       { id: "CK", label: "#CK Black custom label NON RETURNABLE", code: "CK", image: `${IMG}/COLOUR & LABEL/CK Black custom label NON RETURNABLE.webp` },
       { id: "NB", label: "#NB Blue no label", code: "NB", image: `${IMG}/COLOUR & LABEL/NB Blue no label.webp` },
       { id: "CB", label: "#CB Blue custom label NON RETURNABLE", code: "CB", image: `${IMG}/COLOUR & LABEL/CB Blue custom label NON RETURNABLE.webp` },
@@ -57,19 +47,6 @@ const steps: Step[] = [
       { id: "CW", label: "#CW White custom label NON RETURNABLE", code: "CW", image: `${IMG}/COLOUR & LABEL/CW White custom label NON RETURNABLE.webp` },
       { id: "NY", label: "#NY Yellow no label", code: "NY", image: `${IMG}/COLOUR & LABEL/NY Yellow no label.webp` },
       { id: "CY", label: "#CY Yellow Custom Label NON RETURNABLE", code: "CY", image: `${IMG}/COLOUR & LABEL/CY Yellow Custom Label NON RETURNABLE.webp` },
-    ],
-  },
-
-  {
-    id: "language",
-    title: "LANGUAGE",
-    required: true,
-    options: [
-      { id: "EN", label: "# English", code: "", image: `${IMG}/LANGUAGE/English.webp` },
-      { id: "FR", label: "#FR French", code: "FR", image: `${IMG}/LANGUAGE/FR French.webp` },
-      { id: "ES", label: "#ES Spanish", code: "ES", image: `${IMG}/LANGUAGE/ES Spanish.webp` },
-      { id: "NL", label: "#NL Dutch", code: "NL", image: `${IMG}/LANGUAGE/NL Dutch.webp` },
-      { id: "DE", label: "#DE German", code: "DE", image: `${IMG}/LANGUAGE/DE German.webp` },
     ],
   },
 ];
@@ -82,29 +59,23 @@ export const universalStopperModel: ModelDefinition = {
   steps,
   
   stepOrder: [
-    "cover",
     "mounting",
     "hoodSounder",
     "colourLabel",
-    "language",
   ],
   
   productModelSchema: {
-    baseCode: "STI",
+    baseCode: "STI-13",
     partsOrder: [
-      "cover",
       "mounting",
       "hoodSounder",
       "colourLabel",
-      "language",
     ],
     separator: "none",
     separatorMap: {
-      cover: "-",
       mounting: "",
       hoodSounder: "",
       colourLabel: "",
-      language: "-",
     },
   },
 };
