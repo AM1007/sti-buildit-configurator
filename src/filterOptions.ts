@@ -51,6 +51,12 @@ import {
   getValidUSOptionsForStep,
   type USSelectionState,
 } from "./rules/universalStopperRules";
+// ++ LPUS
+import { LOW_PROFILE_UNIVERSAL_STOPPER_CONSTRAINTS } from "./rules/lowProfileUniversalStopperRules";
+import {
+  getValidLPUSOptionsForStep,
+  type LPUSSelectionState,
+} from "./rules/lowProfileUniversalStopperRules";
 
 // ============================================================================
 // Constraints registry
@@ -67,6 +73,7 @@ const CONSTRAINTS_MAP: Record<string, ModelConstraints> = {
   "key-switches": KEY_SWITCHES_CONSTRAINTS,
   "waterproof-push-buttons": WATERPROOF_PUSH_BUTTONS_CONSTRAINTS,
   "universal-stopper": UNIVERSAL_STOPPER_CONSTRAINTS,
+  "low-profile-universal-stopper": LOW_PROFILE_UNIVERSAL_STOPPER_CONSTRAINTS, // ++ LPUS
 };
 
 function getModelConstraints(modelId: ModelId): ModelConstraints | null {
@@ -136,17 +143,12 @@ function isG3Model(modelId: ModelId): boolean {
   return modelId === "g3-multipurpose-push-button";
 }
 
-/**
- * Gets valid options for a step, applying allowlist validation for G3 model.
- * Returns Set of valid option IDs.
- */
 function getG3AllowlistValidOptions(
   stepId: string,
   config: Configuration
 ): Set<string> | null {
   const g3Selection = configToG3Selection(config);
   
-  // Remove the current step from selections to get "other" selections
   const { [stepId as keyof G3SelectionState]: _, ...otherSelections } = g3Selection;
   
   const validOptions = getValidG3Options(
@@ -175,21 +177,6 @@ function isSSModel(modelId: ModelId): boolean {
   return modelId === "stopper-stations";
 }
 
-/**
- * Gets valid options for a step, applying allowlist validation for SS model.
- * Returns Set of valid option IDs, or null if not applicable.
- *
- * ASSUMPTION: activation sub-variants (6-red, 6-green, 6-blue, 7-red,
- * 7-green, 7-blue) share the same code digit ("6" or "7") in the model code.
- * The allowlist stores raw codes, so getValidSSOptions returns "6"/"7".
- * The UI option IDs are "6-red", "6-green", etc. We must map:
- *   allowlist code "6" → UI options "6-red", "6-green", "6-blue"
- *   allowlist code "7" → UI options "7-red", "7-green", "7-blue"
- * For non-activation steps this mapping is identity (code === id).
- */
-/** Steps that participate in allowlist validation (base model code).
- *  installationOptions is NOT part of the base code — it uses constraint
- *  matrices only and must be skipped here. */
 const SS_ALLOWLIST_STEPS: ReadonlySet<string> = new Set<keyof SSSelectionState>([
   "colour", "cover", "activation", "text", "language",
 ]);
@@ -198,20 +185,16 @@ function getSSAllowlistValidOptions(
   stepId: string,
   config: Configuration
 ): Set<string> | null {
-  // Steps outside the base model code are handled by constraint matrices only
   if (!SS_ALLOWLIST_STEPS.has(stepId)) return null;
 
   const ssSelection = configToSSSelection(config);
 
-  // Build "other" selections: all fields except the current step
   const otherSelections: Partial<SSSelectionState> = {};
   for (const key of Object.keys(ssSelection) as (keyof SSSelectionState)[]) {
     if (key === stepId) continue;
     otherSelections[key] = ssSelection[key];
   }
 
-  // For activation step: convert UI option id (e.g. "6-red") to code ("6")
-  // before passing to allowlist lookup
   if (otherSelections.activation) {
     otherSelections.activation = normalizeActivationToCode(otherSelections.activation);
   }
@@ -221,8 +204,6 @@ function getSSAllowlistValidOptions(
     otherSelections as Omit<SSSelectionState, typeof stepId>
   );
 
-  // For activation step: expand allowlist codes back to UI option IDs
-  // "6" → ["6-red", "6-green", "6-blue"], "7" → ["7-red", "7-green", "7-blue"]
   if (stepId === "activation") {
     const expandedIds = new Set<string>();
     for (const code of validCodes) {
@@ -237,22 +218,12 @@ function getSSAllowlistValidOptions(
   return new Set(validCodes);
 }
 
-/**
- * Maps UI activation option ID to its model code digit.
- * "6-red" → "6", "7-green" → "7", "0" → "0", etc.
- */
 function normalizeActivationToCode(activationId: string): string {
   if (activationId.startsWith("6-")) return "6";
   if (activationId.startsWith("7-")) return "7";
   return activationId;
 }
 
-/**
- * Expands a single activation code to all possible UI option IDs.
- * "6" → ["6-red", "6-green", "6-blue"]
- * "7" → ["7-red", "7-green", "7-blue"]
- * "0" → ["0"], etc.
- */
 function expandActivationCodeToIds(code: string): string[] {
   if (code === "6") return ["6-red", "6-green", "6-blue"];
   if (code === "7") return ["7-red", "7-green", "7-blue"];
@@ -276,17 +247,12 @@ function isGFModel(modelId: ModelId): boolean {
   return modelId === "gf-fire-alarm-push-button";
 }
 
-/**
- * Gets valid options for a step, applying allowlist validation for GF model.
- * Returns Set of valid option IDs.
- */
 function getGFAllowlistValidOptions(
   stepId: string,
   config: Configuration
 ): Set<string> | null {
   const gfSelection = configToGFSelection(config);
 
-  // Remove the current step from selections to get "other" selections
   const { [stepId as keyof GFSelectionState]: _, ...otherSelections } = gfSelection;
 
   const validOptions = getValidGFOptionsForStep(
@@ -314,26 +280,18 @@ function isGLRModel(modelId: ModelId): boolean {
   return modelId === "global-reset";
 }
 
-/** Steps that participate in allowlist validation for GLR.
- *  Cover and Language are fixed (single option) but still validated. */
 const GLR_ALLOWLIST_STEPS: ReadonlySet<string> = new Set<keyof GLRSelectionState>([
   "colour", "cover", "text", "language",
 ]);
 
-/**
- * Gets valid options for a step, applying allowlist validation for GLR model.
- * Returns Set of valid option IDs, or null if not applicable.
- */
 function getGLRAllowlistValidOptions(
   stepId: string,
   config: Configuration
 ): Set<string> | null {
-  // Steps outside the base model code are handled by constraint matrices only
   if (!GLR_ALLOWLIST_STEPS.has(stepId)) return null;
 
   const glrSelection = configToGLRSelection(config);
 
-  // Build "other" selections: all fields except the current step
   const otherSelections: Partial<GLRSelectionState> = {};
   for (const key of Object.keys(glrSelection) as (keyof GLRSelectionState)[]) {
     if (key === stepId) continue;
@@ -365,18 +323,10 @@ function isRPModel(modelId: ModelId): boolean {
   return modelId === "reset-call-points";
 }
 
-/** All RP steps participate in allowlist validation. */
 const RP_ALLOWLIST_STEPS: ReadonlySet<string> = new Set<keyof RPSelectionState>([
   "colour", "mounting", "electricalArrangement", "label",
 ]);
 
-/**
- * Gets valid options for a step, applying allowlist validation for RP model.
- * Returns Set of valid option IDs, or null if not applicable.
- *
- * This closes the 14 false positives that pass pairwise constraint matrices
- * but are absent from the 50-model whitelist (e.g. RP-RS2-11, RP-GF2-11-CL).
- */
 function getRPAllowlistValidOptions(
   stepId: string,
   config: Configuration
@@ -385,7 +335,6 @@ function getRPAllowlistValidOptions(
 
   const rpSelection = configToRPSelection(config);
 
-  // Build "other" selections: all fields except the current step
   const otherSelections: Partial<RPSelectionState> = {};
   for (const key of Object.keys(rpSelection) as (keyof RPSelectionState)[]) {
     if (key === stepId) continue;
@@ -416,18 +365,10 @@ function isWRPModel(modelId: ModelId): boolean {
   return modelId === "waterproof-reset-call-point";
 }
 
-/** All WRP steps participate in allowlist validation. */
 const WRP_ALLOWLIST_STEPS: ReadonlySet<string> = new Set<keyof WRPSelectionState>([
   "colour", "electricalArrangement", "label",
 ]);
 
-/**
- * Gets valid options for a step, applying allowlist validation for WRP model.
- * Returns Set of valid option IDs, or null if not applicable.
- *
- * This closes 1 false positive that passes pairwise constraint matrices
- * but is absent from the 23-model whitelist: WRP2-R-02-CL.
- */
 function getWRPAllowlistValidOptions(
   stepId: string,
   config: Configuration
@@ -436,7 +377,6 @@ function getWRPAllowlistValidOptions(
 
   const wrpSelection = configToWRPSelection(config);
 
-  // Build "other" selections: all fields except the current step
   const otherSelections: Partial<WRPSelectionState> = {};
   for (const key of Object.keys(wrpSelection) as (keyof WRPSelectionState)[]) {
     if (key === stepId) continue;
@@ -469,18 +409,10 @@ function isIPBModel(modelId: ModelId): boolean {
   return modelId === "indoor-push-buttons";
 }
 
-/** All IPB steps participate in allowlist validation. */
 const IPB_ALLOWLIST_STEPS: ReadonlySet<string> = new Set<keyof IPBSelectionState>([
   "colour", "buttonColour", "pushButtonType", "electricalArrangements", "label",
 ]);
 
-/**
- * Gets valid options for a step, applying allowlist validation for IPB model.
- * Returns Set of valid option IDs, or null if not applicable.
- *
- * This closes 15 false positives that pass pairwise constraint matrices
- * but are absent from the 35-model whitelist (e.g. SS3-5G60, SS3-9R60).
- */
 function getIPBAllowlistValidOptions(
   stepId: string,
   config: Configuration
@@ -489,7 +421,6 @@ function getIPBAllowlistValidOptions(
 
   const ipbSelection = configToIPBSelection(config);
 
-  // Build "other" selections: all fields except the current step
   const otherSelections: Partial<IPBSelectionState> = {};
   for (const key of Object.keys(ipbSelection) as (keyof IPBSelectionState)[]) {
     if (key === stepId) continue;
@@ -521,18 +452,10 @@ function isKSModel(modelId: ModelId): boolean {
   return modelId === "key-switches";
 }
 
-/** All KS steps participate in allowlist validation.
- *  Label availability depends on the full triplet (colourMounting + switchType +
- *  electricalArrangement), not on any single step — the allowlist catches this.
- *  25 false positives are closed by this level. */
 const KS_ALLOWLIST_STEPS: ReadonlySet<string> = new Set<keyof KSSelectionState>([
   "colourMounting", "switchType", "electricalArrangement", "label",
 ]);
 
-/**
- * Gets valid options for a step, applying allowlist validation for KS model.
- * Returns Set of valid option IDs, or null if not applicable.
- */
 function getKSAllowlistValidOptions(
   stepId: string,
   config: Configuration
@@ -541,7 +464,6 @@ function getKSAllowlistValidOptions(
 
   const ksSelection = configToKSSelection(config);
 
-  // Build "other" selections: all fields except the current step
   const otherSelections: Partial<KSSelectionState> = {};
   for (const key of Object.keys(ksSelection) as (keyof KSSelectionState)[]) {
     if (key === stepId) continue;
@@ -573,19 +495,10 @@ function isWPBModel(modelId: ModelId): boolean {
   return modelId === "waterproof-push-buttons";
 }
 
-/** Steps that participate in allowlist validation for WPB.
- *  electricalArrangements excluded — single option "4", no variability. */
 const WPB_ALLOWLIST_STEPS: ReadonlySet<string> = new Set<keyof WPBSelectionState>([
   "housingColour", "buttonColour", "buttonType", "label",
 ]);
 
-/**
- * Gets valid options for a step, applying allowlist validation for WPB model.
- * Returns Set of valid option IDs, or null if not applicable.
- *
- * This closes 13 false positives that pass pairwise constraint matrices
- * but are absent from the 36-model whitelist.
- */
 function getWPBAllowlistValidOptions(
   stepId: string,
   config: Configuration
@@ -594,7 +507,6 @@ function getWPBAllowlistValidOptions(
 
   const wpbSelection = configToWPBSelection(config);
 
-  // Build "other" selections: all fields except the current step
   const otherSelections: Partial<WPBSelectionState> = {};
   for (const key of Object.keys(wpbSelection) as (keyof WPBSelectionState)[]) {
     if (key === stepId) continue;
@@ -625,18 +537,10 @@ function isUSModel(modelId: ModelId): boolean {
   return modelId === "universal-stopper";
 }
 
-/** All US steps participate in allowlist validation. */
 const US_ALLOWLIST_STEPS: ReadonlySet<string> = new Set<keyof USSelectionState>([
   "mounting", "hoodSounder", "colourLabel",
 ]);
 
-/**
- * Gets valid options for a step, applying allowlist validation for US model.
- * Returns Set of valid option IDs, or null if not applicable.
- *
- * This closes 23 false positives that pass pairwise constraint matrices
- * but are absent from the 65-model whitelist.
- */
 function getUSAllowlistValidOptions(
   stepId: string,
   config: Configuration
@@ -645,7 +549,6 @@ function getUSAllowlistValidOptions(
 
   const usSelection = configToUSSelection(config);
 
-  // Build "other" selections: all fields except the current step
   const otherSelections: Partial<USSelectionState> = {};
   for (const key of Object.keys(usSelection) as (keyof USSelectionState)[]) {
     if (key === stepId) continue;
@@ -655,6 +558,48 @@ function getUSAllowlistValidOptions(
   const validOptions = getValidUSOptionsForStep(
     stepId as keyof USSelectionState,
     otherSelections as Omit<USSelectionState, typeof stepId>,
+  );
+
+  return new Set(validOptions);
+}
+
+// ============================================================================
+// ++ LPUS: Allowlist validation for Low Profile Universal Stopper model
+// ============================================================================
+
+function configToLPUSSelection(config: Configuration): LPUSSelectionState {
+  return {
+    mounting: config.mounting ?? undefined,
+    hoodSounder: config.hoodSounder ?? undefined,
+    colourLabel: config.colourLabel ?? undefined,
+  };
+}
+
+function isLPUSModel(modelId: ModelId): boolean {
+  return modelId === "low-profile-universal-stopper";
+}
+
+const LPUS_ALLOWLIST_STEPS: ReadonlySet<string> = new Set<keyof LPUSSelectionState>([
+  "mounting", "hoodSounder", "colourLabel",
+]);
+
+function getLPUSAllowlistValidOptions(
+  stepId: string,
+  config: Configuration
+): Set<string> | null {
+  if (!LPUS_ALLOWLIST_STEPS.has(stepId)) return null;
+
+  const lpusSelection = configToLPUSSelection(config);
+
+  const otherSelections: Partial<LPUSSelectionState> = {};
+  for (const key of Object.keys(lpusSelection) as (keyof LPUSSelectionState)[]) {
+    if (key === stepId) continue;
+    otherSelections[key] = lpusSelection[key];
+  }
+
+  const validOptions = getValidLPUSOptionsForStep(
+    stepId as keyof LPUSSelectionState,
+    otherSelections as Omit<LPUSSelectionState, typeof stepId>,
   );
 
   return new Set(validOptions);
@@ -677,7 +622,7 @@ export interface OptionWithAvailability {
 /**
  * Gets all options for a step with their availability status.
  * Combines constraint matrix checks with allowlist validation for
- * G3, SS, GF, GLR, RP, WRP, IPB, KS, WPB, and US models.
+ * G3, SS, GF, GLR, RP, WRP, IPB, KS, WPB, US, and LPUS models.
  */
 export function getOptionsWithAvailability(
   step: Step,
@@ -686,7 +631,6 @@ export function getOptionsWithAvailability(
 ): OptionWithAvailability[] {
   const constraints = getModelConstraints(modelId);
   
-  // If no constraints defined, all options are available
   if (!constraints) {
     return step.options.map((option) => ({
       option,
@@ -698,7 +642,6 @@ export function getOptionsWithAvailability(
   const allOptionIds = step.options.map((o) => o.id);
   const stepAvailability = getStepAvailability(engine, step.id, allOptionIds, config);
   
-  // Apply allowlist validation per model
   const g3AllowlistValid = isG3Model(modelId)
     ? getG3AllowlistValidOptions(step.id, config)
     : null;
@@ -738,13 +681,17 @@ export function getOptionsWithAvailability(
   const usAllowlistValid = isUSModel(modelId)
     ? getUSAllowlistValidOptions(step.id, config)
     : null;
+
+  // ++ LPUS
+  const lpusAllowlistValid = isLPUSModel(modelId)
+    ? getLPUSAllowlistValidOptions(step.id, config)
+    : null;
   
   return step.options.map((option) => {
     const constraintResult = stepAvailability.options.find(
       (o) => o.optionId === option.id
     );
     
-    // Check constraint matrix
     if (constraintResult && !constraintResult.available) {
       const reason = constraintResult.reasons.length > 0
         ? constraintResult.reasons[0].message
@@ -755,7 +702,6 @@ export function getOptionsWithAvailability(
       };
     }
     
-    // Check G3 allowlist (only if constraint passed)
     if (g3AllowlistValid && !g3AllowlistValid.has(option.id)) {
       return {
         option,
@@ -766,7 +712,6 @@ export function getOptionsWithAvailability(
       };
     }
 
-    // Check SS allowlist (only if constraint passed)
     if (ssAllowlistValid && !ssAllowlistValid.has(option.id)) {
       return {
         option,
@@ -777,7 +722,6 @@ export function getOptionsWithAvailability(
       };
     }
 
-    // Check GF allowlist (only if constraint passed)
     if (gfAllowlistValid && !gfAllowlistValid.has(option.id)) {
       return {
         option,
@@ -788,7 +732,6 @@ export function getOptionsWithAvailability(
       };
     }
 
-    // Check GLR allowlist (only if constraint passed)
     if (glrAllowlistValid && !glrAllowlistValid.has(option.id)) {
       return {
         option,
@@ -799,7 +742,6 @@ export function getOptionsWithAvailability(
       };
     }
 
-    // Check RP allowlist (only if constraint passed)
     if (rpAllowlistValid && !rpAllowlistValid.has(option.id)) {
       return {
         option,
@@ -810,7 +752,6 @@ export function getOptionsWithAvailability(
       };
     }
 
-    // Check WRP allowlist (only if constraint passed)
     if (wrpAllowlistValid && !wrpAllowlistValid.has(option.id)) {
       return {
         option,
@@ -821,7 +762,6 @@ export function getOptionsWithAvailability(
       };
     }
 
-    // Check IPB allowlist (only if constraint passed)
     if (ipbAllowlistValid && !ipbAllowlistValid.has(option.id)) {
       return {
         option,
@@ -832,7 +772,6 @@ export function getOptionsWithAvailability(
       };
     }
 
-    // Check KS allowlist (only if constraint passed)
     if (ksAllowlistValid && !ksAllowlistValid.has(option.id)) {
       return {
         option,
@@ -843,7 +782,6 @@ export function getOptionsWithAvailability(
       };
     }
 
-    // Check WPB allowlist (only if constraint passed)
     if (wpbAllowlistValid && !wpbAllowlistValid.has(option.id)) {
       return {
         option,
@@ -854,8 +792,18 @@ export function getOptionsWithAvailability(
       };
     }
 
-    // Check US allowlist (only if constraint passed)
     if (usAllowlistValid && !usAllowlistValid.has(option.id)) {
+      return {
+        option,
+        availability: {
+          available: false,
+          reason: "This option does not lead to a valid product model",
+        },
+      };
+    }
+
+    // ++ LPUS
+    if (lpusAllowlistValid && !lpusAllowlistValid.has(option.id)) {
       return {
         option,
         availability: {
@@ -884,7 +832,6 @@ export function isConfigurationComplete(
     const step = model.steps.find((s) => s.id === stepId);
     if (!step) continue;
     
-    // Skip non-required steps
     if (!step.required) continue;
     
     const selection = config[stepId];
@@ -905,7 +852,6 @@ export function getMissingRequiredSteps(
     const step = model.steps.find((s) => s.id === stepId);
     if (!step) continue;
     
-    // Skip non-required steps
     if (!step.required) continue;
     
     const selection = config[stepId];
@@ -939,10 +885,6 @@ export function getCompletionPercentage(
 // Selection reset logic
 // ============================================================================
 
-/**
- * Returns list of step IDs that should be reset when a step selection changes.
- * This is needed when changing an earlier step invalidates later selections.
- */
 export function getSelectionsToReset(
   model: ModelDefinition,
   changedStepId: string,
@@ -958,7 +900,6 @@ export function getSelectionsToReset(
   const engine = createConstraintEngine(constraints);
   const changedStepIndex = model.stepOrder.indexOf(changedStepId);
   
-  // Check all steps after the changed step
   for (let i = changedStepIndex + 1; i < model.stepOrder.length; i++) {
     const stepId = model.stepOrder[i];
     const currentSelection = newConfig[stepId];
@@ -972,7 +913,6 @@ export function getSelectionsToReset(
     }
   }
   
-  // For G3 model, also check if selection leads to invalid model
   if (isG3Model(model.id)) {
     for (let i = changedStepIndex + 1; i < model.stepOrder.length; i++) {
       const stepId = model.stepOrder[i];
@@ -988,7 +928,6 @@ export function getSelectionsToReset(
     }
   }
 
-  // For SS model, also check if selection leads to invalid model
   if (isSSModel(model.id)) {
     for (let i = changedStepIndex + 1; i < model.stepOrder.length; i++) {
       const stepId = model.stepOrder[i];
@@ -1004,7 +943,6 @@ export function getSelectionsToReset(
     }
   }
 
-  // For GF model, also check if selection leads to invalid model
   if (isGFModel(model.id)) {
     for (let i = changedStepIndex + 1; i < model.stepOrder.length; i++) {
       const stepId = model.stepOrder[i];
@@ -1020,7 +958,6 @@ export function getSelectionsToReset(
     }
   }
 
-  // For GLR model, also check if selection leads to invalid model
   if (isGLRModel(model.id)) {
     for (let i = changedStepIndex + 1; i < model.stepOrder.length; i++) {
       const stepId = model.stepOrder[i];
@@ -1036,7 +973,6 @@ export function getSelectionsToReset(
     }
   }
 
-  // For RP model, also check if selection leads to invalid model
   if (isRPModel(model.id)) {
     for (let i = changedStepIndex + 1; i < model.stepOrder.length; i++) {
       const stepId = model.stepOrder[i];
@@ -1052,7 +988,6 @@ export function getSelectionsToReset(
     }
   }
 
-  // For WRP model, also check if selection leads to invalid model
   if (isWRPModel(model.id)) {
     for (let i = changedStepIndex + 1; i < model.stepOrder.length; i++) {
       const stepId = model.stepOrder[i];
@@ -1068,7 +1003,6 @@ export function getSelectionsToReset(
     }
   }
 
-  // For IPB model, also check if selection leads to invalid model
   if (isIPBModel(model.id)) {
     for (let i = changedStepIndex + 1; i < model.stepOrder.length; i++) {
       const stepId = model.stepOrder[i];
@@ -1084,7 +1018,6 @@ export function getSelectionsToReset(
     }
   }
 
-  // For KS model, also check if selection leads to invalid model
   if (isKSModel(model.id)) {
     for (let i = changedStepIndex + 1; i < model.stepOrder.length; i++) {
       const stepId = model.stepOrder[i];
@@ -1100,7 +1033,6 @@ export function getSelectionsToReset(
     }
   }
 
-  // For WPB model, also check if selection leads to invalid model
   if (isWPBModel(model.id)) {
     for (let i = changedStepIndex + 1; i < model.stepOrder.length; i++) {
       const stepId = model.stepOrder[i];
@@ -1116,7 +1048,6 @@ export function getSelectionsToReset(
     }
   }
 
-  // For US model, also check if selection leads to invalid model
   if (isUSModel(model.id)) {
     for (let i = changedStepIndex + 1; i < model.stepOrder.length; i++) {
       const stepId = model.stepOrder[i];
@@ -1126,6 +1057,22 @@ export function getSelectionsToReset(
       if (!currentSelection) continue;
 
       const validOptions = getUSAllowlistValidOptions(stepId, newConfig);
+      if (validOptions && !validOptions.has(currentSelection)) {
+        toReset.push(stepId);
+      }
+    }
+  }
+
+  // ++ LPUS
+  if (isLPUSModel(model.id)) {
+    for (let i = changedStepIndex + 1; i < model.stepOrder.length; i++) {
+      const stepId = model.stepOrder[i];
+      if (toReset.includes(stepId)) continue;
+
+      const currentSelection = newConfig[stepId];
+      if (!currentSelection) continue;
+
+      const validOptions = getLPUSAllowlistValidOptions(stepId, newConfig);
       if (validOptions && !validOptions.has(currentSelection)) {
         toReset.push(stepId);
       }
