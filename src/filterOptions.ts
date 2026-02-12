@@ -57,6 +57,12 @@ import {
   getValidLPUSOptionsForStep,
   type LPUSSelectionState,
 } from "./rules/lowProfileUniversalStopperRules";
+// ++ ES (Enviro Stopper)
+import { ENVIRO_STOPPER_CONSTRAINTS } from "./rules/enviroStopperRules";
+import {
+  getValidESOptionsForStep,
+  type ESSelectionState,
+} from "./rules/enviroStopperRules";
 
 // ============================================================================
 // Constraints registry
@@ -74,6 +80,7 @@ const CONSTRAINTS_MAP: Record<string, ModelConstraints> = {
   "waterproof-push-buttons": WATERPROOF_PUSH_BUTTONS_CONSTRAINTS,
   "universal-stopper": UNIVERSAL_STOPPER_CONSTRAINTS,
   "low-profile-universal-stopper": LOW_PROFILE_UNIVERSAL_STOPPER_CONSTRAINTS, // ++ LPUS
+  "enviro-stopper": ENVIRO_STOPPER_CONSTRAINTS, // ++ ES
 };
 
 function getModelConstraints(modelId: ModelId): ModelConstraints | null {
@@ -606,6 +613,49 @@ function getLPUSAllowlistValidOptions(
 }
 
 // ============================================================================
+// ++ ES: Allowlist validation for Enviro Stopper model
+// ============================================================================
+
+function configToESSelection(config: Configuration): ESSelectionState {
+  return {
+    cover: config.cover ?? undefined,
+    mounting: config.mounting ?? undefined,
+    hoodSounder: config.hoodSounder ?? undefined,
+    colourLabel: config.colourLabel ?? undefined,
+  };
+}
+
+function isESModel(modelId: ModelId): boolean {
+  return modelId === "enviro-stopper";
+}
+
+const ES_ALLOWLIST_STEPS: ReadonlySet<string> = new Set<keyof ESSelectionState>([
+  "cover", "mounting", "hoodSounder", "colourLabel",
+]);
+
+function getESAllowlistValidOptions(
+  stepId: string,
+  config: Configuration
+): Set<string> | null {
+  if (!ES_ALLOWLIST_STEPS.has(stepId)) return null;
+
+  const esSelection = configToESSelection(config);
+
+  const otherSelections: Partial<ESSelectionState> = {};
+  for (const key of Object.keys(esSelection) as (keyof ESSelectionState)[]) {
+    if (key === stepId) continue;
+    otherSelections[key] = esSelection[key];
+  }
+
+  const validOptions = getValidESOptionsForStep(
+    stepId as keyof ESSelectionState,
+    otherSelections as Omit<ESSelectionState, typeof stepId>,
+  );
+
+  return new Set(validOptions);
+}
+
+// ============================================================================
 // Enhanced option availability with constraint engine + allowlist
 // ============================================================================
 
@@ -622,7 +672,7 @@ export interface OptionWithAvailability {
 /**
  * Gets all options for a step with their availability status.
  * Combines constraint matrix checks with allowlist validation for
- * G3, SS, GF, GLR, RP, WRP, IPB, KS, WPB, US, and LPUS models.
+ * G3, SS, GF, GLR, RP, WRP, IPB, KS, WPB, US, LPUS, and ES models.
  */
 export function getOptionsWithAvailability(
   step: Step,
@@ -685,6 +735,11 @@ export function getOptionsWithAvailability(
   // ++ LPUS
   const lpusAllowlistValid = isLPUSModel(modelId)
     ? getLPUSAllowlistValidOptions(step.id, config)
+    : null;
+
+  // ++ ES
+  const esAllowlistValid = isESModel(modelId)
+    ? getESAllowlistValidOptions(step.id, config)
     : null;
   
   return step.options.map((option) => {
@@ -804,6 +859,17 @@ export function getOptionsWithAvailability(
 
     // ++ LPUS
     if (lpusAllowlistValid && !lpusAllowlistValid.has(option.id)) {
+      return {
+        option,
+        availability: {
+          available: false,
+          reason: "This option does not lead to a valid product model",
+        },
+      };
+    }
+
+    // ++ ES
+    if (esAllowlistValid && !esAllowlistValid.has(option.id)) {
       return {
         option,
         availability: {
@@ -1073,6 +1139,22 @@ export function getSelectionsToReset(
       if (!currentSelection) continue;
 
       const validOptions = getLPUSAllowlistValidOptions(stepId, newConfig);
+      if (validOptions && !validOptions.has(currentSelection)) {
+        toReset.push(stepId);
+      }
+    }
+  }
+
+  // ++ ES
+  if (isESModel(model.id)) {
+    for (let i = changedStepIndex + 1; i < model.stepOrder.length; i++) {
+      const stepId = model.stepOrder[i];
+      if (toReset.includes(stepId)) continue;
+
+      const currentSelection = newConfig[stepId];
+      if (!currentSelection) continue;
+
+      const validOptions = getESAllowlistValidOptions(stepId, newConfig);
       if (validOptions && !validOptions.has(currentSelection)) {
         toReset.push(stepId);
       }

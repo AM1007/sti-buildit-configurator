@@ -13,6 +13,13 @@
         "14": "#14 Low Profile Cover"
       }
     },
+    "mounting": {
+      "title": "MOUNTING",
+      "options": {
+        "6": "#6 European Enclosed Back Box, 20mm Entry Point, Sealed Mounting Plate",
+        "7": "#7 European Enclosed Back Box, 20mm Entry Point, Open Mounting Plate"
+      }
+    },
     "hoodSounder": {
       "title": "HOOD, SOUNDER & WIRELESS",
       "options": {
@@ -32,31 +39,12 @@
         "NG": "#NG Green no label",
         "CG": "#CG Green custom label (NON-RETURNABLE)",
         "NC": "#NC Clear no label",
-        "NK": "#NK Black no label",
-        "CK": "#CK Black custom label (NON-RETURNABLE)",
         "NB": "#NB Blue no label",
         "CB": "#CB Blue custom label (NON-RETURNABLE)",
         "NW": "#NW White no label",
         "CW": "#CW White custom label (NON-RETURNABLE)",
         "NY": "#NY Yellow no label",
         "CY": "#CY Yellow custom label (NON-RETURNABLE)"
-      }
-    },
-    "language": {
-      "title": "LANGUAGE",
-      "options": {
-        "EN": "#EN English",
-        "ES": "#ES Spanish",
-        "FR": "#FR French",
-        "DE": "#DE German",
-        "NL": "#NL Dutch"
-      }
-    },
-    "mounting": {
-      "title": "MOUNTING",
-      "options": {
-        "6": "#6 European Enclosed Back Box, 20mm Entry Point, Sealed Mounting Plate",
-        "7": "#7 European Enclosed Back Box, 20mm Entry Point, Open Mounting Plate"
       }
     }
   }

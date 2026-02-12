@@ -57,19 +57,6 @@ const steps: Step[] = [
       { id: "CY", label: "#CY Yellow Custom Label NON RETURNABLE", code: "CY", image: `${IMG}/COLOUR & LABEL/CY Yellow Custom Label NON RETURNABLE.webp` },
     ],
   },
-
-  {
-    id: "language",
-    title: "LANGUAGE",
-    required: true,
-    options: [
-      { id: "EN", label: "# English", code: "", image: `${IMG}/LANGUAGE/English.webp` },
-      { id: "FR", label: "#FR French", code: "FR", image: `${IMG}/LANGUAGE/FR French.webp` },
-      { id: "ES", label: "#ES Spanish", code: "ES", image: `${IMG}/LANGUAGE/ES Spanish.webp` },
-      { id: "NL", label: "#NL Dutch", code: "NL", image: `${IMG}/LANGUAGE/NL Dutch.webp` },
-      { id: "DE", label: "#DE German", code: "DE", image: `${IMG}/LANGUAGE/DE German.webp` },
-    ],
-  },
 ];
 
 export const enviroStopperModel: ModelDefinition = {
@@ -84,7 +71,6 @@ export const enviroStopperModel: ModelDefinition = {
     "mounting",
     "hoodSounder",
     "colourLabel",
-    "language",
   ],
 
   productModelSchema: {
@@ -94,7 +80,6 @@ export const enviroStopperModel: ModelDefinition = {
       "mounting",
       "hoodSounder",
       "colourLabel",
-      "language",
     ],
     separator: "none",
     separatorMap: {
@@ -102,7 +87,6 @@ export const enviroStopperModel: ModelDefinition = {
       mounting: "",
       hoodSounder: "",
       colourLabel: "",
-      language: "-",
     },
   },
 };
