@@ -35,18 +35,6 @@ export function ProductPreview({ model, config, onEditStep }: ProductPreviewProp
           return null;
         }
 
-        const isCallPointStopperHidden =
-          model.id === "call-point-stopper" && (
-            (stepId === "colour" && config.colour === "R") ||
-            (stepId === "language" && config.language === "EN") ||
-            (stepId === "label" && ["FIRE", "EMERGENCY_DOOR", "EMERGENCY_OPERATE"].includes(config.label as string))
-          );
-
-        if (isCallPointStopperHidden) {
-          return null;
-        }
-
-
         const selectedOptionId = config[stepId];
         const selectedOption = step.options.find((o) => o.id === selectedOptionId);
 

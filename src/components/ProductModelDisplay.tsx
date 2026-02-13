@@ -63,7 +63,6 @@ export function ProductModelDisplay({
           const isCallPointStopperHidden =
             model.id === "call-point-stopper" && (
               (stepId === "colour" && config.colour === "R") ||
-              (stepId === "language" && config.language === "EN") ||
               (stepId === "label" && ["FIRE", "EMERGENCY_DOOR", "EMERGENCY_OPERATE"].includes(config.label as string))
             );
 

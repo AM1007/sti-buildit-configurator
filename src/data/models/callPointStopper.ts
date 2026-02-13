@@ -28,19 +28,6 @@ const steps: Step[] = [
   },
 
   {
-    id: "language",
-    title: "LANGUAGE",
-    required: true,
-    options: [
-      { id: "EN", label: "# English", code: "", image: `${IMG}/LANGUAGE/English.webp` },
-      { id: "FR", label: "#FR French", code: "FR", image: `${IMG}/LANGUAGE/FR French.webp` },
-      { id: "ES", label: "#ES Spanish", code: "ES", image: `${IMG}/LANGUAGE/ES Spanish.webp` },
-      { id: "NL", label: "#NL Dutch", code: "NL", image: `${IMG}/LANGUAGE/NL Dutch.webp` },
-      { id: "DE", label: "#DE German", code: "DE", image: `${IMG}/LANGUAGE/DE German.webp` },
-    ],
-  },
-
-  {
     id: "label",
     title: "LABEL",
     required: true,
@@ -64,7 +51,6 @@ export const callPointStopperModel: ModelDefinition = {
   stepOrder: [
     "mounting",
     "colour",
-    "language",
     "label",
   ],
 
@@ -73,14 +59,12 @@ export const callPointStopperModel: ModelDefinition = {
     partsOrder: [
       "mounting",
       "colour",
-      "language",
       "label",
     ],
     separator: "none",
     separatorMap: {
       mounting: "",
       colour: "-",
-      language: "-",
       label: "-",
     },
   },

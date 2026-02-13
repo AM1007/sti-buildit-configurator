@@ -63,6 +63,12 @@ import {
   getValidESOptionsForStep,
   type ESSelectionState,
 } from "./rules/enviroStopperRules";
+// ++ CPS (Call Point Stopper)
+import { CALL_POINT_STOPPER_CONSTRAINTS } from "./rules/callPointStopperRules";
+import {
+  getValidCPSOptionsForStep,
+  type CPSSelectionState,
+} from "./rules/callPointStopperRules";
 
 // ============================================================================
 // Constraints registry
@@ -81,6 +87,7 @@ const CONSTRAINTS_MAP: Record<string, ModelConstraints> = {
   "universal-stopper": UNIVERSAL_STOPPER_CONSTRAINTS,
   "low-profile-universal-stopper": LOW_PROFILE_UNIVERSAL_STOPPER_CONSTRAINTS, // ++ LPUS
   "enviro-stopper": ENVIRO_STOPPER_CONSTRAINTS, // ++ ES
+  "call-point-stopper": CALL_POINT_STOPPER_CONSTRAINTS, // ++ CPS
 };
 
 function getModelConstraints(modelId: ModelId): ModelConstraints | null {
@@ -656,6 +663,48 @@ function getESAllowlistValidOptions(
 }
 
 // ============================================================================
+// ++ CPS: Allowlist validation for Call Point Stopper model
+// ============================================================================
+
+function configToCPSSelection(config: Configuration): CPSSelectionState {
+  return {
+    mounting: config.mounting ?? undefined,
+    colour: config.colour ?? undefined,
+    label: config.label ?? undefined,
+  };
+}
+
+function isCPSModel(modelId: ModelId): boolean {
+  return modelId === "call-point-stopper";
+}
+
+const CPS_ALLOWLIST_STEPS: ReadonlySet<string> = new Set<keyof CPSSelectionState>([
+  "mounting", "colour", "label",
+]);
+
+function getCPSAllowlistValidOptions(
+  stepId: string,
+  config: Configuration
+): Set<string> | null {
+  if (!CPS_ALLOWLIST_STEPS.has(stepId)) return null;
+
+  const cpsSelection = configToCPSSelection(config);
+
+  const otherSelections: Partial<CPSSelectionState> = {};
+  for (const key of Object.keys(cpsSelection) as (keyof CPSSelectionState)[]) {
+    if (key === stepId) continue;
+    otherSelections[key] = cpsSelection[key];
+  }
+
+  const validOptions = getValidCPSOptionsForStep(
+    stepId as keyof CPSSelectionState,
+    otherSelections as Omit<CPSSelectionState, typeof stepId>,
+  );
+
+  return new Set(validOptions);
+}
+
+// ============================================================================
 // Enhanced option availability with constraint engine + allowlist
 // ============================================================================
 
@@ -740,6 +789,11 @@ export function getOptionsWithAvailability(
   // ++ ES
   const esAllowlistValid = isESModel(modelId)
     ? getESAllowlistValidOptions(step.id, config)
+    : null;
+
+  // ++ CPS
+  const cpsAllowlistValid = isCPSModel(modelId)
+    ? getCPSAllowlistValidOptions(step.id, config)
     : null;
   
   return step.options.map((option) => {
@@ -870,6 +924,17 @@ export function getOptionsWithAvailability(
 
     // ++ ES
     if (esAllowlistValid && !esAllowlistValid.has(option.id)) {
+      return {
+        option,
+        availability: {
+          available: false,
+          reason: "This option does not lead to a valid product model",
+        },
+      };
+    }
+
+    // ++ CPS
+    if (cpsAllowlistValid && !cpsAllowlistValid.has(option.id)) {
       return {
         option,
         availability: {
@@ -1155,6 +1220,22 @@ export function getSelectionsToReset(
       if (!currentSelection) continue;
 
       const validOptions = getESAllowlistValidOptions(stepId, newConfig);
+      if (validOptions && !validOptions.has(currentSelection)) {
+        toReset.push(stepId);
+      }
+    }
+  }
+
+  // ++ CPS
+  if (isCPSModel(model.id)) {
+    for (let i = changedStepIndex + 1; i < model.stepOrder.length; i++) {
+      const stepId = model.stepOrder[i];
+      if (toReset.includes(stepId)) continue;
+
+      const currentSelection = newConfig[stepId];
+      if (!currentSelection) continue;
+
+      const validOptions = getCPSAllowlistValidOptions(stepId, newConfig);
       if (validOptions && !validOptions.has(currentSelection)) {
         toReset.push(stepId);
       }

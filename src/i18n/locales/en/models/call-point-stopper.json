@@ -20,21 +20,11 @@
     "label": {
       "title": "LABEL",
       "options": {
-        "FIRE": "In Case of Fire",
-        "EMERGENCY_BREAK": "In Emergency Break Glass",
-        "EMERGENCY_OPERATE": "In Emergency Operate",
-        "PLAIN": "Plain, no text",
-        "CL": "Custom Label (NON-RETURNABLE)"
-      }
-    },
-    "language": {
-      "title": "LANGUAGE",
-      "options": {
-        "EN": "#EN English",
-        "ES": "#ES Spanish",
-        "FR": "#FR French",
-        "DE": "#DE German",
-        "NL": "#NL Dutch"
+        "FIRE": "# IN CASE OF FIRE LIFT COVER - BREAK GLASS",
+        "EMERGENCY_DOOR": "# IN CASE OF EMERGENCY - LIFT COVER BREAK GLASS TO OPEN DOOR",
+        "EMERGENCY_OPERATE": "# IN CASE OF EMERGENCY LIFT COVER - OPERATE DEVICE",
+        "CL": "#CL Custom Label",
+        "PLAIN": "#PLAIN No text"
       }
     },
     "mounting": {
