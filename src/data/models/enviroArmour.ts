@@ -20,7 +20,6 @@ const steps: Step[] = [
     options: [
       { id: "121005", label: "#121005 274mm x 240mm x 124mm (Limited Stock)", code: "121005", image: `${IMG}/SIZE (INTERNAL)/121005 274mm x 240mm x 124mm (Limited Stock).webp` },
       { id: "121006", label: "#121006 291mm x 241mm x 129mm (Limited Stock)", code: "121006", image: `${IMG}/SIZE (INTERNAL)/121006 291mm x 241mm x 129mm (Limited Stock).webp` },
-      { id: "141007", label: "#141007 331mm x 231mm x 159mm (Limited Stock)", code: "141007", image: `${IMG}/SIZE (INTERNAL)/141007 331mm x 231mm x 159mm (Limited Stock).webp` },
       { id: "161608", label: "#161608 366mm x 388mm x 181mm (Limited Stock)", code: "161608", image: `${IMG}/SIZE (INTERNAL)/161608 366mm x 388mm x 181mm (Limited Stock).webp` },
       { id: "181408", label: "#181408 462mm x 347mm x 179mm (Limited Stock)", code: "181408", image: `${IMG}/SIZE (INTERNAL)/181408 462mm x 347mm x 179mm (Limited Stock).webp` },
       { id: "231609", label: "#231609 565mm x 387mm x 211mm (Limited Stock)", code: "231609", image: `${IMG}/SIZE (INTERNAL)/231609 565mm x 387mm x 211mm (Limited Stock).webp` },

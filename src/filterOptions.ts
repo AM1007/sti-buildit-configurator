@@ -69,6 +69,12 @@ import {
   getValidCPSOptionsForStep,
   type CPSSelectionState,
 } from "./rules/callPointStopperRules";
+// ++ EA (EnviroArmour)
+import { ENVIRO_ARMOUR_CONSTRAINTS } from "./rules/enviroArmourRules";
+import {
+  getValidEAOptionsForStep,
+  type EASelectionState,
+} from "./rules/enviroArmourRules";
 
 // ============================================================================
 // Constraints registry
@@ -88,6 +94,7 @@ const CONSTRAINTS_MAP: Record<string, ModelConstraints> = {
   "low-profile-universal-stopper": LOW_PROFILE_UNIVERSAL_STOPPER_CONSTRAINTS, // ++ LPUS
   "enviro-stopper": ENVIRO_STOPPER_CONSTRAINTS, // ++ ES
   "call-point-stopper": CALL_POINT_STOPPER_CONSTRAINTS, // ++ CPS
+  "enviro-armour": ENVIRO_ARMOUR_CONSTRAINTS, // ++ EA
 };
 
 function getModelConstraints(modelId: ModelId): ModelConstraints | null {
@@ -705,6 +712,48 @@ function getCPSAllowlistValidOptions(
 }
 
 // ============================================================================
+// ++ EA: Allowlist validation for EnviroArmour model
+// ============================================================================
+
+function configToEASelection(config: Configuration): EASelectionState {
+  return {
+    material: config.material ?? undefined,
+    size: config.size ?? undefined,
+    doorType: config.doorType ?? undefined,
+  };
+}
+
+function isEAModel(modelId: ModelId): boolean {
+  return modelId === "enviro-armour";
+}
+
+const EA_ALLOWLIST_STEPS: ReadonlySet<string> = new Set<keyof EASelectionState>([
+  "material", "size", "doorType",
+]);
+
+function getEAAllowlistValidOptions(
+  stepId: string,
+  config: Configuration
+): Set<string> | null {
+  if (!EA_ALLOWLIST_STEPS.has(stepId)) return null;
+
+  const eaSelection = configToEASelection(config);
+
+  const otherSelections: Partial<EASelectionState> = {};
+  for (const key of Object.keys(eaSelection) as (keyof EASelectionState)[]) {
+    if (key === stepId) continue;
+    otherSelections[key] = eaSelection[key];
+  }
+
+  const validOptions = getValidEAOptionsForStep(
+    stepId as keyof EASelectionState,
+    otherSelections as Omit<EASelectionState, typeof stepId>,
+  );
+
+  return new Set(validOptions);
+}
+
+// ============================================================================
 // Enhanced option availability with constraint engine + allowlist
 // ============================================================================
 
@@ -721,7 +770,7 @@ export interface OptionWithAvailability {
 /**
  * Gets all options for a step with their availability status.
  * Combines constraint matrix checks with allowlist validation for
- * G3, SS, GF, GLR, RP, WRP, IPB, KS, WPB, US, LPUS, and ES models.
+ * G3, SS, GF, GLR, RP, WRP, IPB, KS, WPB, US, LPUS, ES, CPS, and EA models.
  */
 export function getOptionsWithAvailability(
   step: Step,
@@ -794,6 +843,11 @@ export function getOptionsWithAvailability(
   // ++ CPS
   const cpsAllowlistValid = isCPSModel(modelId)
     ? getCPSAllowlistValidOptions(step.id, config)
+    : null;
+
+  // ++ EA
+  const eaAllowlistValid = isEAModel(modelId)
+    ? getEAAllowlistValidOptions(step.id, config)
     : null;
   
   return step.options.map((option) => {
@@ -935,6 +989,17 @@ export function getOptionsWithAvailability(
 
     // ++ CPS
     if (cpsAllowlistValid && !cpsAllowlistValid.has(option.id)) {
+      return {
+        option,
+        availability: {
+          available: false,
+          reason: "This option does not lead to a valid product model",
+        },
+      };
+    }
+
+    // ++ EA
+    if (eaAllowlistValid && !eaAllowlistValid.has(option.id)) {
       return {
         option,
         availability: {
@@ -1236,6 +1301,22 @@ export function getSelectionsToReset(
       if (!currentSelection) continue;
 
       const validOptions = getCPSAllowlistValidOptions(stepId, newConfig);
+      if (validOptions && !validOptions.has(currentSelection)) {
+        toReset.push(stepId);
+      }
+    }
+  }
+
+  // ++ EA
+  if (isEAModel(model.id)) {
+    for (let i = changedStepIndex + 1; i < model.stepOrder.length; i++) {
+      const stepId = model.stepOrder[i];
+      if (toReset.includes(stepId)) continue;
+
+      const currentSelection = newConfig[stepId];
+      if (!currentSelection) continue;
+
+      const validOptions = getEAAllowlistValidOptions(stepId, newConfig);
       if (validOptions && !validOptions.has(currentSelection)) {
         toReset.push(stepId);
       }
