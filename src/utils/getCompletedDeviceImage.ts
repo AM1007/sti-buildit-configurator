@@ -88,7 +88,7 @@ const MODEL_CONFIG: Record<string, {
       "O": "ORANGE",
     },
     colourStep: "colour",
-    // No clStep â€” label CL already included in fullCode via buildProductModel (code: "CL")
+    // No clStep — label CL already included in fullCode via buildProductModel (code: "CL")
   },
   "waterproof-push-buttons": {
     basePath: "/Waterproof Push Buttons/COMPLETED DEVICE",
@@ -222,6 +222,11 @@ const MODEL_CONFIG: Record<string, {
   "euro-stopper": {
     basePath: "/Euro Stopper/COMPLETED DEVICE",
     colourMap: {
+      // Special labels
+      "ML": "RED",
+      "FR": "RED",
+      "EG": "GREEN",
+      // No label variants
       "NK": "BLACK",
       "NB": "BLUE",
       "NG": "GREEN",
@@ -229,6 +234,7 @@ const MODEL_CONFIG: Record<string, {
       "NR": "RED",
       "NW": "WHITE",
       "NY": "YELLOW",
+      // Custom label variants
       "CK": "BLACK",
       "CB": "BLUE",
       "CG": "GREEN",

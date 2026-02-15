@@ -75,6 +75,12 @@ import {
   getValidEAOptionsForStep,
   type EASelectionState,
 } from "./rules/enviroArmourRules";
+// ++ EUS (Euro Stopper)
+import { EURO_STOPPER_CONSTRAINTS } from "./rules/euroStopperRules";
+import {
+  getValidEUSOptionsForStep,
+  type EUSSelectionState,
+} from "./rules/euroStopperRules";
 
 // ============================================================================
 // Constraints registry
@@ -95,6 +101,7 @@ const CONSTRAINTS_MAP: Record<string, ModelConstraints> = {
   "enviro-stopper": ENVIRO_STOPPER_CONSTRAINTS, // ++ ES
   "call-point-stopper": CALL_POINT_STOPPER_CONSTRAINTS, // ++ CPS
   "enviro-armour": ENVIRO_ARMOUR_CONSTRAINTS, // ++ EA
+  "euro-stopper": EURO_STOPPER_CONSTRAINTS, // ++ EUS
 };
 
 function getModelConstraints(modelId: ModelId): ModelConstraints | null {
@@ -754,6 +761,48 @@ function getEAAllowlistValidOptions(
 }
 
 // ============================================================================
+// ++ EUS: Allowlist validation for Euro Stopper model
+// ============================================================================
+
+function configToEUSSelection(config: Configuration): EUSSelectionState {
+  return {
+    mounting: config.mounting ?? undefined,
+    sounder: config.sounder ?? undefined,
+    colourLabel: config.colourLabel ?? undefined,
+  };
+}
+
+function isEUSModel(modelId: ModelId): boolean {
+  return modelId === "euro-stopper";
+}
+
+const EUS_ALLOWLIST_STEPS: ReadonlySet<string> = new Set<keyof EUSSelectionState>([
+  "mounting", "sounder", "colourLabel",
+]);
+
+function getEUSAllowlistValidOptions(
+  stepId: string,
+  config: Configuration
+): Set<string> | null {
+  if (!EUS_ALLOWLIST_STEPS.has(stepId)) return null;
+
+  const eusSelection = configToEUSSelection(config);
+
+  const otherSelections: Partial<EUSSelectionState> = {};
+  for (const key of Object.keys(eusSelection) as (keyof EUSSelectionState)[]) {
+    if (key === stepId) continue;
+    otherSelections[key] = eusSelection[key];
+  }
+
+  const validOptions = getValidEUSOptionsForStep(
+    stepId as keyof EUSSelectionState,
+    otherSelections as Omit<EUSSelectionState, typeof stepId>,
+  );
+
+  return new Set(validOptions);
+}
+
+// ============================================================================
 // Enhanced option availability with constraint engine + allowlist
 // ============================================================================
 
@@ -848,6 +897,11 @@ export function getOptionsWithAvailability(
   // ++ EA
   const eaAllowlistValid = isEAModel(modelId)
     ? getEAAllowlistValidOptions(step.id, config)
+    : null;
+
+  // ++ EUS
+  const eusAllowlistValid = isEUSModel(modelId)
+    ? getEUSAllowlistValidOptions(step.id, config)
     : null;
   
   return step.options.map((option) => {
@@ -1000,6 +1054,17 @@ export function getOptionsWithAvailability(
 
     // ++ EA
     if (eaAllowlistValid && !eaAllowlistValid.has(option.id)) {
+      return {
+        option,
+        availability: {
+          available: false,
+          reason: "This option does not lead to a valid product model",
+        },
+      };
+    }
+
+    // ++ EUS
+    if (eusAllowlistValid && !eusAllowlistValid.has(option.id)) {
       return {
         option,
         availability: {
@@ -1317,6 +1382,22 @@ export function getSelectionsToReset(
       if (!currentSelection) continue;
 
       const validOptions = getEAAllowlistValidOptions(stepId, newConfig);
+      if (validOptions && !validOptions.has(currentSelection)) {
+        toReset.push(stepId);
+      }
+    }
+  }
+
+  // ++ EUS
+  if (isEUSModel(model.id)) {
+    for (let i = changedStepIndex + 1; i < model.stepOrder.length; i++) {
+      const stepId = model.stepOrder[i];
+      if (toReset.includes(stepId)) continue;
+
+      const currentSelection = newConfig[stepId];
+      if (!currentSelection) continue;
+
+      const validOptions = getEUSAllowlistValidOptions(stepId, newConfig);
       if (validOptions && !validOptions.has(currentSelection)) {
         toReset.push(stepId);
       }
