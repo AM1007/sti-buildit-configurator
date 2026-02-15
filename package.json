@@ -3,12 +3,14 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
-  },
+"scripts": {
+  "dev": "vite",
+  "build": "tsc -b && vite build",
+  "build:staging": "tsc -b && vite build --mode staging",
+  "preview": "vite preview",
+  "lint": "eslint .",
+  "typecheck": "tsc --noEmit"
+},
   "dependencies": {
     "@react-pdf/renderer": "^4.3.2",
     "izitoast": "^1.4.0",
