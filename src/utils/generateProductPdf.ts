@@ -1,5 +1,4 @@
-import { pdf } from "@react-pdf/renderer";
-import { ProductPdfDocument, type ProductPdfData } from "../components/ProductPdfDocument";
+import type { ProductPdfData } from "../components/ProductPdfDocument";
 
 
 async function convertImageToPngBase64(imageUrl: string): Promise<string | null> {
@@ -96,6 +95,11 @@ async function preparePdfData(data: ProductPdfData): Promise<ProductPdfData> {
 }
 
 async function generatePdfBlob(data: ProductPdfData): Promise<Blob> {
+  const [{ pdf }, { ProductPdfDocument }] = await Promise.all([
+    import("@react-pdf/renderer"),
+    import("../components/ProductPdfDocument"),
+  ]);
+
   const preparedData = await preparePdfData(data);
   const document = ProductPdfDocument({ data: preparedData });
   const blob = await pdf(document).toBlob();

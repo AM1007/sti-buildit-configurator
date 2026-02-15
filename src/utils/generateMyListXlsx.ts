@@ -1,4 +1,3 @@
-import * as XLSX from "xlsx";
 import type { SavedConfiguration } from "../types";
 import { MODEL_NAMES } from "../types";
 import { getModelDescription } from "./getModelDescription";
@@ -89,6 +88,8 @@ export async function downloadMyListXlsx(
   if (items.length === 0) {
     return;
   }
+
+  const XLSX = await import("xlsx");
 
   const rows = await buildRows(items, lang);
 
