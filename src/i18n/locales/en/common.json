@@ -46,6 +46,25 @@
     "inDevelopment": "In Development"
   },
 
+  "filter": {
+    "productType": "Product type",
+    "all": "All",
+    "pushButtons": "Push Buttons",
+    "callPoints": "Call Points",
+    "covers": "Covers",
+    "enclosures": "Enclosures",
+    "weatherRated": "Weather Rated",
+    "sounder": "Sounder",
+    "resetDevice": "Reset Device",
+    "fireAlarm": "Fire Alarm",
+    "keyOperated": "Key Operated",
+    "filters": "Filters",
+    "filtersActive": "Filters ({count} active)",
+    "showingOf": "Showing {shown} of {total} products",
+    "noResults": "No products match selected filters.",
+    "clearFilters": "Clear filters"
+  },
+
   "configurator": {
     "editSelections": "Edit Selections",
     "productPreview": "Product Preview",

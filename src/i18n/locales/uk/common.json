@@ -46,6 +46,25 @@
     "inDevelopment": "В розробці"
   },
 
+  "filter": {
+    "productType": "Тип продукту",
+    "all": "Усі",
+    "pushButtons": "Кнопки",
+    "callPoints": "Сповіщувачі",
+    "covers": "Захисні кришки",
+    "enclosures": "Корпуси",
+    "weatherRated": "Вологозахист",
+    "sounder": "Сирена",
+    "resetDevice": "Пристрій скидання",
+    "fireAlarm": "Пожежна сигналізація",
+    "keyOperated": "Ключовий",
+    "filters": "Фільтри",
+    "filtersActive": "Фільтри ({count} активних)",
+    "showingOf": "Показано {shown} з {total} продуктів",
+    "noResults": "Жоден продукт не відповідає обраним фільтрам.",
+    "clearFilters": "Очистити фільтри"
+  },
+
   "configurator": {
     "editSelections": "Редагувати вибір",
     "productPreview": "Попередній перегляд",

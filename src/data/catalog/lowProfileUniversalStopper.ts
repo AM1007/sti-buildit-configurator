@@ -8,5 +8,6 @@ export const lowProfileUniversalStopperMeta: ConfiguratorMeta = {
   imagePath: "/Configurators/05_Low Profile Universal Stopper.webp",
   features: ["weather"],
   colours: ["clear", "yellow", "red", "white", "green", "blue"],
+  tags: ["protective-cover", "weather-rated", "sounder"],
   isImplemented: true,
 };

@@ -1,9 +1,21 @@
 import { allConfigurators } from "../data/catalog";
 import { ConfiguratorCard } from "../components/ConfiguratorCard";
+import { PrimaryNavigation } from "../components/PrimaryNavigation";
+import { FunctionalFilters } from "../components/FunctionalFilters";
+import { ResultCounter, EmptyState } from "../components/FilterResults";
+import { useFilterState } from "../hooks/useFilterState";
 import { useTranslation } from "../i18n";
 
 export function HomePage() {
   const { t } = useTranslation();
+  const {
+    state,
+    filtered,
+    chipCounts,
+    setPrimary,
+    toggleFunctional,
+    clearFilters,
+  } = useFilterState(allConfigurators);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -18,12 +30,11 @@ export function HomePage() {
           src="/hero-portrait.avif"
           className="absolute inset-0 z-0 block h-full w-full object-cover md:hidden"
         />
-        
+
         <span className="absolute inset-0 z-1 h-full w-full bg-black/60" />
-        
+
         <div className="container relative z-10 mx-auto px-4">
           <div className="mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-5 md:gap-12 lg:grid-cols-[1.5fr_1fr] lg:gap-16 xl:gap-24">
-           
             <div className="order-2 flex flex-col gap-5 overflow-hidden wrap-break-word text-center lg:order-1 lg:gap-8 lg:text-left">
               <h1 className="max-w-185 text-4xl font-bold text-white md:text-5xl lg:text-5xl xl:text-6xl">
                 {t("home.heroTitle")}
@@ -32,7 +43,7 @@ export function HomePage() {
                 {t("home.heroDescription")}
               </p>
             </div>
-            
+
             <div className="relative order-1 h-fit overflow-hidden lg:order-2">
               <img
                 alt="Build It Configurator Device"
@@ -46,13 +57,33 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="py-12 md:py-16">
+      <section className="py-8 md:py-12">
         <div className="mx-auto w-full max-w-301.5 px-4">
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 lg:gap-12">
-            {allConfigurators.map((config) => (
-              <ConfiguratorCard key={config.id} config={config} />
-            ))}
+          <div className="flex flex-col gap-4 mb-6">
+            <PrimaryNavigation value={state.primary} onChange={setPrimary} />
+
+            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+              <FunctionalFilters
+                selected={state.functional}
+                counts={chipCounts}
+                onToggle={toggleFunctional}
+              />
+              <ResultCounter
+                shown={filtered.length}
+                total={allConfigurators.length}
+              />
+            </div>
           </div>
+
+          {filtered.length > 0 ? (
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 md:gap-6 xl:gap-8">
+              {filtered.map((config) => (
+                <ConfiguratorCard key={config.id} config={config} />
+              ))}
+            </div>
+          ) : (
+            <EmptyState onClear={clearFilters} />
+          )}
         </div>
       </section>
     </div>

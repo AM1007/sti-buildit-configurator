@@ -78,13 +78,6 @@ const MODEL_CUSTOM_TEXT_CONFIG: Partial<Record<ModelId, CustomTextConfig>> = {
     maxLength: 30,
     line2Required: false,
   },
-  "alert-point": {
-    stepId: "label",
-    optionId: "X",
-    variant: "multiline-fixed",
-    maxLength: 10,
-    line2Required: false,
-  },
   "call-point-stopper": {
     stepId: "label",
     optionId: "CL",

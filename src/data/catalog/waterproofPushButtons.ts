@@ -7,5 +7,6 @@ export const waterproofPushButtonsMeta: ConfiguratorMeta = {
   description: "Waterproof Range of Push Buttons with Many Applications",
   imagePath: "/Configurators/12_Waterproof Push Buttons.webp",
   colours: ["yellow", "red", "white", "green", "blue"],
+  tags: ["push-button", "weather-rated"],
   isImplemented: true,
 };

@@ -11,10 +11,10 @@ export type ModelId =
   | "low-profile-universal-stopper"
   | "global-reset"
   | "enviro-stopper"
-  | "alert-point"
   | "call-point-stopper"
   | "enviro-armour"
   | "euro-stopper";
+
 export type StepId = string;
 export type OptionId = string;
 
@@ -33,7 +33,6 @@ export const MODEL_NAMES: Record<ModelId, string> = {
   "low-profile-universal-stopper": "Low Profile Universal Stopper",
   "global-reset": "Global ReSet",
   "enviro-stopper": "Enviro Stopper",
-  "alert-point": "Alert Point",
   "call-point-stopper": "Call Point Stopper",
   "enviro-armour": "EnviroArmour",
   "euro-stopper": "Euro Stopper",

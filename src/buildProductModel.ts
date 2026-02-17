@@ -109,9 +109,6 @@ export function identifyModel(modelCode: string): string | null {
   if (modelCode.startsWith("GLR")) {
     return "global-reset";
   }
-  if (modelCode.startsWith("AP")) {
-    return "alert-point";
-  }
   if (modelCode.startsWith("STI-15")) {
     return "euro-stopper";
   }

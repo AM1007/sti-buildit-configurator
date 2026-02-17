@@ -7,5 +7,6 @@ export const indoorPushButtonsMeta: ConfiguratorMeta = {
   description: "Diverse Range of Push Buttons with Many Applications",
   imagePath: "/Configurators/10_Indoor Push Buttons.webp",
   colours: ["yellow", "red", "white", "green", "blue", "orange"],
+  tags: ["push-button"],
   isImplemented: true,
 };

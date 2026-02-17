@@ -7,5 +7,6 @@ export const keySwitchesMeta: ConfiguratorMeta = {
   description: "Diverse Range of Key Switches with Many Applications",
   imagePath: "/Configurators/11_Key Switches.webp",
   colours: ["yellow", "red", "white", "green", "orange"],
+  tags: ["push-button", "key-operated"],
   isImplemented: true,
 };

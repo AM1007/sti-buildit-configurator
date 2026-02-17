@@ -8,5 +8,6 @@ export const waterproofResetCallPointMeta: ConfiguratorMeta = {
   imagePath: "/Configurators/08_Waterproof ReSet Call Point.webp",
   features: ["weather"],
   colours: ["yellow", "red", "white", "green", "blue", "orange"],
+  tags: ["call-point", "fire-alarm", "reset-device", "weather-rated"],
   isImplemented: true,
 };

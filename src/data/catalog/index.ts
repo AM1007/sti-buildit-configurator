@@ -1,4 +1,4 @@
-export type { ConfiguratorMeta, ColourId, FeatureId } from "./types";
+export type { ConfiguratorMeta, ColourId, FeatureId, ProductTag, PrimaryTag, FunctionalTag } from "./types";
 
 export { g3MultipurposePushButtonMeta } from "./g3MultipurposePushButton";
 export { stopperStationsMeta } from "./stopperStations";
@@ -12,7 +12,6 @@ export { enviroStopperMeta } from "./enviroStopper";
 export { indoorPushButtonsMeta } from "./indoorPushButtons";
 export { keySwitchesMeta } from "./keySwitches";
 export { waterproofPushButtonsMeta } from "./waterproofPushButtons";
-export { alertPointMeta } from "./alertPoint";
 export { callPointStopperMeta } from "./callPointStopper";
 export { enviroArmourMeta } from "./enviroArmour";
 export { euroStopperMeta } from "./euroStopper";
@@ -30,7 +29,6 @@ import { enviroStopperMeta } from "./enviroStopper";
 import { indoorPushButtonsMeta } from "./indoorPushButtons";
 import { keySwitchesMeta } from "./keySwitches";
 import { waterproofPushButtonsMeta } from "./waterproofPushButtons";
-// import { alertPointMeta } from "./alertPoint";
 import { callPointStopperMeta } from "./callPointStopper";
 import { enviroArmourMeta } from "./enviroArmour";
 import { euroStopperMeta } from "./euroStopper";
@@ -48,7 +46,6 @@ export const allConfigurators: ConfiguratorMeta[] = [
   indoorPushButtonsMeta,
   keySwitchesMeta,
   waterproofPushButtonsMeta,
-  // alertPointMeta, // TEMPORARILY DISABLED — uncomment to restore Alert Point card on Home
   callPointStopperMeta,
   enviroArmourMeta,
   euroStopperMeta,

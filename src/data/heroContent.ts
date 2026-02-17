@@ -184,18 +184,6 @@ For the domed version of the Universal Stopper <a href="/configurator/universal-
     ],
   },
 
-  "alert-point": {
-    modelId: "alert-point",
-    title: "Standalone Alarm Device Signals an Emergency",
-    description: `Powered with a 9V alkaline battery, the Alert Point includes an integral sounder and resettable call point. Once activated, it emits a 102 dB alarm, an activation flag drops into view and the built-in LED will flash red. Any external connected devices will be activated. It can be easily reset with a key, ensuring the unit is quickly operational again. An override facility can silence the alarm until the Alert Point can be reset. Please note: Larger quantities may require a longer lead time.`,
-    media: [
-      { type: "image", src: "/Alert Point/HERO/01.webp", alt: "Alert Point" },
-      { type: "image", src: "/Alert Point/HERO/02.webp", alt: "Alert Point" },
-      { type: "image", src: "/Alert Point/HERO/03.webp", alt: "Alert Point" },
-      { type: "image", src: "/Alert Point/HERO/04.webp", alt: "Alert Point" },
-    ],
-  },
-
   "call-point-stopper": {
     modelId: "call-point-stopper",
     title: "Inexpensive Cover with Spring Loaded Hinge",

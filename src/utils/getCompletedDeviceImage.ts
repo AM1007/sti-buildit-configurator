@@ -189,16 +189,6 @@ const MODEL_CONFIG: Record<string, {
     },
     colourStep: "colourLabel",
   },
-  "alert-point": {
-    basePath: "/Alert Point/COMPLETED DEVICE",
-    colourMap: {
-      "R": "RED",
-      "B": "BLUE",
-      "G": "GREEN",
-      "W": "WHITE",
-    },
-    colourStep: "colour",
-  },
   "call-point-stopper": {
     basePath: "/Call Point Stopper/COMPLETED DEVICE",
     colourMap: {

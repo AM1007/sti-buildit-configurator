@@ -8,5 +8,6 @@ export const universalStopperMeta: ConfiguratorMeta = {
   imagePath: "/Configurators/03_Universal Stopper.webp",
   features: ["weather", "sound"],
   colours: ["clear", "yellow", "red", "white", "green", "blue"],
+  tags: ["protective-cover", "weather-rated", "sounder"],
   isImplemented: true,
 };

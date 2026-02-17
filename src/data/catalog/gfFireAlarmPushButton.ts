@@ -7,5 +7,6 @@ export const gfFireAlarmPushButtonMeta: ConfiguratorMeta = {
   description: "Helps Stop Unwanted Fire Alarm Activation",
   imagePath: "/Configurators/04_GF Fire Alarm Push Button.webp",
   colours: ["red"],
+  tags: ["push-button", "fire-alarm", "reset-device"],
   isImplemented: true,
 };
