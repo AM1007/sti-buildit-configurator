@@ -1,4 +1,5 @@
-import type { SavedConfiguration } from "../types";
+import * as XLSX from "xlsx";
+import type { SavedConfiguration, ProjectMeta } from "../types";
 import { MODEL_NAMES } from "../types";
 import { getModelDescription } from "./getModelDescription";
 
@@ -9,6 +10,8 @@ interface MyListRowEn {
   "Product Code": string;
   "Model": string;
   "Description": string;
+  "Qty": number;
+  "Comment": string;
   "Date Added": string;
 }
 
@@ -17,6 +20,8 @@ interface MyListRowUk {
   "Код продукту": string;
   "Модель": string;
   "Опис": string;
+  "К-сть": number;
+  "Коментар": string;
   "Дата додавання": string;
 }
 
@@ -52,7 +57,6 @@ async function buildRows(
     const modelName = MODEL_NAMES[item.modelId] ?? item.modelId;
     const dateAdded = formatDate(item.savedAt);
     
-    // Fetch description for this product code
     const description = await getModelDescription(
       item.productCode,
       item.modelId,
@@ -65,6 +69,8 @@ async function buildRows(
         "Код продукту": item.productCode,
         "Модель": modelName,
         "Опис": description,
+        "К-сть": item.qty,
+        "Коментар": item.note,
         "Дата додавання": dateAdded,
       });
     } else {
@@ -73,6 +79,8 @@ async function buildRows(
         "Product Code": item.productCode,
         "Model": modelName,
         "Description": description,
+        "Qty": item.qty,
+        "Comment": item.note,
         "Date Added": dateAdded,
       });
     }
@@ -81,26 +89,62 @@ async function buildRows(
   return rows;
 }
 
+function buildProjectHeaderRows(
+  projectMeta: ProjectMeta,
+  lang: Language
+): string[][] {
+  const date = formatDate(projectMeta.createdAt);
+
+  if (lang === "uk") {
+    return [
+      ["Назва проєкту:", projectMeta.projectName || "—"],
+      ["Клієнт:", projectMeta.clientName || "—"],
+      ["Дата:", date],
+      [], // empty row separator
+    ];
+  }
+
+  return [
+    ["Project Name:", projectMeta.projectName || "—"],
+    ["Client:", projectMeta.clientName || "—"],
+    ["Date:", date],
+    [], // empty row separator
+  ];
+}
+
 export async function downloadMyListXlsx(
   items: SavedConfiguration[],
-  lang: Language = "en"
+  lang: Language = "en",
+  projectMeta?: ProjectMeta
 ): Promise<void> {
   if (items.length === 0) {
     return;
   }
 
-  const XLSX = await import("xlsx");
-
   const rows = await buildRows(items, lang);
 
-  const worksheet = XLSX.utils.json_to_sheet(rows);
+  const worksheet = XLSX.utils.aoa_to_sheet([]);
+
+  // Add project header if available
+  if (projectMeta) {
+    const headerRows = buildProjectHeaderRows(projectMeta, lang);
+    XLSX.utils.sheet_add_aoa(worksheet, headerRows, { origin: "A1" });
+    
+    // Add data rows after header
+    const startRow = headerRows.length;
+    XLSX.utils.sheet_add_json(worksheet, rows, { origin: `A${startRow + 1}` });
+  } else {
+    XLSX.utils.sheet_add_json(worksheet, rows);
+  }
 
   const columnWidths = [
     { wch: 5 },   // №
-    { wch: 25 },  // Product Code / Код продукту
-    { wch: 30 },  // Model / Модель
-    { wch: 80 },  // Description / Опис
-    { wch: 14 },  // Date Added / Дата додавання
+    { wch: 25 },  // Product Code
+    { wch: 30 },  // Model
+    { wch: 80 },  // Description
+    { wch: 6 },   // Qty
+    { wch: 30 },  // Comment
+    { wch: 14 },  // Date Added
   ];
   worksheet["!cols"] = columnWidths;
 

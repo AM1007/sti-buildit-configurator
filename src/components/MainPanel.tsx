@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { ClipLoader } from "react-spinners";
-import type { Configuration, ProductModel, ModelDefinition, StepId, CustomTextData, ModelId } from "../types";
+import type { Configuration, ProductModel, ModelDefinition, StepId, CustomTextData,  } from "../types";
 import { ProductPreview } from "./ProductPreview";
 import { ProductModelDisplay } from "./ProductModelDisplay";
 import { ActionButtons } from "./ActionButtons";
@@ -46,7 +46,7 @@ export function MainPanel({
 
   const showCustomTextForm = shouldShowCustomTextForm(model, config, customText);
   const customTextConfig = getCustomTextConfig(model.id);
-  const showActionButtons = productModel.isComplete && isConfigurationReadyForActions(model.id, config, customText);
+  const actionsReady = productModel.isComplete && isConfigurationReadyForActions(model.id, config, customText);
 
   const heroContent = getHeroContent(model.id);
 
@@ -91,10 +91,27 @@ export function MainPanel({
     return getMaxLength(model.id, effectiveLineCount);
   };
 
+  // Shared action buttons props
+  const actionButtonsProps = {
+    productModel,
+    modelId: model.id,
+    config,
+    customText,
+    onReset,
+    onAddToMyList,
+    onRemoveFromMyList,
+    isInMyList,
+    disabled: !actionsReady,
+    disabledReason: !actionsReady ? t("configurator.completeSelections") : undefined,
+    productName,
+    productDescription: heroContent?.description,
+    productImageUrl: imagePath,
+  };
+
   return (
     <div className={`h-full w-full ${className}`}>
-      <div className="flex h-fit flex-col gap-8 p-5 lg:sticky lg:top-0 lg:gap-16 lg:p-10 xl:gap-20 xl:p-16">
-        <div className="w-full lg:min-h-144">
+      <div className="flex h-fit flex-col gap-8 p-5 md:p-8 xl:sticky xl:top-0 xl:gap-16 xl:p-10 2xl:gap-20 2xl:p-16">
+        <div className="w-full xl:min-h-144">
           <div className="inline-flex items-center justify-center h-auto gap-6 rounded-none bg-white p-0 text-black xl:gap-10">
             <button
               type="button"
@@ -106,7 +123,7 @@ export function MainPanel({
                 ${activeTab === "edit" ? "text-brand-600" : "text-black"}
               `}
             >
-              <span className="font-bold text-sm lg:text-lg">{t("configurator.editSelections")}</span>
+              <span className="font-bold text-sm md:text-base xl:text-lg">{t("configurator.editSelections")}</span>
             </button>
             <button
               type="button"
@@ -118,7 +135,7 @@ export function MainPanel({
                 ${activeTab === "preview" ? "text-brand-600" : "text-black"}
               `}
             >
-              <span className="font-bold text-sm lg:text-lg">{t("configurator.productPreview")}</span>
+              <span className="font-bold text-sm md:text-base xl:text-lg">{t("configurator.productPreview")}</span>
             </button>
           </div>
 
@@ -147,36 +164,17 @@ export function MainPanel({
                 <ProductPreviewContent
                   imagePath={imagePath}
                   productCode={productModel.fullCode}
-                  showActionButtons={showActionButtons}
-                  productModel={productModel}
-                  modelId={model.id}
-                  config={config}
-                  customText={customText}
-                  onReset={onReset}
-                  onAddToMyList={onAddToMyList}
-                  onRemoveFromMyList={onRemoveFromMyList}
-                  isInMyList={isInMyList}
-                  productName={productName}
-                  productDescription={heroContent?.description}
                 />
               ) : (
-                <NoPreviewContent
-                  reason={reason}
-                  showActionButtons={showActionButtons}
-                  productModel={productModel}
-                  modelId={model.id}
-                  config={config}
-                  customText={customText}
-                  onReset={onReset}
-                  onAddToMyList={onAddToMyList}
-                  onRemoveFromMyList={onRemoveFromMyList}
-                  isInMyList={isInMyList}
-                  productName={productName}
-                  productDescription={heroContent?.description}
-                />
+                <NoPreviewContent reason={reason} />
               )}
             </div>
           )}
+        </div>
+
+        {/* Actions — always visible */}
+        <div className="flex w-full flex-wrap items-center justify-center gap-2 md:items-start md:gap-6">
+          <ActionButtons {...actionButtonsProps} />
         </div>
 
         <ProductModelDisplay
@@ -192,61 +190,19 @@ export function MainPanel({
 
 interface NoPreviewContentProps {
   reason?: string;
-  showActionButtons: boolean;
-  productModel: ProductModel;
-  modelId: ModelId;
-  config: Configuration;
-  customText?: CustomTextData | null;
-  onReset: () => void;
-  onAddToMyList: () => void;
-  onRemoveFromMyList: () => void;
-  isInMyList: boolean;
-  productName: string;
-  productDescription?: string;
 }
 
-function NoPreviewContent({
-  reason,
-  showActionButtons,
-  productModel,
-  modelId,
-  config,
-  customText,
-  onReset,
-  onAddToMyList,
-  onRemoveFromMyList,
-  isInMyList,
-  productName,
-  productDescription,
-}: NoPreviewContentProps) {
+function NoPreviewContent({ reason }: NoPreviewContentProps) {
   const { t } = useTranslation();
 
   return (
     <div className="flex w-full flex-col items-center gap-11 py-16 text-center text-gray-500">
-      <p className="font-medium text-base lg:text-md whitespace-pre-line">
+      <p className="font-medium text-base md:text-md whitespace-pre-line">
         {t("configurator.previewNotAvailable")}
       </p>
-      <p className="font-normal text-base lg:text-md">
+      <p className="font-normal text-base md:text-md">
         {reason || t("configurator.completeSelections")}
       </p>
-      
-      {showActionButtons && (
-        <div className="flex w-full flex-wrap items-center justify-center gap-2 md:items-start md:gap-6 mt-4">
-          <ActionButtons
-            productModel={productModel}
-            modelId={modelId}
-            config={config}
-            customText={customText}
-            onReset={onReset}
-            onAddToMyList={onAddToMyList}
-            onRemoveFromMyList={onRemoveFromMyList}
-            isInMyList={isInMyList}
-            productName={productName}
-            productDescription={productDescription}
-            productImageUrl={null}
-          />
-        </div>
-      )}
     </div>
   );
 }
@@ -254,33 +210,11 @@ function NoPreviewContent({
 interface ProductPreviewContentProps {
   imagePath: string;
   productCode: string;
-  showActionButtons: boolean;
-  productModel: ProductModel;
-  modelId: ModelId;
-  config: Configuration;
-  customText?: CustomTextData | null;
-  onReset: () => void;
-  onAddToMyList: () => void;
-  onRemoveFromMyList: () => void;
-  isInMyList: boolean;
-  productName: string;
-  productDescription?: string;
 }
 
 function ProductPreviewContent({
   imagePath,
   productCode,
-  showActionButtons,
-  productModel,
-  modelId,
-  config,
-  customText,
-  onReset,
-  onAddToMyList,
-  onRemoveFromMyList,
-  isInMyList,
-  productName,
-  productDescription,
 }: ProductPreviewContentProps) {
   const { t } = useTranslation();
   const [hasError, setHasError] = useState(false);
@@ -297,10 +231,10 @@ function ProductPreviewContent({
     <div className="flex w-full flex-col gap-10 py-5">
       {hasError ? (
         <div className="flex w-full flex-col items-center gap-11 py-16 text-center text-gray-500">
-          <p className="font-medium text-base lg:text-md whitespace-pre-line">
+          <p className="font-medium text-base md:text-md whitespace-pre-line">
             {t("configurator.previewNotAvailable")}
           </p>
-          <p className="font-normal text-base lg:text-md">
+          <p className="font-normal text-base md:text-md">
             {t("configurator.imageFailedToLoad")}
           </p>
         </div>
@@ -323,24 +257,6 @@ function ProductPreviewContent({
               setIsLoading(false);
               setHasError(true);
             }}
-          />
-        </div>
-      )}
-
-      {showActionButtons && (
-        <div className="flex w-full flex-wrap items-center justify-center gap-2 md:items-start md:gap-6">
-          <ActionButtons
-            productModel={productModel}
-            modelId={modelId}
-            config={config}
-            customText={customText}
-            onReset={onReset}
-            onAddToMyList={onAddToMyList}
-            onRemoveFromMyList={onRemoveFromMyList}
-            isInMyList={isInMyList}
-            productName={productName}
-            productDescription={productDescription}
-            productImageUrl={imagePath}
           />
         </div>
       )}

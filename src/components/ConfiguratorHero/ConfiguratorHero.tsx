@@ -15,14 +15,14 @@ export function ConfiguratorHero({ data, productName }: ConfiguratorHeroProps) {
   const description = meta?.heroDescription ?? data.description;
 
   return (
-    <section className="bg-white py-6 lg:py-10">
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col items-start justify-between gap-10 lg:flex-row lg:gap-16">
-          <div className="w-full lg:sticky lg:top-24 lg:w-1/2">
+    <section className="bg-white py-6 md:py-8 xl:py-10">
+      <div className="container mx-auto px-4 md:px-6 xl:px-8">
+        <div className="flex flex-col items-start justify-between gap-10 xl:flex-row xl:gap-16">
+          <div className="w-full xl:sticky xl:top-24 xl:w-1/2">
             <HeroGallery media={data.media} productName={productName} />
           </div>
 
-          <div className="w-full lg:w-1/2">
+          <div className="w-full xl:w-1/2">
             <HeroContent
               productName={meta?.name ?? productName}
               title={title}

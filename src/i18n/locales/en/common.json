@@ -95,7 +95,9 @@
     "charactersRemaining": "Characters remaining",
     "textPreview": "Text preview",
     "submitCustomText": "Apply text",
-    "noSelection": "NO SELECTION"
+    "noSelection": "NO SELECTION",
+    "stepsCompleted": "{completed} of {total} steps completed",
+    "invalidDeepLink": "The shared configuration link is invalid or corrupted. Starting fresh."
   },
 
   "myList": {
@@ -113,7 +115,15 @@
     "clearListConfirm": "Are you sure you want to clear all saved configurations?",
     "downloadList": "Download My List",
     "exportXlsx": "Export to Excel",
-    "copyAllModels": "Copy All Models"
+    "copyAllModels": "Copy All Models",
+    "projectName": "Project Name",
+    "projectNamePlaceholder": "Enter project name",
+    "clientName": "Client",
+    "clientNamePlaceholder": "Enter client name",
+    "date": "Date",
+    "qty": "Qty",
+    "note": "Note",
+    "notePlaceholder": "Add a note..."
   },
 
   "share": {

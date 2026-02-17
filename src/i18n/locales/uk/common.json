@@ -95,7 +95,9 @@
     "charactersRemaining": "Залишилось символів",
     "textPreview": "Попередній перегляд тексту",
     "submitCustomText": "Застосувати текст",
-    "noSelection": "НЕ ВИБРАНО"
+    "noSelection": "НЕ ВИБРАНО",
+    "stepsCompleted": "{completed} з {total} кроків виконано",
+    "invalidDeepLink": "Посилання на конфігурацію недійсне або пошкоджене. Починаємо заново."
   },
 
   "myList": {
@@ -113,7 +115,15 @@
     "clearListConfirm": "Ви впевнені, що хочете очистити весь список збережених конфігурацій?",
     "downloadList": "Завантажити мій список",
     "exportXlsx": "Експорт в Excel",
-    "copyAllModels": "Копіювати всі артикули"
+    "copyAllModels": "Копіювати всі артикули",
+    "projectName": "Назва проєкту",
+    "projectNamePlaceholder": "Введіть назву проєкту",
+    "clientName": "Клієнт",
+    "clientNamePlaceholder": "Введіть ім'я клієнта",
+    "date": "Дата",
+    "qty": "К-сть",
+    "note": "Нотатка",
+    "notePlaceholder": "Додати нотатку..."
   },
 
   "share": {

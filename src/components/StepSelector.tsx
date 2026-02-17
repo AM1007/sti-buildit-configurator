@@ -5,7 +5,10 @@ import { useTranslation } from "../i18n";
 
 interface StepSelectorProps {
   step: Step;
+  stepIndex: number;
+  totalSteps: number;
   isOpen: boolean;
+  isCompleted: boolean;
   selectedOptionId: OptionId | null;
   config: Configuration;
   modelId: ModelId;
@@ -20,15 +23,15 @@ function getGridClasses(optionCount: number): string {
   if (optionCount <= 3) {
     return "grid-cols-3";
   }
-  if (optionCount <= 4) {
-    return "grid-cols-3 lg:grid-cols-4";
-  }
-  return "grid-cols-3 lg:grid-cols-4";
+  return "grid-cols-3 md:grid-cols-4";
 }
 
 export function StepSelector({
   step,
+  stepIndex,
+  totalSteps,
   isOpen,
+  isCompleted,
   selectedOptionId,
   config,
   modelId,
@@ -54,13 +57,19 @@ export function StepSelector({
   const title = getStepTitle ? getStepTitle(step.id) : step.title;
   const selectedLabel = selectedOption
     ? (getOptionLabel ? getOptionLabel(step.id, selectedOption.id) : selectedOption.label)
-    : t("configurator.noSelection");
+    : null;
+
+  const getBorderClasses = (): string => {
+    if (isOpen) return "border-black bg-white";
+    if (isCompleted) return "border-transparent border-b-white/60";
+    return "border-transparent border-b-white";
+  };
 
   return (
     <div
       className={`
-        box-border border-2 border-solid p-4 lg:p-5 transition-all duration-300
-        ${isOpen ? "border-black bg-white" : "border-transparent border-b-white"}
+        box-border border-2 border-solid p-4 md:p-5 transition-all duration-300
+        ${getBorderClasses()}
       `}
     >
       <button
@@ -74,21 +83,47 @@ export function StepSelector({
         aria-controls={`step-${step.id}-content`}
       >
         <div className="flex w-full items-center justify-between gap-4">
-          <h4 className="font-bold text-lg lg:text-2xl text-inherit transition-all duration-300">
-            {title}
-          </h4>
-          <span
-            className={`
-              inline-grid text-lg leading-none text-inherit transition-all duration-300
-              ${isOpen ? "rotate-180" : ""}
-            `}
-          >
-            <ChevronIcon />
-          </span>
+          <div className="flex items-center gap-3">
+            {/* Step state indicator */}
+            <StepIndicator
+              stepIndex={stepIndex}
+              isOpen={isOpen}
+              isCompleted={isCompleted}
+            />
+            <h4 className="font-bold text-lg md:text-xl xl:text-2xl text-inherit transition-all duration-300">
+              {title}
+            </h4>
+          </div>
+
+          <div className="flex items-center gap-2">
+            {/* Step counter */}
+            <span className={`text-xs font-medium transition-all duration-300 ${isOpen ? "text-gray-400" : "text-white/50"}`}>
+              {stepIndex}/{totalSteps}
+            </span>
+            <span
+              className={`
+                inline-grid text-lg leading-none text-inherit transition-all duration-300
+                ${isOpen ? "rotate-180" : ""}
+              `}
+            >
+              <ChevronIcon />
+            </span>
+          </div>
         </div>
-        <p className="font-normal text-base lg:text-md block w-full text-start text-inherit transition-all duration-300">
-          {selectedLabel}
-        </p>
+
+        {/* Summary line when closed and has selection */}
+        {!isOpen && selectedLabel && (
+          <p className="font-normal text-sm text-white/70 block w-full text-start pl-9 transition-all duration-300">
+            {selectedLabel}
+          </p>
+        )}
+
+        {/* "No selection" prompt when closed and empty */}
+        {!isOpen && !selectedLabel && (
+          <p className="font-normal text-sm text-white/40 italic block w-full text-start pl-9 transition-all duration-300">
+            {t("configurator.noSelection")}
+          </p>
+        )}
       </button>
 
       <div
@@ -117,6 +152,41 @@ export function StepSelector({
         </div>
       </div>
     </div>
+  );
+}
+
+interface StepIndicatorProps {
+  stepIndex: number;
+  isOpen: boolean;
+  isCompleted: boolean;
+}
+
+function StepIndicator({ stepIndex, isOpen, isCompleted }: StepIndicatorProps) {
+  if (isCompleted && !isOpen) {
+    return (
+      <span className="flex h-6 w-6 flex-none items-center justify-center rounded-full bg-white text-brand-600">
+        <CheckIcon />
+      </span>
+    );
+  }
+
+  return (
+    <span
+      className={`
+        flex h-6 w-6 flex-none items-center justify-center rounded-full text-xs font-bold transition-all duration-300
+        ${isOpen ? "bg-brand-600 text-white" : "bg-white/20 text-white"}
+      `}
+    >
+      {stepIndex}
+    </span>
+  );
+}
+
+function CheckIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M20 6L9 17L4 12" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   );
 }
 

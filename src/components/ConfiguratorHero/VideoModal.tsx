@@ -43,9 +43,9 @@ export function VideoModal({ isOpen, videoId, title, onClose }: VideoModalProps)
       <div
         role="dialog"
         aria-label={title ?? "Video player"}
-        className="fixed left-1/2 top-1/2 z-101 w-full max-w-fit -translate-x-1/2 -translate-y-1/2 rounded border-0 bg-white p-2 shadow-md shadow-gray-400 lg:p-5"
+        className="fixed left-1/2 top-1/2 z-101 w-full max-w-fit -translate-x-1/2 -translate-y-1/2 rounded border-0 bg-white p-2 shadow-md shadow-gray-400 md:p-4 xl:p-5"
       >
-        <div className="aspect-video w-[85vw] lg:w-160 xl:w-200 2xl:w-240">
+        <div className="aspect-video w-[85vw] md:w-160 xl:w-200 2xl:w-240">
           <iframe
             src={`https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`}
             title={title ?? "Video"}

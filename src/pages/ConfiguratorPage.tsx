@@ -8,11 +8,14 @@ import { getHeroContent } from "../data/heroContent";
 import { useConfigurationStore } from "../stores/configurationStore";
 import { InDevelopmentPage } from "./InDevelopmentPage";
 import { parseConfigFromUrl } from "../utils/configSerializer";
+import { toast } from "../utils/toast";
+import { useTranslation } from "../i18n";
 
 export function ConfiguratorPage() {
   const { slug } = useParams<{ slug: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const hasLoadedFromUrl = useRef(false);
+  const { t } = useTranslation();
 
   const addToMyList = useConfigurationStore((state) => state.addToMyList);
   const removeFromMyList = useConfigurationStore((state) => state.removeFromMyList);
@@ -51,21 +54,32 @@ export function ConfiguratorPage() {
       const { state } = parseConfigFromUrl(searchParams);
       
       if (state) {
-        // Set model first, then load config
+        // Valid deep-link: set model and load config
         setModel(model.id);
         setConfigFromUrl(model.id, state.config, state.customText ?? null);
         hasLoadedFromUrl.current = true;
         
-        // Clear URL params after loading (optional - keeps URL clean)
+        // Clear URL params after loading
         setSearchParams({}, { replace: true });
+      } else {
+        // Invalid deep-link: state param exists but failed to parse
+        hasLoadedFromUrl.current = true;
+        setSearchParams({}, { replace: true });
+        
+        if (currentModelId !== model.id) {
+          setModel(model.id);
+        }
+
+        // Notify user about invalid link
+        toast.error(t("configurator.invalidDeepLink"));
       }
     } else {
-      // No URL state - just set the model normally
+      // No URL state — just set the model normally
       if (currentModelId !== model.id) {
         setModel(model.id);
       }
     }
-  }, [model.id, searchParams, setModel, setConfigFromUrl, setSearchParams, currentModelId]);
+  }, [model.id, searchParams, setModel, setConfigFromUrl, setSearchParams, currentModelId, t]);
 
   const heroContent = getHeroContent(model.id);
 

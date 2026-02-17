@@ -12,6 +12,8 @@ interface ActionButtonsProps {
   onAddToMyList: () => void;
   onRemoveFromMyList: () => void;
   isInMyList?: boolean;
+  disabled?: boolean;
+  disabledReason?: string;
   productName?: string;
   productDescription?: string;
   productImageUrl?: string | null;
@@ -26,6 +28,8 @@ export function ActionButtons({
   onAddToMyList,
   onRemoveFromMyList,
   isInMyList = false,
+  disabled = false,
+  disabledReason,
   productName,
   productDescription,
   productImageUrl,
@@ -34,6 +38,7 @@ export function ActionButtons({
   const [showShareMenu, setShowShareMenu] = useState(false);
 
   const handleStarClick = () => {
+    if (disabled) return;
     if (isInMyList) {
       onRemoveFromMyList();
     } else {
@@ -45,63 +50,79 @@ export function ActionButtons({
     ? t("configurator.removeFromMyList") 
     : t("configurator.addToMyList");
 
-  return (
-    <div className="flex w-full flex-wrap items-center justify-center gap-2 md:items-start md:gap-6">
-      <button
-        type="button"
-        onClick={onReset}
-        className="cursor-pointer inline-flex items-center justify-center gap-1 border-4 border-gray-500 bg-gray-500 px-4.5 py-0.5 text-sm font-bold text-white transition-all duration-300 hover:border-gray-600 hover:bg-gray-600 lg:gap-1.5 lg:px-6 lg:py-1 lg:text-base min-h-9 lg:min-h-11 min-w-28 lg:min-w-32"
-      >
-        <span className="inline-grid text-lg leading-none">
-          <RefreshIcon />
-        </span>
-        <span>{t("common.reset")}</span>
-      </button>
+  const disabledClass = disabled
+    ? "opacity-40 cursor-not-allowed pointer-events-none"
+    : "";
 
-      <div className="relative">
+  return (
+    <div className="flex w-full flex-col gap-3">
+      {/* Disabled reason message */}
+      {disabled && disabledReason && (
+        <p className="text-center text-sm font-medium text-gray-400">
+          {disabledReason}
+        </p>
+      )}
+
+      <div className={`flex w-full flex-wrap items-center justify-center gap-2 md:items-start md:gap-6 ${disabledClass}`}>
         <button
           type="button"
-          onClick={() => setShowShareMenu((prev) => !prev)}
-          className="cursor-pointer inline-flex items-center justify-center gap-1 border-4 border-gray-500 bg-gray-500 px-4.5 py-0.5 text-sm font-bold text-white transition-all duration-300 hover:border-gray-600 hover:bg-gray-600 lg:gap-1.5 lg:px-6 lg:py-1 lg:text-base min-h-9 lg:min-h-11 min-w-28 lg:min-w-32"
-          aria-expanded={showShareMenu}
-          aria-haspopup="true"
+          onClick={onReset}
+          disabled={disabled}
+          className="cursor-pointer inline-flex items-center justify-center gap-1 border-4 border-gray-500 bg-gray-500 px-4.5 py-0.5 text-sm font-bold text-white transition-all duration-300 hover:border-gray-600 hover:bg-gray-600 md:gap-1.5 md:px-6 md:py-1 xl:text-base min-h-9 md:min-h-11 min-w-28 md:min-w-32 disabled:opacity-100 disabled:cursor-not-allowed"
         >
-          <span>{t("common.share")}</span>
           <span className="inline-grid text-lg leading-none">
-            <ShareIcon />
+            <RefreshIcon />
           </span>
+          <span>{t("common.reset")}</span>
         </button>
 
-        {showShareMenu && (
-          <ShareMenu
-            productModel={productModel}
-            modelId={modelId}
-            config={config}
-            customText={customText}
-            onClose={() => setShowShareMenu(false)}
-            productName={productName}
-            productDescription={productDescription}
-            productImageUrl={productImageUrl}
-          />
-        )}
-      </div>
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() => !disabled && setShowShareMenu((prev) => !prev)}
+            disabled={disabled}
+            className="cursor-pointer inline-flex items-center justify-center gap-1 border-4 border-gray-500 bg-gray-500 px-4.5 py-0.5 text-sm font-bold text-white transition-all duration-300 hover:border-gray-600 hover:bg-gray-600 md:gap-1.5 md:px-6 md:py-1 xl:text-base min-h-9 md:min-h-11 min-w-28 md:min-w-32 disabled:opacity-100 disabled:cursor-not-allowed"
+            aria-expanded={showShareMenu}
+            aria-haspopup="true"
+          >
+            <span>{t("common.share")}</span>
+            <span className="inline-grid text-lg leading-none">
+              <ShareIcon />
+            </span>
+          </button>
 
-      <button
-        type="button"
-        onClick={handleStarClick}
-        className="cursor-pointer inline-flex h-9 w-9 items-center justify-center bg-gray-100 transition-all duration-300 lg:h-11 lg:w-11 hover:bg-gray-200"
-        aria-label={starTitle}
-        aria-pressed={isInMyList}
-        title={starTitle}
-      >
-        <div className="flex items-center justify-start gap-3">
-          <span className="inline-grid text-lg text-brand-600">
-            {isInMyList ? <StarFilledIcon /> : <StarOutlineIcon />}
-          </span>
+          {showShareMenu && !disabled && (
+            <ShareMenu
+              productModel={productModel}
+              modelId={modelId}
+              config={config}
+              customText={customText}
+              onClose={() => setShowShareMenu(false)}
+              productName={productName}
+              productDescription={productDescription}
+              productImageUrl={productImageUrl}
+            />
+          )}
         </div>
-      </button>
+
+        <button
+          type="button"
+          onClick={handleStarClick}
+          disabled={disabled}
+          className="cursor-pointer inline-flex h-9 w-9 items-center justify-center bg-gray-100 transition-all duration-300 md:h-11 md:w-11 hover:bg-gray-200 disabled:cursor-not-allowed"
+          aria-label={starTitle}
+          aria-pressed={isInMyList}
+          title={starTitle}
+        >
+          <div className="flex items-center justify-start gap-3">
+            <span className="inline-grid text-lg text-brand-600">
+              {isInMyList ? <StarFilledIcon /> : <StarOutlineIcon />}
+            </span>
+          </div>
+        </button>
+      </div>
     </div>
-  )
+  );
 }
 
 function RefreshIcon() {

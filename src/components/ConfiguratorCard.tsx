@@ -28,24 +28,24 @@ export function ConfiguratorCard({ config }: ConfiguratorCardProps) {
     <Link to={href} aria-label={config.name} className="block">
       <article className="group/primary-card flex h-full flex-col justify-between bg-white transition-all duration-300 hover:drop-shadow-xl">
         <div className="relative flex-1 border-2 border-b-0 border-solid border-gray-200 transition-all group-hover/primary-card:border-transparent">
-          <div className="relative h-auto w-full px-11 py-8 lg:px-12">
+          <div className="relative h-auto w-full px-11 py-8 md:px-12">
             <img
               alt={`${config.name} featured product model`}
               loading="lazy"
               width="600"
               height="600"
               decoding="async"
-              className="w-full lg:object-cover"
+              className="w-full md:object-cover"
               src={config.imagePath}
             />
           </div>
 
-          <div className="flex flex-1 flex-col gap-1 px-4 pb-3 pt-4 lg:py-4">
-            <h3 className="font-bold text-lg lg:text-xl flex min-h-11 w-full items-center text-black lg:min-h-17">
+          <div className="flex flex-1 flex-col gap-1 px-4 pb-3 pt-4 md:py-4">
+            <h3 className="font-bold text-lg md:text-xl flex min-h-11 w-full items-center text-black md:min-h-17">
               <span className="line-clamp-2 w-full text-left">{config.name}</span>
             </h3>
 
-            <span className="font-normal text-sm lg:text-base line-clamp-2 min-h-12 text-left text-gray-500">
+            <span className="font-normal text-sm md:text-base line-clamp-2 min-h-12 text-left text-gray-500">
               {displayDescription}
             </span>
 
@@ -88,7 +88,7 @@ export function ConfiguratorCard({ config }: ConfiguratorCardProps) {
           </div>
         </div>
 
-        <span className="cursor-pointer inline-flex items-center justify-center relative ring-offset-0 transition-all duration-300 ease-in-out focus-visible:outline-none box-border font-bold text-base gap-1.5 px-5 py-1 min-h-10 border-4 lg:gap-2.5 lg:px-7 lg:py-3 lg:min-h-14 lg:text-lg bg-brand-600 border-brand-600 text-white hover:bg-brand-700 hover:border-brand-700 w-full">
+        <span className="cursor-pointer inline-flex items-center justify-center relative ring-offset-0 transition-all duration-300 ease-in-out focus-visible:outline-none box-border font-bold text-base gap-1.5 px-5 py-1 min-h-10 border-4 md:gap-2.5 md:px-7 md:py-3 md:min-h-14 xl:text-lg bg-brand-600 border-brand-600 text-white hover:bg-brand-700 hover:border-brand-700 w-full">
           {t("card.buildYourModel")}
           <span className="inline-grid leading-none text-inherit">
             <ArrowRightIcon />

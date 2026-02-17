@@ -61,10 +61,10 @@ export function HeroGallery({ media, productName }: HeroGalleryProps) {
   const getMaskClass = (): string => {
     switch (scrollPosition) {
       case "start":
-        return "[mask-image:linear-gradient(to_right,#000_calc(100%-100px),transparent)] lg:[mask-image:linear-gradient(to_bottom,#000_calc(100%-100px),transparent)]";
+        return "[mask-image:linear-gradient(to_right,#000_calc(100%-100px),transparent)] xl:[mask-image:linear-gradient(to_bottom,#000_calc(100%-100px),transparent)]";
       case "end":
       case "middle":
-        return "[mask-image:linear-gradient(to_right,transparent,#000_100px,#000_calc(100%-100px),transparent)] lg:[mask-image:linear-gradient(to_bottom,transparent,#000_100px,#000_calc(100%-100px),transparent)]";
+        return "[mask-image:linear-gradient(to_right,transparent,#000_100px,#000_calc(100%-100px),transparent)] xl:[mask-image:linear-gradient(to_bottom,transparent,#000_100px,#000_calc(100%-100px),transparent)]";
       default:
         return "";
     }
@@ -72,8 +72,8 @@ export function HeroGallery({ media, productName }: HeroGalleryProps) {
 
   return (
     <>
-      <div className="relative flex w-full flex-col gap-4 lg:flex-row lg:gap-8">
-        <div className={`order-2 w-full lg:order-1 lg:w-22 ${getMaskClass()}`}>
+      <div className="relative flex w-full flex-col gap-4 xl:flex-row xl:gap-8">
+        <div className={`order-2 w-full xl:order-1 xl:w-22 ${getMaskClass()}`}>
           <Swiper
             modules={[FreeMode, Mousewheel]}
             direction="horizontal"
@@ -90,18 +90,18 @@ export function HeroGallery({ media, productName }: HeroGalleryProps) {
             onScroll={updateScrollPosition}
             onProgress={updateScrollPosition}
             breakpoints={{
-              1024: {
+              1280: {
                 direction: "vertical",
                 slidesPerView: "auto",
                 spaceBetween: 12,
               },
             }}
-            className="h-12 w-full lg:h-[600px] lg:w-full"
+            className="h-12 w-full xl:h-[600px] xl:w-full"
           >
             {media.map((item, index) => (
               <SwiperSlide
                 key={index}
-                className="h-12! w-12! lg:h-22! lg:w-full!"
+                className="h-12! w-12! xl:h-22! xl:w-full!"
               >
                 <button
                   onClick={() => handleThumbnailClick(index)}
@@ -116,7 +116,7 @@ export function HeroGallery({ media, productName }: HeroGalleryProps) {
                       src={item.src}
                       alt={item.alt ?? `${productName} thumbnail ${index + 1}`}
                       draggable={false}
-                      className="h-full w-full select-none object-contain p-0.5 lg:p-1"
+                      className="h-full w-full select-none object-contain p-0.5 xl:p-1"
                     />
                   ) : (
                     <div className="relative h-full w-full">
@@ -128,7 +128,7 @@ export function HeroGallery({ media, productName }: HeroGalleryProps) {
                       />
                       <div className="absolute inset-0 flex items-center justify-center bg-black/30">
                         <svg
-                          className="h-5 w-5 text-white lg:h-6 lg:w-6"
+                          className="h-5 w-5 text-white md:h-6 md:w-6"
                           viewBox="0 0 24 24"
                           fill="currentColor"
                         >
@@ -143,7 +143,7 @@ export function HeroGallery({ media, productName }: HeroGalleryProps) {
           </Swiper>
         </div>
 
-        <div className="order-1 flex aspect-square w-full items-center justify-center lg:order-2 lg:flex-1">
+        <div className="order-1 flex aspect-square w-full items-center justify-center xl:order-2 xl:flex-1">
           {activeItem.type === "image" ? (
             <img
               src={activeItem.src}
@@ -162,9 +162,9 @@ export function HeroGallery({ media, productName }: HeroGalleryProps) {
                 className="h-full w-full object-contain"
               />
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-white shadow-lg transition-transform hover:scale-110 lg:h-20 lg:w-20">
+                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-white shadow-lg transition-transform hover:scale-110 xl:h-20 xl:w-20">
                   <svg
-                    className="ml-1 h-8 w-8 lg:h-10 lg:w-10"
+                    className="ml-1 h-8 w-8 xl:h-10 xl:w-10"
                     viewBox="0 0 24 24"
                     fill="currentColor"
                   >

@@ -126,7 +126,7 @@ export function CustomTextForm({ variant, maxLength, onSubmit, initialData }: Cu
     onChange: (val: 1 | 2 | 3) => void,
     showThreeLine: boolean
   ) => (
-    <div className="mb-3 flex items-center justify-center gap-3 lg:mb-4">
+    <div className="mb-3 flex items-center justify-center gap-3 md:mb-4">
       <label className="flex items-center justify-start gap-2 text-sm font-normal">
         <input
           type="radio"
@@ -174,19 +174,19 @@ export function CustomTextForm({ variant, maxLength, onSubmit, initialData }: Cu
                           border-gray-300 bg-gray-100 px-3 py-1.5 text-sm font-normal 
                           text-gray-800 placeholder:text-gray-500 
                           hover:border-gray-500 focus:border-gray-500 focus:outline-none 
-                          lg:min-h-11 lg:py-2`;
+                          md:min-h-11 md:py-2`;
 
   return (
     <div className="flex w-full justify-center">
       <div className="max-w-126 flex-1">
-        <p className="mb-5 text-center text-base font-normal lg:mb-7 lg:text-lg">
+        <p className="mb-5 text-center text-base font-normal md:mb-7 md:text-lg">
           {t("customText.enterLabel")}
         </p>
 
         <form onSubmit={handleSubmit}>
           <div className="grid w-full grid-cols-1 gap-7">
             <div className="w-full">
-              <p className="mb-4 text-center text-base font-bold lg:text-lg">
+              <p className="mb-4 text-center text-base font-bold md:text-lg">
                 {t("customText.label")}
               </p>
 
@@ -249,7 +249,7 @@ export function CustomTextForm({ variant, maxLength, onSubmit, initialData }: Cu
 
             {isDualBlock && (
               <div className="w-full">
-                <p className="mb-4 text-center text-base font-bold lg:text-lg">
+                <p className="mb-4 text-center text-base font-bold md:text-lg">
                   {t("customText.cover")}
                 </p>
 
@@ -320,13 +320,13 @@ export function CustomTextForm({ variant, maxLength, onSubmit, initialData }: Cu
             </div>
           )}
 
-          <div className="mt-10 flex w-full flex-col items-center gap-2 lg:gap-4">
+          <div className="mt-10 flex w-full flex-col items-center gap-2 md:gap-4">
             <button
               type="submit"
               className="inline-flex min-h-9 items-center justify-center border-4 border-brand-600 
                          bg-brand-600 px-4.5 py-0.5 text-sm font-bold text-white 
                          transition-all duration-300 hover:border-brand-700 hover:bg-brand-700 
-                         focus:border-red-300 lg:min-h-11 lg:px-6 lg:py-1 lg:text-base"
+                         focus:border-red-300 md:min-h-11 md:px-6 md:py-1 xl:text-base"
             >
               {t("common.submit")}
             </button>

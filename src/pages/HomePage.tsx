@@ -19,7 +19,7 @@ export function HomePage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <section className="relative flex min-h-106.5 items-center py-10 lg:min-h-145 lg:py-12">
+      <section className="relative flex min-h-106.5 items-center py-10 md:py-12 xl:min-h-145">
         <img
           alt=""
           src="/hero.avif"
@@ -33,18 +33,18 @@ export function HomePage() {
 
         <span className="absolute inset-0 z-1 h-full w-full bg-black/60" />
 
-        <div className="container relative z-10 mx-auto px-4">
-          <div className="mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-5 md:gap-12 lg:grid-cols-[1.5fr_1fr] lg:gap-16 xl:gap-24">
-            <div className="order-2 flex flex-col gap-5 overflow-hidden wrap-break-word text-center lg:order-1 lg:gap-8 lg:text-left">
-              <h1 className="max-w-185 text-4xl font-bold text-white md:text-5xl lg:text-5xl xl:text-6xl">
+        <div className="container relative z-10 mx-auto px-4 md:px-6 xl:px-8">
+          <div className="mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-5 md:gap-10 xl:grid-cols-[1.5fr_1fr] xl:gap-16 2xl:gap-24">
+            <div className="order-2 flex flex-col gap-5 overflow-hidden wrap-break-word text-center xl:order-1 xl:gap-8 xl:text-left">
+              <h1 className="max-w-185 text-4xl font-bold text-white md:text-5xl xl:text-6xl">
                 {t("home.heroTitle")}
               </h1>
-              <p className="text-base font-normal text-white lg:text-xl">
+              <p className="text-base font-normal text-white md:text-lg xl:text-xl">
                 {t("home.heroDescription")}
               </p>
             </div>
 
-            <div className="relative order-1 h-fit overflow-hidden lg:order-2">
+            <div className="relative order-1 h-fit overflow-hidden xl:order-2">
               <img
                 alt="Build It Configurator Device"
                 src="/hero-device.webp"
@@ -58,7 +58,7 @@ export function HomePage() {
       </section>
 
       <section className="py-8 md:py-12">
-        <div className="mx-auto w-full max-w-301.5 px-4">
+        <div className="mx-auto w-full max-w-301.5 px-4 md:px-6 xl:px-8">
           <div className="flex flex-col gap-4 mb-6">
             <PrimaryNavigation value={state.primary} onChange={setPrimary} />
 

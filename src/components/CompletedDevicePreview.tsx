@@ -49,7 +49,7 @@ export function CompletedDevicePreview({
 
   return (
     <div className="flex flex-col items-center justify-center py-8 md:py-12 w-full">
-      <div className="w-full max-w-md md:max-w-lg lg:max-w-xl px-4">
+      <div className="w-full max-w-md md:max-w-lg xl:max-w-xl px-4">
         <img
           src={imagePath}
           alt={`Completed device: ${productCode}`}

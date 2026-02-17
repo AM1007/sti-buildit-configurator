@@ -23,7 +23,7 @@ export function PreviewTile({
       className={`
         relative flex h-25 w-full cursor-pointer items-center justify-center
         overflow-hidden border-2 border-solid px-1 py-3 transition-all duration-300
-        md:h-42 md:px-2.5 md:py-6 lg:h-50
+        md:h-42 md:px-2.5 md:py-6 xl:h-50
         hover:[&_.edit-box]:opacity-100
         ${isSelected ? "border-black bg-white" : "border-gray-300 bg-gray-200 hover:border-black/20"}
       `}
@@ -36,13 +36,13 @@ export function PreviewTile({
           className="max-h-full max-w-full object-contain"
         />
       ) : (
-        <span className="w-full overflow-hidden wrap-break-word text-center text-sm font-medium text-black lg:text-base lg:font-bold">
+        <span className="w-full overflow-hidden wrap-break-word text-center text-sm font-medium text-black md:text-base md:font-bold">
           {label}
         </span>
       )}
 
       <div className="edit-box absolute inset-0 z-20 flex h-full w-full items-center justify-center bg-black/20 opacity-0 transition-all duration-300">
-        <span className="flex items-center gap-1 bg-white px-1 py-0.5 text-sm font-bold md:px-2 lg:text-sm">
+        <span className="flex items-center gap-1 bg-white px-1 py-0.5 text-sm font-bold md:px-2">
           <EditIcon />
           {t("common.edit")}
         </span>

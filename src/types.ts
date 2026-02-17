@@ -102,6 +102,14 @@ export interface SavedConfiguration {
   customText?: CustomTextData;
   savedAt: number;
   name?: string;
+  qty: number;
+  note: string;
+}
+
+export interface ProjectMeta {
+  projectName: string;
+  clientName: string;
+  createdAt: number;
 }
 
 export interface CustomTextConfig {

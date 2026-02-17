@@ -19,13 +19,13 @@ export function ProductModelDisplay({
   const { partsOrder, separatorMap } = model.productModelSchema;
 
   return (
-    <div className="flex flex-col gap-2 overflow-hidden p-4 lg:gap-3 lg:p-0">
-      <span className="block text-base font-normal text-black lg:text-xl lg:font-bold">
+    <div className="flex flex-col gap-2 overflow-hidden p-4 md:gap-3 md:p-0">
+      <span className="block text-base font-normal text-black md:text-lg md:font-bold xl:text-xl">
         {t("configurator.productModel")}:
       </span>
 
-      <div className="flex max-w-full select-auto items-start gap-3 text-black lg:flex-wrap lg:gap-1 xl:gap-3 overflow-x-auto overflow-y-hidden lg:overflow-hidden">
-        <span className="flex-none border-white bg-white flex items-center justify-center border-2 border-solid p-2 lg:p-1.5 xl:p-4 text-center box-border min-w-[33px] min-h-11 lg:min-w-11 lg:min-h-[62px] xl:min-h-[70px] xl:min-w-[52px] 2xl:min-h-[78px] 2xl:min-w-[57px] font-bold text-lg lg:text-xl 2xl:text-2xl">
+      <div className="flex max-w-full select-auto items-start gap-3 text-black md:flex-wrap md:gap-1 xl:gap-3 overflow-x-auto overflow-y-hidden md:overflow-hidden">
+        <span className="flex-none border-white bg-white flex items-center justify-center border-2 border-solid p-2 md:p-1.5 xl:p-4 text-center box-border min-w-[33px] min-h-11 md:min-w-11 md:min-h-[62px] xl:min-h-[70px] xl:min-w-[52px] 2xl:min-h-[78px] 2xl:min-w-[57px] font-bold text-lg md:text-xl 2xl:text-2xl">
           {baseCode}
         </span>
 
@@ -82,10 +82,10 @@ export function ProductModelDisplay({
                 className={`
                   relative flex-none cursor-pointer transition-all duration-300
                   hover:[&_.edit-box]:opacity-100
-                  flex items-center justify-center border-2 border-solid p-2 lg:p-1.5 xl:p-4
-                  text-center box-border min-w-[33px] min-h-11 lg:min-w-11 lg:min-h-[62px]
+                  flex items-center justify-center border-2 border-solid p-2 md:p-1.5 xl:p-4
+                  text-center box-border min-w-[33px] min-h-11 md:min-w-11 md:min-h-[62px]
                   xl:min-h-[70px] xl:min-w-[52px] 2xl:min-h-[78px] 2xl:min-w-[57px]
-                  font-bold text-lg lg:text-xl 2xl:text-2xl
+                  font-bold text-lg md:text-xl 2xl:text-2xl
                   ${hasValue ? "bg-gray-200 border-black" : "bg-gray-200 border-gray-300"}
                 `}
                 onClick={() => onEditStep(stepId)}
@@ -93,7 +93,7 @@ export function ProductModelDisplay({
                 {value || ""}
 
                 <div className="edit-box absolute inset-0 z-20 flex h-full w-full items-center justify-center bg-black/20 opacity-0 transition-all duration-300">
-                  <span className="flex items-center bg-white p-0.5 text-sm lg:text-sm">
+                  <span className="flex items-center bg-white p-0.5 text-sm">
                     <EditIcon />
                   </span>
                 </div>

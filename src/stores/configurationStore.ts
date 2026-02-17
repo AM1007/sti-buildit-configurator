@@ -8,6 +8,7 @@ import type {
   ModelDefinition,
   SavedConfiguration,
   CustomTextData,
+  ProjectMeta,
 } from "../types";
 import { createEmptyConfiguration, generateSavedConfigurationId } from "../types";
 import { getModelById } from "../data/models";
@@ -30,6 +31,7 @@ interface ConfigurationState {
   customText: CustomTextData | null;
   currentStep: StepId | null;
   myList: SavedConfiguration[];
+  projectMeta: ProjectMeta;
   setModel: (modelId: ModelId) => void;
   clearModel: () => void;
   selectOption: (stepId: StepId, optionId: OptionId) => void;
@@ -43,10 +45,31 @@ interface ConfigurationState {
   clearMyList: () => void;
   loadFromMyList: (id: string) => void;
   loadConfigFromUrl: (modelId: ModelId, config: Configuration, customText: CustomTextData | null) => void;
+  updateItemQty: (id: string, qty: number) => void;
+  updateItemNote: (id: string, note: string) => void;
+  setProjectMeta: (meta: Partial<ProjectMeta>) => void;
   getModel: () => ModelDefinition | null;
   isComplete: () => boolean;
   getMissingSteps: () => StepId[];
   getProductCode: () => string | null;
+}
+
+const DEFAULT_PROJECT_META: ProjectMeta = {
+  projectName: "",
+  clientName: "",
+  createdAt: Date.now(),
+};
+
+/**
+ * Migration: ensure old SavedConfiguration entries without qty/note
+ * get default values when loaded from localStorage.
+ */
+function migrateMyList(myList: SavedConfiguration[]): SavedConfiguration[] {
+  return myList.map((item) => ({
+    ...item,
+    qty: item.qty ?? 1,
+    note: item.note ?? "",
+  }));
 }
 
 export const useConfigurationStore = create<ConfigurationState>()(
@@ -57,6 +80,7 @@ export const useConfigurationStore = create<ConfigurationState>()(
       customText: null,
       currentStep: null,
       myList: [],
+      projectMeta: { ...DEFAULT_PROJECT_META },
 
       setModel: (modelId) => {
         const { currentModelId } = get();
@@ -199,6 +223,8 @@ export const useConfigurationStore = create<ConfigurationState>()(
           customText: customText ?? undefined,
           savedAt: Date.now(),
           name,
+          qty: 1,
+          note: "",
         };
 
         set({ myList: [...myList, savedConfig] });
@@ -210,7 +236,10 @@ export const useConfigurationStore = create<ConfigurationState>()(
       },
 
       clearMyList: () => {
-        set({ myList: [] });
+        set({
+          myList: [],
+          projectMeta: { ...DEFAULT_PROJECT_META, createdAt: Date.now() },
+        });
       },
 
       loadFromMyList: (id) => {
@@ -243,12 +272,10 @@ export const useConfigurationStore = create<ConfigurationState>()(
           return;
         }
 
-        // Validate config - only keep valid step selections
         const validatedConfig: Configuration = {};
         for (const stepId of model.stepOrder) {
           const value = config[stepId];
           if (value !== undefined && value !== null) {
-            // TODO: Could add deeper validation here (check if option exists and is available)
             validatedConfig[stepId] = value;
           }
         }
@@ -259,6 +286,30 @@ export const useConfigurationStore = create<ConfigurationState>()(
           customText: customText,
           currentStep: model.stepOrder[model.stepOrder.length - 1],
         });
+      },
+
+      updateItemQty: (id, qty) => {
+        const { myList } = get();
+        const clamped = Math.max(1, Math.floor(qty));
+        set({
+          myList: myList.map((item) =>
+            item.id === id ? { ...item, qty: clamped } : item
+          ),
+        });
+      },
+
+      updateItemNote: (id, note) => {
+        const { myList } = get();
+        set({
+          myList: myList.map((item) =>
+            item.id === id ? { ...item, note } : item
+          ),
+        });
+      },
+
+      setProjectMeta: (meta) => {
+        const { projectMeta } = get();
+        set({ projectMeta: { ...projectMeta, ...meta } });
       },
 
       getModel: () => {
@@ -291,7 +342,30 @@ export const useConfigurationStore = create<ConfigurationState>()(
     }),
     {
       name: "configurator-storage",
-      partialize: (state) => ({ myList: state.myList }),
+      version: 1,
+      partialize: (state) => ({
+        myList: state.myList,
+        projectMeta: state.projectMeta,
+      }),
+      migrate: (persisted: unknown, version: number) => {
+        const state = persisted as {
+          myList?: SavedConfiguration[];
+          projectMeta?: ProjectMeta;
+        };
+
+        if (version === 0 || !version) {
+          // v0 → v1: add qty/note to old entries, ensure projectMeta exists
+          return {
+            myList: migrateMyList(state.myList ?? []),
+            projectMeta: {
+              ...DEFAULT_PROJECT_META,
+              ...state.projectMeta,
+            },
+          };
+        }
+
+        return state;
+      },
     }
   )
 );
@@ -313,6 +387,9 @@ export const useMyList = () =>
 
 export const useMyListCount = () =>
   useConfigurationStore((state) => state.myList.length);
+
+export const useProjectMeta = () =>
+  useConfigurationStore((state) => state.projectMeta);
 
 export const useIsProductInMyList = (productCode: string | null) =>
   useConfigurationStore((state) => {
