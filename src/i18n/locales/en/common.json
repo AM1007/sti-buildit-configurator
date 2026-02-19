@@ -27,7 +27,9 @@
     "privacy": "Privacy",
     "terms": "Terms",
     "contact": "Contact",
-    "allRightsReserved": "All rights reserved"
+    "allRightsReserved": "All rights reserved",
+    "navigation": "Navigation",
+    "legal": "Legal"
   },
 
   "header": {
@@ -42,12 +44,19 @@
     "heroTitle": "Build It Configurators",
     "heroDescription": "STI's Build It Configurator collection brings together customizable push buttons, call points, protective covers, enclosures, and other activation and protection devices for fire, security, and access-control applications. Each product series includes an interactive configurator that lets you tailor materials, activation methods, mounting options, and protective features to fit your exact requirements.",
     "heroSubtitle": "Build your perfect device",
+    "heroBadge": "Product Configurator",
     "configuratorsTitle": "Choose a configurator",
     "inDevelopment": "In Development"
   },
 
+  "hero": {
+    "startConfig": "Start Configuration",
+    "browseAll": "Browse All Models"
+  },
+
   "filter": {
     "productType": "Product type",
+    "label": "Filter",
     "all": "All",
     "pushButtons": "Push Buttons",
     "callPoints": "Call Points",
@@ -60,9 +69,27 @@
     "keyOperated": "Key Operated",
     "filters": "Filters",
     "filtersActive": "Filters ({count} active)",
-    "showingOf": "Showing {shown} of {total} products",
+    "showingOf": "Showing {shown} of {total}",
     "noResults": "No products match selected filters.",
     "clearFilters": "Clear filters"
+  },
+
+  "grid": {
+    "loadMore": "Load More Models",
+    "showingAll": "Showing All Models"
+  },
+
+  "view": {
+    "grid": "Grid",
+    "list": "List"
+  },
+
+  "tag": {
+    "weatherRated": "Weather Rated",
+    "sounder": "Sounder",
+    "fireAlarm": "Fire Alarm",
+    "resetDevice": "Resettable",
+    "keyOperated": "Key Operated"
   },
 
   "configurator": {

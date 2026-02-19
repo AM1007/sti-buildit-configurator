@@ -1,4 +1,7 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { Menu, X, Star } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
 import { useMyListCount } from "../stores/configurationStore";
 import { useTranslation } from "../i18n";
 import { LanguageSwitcher } from "./LanguageSwitcher";
@@ -18,68 +21,168 @@ export function Layout({ children }: LayoutProps) {
 }
 
 function Header() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const myListCount = useMyListCount();
   const { t } = useTranslation();
+  const location = useLocation();
+
+  const navLinks = [
+    { to: "/", label: t("common.home") },
+    { to: "/my-list", label: t("common.myList"), badge: myListCount },
+  ] as const;
+
+  const isActive = (path: string) => location.pathname === path;
 
   return (
-    <header className="bg-white border-b border-gray-200">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          <Link to="/" className="text-2xl font-bold text-gray-800 hover:text-brand-600">
-            Build <span className="bg-brand-600 text-white px-1">it</span>
-          </Link>
-          <nav className="flex items-center gap-4 md:gap-6">
+    <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/95 backdrop-blur-sm">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 md:px-6 xl:px-8">
+        <Link to="/" className="flex items-center gap-1.5">
+          <div className="h-6 w-6 bg-brand-600" />
+          <span className="text-lg font-semibold tracking-tighter text-slate-900">
+            BUILD<span className="font-normal text-slate-500">IT</span>
+          </span>
+        </Link>
+
+        <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
+          {navLinks.map((link) => (
             <Link
-              to="/"
-              className="text-gray-600 hover:text-brand-600 font-medium text-sm"
+              key={link.to}
+              to={link.to}
+              className={`flex items-center gap-2 transition-colors ${
+                isActive(link.to)
+                  ? "text-slate-900"
+                  : "text-slate-500 hover:text-slate-900"
+              }`}
             >
-              {t("common.home")}
-            </Link>
-            <Link
-              to="/my-list"
-              className="text-gray-600 hover:text-brand-600 font-medium text-sm flex items-center gap-2"
-            >
-              {t("common.myList")}
-              {myListCount > 0 && (
-                <span className="bg-brand-600 text-white text-xs px-2 py-0.5 rounded-full">
-                  {myListCount}
+              {link.label}
+              {"badge" in link && link.badge > 0 && (
+                <span className="flex items-center gap-1 rounded-sm bg-brand-600 px-1.5 py-0.5 text-[10px] font-semibold text-white">
+                  <Star className="h-2.5 w-2.5" />
+                  {link.badge}
                 </span>
               )}
             </Link>
-            <LanguageSwitcher />
-          </nav>
+          ))}
+        </nav>
+
+        <div className="flex items-center gap-3">
+          <LanguageSwitcher />
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen((prev) => !prev)}
+            className="flex md:hidden items-center justify-center h-9 w-9 rounded-sm border border-slate-200 text-slate-600 hover:bg-slate-50"
+            aria-label="Toggle menu"
+            aria-expanded={mobileMenuOpen}
+          >
+            {mobileMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+          </button>
         </div>
       </div>
+
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="overflow-hidden border-t border-slate-200 bg-white md:hidden"
+          >
+            <nav className="flex flex-col px-4 py-3 gap-1">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`flex items-center justify-between rounded-sm px-3 py-2.5 text-sm font-medium transition-colors ${
+                    isActive(link.to)
+                      ? "bg-slate-100 text-slate-900"
+                      : "text-slate-600 hover:bg-slate-50"
+                  }`}
+                >
+                  {link.label}
+                  {"badge" in link && link.badge > 0 && (
+                    <span className="flex items-center gap-1 rounded-sm bg-brand-600 px-1.5 py-0.5 text-[10px] font-semibold text-white">
+                      <Star className="h-2.5 w-2.5" />
+                      {link.badge}
+                    </span>
+                  )}
+                </Link>
+              ))}
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }
 
 function Footer() {
   const { t } = useTranslation();
+  const year = new Date().getFullYear().toString();
 
   return (
-    <footer className="bg-gray-800 text-gray-400 py-8">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="text-xl font-bold text-white">
-            Build <span className="bg-brand-600 px-1">it</span>
+    <footer className="border-t border-slate-200 bg-slate-900 pt-12 pb-8">
+      <div className="mx-auto max-w-7xl px-4 md:px-6 xl:px-8">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-4">
+          <div className="md:col-span-2 xl:col-span-2">
+            <div className="flex items-center gap-1.5 mb-4">
+              <div className="h-5 w-5 bg-brand-600" />
+              <span className="text-base font-semibold tracking-tighter text-white">
+                BUILD<span className="font-normal text-slate-400">IT</span>
+              </span>
+            </div>
+            <p className="max-w-xs text-xs text-slate-400 leading-relaxed">
+              {t("home.heroDescription")}
+            </p>
           </div>
 
-          <p className="text-sm">
-            {t("footer.copyright", { year: new Date().getFullYear().toString() })}
+          <div>
+            <h4 className="mb-4 text-xs font-semibold uppercase tracking-wider text-white">
+              {t("common.navigation")}
+            </h4>
+            <ul className="space-y-3 text-xs text-slate-400">
+              <li>
+                <Link to="/" className="hover:text-white transition-colors">
+                  {t("common.home")}
+                </Link>
+              </li>
+              <li>
+                <Link to="/my-list" className="hover:text-white transition-colors">
+                  {t("common.myList")}
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="mb-4 text-xs font-semibold uppercase tracking-wider text-white">
+              {t("common.legal")}
+            </h4>
+            <ul className="space-y-3 text-xs text-slate-400">
+              <li>
+                <a href="#" className="hover:text-white transition-colors">
+                  {t("common.privacy")}
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-white transition-colors">
+                  {t("common.terms")}
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-white transition-colors">
+                  {t("common.contact")}
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="mt-10 border-t border-slate-800 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-[10px] text-slate-500">
+            {t("footer.copyright", { year })}
           </p>
-
-          <div className="flex gap-4 text-sm">
-            <a href="#" className="hover:text-white">
-              {t("common.privacy")}
-            </a>
-            <a href="#" className="hover:text-white">
-              {t("common.terms")}
-            </a>
-            <a href="#" className="hover:text-white">
-              {t("common.contact")}
-            </a>
-          </div>
         </div>
       </div>
     </footer>

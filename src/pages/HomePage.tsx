@@ -1,3 +1,6 @@
+import { useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowRight, ChevronDown } from "lucide-react";
 import { allConfigurators } from "../data/catalog";
 import { ConfiguratorCard } from "../components/ConfiguratorCard";
 import { PrimaryNavigation } from "../components/PrimaryNavigation";
@@ -8,57 +11,110 @@ import { useTranslation } from "../i18n";
 
 export function HomePage() {
   const { t } = useTranslation();
+  const catalogRef = useRef<HTMLElement>(null);
   const {
     state,
+    displayed,
     filtered,
     chipCounts,
+    viewMode,
+    isPaginated,
+    hasMore,
     setPrimary,
     toggleFunctional,
     clearFilters,
+    setViewMode,
+    loadMore,
+    togglePagination,
   } = useFilterState(allConfigurators);
 
+  const scrollToCatalog = () => {
+    catalogRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      <section className="relative flex min-h-106.5 items-center py-10 md:py-12 xl:min-h-145">
-        <img
-          alt=""
-          src="/hero.avif"
-          className="absolute inset-0 z-0 hidden h-full w-full object-cover md:block"
-        />
-        <img
-          alt=""
-          src="/hero-portrait.avif"
-          className="absolute inset-0 z-0 block h-full w-full object-cover md:hidden"
-        />
-
-        <span className="absolute inset-0 z-1 h-full w-full bg-black/60" />
-
-        <div className="container relative z-10 mx-auto px-4 md:px-6 xl:px-8">
-          <div className="mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-5 md:gap-10 xl:grid-cols-[1.5fr_1fr] xl:gap-16 2xl:gap-24">
-            <div className="order-2 flex flex-col gap-5 overflow-hidden wrap-break-word text-center xl:order-1 xl:gap-8 xl:text-left">
-              <h1 className="max-w-185 text-4xl font-bold text-white md:text-5xl xl:text-6xl">
-                {t("home.heroTitle")}
-              </h1>
-              <p className="text-base font-normal text-white md:text-lg xl:text-xl">
-                {t("home.heroDescription")}
-              </p>
+    <div className="min-h-screen bg-slate-50">
+      <section className="relative border-b border-slate-200 bg-white">
+        <div className="mx-auto grid max-w-7xl grid-cols-1 md:grid-cols-2">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            className="flex flex-col justify-center px-4 py-12 md:px-6 md:py-16 xl:px-8 xl:py-24"
+          >
+            <div className="mb-6 inline-flex w-fit items-center gap-2 rounded-sm bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
+              <span className="h-1.5 w-1.5 rounded-full bg-brand-600" />
+              {t("home.heroBadge")}
             </div>
 
-            <div className="relative order-1 h-fit overflow-hidden xl:order-2">
-              <img
-                alt="Build It Configurator Device"
-                src="/hero-device.webp"
-                width={800}
-                height={800}
-                className="block h-full w-full object-contain"
-              />
+            <h1 className="mb-4 text-3xl font-semibold tracking-tight text-slate-900 md:text-4xl xl:text-5xl">
+              {t("home.heroTitle")}
+            </h1>
+
+            <p className="mb-8 max-w-md text-base text-slate-500 md:text-lg">
+              {t("home.heroDescription")}
+            </p>
+
+            <div className="flex flex-col gap-3 md:flex-row">
+              <button
+                type="button"
+                onClick={scrollToCatalog}
+                className="inline-flex h-10 items-center justify-center gap-2 rounded-sm bg-brand-600 px-6 text-sm font-medium text-white transition-colors hover:bg-brand-700"
+              >
+                {t("hero.startConfig")}
+                <ArrowRight className="h-4 w-4" />
+              </button>
+              <button
+                type="button"
+                onClick={scrollToCatalog}
+                className="inline-flex h-10 items-center justify-center gap-2 rounded-sm border border-slate-200 bg-white px-6 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 hover:border-slate-300"
+              >
+                {t("hero.browseAll")}
+              </button>
             </div>
-          </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.15, ease: "easeOut" }}
+            className="relative hidden min-h-[300px] items-center justify-center overflow-hidden border-l border-slate-200 bg-slate-50 tech-grid md:flex"
+          >
+            <div className="relative flex h-64 w-64 flex-col border border-slate-300 bg-white/50 p-4 shadow-sm backdrop-blur-sm xl:h-80 xl:w-80">
+              <div className="mb-4 flex justify-between border-b border-slate-200 pb-2">
+                <div className="h-2 w-12 rounded-sm bg-slate-200" />
+                <div className="h-2 w-4 rounded-sm bg-slate-200" />
+              </div>
+              <div className="flex flex-1 items-center justify-center border border-dashed border-slate-300 bg-slate-50">
+                <img
+                  alt="STI Configurator Device"
+                  src="/hero-device.webp"
+                  width={200}
+                  height={200}
+                  className="h-auto w-3/4 object-contain"
+                />
+              </div>
+              <div className="mt-4 grid grid-cols-2 gap-2">
+                <div className="h-2 w-full rounded-sm bg-slate-200" />
+                <div className="h-2 w-full rounded-sm bg-slate-200" />
+              </div>
+              <div className="absolute -right-8 top-0 flex h-full w-px items-center justify-center bg-slate-300">
+                <span className="-rotate-90 bg-slate-50 px-1 font-mono text-[10px] text-slate-400">
+                  240mm
+                </span>
+              </div>
+              <div className="absolute -bottom-8 left-0 flex h-px w-full items-center justify-center bg-slate-300">
+                <span className="bg-slate-50 px-1 font-mono text-[10px] text-slate-400">
+                  180mm
+                </span>
+              </div>
+            </div>
+          </motion.div>
         </div>
       </section>
 
-      <section className="py-8 md:py-12">
-        <div className="mx-auto w-full max-w-301.5 px-4 md:px-6 xl:px-8">
+      <section ref={catalogRef} className="py-8 md:py-12">
+        <div className="mx-auto w-full max-w-7xl px-4 md:px-6 xl:px-8">
           <div className="flex flex-col gap-4 mb-6">
             <PrimaryNavigation value={state.primary} onChange={setPrimary} />
 
@@ -69,18 +125,59 @@ export function HomePage() {
                 onToggle={toggleFunctional}
               />
               <ResultCounter
-                shown={filtered.length}
-                total={allConfigurators.length}
+                shown={displayed.length}
+                total={filtered.length}
+                viewMode={viewMode}
+                onViewModeChange={setViewMode}
+                isPaginated={isPaginated}
+                onTogglePagination={togglePagination}
               />
             </div>
           </div>
 
           {filtered.length > 0 ? (
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 md:gap-6 xl:gap-8">
-              {filtered.map((config) => (
-                <ConfiguratorCard key={config.id} config={config} />
-              ))}
-            </div>
+            <>
+              {viewMode === "grid" ? (
+                <div className="grid grid-cols-1 gap-px border border-slate-200 bg-slate-200 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+                  <AnimatePresence mode="popLayout">
+                    {displayed.map((config, i) => (
+                      <ConfiguratorCard
+                        key={config.id}
+                        config={config}
+                        index={i}
+                        viewMode="grid"
+                      />
+                    ))}
+                  </AnimatePresence>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-px border border-slate-200 bg-slate-200">
+                  <AnimatePresence mode="popLayout">
+                    {displayed.map((config, i) => (
+                      <ConfiguratorCard
+                        key={config.id}
+                        config={config}
+                        index={i}
+                        viewMode="list"
+                      />
+                    ))}
+                  </AnimatePresence>
+                </div>
+              )}
+
+              {hasMore && (
+                <div className="mt-8 flex justify-center">
+                  <button
+                    type="button"
+                    onClick={loadMore}
+                    className="flex items-center gap-2 rounded-sm border border-slate-200 bg-white px-6 py-2 text-xs font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:border-slate-300 cursor-pointer"
+                  >
+                    {t("grid.loadMore")}
+                    <ChevronDown className="h-3 w-3" />
+                  </button>
+                </div>
+              )}
+            </>
           ) : (
             <EmptyState onClear={clearFilters} />
           )}

@@ -1,10 +1,23 @@
 import { Link } from "react-router-dom";
-import type { ConfiguratorMeta, ColourId } from "../data/catalog";
+import { motion } from "framer-motion";
+import {
+  CloudRain,
+  Volume2,
+  Flame,
+  RotateCcw,
+  KeyRound,
+} from "lucide-react";
+import type { ConfiguratorMeta, ColourId, FunctionalTag } from "../data/catalog";
 import { useTranslation } from "../i18n";
 import { useModelTranslations } from "../hooks/useModelTranslations";
+import { getSkuPrefix } from "../utils/getSkuPrefix";
+
+type ViewMode = "grid" | "list";
 
 interface ConfiguratorCardProps {
   config: ConfiguratorMeta;
+  index?: number;
+  viewMode?: ViewMode;
 }
 
 const COLOUR_MAP: Record<ColourId, string> = {
@@ -17,95 +30,163 @@ const COLOUR_MAP: Record<ColourId, string> = {
   clear: "transparent",
 };
 
-export function ConfiguratorCard({ config }: ConfiguratorCardProps) {
+const TAG_SPEC: Record<FunctionalTag, { icon: React.ComponentType<{ className?: string }>; labelKey: string }> = {
+  "weather-rated": { icon: CloudRain, labelKey: "tag.weatherRated" },
+  "sounder": { icon: Volume2, labelKey: "tag.sounder" },
+  "fire-alarm": { icon: Flame, labelKey: "tag.fireAlarm" },
+  "reset-device": { icon: RotateCcw, labelKey: "tag.resetDevice" },
+  "key-operated": { icon: KeyRound, labelKey: "tag.keyOperated" },
+};
+
+const FUNCTIONAL_TAG_SET = new Set<string>(Object.keys(TAG_SPEC));
+
+export function ConfiguratorCard({ config, index = 0, viewMode = "grid" }: ConfiguratorCardProps) {
   const { t } = useTranslation();
   const { meta } = useModelTranslations(config.slug);
   const href = `/configurator/${config.slug}`;
-
   const displayDescription = meta?.heroTitle ?? config.description;
+  const skuPrefix = getSkuPrefix(config.slug);
+  const functionalTags = config.tags.filter((tag) => FUNCTIONAL_TAG_SET.has(tag)) as FunctionalTag[];
+
+  if (viewMode === "list") {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: index * 0.03 }}
+      >
+        <Link to={href} aria-label={config.name} className="block">
+          <article className="group flex items-center gap-6 bg-white p-4 transition-shadow duration-200 hover:z-10 md:p-6">
+            <div className="flex h-24 w-24 shrink-0 items-center justify-center bg-slate-50/50 md:h-28 md:w-28">
+              <img
+                alt={`${config.name} featured product model`}
+                loading="lazy"
+                width="112"
+                height="112"
+                decoding="async"
+                className="h-full w-full object-contain p-2"
+                src={config.imagePath}
+              />
+            </div>
+
+            <div className="flex flex-1 flex-col gap-1.5 overflow-hidden">
+              <div className="flex items-center gap-3">
+                <span className="font-mono text-[10px] text-slate-400">{skuPrefix}</span>
+                {config.colours && config.colours.length > 0 && (
+                  <div className="flex items-center gap-0.5">
+                    {config.colours.map((colour) => (
+                      <div
+                        key={colour}
+                        className="h-2.5 w-2.5 border border-slate-200"
+                        style={{ backgroundColor: COLOUR_MAP[colour] }}
+                        title={colour}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <h3 className="text-sm font-semibold text-slate-900 group-hover:text-brand-600 transition-colors truncate">
+                {config.name}
+              </h3>
+
+              <p className="text-xs text-slate-500 line-clamp-1">
+                {displayDescription}
+              </p>
+
+              {functionalTags.length > 0 && (
+                <div className="flex items-center gap-3">
+                  {functionalTags.map((tag) => {
+                    const spec = TAG_SPEC[tag];
+                    const Icon = spec.icon;
+                    return (
+                      <div key={tag} className="flex items-center gap-1 text-[10px] text-slate-400">
+                        <Icon className="h-3 w-3" />
+                        {t(spec.labelKey)}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            <div className="hidden md:block shrink-0">
+              <span className="inline-flex items-center rounded-sm bg-slate-900 px-4 py-2 text-xs font-semibold text-white transition-colors group-hover:bg-brand-600">
+                {t("card.buildYourModel")}
+              </span>
+            </div>
+          </article>
+        </Link>
+      </motion.div>
+    );
+  }
 
   return (
-    <Link to={href} aria-label={config.name} className="block">
-      <article className="group/primary-card flex h-full flex-col justify-between bg-white transition-all duration-300 hover:drop-shadow-xl">
-        <div className="relative flex-1 border-2 border-b-0 border-solid border-gray-200 transition-all group-hover/primary-card:border-transparent">
-          <div className="relative h-auto w-full px-11 py-8 md:px-12">
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, delay: index * 0.04 }}
+    >
+      <Link to={href} aria-label={config.name} className="block h-full">
+        <article className="group relative flex h-full flex-col bg-white p-6 transition-shadow duration-200 hover:z-10">
+          <div className="mb-2 flex items-center justify-between">
+            <span className="font-mono text-[10px] text-slate-400">{skuPrefix}</span>
+            {config.colours && config.colours.length > 0 && (
+              <div className="flex items-center gap-0.5">
+                {config.colours.map((colour) => (
+                  <div
+                    key={colour}
+                    className="h-2.5 w-2.5 border border-slate-200"
+                    style={{ backgroundColor: COLOUR_MAP[colour] }}
+                    title={colour}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="mb-4 flex items-center justify-center py-4 bg-slate-50/50 md:py-6">
             <img
               alt={`${config.name} featured product model`}
               loading="lazy"
               width="600"
               height="600"
               decoding="async"
-              className="w-full md:object-cover"
+              className="h-auto w-full object-contain px-4 md:px-6"
               src={config.imagePath}
             />
           </div>
 
-          <div className="flex flex-1 flex-col gap-1 px-4 pb-3 pt-4 md:py-4">
-            <h3 className="font-bold text-lg md:text-xl flex min-h-11 w-full items-center text-black md:min-h-17">
-              <span className="line-clamp-2 w-full text-left">{config.name}</span>
-            </h3>
+          <h3 className="text-sm font-semibold text-slate-900 group-hover:text-brand-600 transition-colors">
+            {config.name}
+          </h3>
 
-            <span className="font-normal text-sm md:text-base line-clamp-2 min-h-12 text-left text-gray-500">
-              {displayDescription}
+          <p className="mt-1 mb-4 text-xs leading-relaxed text-slate-500 line-clamp-2">
+            {displayDescription}
+          </p>
+
+          <div className="mt-auto">
+            {functionalTags.length > 0 && (
+              <div className="mb-4 flex flex-wrap items-center gap-3 border-t border-slate-100 pt-3">
+                {functionalTags.map((tag) => {
+                  const spec = TAG_SPEC[tag];
+                  const Icon = spec.icon;
+                  return (
+                    <div key={tag} className="flex items-center gap-1 text-[10px] text-slate-400">
+                      <Icon className="h-3 w-3" />
+                      {t(spec.labelKey)}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            <span className="block w-full rounded-sm bg-brand-600 py-2 text-center text-xs font-semibold text-white transition-colors group-hover:bg-brand-700">
+              {t("card.buildYourModel")}
             </span>
-
-            <div className="grid grid-cols-1 gap-0.5 text-gray-500">
-              {config.features && config.features.length > 0 && (
-                <div className="flex items-center justify-start gap-2 py-0.5">
-                  <span className="font-normal text-sm">{t("card.features")}:</span>
-                  <div className="flex gap-2">
-                    {config.features.map((feature) => (
-                      <img
-                        key={feature}
-                        alt={`${feature} feature`}
-                        loading="lazy"
-                        width="16"
-                        height="16"
-                        decoding="async"
-                        src={`/icons/${feature}.webp`}
-                      />
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {config.colours && config.colours.length > 0 && (
-                <div className="font-normal text-sm flex items-center justify-start gap-2 py-0.5">
-                  {t("card.colours")}:
-                  <div className="flex items-center gap-1">
-                    {config.colours.map((colour) => (
-                      <div
-                        key={colour}
-                        className="block h-4 w-4 overflow-hidden border border-solid border-gray-200"
-                        style={{ backgroundColor: COLOUR_MAP[colour] }}
-                        title={colour}
-                      />
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
           </div>
-        </div>
-
-        <span className="cursor-pointer inline-flex items-center justify-center relative ring-offset-0 transition-all duration-300 ease-in-out focus-visible:outline-none box-border font-bold text-base gap-1.5 px-5 py-1 min-h-10 border-4 md:gap-2.5 md:px-7 md:py-3 md:min-h-14 xl:text-lg bg-brand-600 border-brand-600 text-white hover:bg-brand-700 hover:border-brand-700 w-full">
-          {t("card.buildYourModel")}
-          <span className="inline-grid leading-none text-inherit">
-            <ArrowRightIcon />
-          </span>
-        </span>
-      </article>
-    </Link>
-  );
-}
-
-function ArrowRightIcon() {
-  return (
-    <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path
-        d="M5 11C4.44772 11 4 11.4477 4 12C4 12.5523 4.44772 13 5 13L5 11ZM19.7071 12.7071C20.0976 12.3166 20.0976 11.6834 19.7071 11.2929L13.3431 4.92893C12.9526 4.53841 12.3195 4.53841 11.9289 4.92893C11.5384 5.31946 11.5384 5.95262 11.9289 6.34315L17.5858 12L11.9289 17.6569C11.5384 18.0474 11.5384 18.6805 11.9289 19.0711C12.3195 19.4616 12.9526 19.4616 13.3431 19.0711L19.7071 12.7071ZM5 13L19 13L19 11L5 11L5 13Z"
-        fill="currentColor"
-      />
-    </svg>
+        </article>
+      </Link>
+    </motion.div>
   );
 }

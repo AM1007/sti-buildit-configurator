@@ -7,8 +7,15 @@ import {
   computeChipCounts,
 } from "../utils/filterProducts";
 
+type ViewMode = "grid" | "list";
+
+const PAGE_SIZE = 8;
+
 export function useFilterState(all: ConfiguratorMeta[]) {
   const [state, setState] = useState<FilterState>(createInitialFilterState);
+  const [viewMode, setViewMode] = useState<ViewMode>("grid");
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const [isPaginated, setIsPaginated] = useState(true);
 
   const filtered = useMemo(
     () => filterConfigurators(all, state),
@@ -22,6 +29,8 @@ export function useFilterState(all: ConfiguratorMeta[]) {
 
   const setPrimary = useCallback((tag: PrimaryTag | "all") => {
     setState((prev) => ({ ...prev, primary: tag }));
+    setVisibleCount(PAGE_SIZE);
+    setIsPaginated(true);
   }, []);
 
   const toggleFunctional = useCallback((tag: FunctionalTag) => {
@@ -34,21 +43,52 @@ export function useFilterState(all: ConfiguratorMeta[]) {
       }
       return { ...prev, functional: next };
     });
+    setVisibleCount(PAGE_SIZE);
+    setIsPaginated(true);
   }, []);
 
   const clearFilters = useCallback(() => {
     setState(createInitialFilterState());
+    setVisibleCount(PAGE_SIZE);
+    setIsPaginated(true);
+  }, []);
+
+  const loadMore = useCallback(() => {
+    setVisibleCount((prev) => prev + PAGE_SIZE);
+  }, []);
+
+  const showAll = useCallback(() => {
+    setIsPaginated(false);
+  }, []);
+
+  const togglePagination = useCallback(() => {
+    setIsPaginated((prev) => {
+      if (prev) return false;
+      setVisibleCount(PAGE_SIZE);
+      return true;
+    });
   }, []);
 
   const hasActiveFilters = state.primary !== "all" || state.functional.size > 0;
 
+  const displayed = isPaginated ? filtered.slice(0, visibleCount) : filtered;
+  const hasMore = isPaginated && visibleCount < filtered.length;
+
   return {
     state,
     filtered,
+    displayed,
     chipCounts,
     hasActiveFilters,
+    viewMode,
+    isPaginated,
+    hasMore,
     setPrimary,
     toggleFunctional,
     clearFilters,
+    setViewMode,
+    loadMore,
+    showAll,
+    togglePagination,
   };
 }

@@ -3,17 +3,20 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-"scripts": {
-  "dev": "vite",
-  "build": "tsc -b && vite build",
-  "build:staging": "tsc -b && vite build --mode staging",
-  "preview": "vite preview",
-  "lint": "eslint .",
-  "typecheck": "tsc --noEmit"
-},
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "build:staging": "tsc -b && vite build --mode staging",
+    "preview": "vite preview",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
+  },
   "dependencies": {
     "@react-pdf/renderer": "^4.3.2",
+    "clsx": "^2.1.1",
+    "framer-motion": "^12.34.1",
     "izitoast": "^1.4.0",
+    "lucide-react": "^0.574.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-router-dom": "^7.10.1",
