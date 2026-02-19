@@ -32,6 +32,12 @@ export function HomePage() {
     catalogRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const clearFunctionalFilters = () => {
+    for (const tag of state.functional) {
+      toggleFunctional(tag);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-slate-50">
       <section className="relative border-b border-slate-200 bg-white">
@@ -115,14 +121,30 @@ export function HomePage() {
 
       <section ref={catalogRef} className="py-8 md:py-12">
         <div className="mx-auto w-full max-w-7xl px-4 md:px-6 xl:px-8">
-          <div className="flex flex-col gap-4 mb-6">
-            <PrimaryNavigation value={state.primary} onChange={setPrimary} />
-
-            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <div className="sticky top-16 z-40 -mx-4 border-b border-slate-200 bg-slate-50 px-4 py-3 md:hidden">
+            <div className="flex items-center gap-3">
+              <PrimaryNavigation value={state.primary} onChange={setPrimary} />
               <FunctionalFilters
                 selected={state.functional}
                 counts={chipCounts}
                 onToggle={toggleFunctional}
+                onClear={clearFunctionalFilters}
+              />
+              <span className="ml-auto text-[10px] font-medium text-slate-400 whitespace-nowrap">
+                {displayed.length}/{filtered.length}
+              </span>
+            </div>
+          </div>
+
+          <div className="hidden md:flex md:flex-col md:gap-4 md:mb-6">
+            <PrimaryNavigation value={state.primary} onChange={setPrimary} />
+
+            <div className="flex items-center justify-between">
+              <FunctionalFilters
+                selected={state.functional}
+                counts={chipCounts}
+                onToggle={toggleFunctional}
+                onClear={clearFunctionalFilters}
               />
               <ResultCounter
                 shown={displayed.length}

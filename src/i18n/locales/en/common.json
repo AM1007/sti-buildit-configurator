@@ -57,6 +57,8 @@
   "filter": {
     "productType": "Product type",
     "label": "Filter",
+    "type": "Type",
+    "specs": "Specs",
     "all": "All",
     "pushButtons": "Push Buttons",
     "callPoints": "Call Points",

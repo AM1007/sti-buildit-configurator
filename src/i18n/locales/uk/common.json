@@ -57,6 +57,8 @@
   "filter": {
     "productType": "Тип продукту",
     "label": "Фільтр",
+    "type": "Тип",
+    "specs": "Хар-ки",
     "all": "Усі",
     "pushButtons": "Кнопки",
     "callPoints": "Сповіщувачі",
