@@ -2,8 +2,10 @@
   "meta": {
     "name": "Global ReSet®",
     "description": "Resettable call point",
-    "heroTitle": "Large Re-settable Manual Call Point for Global Use",
-    "heroDescription": "A re-settable UL fire alarm call point that simulates break glass activation with no broken glass. Versatile mounting plate fits to U.S., European (GLR models only), double-gang and single-gang mounting boxes, making it quick and easy to install. When activated an indicator drops into view. Simple reset with the provided key for immediate re-use. Housing is available in five colours for the fire alarm call point. Key-to-Reset DPDT with 2 Form C contacts.\n\n<strong>MOUNTING</strong> - Global Resets (GLR models only) are supplied as flush mount only. Back boxes are available for surface mount applications."
+    "series": "Global ReSet Series",
+    "badges": ["UL Listed", "Resettable", "Fire Safety"],
+    "heroTitle": "Resettable Manual Call Point for Global Mounting Standards",
+    "heroDescription": "UL-listed resettable fire alarm call point that simulates break-glass activation without broken glass. Key-to-Reset DPDT with 2 Form C contacts and visible activation indicator.\nUniversal mounting plate compatible with U.S., European (GLR models), double-gang and single-gang boxes. Available in five housing colours with custom labelling.\nDesigned for fire alarm systems requiring rapid reset capability across multiple regional installation standards.\n\n<strong>MOUNTING</strong> — Global ReSet (GLR models only) are supplied as flush mount only. Back boxes are available for surface mount applications."
   },
   "steps": {
     "colour": {

@@ -2,8 +2,10 @@
   "meta": {
     "name": "Call Point Stopper",
     "description": "Protective cover for call points",
-    "heroTitle": "Inexpensive Cover with Spring Loaded Hinge",
-    "heroDescription": "The Call Point Stopper is a UV-stabilised polycarbonate cover which protects a wide range of electrical switches and call points, without restricting legitimate operation. The Call Point Stopper is ideal for shopping centres, hotels, schools, colleges, hospitals, nursing homes and all public buildings where there is a risk of accidental activation."
+    "series": "STI-6900 Series",
+    "badges": ["CE Marked", "UV Stabilised"],
+    "heroTitle": "Spring-Hinged Polycarbonate Protective Cover",
+    "heroDescription": "UV-stabilised polycarbonate cover designed to protect electrical switches and manual call points without restricting legitimate operation.\nAvailable in six colours with multiple label and mounting options.\nSuitable for public buildings, schools, hospitals, hotels and commercial environments where accidental activation is a concern."
   },
   "steps": {
     "colour": {

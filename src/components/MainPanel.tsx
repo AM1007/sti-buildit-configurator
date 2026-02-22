@@ -1,14 +1,15 @@
 import { useState, useEffect } from "react";
 import { ClipLoader } from "react-spinners";
-import type { Configuration, ProductModel, ModelDefinition, StepId, CustomTextData,  } from "../types";
+import { SlidersHorizontal, FileCode, Box, FileText } from "lucide-react";
+import type { Configuration, ProductModel, ModelDefinition, StepId, CustomTextData } from "../types";
 import { ProductPreview } from "./ProductPreview";
-import { ProductModelDisplay } from "./ProductModelDisplay";
 import { ActionButtons } from "./ActionButtons";
 import { CustomTextForm } from "./CustomTextForm";
 import { getCompletedDeviceImage } from "../utils/getCompletedDeviceImage";
+import { getModelDescription } from "../utils/getModelDescription";
 import { shouldShowCustomTextForm, getCustomTextConfig, getMaxLength, getEffectiveLineCount, isConfigurationReadyForActions } from "../utils/customTextHelpers";
 import { getHeroContent } from "../data/heroContent";
-import { useTranslation } from "../i18n";
+import { useTranslation, useLanguage } from "../i18n";
 
 type TabId = "edit" | "preview";
 
@@ -42,7 +43,9 @@ export function MainPanel({
   className = "",
 }: MainPanelProps) {
   const { t } = useTranslation();
+  const { lang } = useLanguage();
   const [activeTab, setActiveTab] = useState<TabId>("edit");
+  const [modelDescription, setModelDescription] = useState<string | null>(null);
 
   const showCustomTextForm = shouldShowCustomTextForm(model, config, customText);
   const customTextConfig = getCustomTextConfig(model.id);
@@ -68,6 +71,27 @@ export function MainPanel({
     }
   }, [productModel.isComplete, showCustomTextForm, customText?.submitted]);
 
+  useEffect(() => {
+    let cancelled = false;
+
+    if (productModel.isComplete) {
+      const currentLang = lang as "en" | "uk";
+      getModelDescription(productModel.fullCode, model.id, currentLang).then(
+        (desc) => {
+          if (!cancelled) {
+            setModelDescription(desc);
+          }
+        }
+      );
+    } else {
+      setModelDescription(null);
+    }
+
+    return () => {
+      cancelled = true;
+    };
+  }, [productModel.isComplete, productModel.fullCode, model.id, lang]);
+
   const handleCustomTextSubmit = (data: Omit<CustomTextData, "submitted">) => {
     onCustomTextSubmit(data);
     setActiveTab("preview");
@@ -82,16 +106,15 @@ export function MainPanel({
 
   const getFormMaxLength = (): number => {
     if (!customTextConfig) return 20;
-    
+
     const effectiveLineCount = getEffectiveLineCount(
       customTextConfig.variant,
       customText?.lineCount ?? 2
     );
-    
+
     return getMaxLength(model.id, effectiveLineCount);
   };
 
-  // Shared action buttons props
   const actionButtonsProps = {
     productModel,
     modelId: model.id,
@@ -108,39 +131,51 @@ export function MainPanel({
     productImageUrl: imagePath,
   };
 
+  const configuredStatus = productModel.isComplete;
+
   return (
-    <div className={`h-full w-full ${className}`}>
-      <div className="flex h-fit flex-col gap-8 p-5 md:p-8 xl:sticky xl:top-0 xl:gap-16 xl:p-10 2xl:gap-20 2xl:p-16">
-        <div className="w-full xl:min-h-144">
-          <div className="inline-flex items-center justify-center h-auto gap-6 rounded-none bg-white p-0 text-black xl:gap-10">
+    <div className={`flex flex-col ${className}`}>
+      <div className="flex min-h-[600px] flex-1 flex-col overflow-hidden rounded-sm border border-slate-200 bg-white shadow-sm">
+        <div className="border-b border-slate-200">
+          <div className="flex">
             <button
               type="button"
               onClick={() => setActiveTab("edit")}
               className={`
-                inline-flex items-center justify-center whitespace-nowrap px-3 py-1.5
-                text-sm font-medium transition-all focus-visible:outline-none
-                rounded-none bg-white p-0 shadow-none outline-0 ring-0
-                ${activeTab === "edit" ? "text-brand-600" : "text-black"}
+                relative px-5 py-3 text-sm font-medium transition-colors
+                ${activeTab === "edit"
+                  ? "text-slate-900"
+                  : "text-slate-400 hover:text-slate-600"
+                }
               `}
             >
-              <span className="font-bold text-sm md:text-base xl:text-lg">{t("configurator.editSelections")}</span>
+              {t("configurator.editSelections")}
+              {activeTab === "edit" && (
+                <span className="absolute bottom-0 left-0 h-0.5 w-full bg-brand-600" />
+              )}
             </button>
             <button
               type="button"
               onClick={() => setActiveTab("preview")}
               className={`
-                inline-flex items-center justify-center whitespace-nowrap px-3 py-1.5
-                text-sm font-medium transition-all focus-visible:outline-none
-                rounded-none bg-white p-0 shadow-none outline-0 ring-0
-                ${activeTab === "preview" ? "text-brand-600" : "text-black"}
+                relative px-5 py-3 text-sm font-medium transition-colors
+                ${activeTab === "preview"
+                  ? "text-slate-900"
+                  : "text-slate-400 hover:text-slate-600"
+                }
               `}
             >
-              <span className="font-bold text-sm md:text-base xl:text-lg">{t("configurator.productPreview")}</span>
+              {t("configurator.productPreview")}
+              {activeTab === "preview" && (
+                <span className="absolute bottom-0 left-0 h-0.5 w-full bg-brand-600" />
+              )}
             </button>
           </div>
+        </div>
 
+        <div className="relative flex-1">
           {activeTab === "edit" && (
-            <div className="mt-10">
+            <div className="p-5 md:p-8">
               {showCustomTextForm && customTextConfig ? (
                 <CustomTextForm
                   variant={customTextConfig.variant}
@@ -159,50 +194,81 @@ export function MainPanel({
           )}
 
           {activeTab === "preview" && (
-            <div className="mt-10">
+            <div className="flex flex-1 flex-col">
               {imagePath ? (
                 <ProductPreviewContent
                   imagePath={imagePath}
                   productCode={productModel.fullCode}
                 />
               ) : (
-                <NoPreviewContent reason={reason} />
+                <EmptyStateContent reason={reason} />
               )}
             </div>
           )}
         </div>
 
-        {/* Actions — always visible */}
-        <div className="flex w-full flex-wrap items-center justify-center gap-2 md:items-start md:gap-6">
-          <ActionButtons {...actionButtonsProps} />
+        <div className="flex items-center justify-between border-t border-slate-200 p-3 font-mono text-[10px] text-slate-400">
+          <div className="flex gap-4">
+            <span>SCALE: 1:1</span>
+            <span>UNIT: MM</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span
+              className={`h-2 w-2 rounded-full ${
+                configuredStatus ? "bg-green-400" : "bg-slate-300"
+              }`}
+            />
+            {configuredStatus ? "CONFIGURED" : "WAITING FOR INPUT"}
+          </div>
         </div>
+      </div>
 
-        <ProductModelDisplay
-          model={model}
-          productModel={productModel}
-          config={config}
-          onEditStep={onEditStep}
-        />
+      {modelDescription && (
+        <div className="mt-4 rounded-sm border border-slate-200 bg-white p-5 shadow-sm">
+          <span className="mb-2 block text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+            {t("configurator.modelDescription", { defaultValue: "Model Description" })}
+          </span>
+          <p className="text-sm leading-relaxed text-slate-600">
+            {modelDescription}
+          </p>
+        </div>
+      )}
+
+      <div className="mt-4">
+        <ActionButtons {...actionButtonsProps} />
       </div>
     </div>
   );
 }
 
-interface NoPreviewContentProps {
-  reason?: string;
-}
-
-function NoPreviewContent({ reason }: NoPreviewContentProps) {
+function EmptyStateContent({ reason }: { reason?: string }) {
   const { t } = useTranslation();
 
   return (
-    <div className="flex w-full flex-col items-center gap-11 py-16 text-center text-gray-500">
-      <p className="font-medium text-base md:text-md whitespace-pre-line">
-        {t("configurator.previewNotAvailable")}
-      </p>
-      <p className="font-normal text-base md:text-md">
+    <div className="tech-grid flex flex-1 flex-col items-center justify-center p-12 text-center">
+      <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-full border border-slate-200 bg-slate-50 shadow-sm">
+        <SlidersHorizontal className="h-10 w-10 text-slate-300" strokeWidth={1} />
+      </div>
+      <h3 className="mb-2 text-lg font-semibold text-slate-900">
+        {t("configurator.previewNotAvailable", { defaultValue: "Select a configuration to begin" })}
+      </h3>
+      <p className="mb-8 max-w-sm text-sm leading-relaxed text-slate-500">
         {reason || t("configurator.completeSelections")}
       </p>
+      <div className="flex items-center gap-3 border-t border-slate-200 pt-6 font-mono text-xs text-slate-400">
+        <span className="flex items-center gap-1">
+          <FileCode className="h-3 w-3" />
+          STEP
+        </span>
+        <span className="flex items-center gap-1">
+          <Box className="h-3 w-3" />
+          DWG
+        </span>
+        <span className="flex items-center gap-1">
+          <FileText className="h-3 w-3" />
+          PDF
+        </span>
+      </div>
     </div>
   );
 }
@@ -228,29 +294,31 @@ function ProductPreviewContent({
   }
 
   return (
-    <div className="flex w-full flex-col gap-10 py-5">
+    <div className="tech-grid flex flex-1 flex-col items-center justify-center p-5 md:p-8">
       {hasError ? (
-        <div className="flex w-full flex-col items-center gap-11 py-16 text-center text-gray-500">
-          <p className="font-medium text-base md:text-md whitespace-pre-line">
+        <div className="flex w-full flex-col items-center gap-4 py-16 text-center">
+          <p className="text-sm font-medium text-slate-500">
             {t("configurator.previewNotAvailable")}
           </p>
-          <p className="font-normal text-base md:text-md">
+          <p className="text-xs text-slate-400">
             {t("configurator.imageFailedToLoad")}
           </p>
         </div>
       ) : (
-        <div className="mx-auto max-w-120 w-full min-h-[600px] flex items-center justify-center">
+        <div className="relative mx-auto flex w-full max-w-md items-center justify-center md:max-w-lg">
           {isLoading && (
             <div className="absolute inset-0 flex items-center justify-center">
-              <ClipLoader color="#c8102e" size={50} />
+              <ClipLoader color="#c8102e" size={40} />
             </div>
           )}
           <img
-            alt={`Image of ${productCode}`}
+            alt={`${productCode}`}
             loading="lazy"
             width="600"
             height="600"
-            className={`select-none object-contain w-full h-auto ${isLoading ? "opacity-0" : "opacity-100"}`}
+            className={`w-full select-none object-contain transition-opacity duration-300 ${
+              isLoading ? "opacity-0" : "opacity-100"
+            }`}
             src={imagePath}
             onLoad={() => setIsLoading(false)}
             onError={() => {
@@ -259,6 +327,11 @@ function ProductPreviewContent({
             }}
           />
         </div>
+      )}
+      {!hasError && !isLoading && (
+        <p className="mt-4 text-center font-mono text-xs font-semibold text-slate-600">
+          {productCode}
+        </p>
       )}
     </div>
   );

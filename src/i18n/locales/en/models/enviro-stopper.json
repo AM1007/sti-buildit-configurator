@@ -2,8 +2,10 @@
   "meta": {
     "name": "Enviro Stopper®",
     "description": "Protective cover for outdoor use",
-    "heroTitle": "IP66/56 Certified Cover for Use in Harsh Environments",
-    "heroDescription": "IP rated protective cover is ideal for extending the life and reliability of devices exposed to harsh environments such as wash down areas. The Enviro Stopper offers protection to manual call points and switches against dust and water ingress, both outside and inside, as well as preventing tampering, vandalism and damage from accidental or malicious operation."
+    "series": "Enviro Series",
+    "badges": ["IP66/56 Rated", "Outdoor Rated", "Weather Resistant"],
+    "heroTitle": "IP66/56 Protective Cover for Harsh Environments",
+    "heroDescription": "IP-rated polycarbonate cover engineered to protect manual call points and switches against dust, water ingress, tampering and vandalism.\nAvailable with optional sounder, label hood and multiple colour configurations.\nDesigned for wash-down areas, outdoor installations and environments requiring elevated ingress protection."
   },
   "steps": {
     "cover": {

@@ -2,8 +2,10 @@
   "meta": {
     "name": "Waterproof Push Buttons",
     "description": "Waterproof push buttons for outdoor use",
-    "heroTitle": "Waterproof Range of Push Buttons with Many Applications",
-    "heroDescription": "A highly versatile range of attractive Waterproof Push Buttons combining unique design, quality and value. These aesthetically appealing, low/high voltage switches are quick and easy to install. StopperPush — Models are for applications where momentary push and release activation is desired. StopperLatch — Models are for applications where repeat activation must be controlled. Once the switch has been manually activated, it can only be reset by inserting a special key. All models are available in a variety of colours with space for function marking and operating instructions. It is advisable to protect your StopperSwitches with an STI Universal Stopper. The Waterproof Push Button series is tested to IP67."
+    "series": "StopperSwitch Series",
+    "badges": ["IP67 Rated", "Outdoor Rated", "Key-to-Reset"],
+    "heroTitle": "IP67 Waterproof Push Buttons for Outdoor Installations",
+    "heroDescription": "IP67-rated low/high-voltage push buttons with Momentary (StopperPush) and Latching Key-to-Reset (StopperLatch) activation modes. Multi-functional signal electrical configuration.\nSurface-mount design available in six housing and six button colours with function marking or custom labelling. Compatible with STI Universal Stopper for additional protection.\nDesigned for outdoor and moisture-prone environments requiring weather-resistant signalling and control."
   },
   "steps": {
     "housingColour": {

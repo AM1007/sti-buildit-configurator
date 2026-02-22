@@ -12,7 +12,7 @@ export function ProductPreview({ model, config, onEditStep }: ProductPreviewProp
   const { getStepTitle } = useModelTranslations(model.id);
 
   return (
-    <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6 xl:grid-cols-3 xl:gap-8 2xl:grid-cols-4">
+    <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4 xl:grid-cols-4">
       {model.stepOrder.map((stepId) => {
         const step = model.steps.find((s) => s.id === stepId);
         if (!step) return null;

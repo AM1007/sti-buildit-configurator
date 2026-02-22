@@ -2,8 +2,10 @@
   "meta": {
     "name": "Euro Stopper®",
     "description": "European protective cover for buttons",
-    "heroTitle": "Low Profile Protective Cover with Optional Alarm",
-    "heroDescription": "Protective call point covers that help prevent malicious or accidental activation. The Euro Stopper consists of a clear, tamper proof, tough UV-stabilised polycarbonate cover and frame that retrofits over the break glass call point.\n\nThe Glow Guide, a unique material that is embedded in the perimeter of the frame, illuminates in the dark creating a radiant glow around the manual call point making it easier to locate in dark areas. Ideal for schools, colleges, hospitals, nursing homes, hotels and all public buildings where there is a history or a threat of false activation."
+    "series": "Euro Series",
+    "badges": ["CE Marked", "UV Stabilised", "Glow Guide"],
+    "heroTitle": "Low-Profile Protective Cover with Optional Sounder",
+    "heroDescription": "Tamper-proof UV-stabilised polycarbonate cover with integrated Glow Guide for low-light visibility, designed to retrofit over break-glass call points.\nAvailable with optional sounder module, relay output and seven colour options including custom labelling.\nSuitable for schools, hospitals, hotels and public buildings where false activation prevention is required."
   },
   "steps": {
     "mounting": {

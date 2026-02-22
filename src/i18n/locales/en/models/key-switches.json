@@ -2,8 +2,10 @@
   "meta": {
     "name": "Key Switches",
     "description": "Key switches for access control systems",
-    "heroTitle": "Diverse Range of Key Switches with Many Applications",
-    "heroDescription": "A highly versatile range of attractive key switches combining unique design, quality and value, with or without a protective cover or pre-alarm. These aesthetically appealing, low/high voltage switches fit any standard UK-type switch socket box, and are quick and easy to install. Models are supplied as a Dual Mount â€“ designed to fit either flush or surface installations (35mm black surface black back box included.) All models are available in a variety of colours with space for function marking or operating instructions.\n\n<strong>Not suitable for outdoor use. Not compatible with the Enviro Stopper.</strong>"
+    "series": "StopperSwitch Series",
+    "badges": ["Key Operated", "Dual Mount", "Indoor Only"],
+    "heroTitle": "Key-Operated Switches for Access Control and Signalling",
+    "heroDescription": "Low/high-voltage key switches with four switch types and multiple electrical configurations including single-pole changeover, double-pole and 3-position wiring. Optional protective cover and pre-alarm.\nDual-mount design for flush or surface installation with 35mm back box included. Available in six colours with function marking or custom labelling.\nDesigned for indoor access control, system reset and safety-critical switching applications.\n\n<strong>Not suitable for outdoor use. Not compatible with the Enviro Stopper.</strong>"
   },
   "steps": {
     "colourMounting": {

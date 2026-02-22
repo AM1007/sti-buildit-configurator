@@ -3,7 +3,6 @@ import { useConfiguration } from "../hooks/useConfiguration";
 import { buildProductModel } from "../buildProductModel";
 import { Sidebar } from "./Sidebar";
 import { MainPanel } from "./MainPanel";
-import { ProductModelDisplay } from "./ProductModelDisplay";
 import { useCustomText, useConfigurationStore, useIsProductInMyList, useMyListItemIdByProductCode } from "../stores/configurationStore";
 
 interface BuildItCalculatorProps {
@@ -65,17 +64,7 @@ export function BuildItCalculator({
   };
 
   return (
-    <div className="grid h-fit min-h-svh w-full grid-cols-1 md:grid-cols-[2fr_3fr] xl:grid-cols-2 xl:border-4 xl:border-solid xl:border-brand-600">
-      {/* Mobile-only: compact model code summary at top */}
-      <div className="order-1 border-b border-gray-200 bg-white md:hidden">
-        <ProductModelDisplay
-          model={model}
-          productModel={productModel}
-          config={config}
-          onEditStep={handleEditStep}
-        />
-      </div>
-
+    <div className="mx-auto flex max-w-7xl flex-col items-start gap-6 px-4 py-8 md:px-6 lg:flex-row lg:px-8">
       <Sidebar
         model={model}
         config={config}
@@ -84,6 +73,7 @@ export function BuildItCalculator({
         completionPercent={completionPercent}
         completedSteps={completedSteps}
         totalSteps={totalSteps}
+        productModel={productModel}
         onSelectOption={(stepId, optionId) => {
           selectOption(stepId, optionId);
         }}
@@ -91,7 +81,9 @@ export function BuildItCalculator({
           clearSelection(stepId);
         }}
         onSetCurrentStep={setCurrentStep}
-        className="order-2 md:order-0"
+        onEditStep={handleEditStep}
+        onReset={handleReset}
+        className="w-full shrink-0 lg:w-[420px]"
       />
 
       <MainPanel
@@ -106,7 +98,7 @@ export function BuildItCalculator({
         onRemoveFromMyList={handleRemoveFromMyList}
         onCustomTextSubmit={handleCustomTextSubmit}
         isInMyList={isInMyList}
-        className="order-3 md:order-0"
+        className="min-w-0 flex-1"
       />
     </div>
   );

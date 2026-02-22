@@ -1,9 +1,11 @@
-import type { Configuration, StepId, OptionId, ModelDefinition, CustomTextData } from "../types";
+import type { Configuration, StepId, OptionId, ModelDefinition, ProductModel, CustomTextData } from "../types";
 import { StepSelector } from "./StepSelector";
 import { CustomTextDisplay } from "./CustomTextDisplay";
+import { ProductModelDisplay } from "./ProductModelDisplay";
 import { hasSubmittedCustomText } from "../utils/customTextHelpers";
 import { useModelTranslations } from "../hooks/useModelTranslations";
 import { useTranslation } from "../i18n";
+import { RotateCcw } from "lucide-react";
 
 interface SidebarProps {
   model: ModelDefinition;
@@ -13,9 +15,12 @@ interface SidebarProps {
   completionPercent: number;
   completedSteps: number;
   totalSteps: number;
+  productModel: ProductModel;
   onSelectOption: (stepId: StepId, optionId: OptionId) => void;
   onClearOption: (stepId: StepId) => void;
   onSetCurrentStep: (stepId: StepId) => void;
+  onEditStep: (stepId: StepId) => void;
+  onReset: () => void;
   className?: string;
 }
 
@@ -27,12 +32,16 @@ export function Sidebar({
   completionPercent,
   completedSteps,
   totalSteps,
+  productModel,
   onSelectOption,
   onClearOption,
   onSetCurrentStep,
+  onEditStep,
+  onReset,
   className = "",
 }: SidebarProps) {
   const { getStepTitle, getOptionLabel } = useModelTranslations(model.id);
+  const { t } = useTranslation();
 
   const orderedSteps = model.stepOrder
     .map((stepId) => model.steps.find((s) => s.id === stepId))
@@ -41,50 +50,66 @@ export function Sidebar({
   const showCustomTextDisplay = hasSubmittedCustomText(model.id, config, customText);
 
   return (
-    <aside className={`bg-brand-600 text-white flex flex-col h-full ${className}`}>
-      <div className="p-5 md:p-8 xl:p-10 2xl:p-16">
-        <h3 className="mb-4 xl:mb-6">
-          <span className="inline-block h-fit w-fit bg-black p-4 text-5xl font-bold text-white md:text-6xl xl:text-7xl xl:-tracking-[0.175rem] 2xl:text-9xl">
-            Build
-          </span>
-          <span className="inline-block py-4 pl-4 text-5xl font-bold text-black md:text-6xl xl:pl-8 xl:text-7xl xl:-tracking-[0.175rem] 2xl:text-9xl">
-            it
-          </span>
-        </h3>
+    <aside className={`flex flex-col gap-4 ${className}`}>
+      <div className="rounded-sm border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-sm font-semibold text-slate-900">
+            {t("configurator.configuration", { defaultValue: "Configuration" })}
+          </h2>
+          <button
+            type="button"
+            onClick={onReset}
+            className="flex items-center gap-1 text-xs text-slate-400 transition-colors hover:text-brand-600"
+          >
+            <RotateCcw className="h-3 w-3" />
+            {t("common.reset")}
+          </button>
+        </div>
 
-        {/* Progress indicator */}
         <ProgressBar
           completedSteps={completedSteps}
           totalSteps={totalSteps}
           completionPercent={completionPercent}
         />
+
+        <div className="mt-6 border-t border-slate-100 pt-4">
+          <span className="mb-2 block text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+            {t("configurator.productModel", { defaultValue: "Target SKU" })}
+          </span>
+          <ProductModelDisplay
+            model={model}
+            productModel={productModel}
+            config={config}
+            onEditStep={onEditStep}
+          />
+        </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-5 md:px-8 xl:px-10 2xl:px-16 pb-6">
-        <div className="flex flex-col gap-1 md:gap-2">
-          {orderedSteps.map((step, index) => (
-            <StepSelector
-              key={step.id}
-              step={step}
-              stepIndex={index + 1}
-              totalSteps={totalSteps}
-              isOpen={currentStep === step.id}
-              isCompleted={!!config[step.id]}
-              selectedOptionId={config[step.id] ?? null}
-              config={config}
-              modelId={model.id}
-              onSelect={(optionId) => onSelectOption(step.id, optionId)}
-              onClear={() => onClearOption(step.id)}
-              onToggle={() => onSetCurrentStep(step.id)}
-              getStepTitle={getStepTitle}
-              getOptionLabel={getOptionLabel}
-            />
-          ))}
+      <div className="overflow-hidden rounded-sm border border-slate-200 bg-white shadow-sm">
+        {orderedSteps.map((step, index) => (
+          <StepSelector
+            key={step.id}
+            step={step}
+            stepIndex={index + 1}
+            totalSteps={totalSteps}
+            isOpen={currentStep === step.id}
+            isCompleted={!!config[step.id]}
+            selectedOptionId={config[step.id] ?? null}
+            config={config}
+            modelId={model.id}
+            onSelect={(optionId) => onSelectOption(step.id, optionId)}
+            onClear={() => onClearOption(step.id)}
+            onToggle={() => onSetCurrentStep(step.id)}
+            getStepTitle={getStepTitle}
+            getOptionLabel={getOptionLabel}
+          />
+        ))}
 
-          {showCustomTextDisplay && customText && (
+        {showCustomTextDisplay && customText && (
+          <div className="border-t border-slate-100 p-4">
             <CustomTextDisplay customText={customText} />
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </aside>
   );
@@ -102,20 +127,18 @@ function ProgressBar({ completedSteps, totalSteps, completionPercent }: Progress
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex items-center justify-between text-sm font-medium text-white/80">
-        <span>
-          {/* ASSUMPTION: i18n key "configurator.stepsCompleted" must be added.
-              Fallback to interpolated string for now. */}
+      <div className="flex items-end justify-between">
+        <span className="text-xs font-medium text-slate-500">
           {t("configurator.stepsCompleted", {
             completed: completedSteps.toString(),
             total: totalSteps.toString(),
           })}
         </span>
-        <span>{clampedPercent}%</span>
+        <span className="font-mono text-xs text-slate-400">{clampedPercent}%</span>
       </div>
-      <div className="h-2 w-full overflow-hidden rounded-full bg-white/20">
+      <div className="h-1 w-full overflow-hidden rounded-full bg-slate-100">
         <div
-          className="h-full rounded-full bg-white transition-all duration-300 ease-out"
+          className="h-full bg-brand-600 transition-all duration-300"
           style={{ width: `${clampedPercent}%` }}
           role="progressbar"
           aria-valuenow={clampedPercent}

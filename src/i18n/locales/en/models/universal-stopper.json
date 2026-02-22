@@ -2,8 +2,10 @@
   "meta": {
     "name": "Universal Stopper®",
     "description": "Protective cover for buttons and switches",
-    "heroTitle": "IP Rated Cover Offering Robust Protection",
-    "heroDescription": "The Universal Stopper is an indoor and outdoor dome polycarbonate cover that protects devices such as manual call points, emergency buttons and dual action pull stations etc., without restricting legitimate operation.\n\nThe versatile cover can serve as a push button, pull station, electrical device or call point cover. The Universal Stopper offers excellent protection against physical damage (both accidental and intentional), dust and grime as well as harsh environments inside and out. Mounting options 0 & 1 are designed to meet the requirements of IP54. Option 2 includes a matching coloured frame for surface mounting."
+    "series": "Universal Stopper Series",
+    "badges": ["IP54 Rated", "Indoor / Outdoor", "With Sounder"],
+    "heroTitle": "Dome IP54 Protective Cover with Optional Sounder",
+    "heroDescription": "Dome polycarbonate cover for manual call points, emergency buttons, pull stations and electrical devices. IP54-rated mounting options for protection against physical damage, dust and moisture ingress.\nAvailable with optional label hood, sounder with relay, and multiple colour options including custom labelling. Flush, surface and colour-matched frame mounting.\nDesigned for indoor and outdoor installations requiring robust device protection against tampering, vandalism and accidental activation."
   },
   "steps": {
     "mounting": {

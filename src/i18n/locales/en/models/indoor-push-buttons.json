@@ -2,8 +2,10 @@
   "meta": {
     "name": "Indoor Push Buttons",
     "description": "Push buttons for indoor use",
-    "heroTitle": "Diverse Range of Push Buttons with Many Applications",
-    "heroDescription": "A highly versatile range of attractive indoor Push Buttons combining unique design, quality and value. These aesthetically appealing, low/high voltage switches fit any standard UK-type switch socket box, and are quick and easy to install."
+    "series": "StopperSwitch Series",
+    "badges": ["Dual Mount", "Low / High Voltage"],
+    "heroTitle": "Indoor Push Buttons for Signalling and Control",
+    "heroDescription": "Versatile low/high-voltage push buttons with Key-to-Reset, Momentary and Pneumatic activation options. Single-pole changeover and multi-functional signal configurations.\nDual-mount design fits any standard UK-type switch socket box with flush or surface installation. Available in six colours with custom labelling.\nDesigned for indoor access control, emergency signalling and building management applications."
   },
   "steps": {
     "colour": {

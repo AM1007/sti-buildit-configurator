@@ -2,8 +2,10 @@
   "meta": {
     "name": "Stopper® Stations",
     "description": "Customisable UL Listed Push Buttons and Key Switches",
-    "heroTitle": "Customisable UL Listed Push Buttons and Key Switch",
-    "heroDescription": "Build this UL listed, ADA Compliant, multipurpose push buttons to your specifications. The unique, patented design for the push buttons help dramatically stop accidental activation. Available in six colours, ten button activation choices, with or without a protective cover and in any language to accommodate most applications. All Stopper Stations are supplied with a Universal Mounting Plate as standard. For certain button activations, additional surface back box kits are required."
+    "series": "SERIES 2000",
+    "badges": ["UL Listed", "ADA Compliant"],
+    "heroTitle": "Configurable Push Buttons and Key Switches with Patented Design",
+    "heroDescription": "UL-listed, ADA-compliant multipurpose push buttons with patented anti-activation design. Ten activation types including Key-to-Reset, Momentary, Pneumatic, Turn-to-Reset and illuminated variants.\nAvailable in six colours with standard or custom text in any language, optional protective cover and surface mounting kits. Universal Mounting Plate included.\nDesigned for emergency, access control, HVAC and industrial signalling applications."
   },
   "steps": {
     "colour": {

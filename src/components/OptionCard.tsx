@@ -22,10 +22,12 @@ export function OptionCard({
   return (
     <div
       className={`
-        flex cursor-pointer flex-col gap-1 transition-all duration-300
-        border border-solid
-        ${isSelected ? "border-black" : "border-transparent"}
-        ${!isAvailable ? "opacity-50 cursor-not-allowed" : ""}
+        flex cursor-pointer flex-col gap-1 rounded-sm border p-1.5 transition-all duration-200
+        ${isSelected
+          ? "border-brand-600 bg-white"
+          : "border-slate-200 bg-slate-50 hover:border-slate-300"
+        }
+        ${!isAvailable ? "cursor-not-allowed opacity-40" : ""}
       `}
       aria-disabled={!isAvailable}
       aria-selected={isSelected}
@@ -48,11 +50,11 @@ export function OptionCard({
           />
         </div>
       )}
-      <span className="font-normal text-sm wrap-break-word text-center transition-all duration-0 text-black">
+      <span className="text-center text-xs font-medium text-slate-700 wrap-break-word">
         {displayLabel}
       </span>
       {option.notes && (
-        <span className="text-xs text-yellow-600 text-center font-medium">
+        <span className="text-center text-[10px] font-medium text-yellow-600">
           {option.notes}
         </span>
       )}

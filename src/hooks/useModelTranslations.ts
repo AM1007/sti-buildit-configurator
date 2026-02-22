@@ -11,6 +11,8 @@ export interface ModelTranslationMeta {
   description: string;
   heroTitle?: string;
   heroDescription?: string;
+  series?: string;
+  badges?: string[];
 }
 
 export interface ModelTranslation {

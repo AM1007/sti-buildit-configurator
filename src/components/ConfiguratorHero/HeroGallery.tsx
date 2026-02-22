@@ -58,26 +58,24 @@ export function HeroGallery({ media, productName }: HeroGalleryProps) {
     }
   };
 
-  const getMaskClass = (): string => {
-    switch (scrollPosition) {
-      case "start":
-        return "[mask-image:linear-gradient(to_right,#000_calc(100%-100px),transparent)] xl:[mask-image:linear-gradient(to_bottom,#000_calc(100%-100px),transparent)]";
-      case "end":
-      case "middle":
-        return "[mask-image:linear-gradient(to_right,transparent,#000_100px,#000_calc(100%-100px),transparent)] xl:[mask-image:linear-gradient(to_bottom,transparent,#000_100px,#000_calc(100%-100px),transparent)]";
-      default:
-        return "";
-    }
-  };
+  const showFadeStart = scrollPosition === "middle" || scrollPosition === "end";
+  const showFadeEnd = scrollPosition === "start" || scrollPosition === "middle";
 
   return (
     <>
-      <div className="relative flex w-full flex-col gap-4 xl:flex-row xl:gap-8">
-        <div className={`order-2 w-full xl:order-1 xl:w-22 ${getMaskClass()}`}>
+      <div className="relative flex w-full flex-col gap-4 xl:flex-row xl:gap-6">
+        <div className="relative order-2 w-full xl:order-1 xl:w-22">
+          {showFadeStart && (
+            <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-16 bg-linear-to-r from-white to-transparent xl:h-16 xl:w-full xl:bg-linear-to-b" />
+          )}
+          {showFadeEnd && (
+            <div className="pointer-events-none absolute bottom-0 right-0 z-10 h-full w-16 bg-linear-to-l from-white to-transparent xl:h-16 xl:w-full xl:bg-linear-to-t" />
+          )}
+
           <Swiper
             modules={[FreeMode, Mousewheel]}
             direction="horizontal"
-            slidesPerView="auto"
+            slidesPerView={4}
             spaceBetween={12}
             freeMode={{ enabled: true, momentum: true, momentumRatio: 0.5 }}
             speed={400}
@@ -92,23 +90,23 @@ export function HeroGallery({ media, productName }: HeroGalleryProps) {
             breakpoints={{
               1280: {
                 direction: "vertical",
-                slidesPerView: "auto",
+                slidesPerView: 4,
                 spaceBetween: 12,
               },
             }}
-            className="h-12 w-full xl:h-[600px] xl:w-full"
+            className="hero-gallery-swiper h-12 w-full xl:w-full"
           >
             {media.map((item, index) => (
               <SwiperSlide
                 key={index}
-                className="h-12! w-12! xl:h-22! xl:w-full!"
+                className="h-22! w-22!"
               >
                 <button
                   onClick={() => handleThumbnailClick(index)}
-                  className={`relative h-full w-full select-none overflow-hidden outline-none focus:outline-none ${
-                  activeIndex === index
-                    ? "border-2 border-gray-300"
-                    : "border border-gray-300 hover:border-gray-400"
+                  className={`relative h-full w-full select-none overflow-hidden rounded-sm outline-none transition-colors focus:outline-none ${
+                    activeIndex === index
+                      ? "border-2 border-brand-600"
+                      : "border border-slate-200 hover:border-slate-300"
                   }`}
                 >
                   {item.type === "image" ? (
@@ -143,26 +141,32 @@ export function HeroGallery({ media, productName }: HeroGalleryProps) {
           </Swiper>
         </div>
 
-        <div className="order-1 flex aspect-square w-full items-center justify-center xl:order-2 xl:flex-1">
+        <div
+          className="hero-gallery-main group relative order-1 aspect-4/3 w-full overflow-hidden rounded-sm border border-slate-200 bg-slate-50 xl:order-2 xl:flex-1"
+        >
+          <div className="tech-grid absolute inset-0 opacity-50" />
+
           {activeItem.type === "image" ? (
-            <img
-              src={activeItem.src}
-              alt={activeItem.alt ?? productName}
-              className="h-full w-full object-contain"
-            />
+            <div className="relative z-10 flex h-full w-full items-center justify-center p-8 transition-transform duration-500 group-hover:scale-105">
+              <img
+                src={activeItem.src}
+                alt={activeItem.alt ?? productName}
+                className="max-h-full max-w-full object-contain"
+              />
+            </div>
           ) : (
             <button
               onClick={handleMainClick}
-              className="relative h-full w-full cursor-pointer outline-none focus:outline-none"
+              className="relative z-10 flex h-full w-full cursor-pointer items-center justify-center outline-none focus:outline-none"
               aria-label={`Play video: ${activeItem.title}`}
             >
               <img
                 src={getYouTubeThumbnail(activeItem.src)}
                 alt={activeItem.title ?? "Video thumbnail"}
-                className="h-full w-full object-contain"
+                className="max-h-full max-w-full object-contain"
               />
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-white shadow-lg transition-transform hover:scale-110 xl:h-20 xl:w-20">
+                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-brand-600 text-white shadow-lg transition-transform hover:scale-110 xl:h-20 xl:w-20">
                   <svg
                     className="ml-1 h-8 w-8 xl:h-10 xl:w-10"
                     viewBox="0 0 24 24"

@@ -2,8 +2,10 @@
   "meta": {
     "name": "G3 Multipurpose Push Button",
     "description": "G3 multipurpose push button with optional camera",
-    "heroTitle": "Monitor And Prevent Unwanted Activations",
-    "heroDescription": "The UL-listed G3 multipurpose push button is a versatile signalling device designed to meet the diverse needs of various applications. This innovative button features an optional camera and a unique design. The camera is designed to capture video of an individual interacting with the button, as well as their movements before and after activating the unit.\n\nOperation types include Key-to-Reset, Momentary and Turn-to-Reset, allowing flexibility for any application. If needed, the button type can be reconfigured to suit application needs (a new button cap may be required to depict operational movement.)\n\nG3 choices include six shell colours, standard or custom wording (in any language), protective covers, and an IP camera for added identification.\n\nTo view the GF Fire Alarm Push Button, please <a href=\"/configurator/gf-fire-alarm-push-button\" class=\"text-primary underline hover:text-primary/80\">click here</a>."
+    "series": "G3 Series",
+    "badges": ["UL Listed", "ADA Compliant"],
+    "heroTitle": "Multipurpose Signalling Push Button with Optional IP Camera",
+    "heroDescription": "UL-listed multipurpose push button with optional integrated IP camera for identification upon activation. Supports Key-to-Reset, Momentary and Turn-to-Reset operation modes.\nAvailable in six colours with standard or custom labelling in any language, optional protective cover and camera module.\nDesigned for security, access control, emergency and industrial signalling applications.\n\nTo view the GF Fire Alarm Push Button, please <a href=\"/configurator/gf-fire-alarm-push-button\" class=\"text-brand-600 underline hover:text-brand-700\">click here</a>."
   },
   "steps": {
     "model": {
