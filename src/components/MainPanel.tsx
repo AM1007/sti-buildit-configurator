@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { ClipLoader } from "react-spinners";
-import { SlidersHorizontal, FileCode, Box, FileText } from "lucide-react";
+import { SlidersHorizontal } from "lucide-react";
 import type { Configuration, ProductModel, ModelDefinition, StepId, CustomTextData } from "../types";
 import { ProductPreview } from "./ProductPreview";
 import { CustomTextForm } from "./CustomTextForm";
@@ -100,7 +100,6 @@ export function MainPanel({
     return getMaxLength(model.id, effectiveLineCount);
   };
 
-  const configuredStatus = productModel.isComplete;
 
   return (
     <div className={`flex flex-col ${className}`}>
@@ -142,9 +141,9 @@ export function MainPanel({
           </div>
         </div>
 
-        <div className="relative flex-1">
+        <div className="tech-grid relative flex-1">
           {activeTab === "edit" && (
-            <div className="p-5 md:p-8">
+            <div className="h-full p-5 md:p-8">
               {showCustomTextForm && customTextConfig ? (
                 <CustomTextForm
                   variant={customTextConfig.variant}
@@ -163,7 +162,7 @@ export function MainPanel({
           )}
 
           {activeTab === "preview" && (
-            <div className="flex flex-1 flex-col">
+            <div className="flex h-full flex-col">
               {imagePath ? (
                 <ProductPreviewContent
                   imagePath={imagePath}
@@ -176,18 +175,14 @@ export function MainPanel({
           )}
         </div>
 
-        <div className="flex items-center justify-between border-t border-slate-200 p-3 font-mono text-[10px] text-slate-400">
-          <div className="flex gap-4">
-            <span>SCALE: 1:1</span>
-            <span>UNIT: MM</span>
-          </div>
+        <div className="flex items-center justify-end border-t border-slate-200 p-3 font-mono text-[10px] text-slate-400">
           <div className="flex items-center gap-2">
             <span
               className={`h-2 w-2 rounded-full ${
-                configuredStatus ? "bg-green-400" : "bg-slate-300"
+                productModel.isComplete ? "bg-green-400" : "bg-slate-300"
               }`}
             />
-            {configuredStatus ? "CONFIGURED" : "WAITING FOR INPUT"}
+            {productModel.isComplete ? "CONFIGURED" : "WAITING FOR INPUT"}
           </div>
         </div>
       </div>
@@ -210,30 +205,16 @@ function EmptyStateContent({ reason }: { reason?: string }) {
   const { t } = useTranslation();
 
   return (
-    <div className="tech-grid flex flex-1 flex-col items-center justify-center p-12 text-center">
+    <div className="flex h-full flex-1 flex-col items-center justify-center p-12 text-center">
       <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-full border border-slate-200 bg-slate-50 shadow-sm">
         <SlidersHorizontal className="h-10 w-10 text-slate-300" strokeWidth={1} />
       </div>
       <h3 className="mb-2 text-lg font-semibold text-slate-900">
         {t("configurator.previewNotAvailable", { defaultValue: "Select a configuration to begin" })}
       </h3>
-      <p className="mb-8 max-w-sm text-sm leading-relaxed text-slate-500">
+      <p className="max-w-sm text-sm leading-relaxed text-slate-500">
         {reason || t("configurator.completeSelections")}
       </p>
-      <div className="flex items-center gap-3 border-t border-slate-200 pt-6 font-mono text-xs text-slate-400">
-        <span className="flex items-center gap-1">
-          <FileCode className="h-3 w-3" />
-          STEP
-        </span>
-        <span className="flex items-center gap-1">
-          <Box className="h-3 w-3" />
-          DWG
-        </span>
-        <span className="flex items-center gap-1">
-          <FileText className="h-3 w-3" />
-          PDF
-        </span>
-      </div>
     </div>
   );
 }
@@ -259,7 +240,7 @@ function ProductPreviewContent({
   }
 
   return (
-    <div className="tech-grid flex flex-1 flex-col items-center justify-center p-5 md:p-8">
+    <div className="flex flex-1 flex-col items-center justify-center p-5 md:p-8">
       {hasError ? (
         <div className="flex w-full flex-col items-center gap-4 py-16 text-center">
           <p className="text-sm font-medium text-slate-500">

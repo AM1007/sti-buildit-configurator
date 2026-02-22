@@ -80,14 +80,14 @@ export function OptionCard({
         </div>
       )}
 
-      <div className="flex flex-1 flex-col gap-0.5 px-2 py-1.5">
+      <div className="flex h-[100px] flex-col gap-0.5 px-1.5 pt-3.5 pb-1.5">
         {code && (
           <span className="font-mono text-[10px] leading-tight text-slate-400">
             {code}
           </span>
         )}
         {name && (
-          <span className="line-clamp-2 text-xs leading-snug font-medium text-slate-700">
+          <span className="line-clamp-3 text-xs leading-snug font-medium text-slate-700">
             {name}
           </span>
         )}

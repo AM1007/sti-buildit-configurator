@@ -85,7 +85,7 @@ const steps: Step[] = [
         label: "#6 Red Illuminated",
         code: "6",
         image: `${IMG}/ACTIVATION/6 Red Illuminated EXTENDED LEAD TIMES.webp`,
-        notes: "EXTENDED LEAD TIMES",
+        // notes: "EXTENDED LEAD TIMES",
         availableFor: ["0", "2", "3", "5"],
       },
       {
@@ -93,7 +93,7 @@ const steps: Step[] = [
         label: "#6 Green Illuminated",
         code: "6",
         image: `${IMG}/ACTIVATION/6 Green Illuminated EXTENDED LEAD TIMES.webp`,
-        notes: "EXTENDED LEAD TIMES",
+        // notes: "EXTENDED LEAD TIMES",
         availableFor: ["1", "3"],
       },
       {
@@ -101,7 +101,7 @@ const steps: Step[] = [
         label: "#6 Blue Illuminated",
         code: "6",
         image: `${IMG}/ACTIVATION/6 Blue Illuminated EXTENDED LEAD TIMES.webp`,
-        notes: "EXTENDED LEAD TIMES",
+        // notes: "EXTENDED LEAD TIMES",
         availableFor: ["3", "4"],
       },
       {
@@ -109,7 +109,7 @@ const steps: Step[] = [
         label: "#7 Weather Resistant Momentary Illuminated Red",
         code: "7",
         image: `${IMG}/ACTIVATION/7 Weather Resistant Momentary Illuminated Red EXTENDED LEAD TIMES.webp`,
-        notes: "EXTENDED LEAD TIMES",
+        // notes: "EXTENDED LEAD TIMES",
         availableFor: ["0", "2", "3", "5"],
       },
       {
@@ -117,7 +117,7 @@ const steps: Step[] = [
         label: "#7 Weather Resistant Green Illuminated",
         code: "7",
         image: `${IMG}/ACTIVATION/7 Weather Resistant Green Illuminated EXTENDED LEAD TIMES.webp`,
-        notes: "EXTENDED LEAD TIMES",
+        // notes: "EXTENDED LEAD TIMES",
         availableFor: ["1", "3"],
       },
       // {
@@ -133,7 +133,7 @@ const steps: Step[] = [
         label: "#8 Pneumatic Illuminates green, red or white",
         code: "8",
         image: `${IMG}/ACTIVATION/8 Pneumatic Illuminates green, red or white. NOT UL LISTED.webp`,
-        notes: "NOT UL LISTED",
+        // notes: "NOT UL LISTED",
         availableFor: ["0", "1", "2", "3", "4", "5"],
       },
       {
@@ -141,7 +141,7 @@ const steps: Step[] = [
         label: "#9 Turn-to-Reset Illuminates green, red or white",
         code: "9",
         image: `${IMG}/ACTIVATION/9 Turn-to-Reset Illuminates green, red or white. EXTENDED LEAD TIMES.webp`,
-        notes: "EXTENDED LEAD TIMES",
+        // notes: "EXTENDED LEAD TIMES",
         availableFor: ["0", "1", "2", "3", "4", "5"],
       },
     ],

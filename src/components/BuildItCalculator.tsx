@@ -104,7 +104,7 @@ export function BuildItCalculator({
         productName={productName}
         productDescription={heroContent?.description}
         productImageUrl={imagePath}
-        className="w-full shrink-0 lg:w-[420px]"
+        className="w-full shrink-0 lg:w-[520px]"
       />
 
       <MainPanel

@@ -110,10 +110,10 @@ export function StepSelector({
         className="overflow-hidden transition-all"
         style={{ display: isOpen ? "block" : "none" }}
       >
-        <div className="px-4 pb-6 pl-[52px]">
+        <div className="px-3 pb-6 pl-9 md:px-4 md:pl-11">
           <div
             id={`step-${step.id}-content`}
-            className="grid grid-cols-[repeat(auto-fill,minmax(90px,110px))] gap-2"
+            className="grid grid-cols-3 gap-2"
             role="listbox"
             aria-label={`${title} options`}
           >
