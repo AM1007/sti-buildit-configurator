@@ -11,9 +11,14 @@ type ViewMode = "grid" | "list";
 
 const PAGE_SIZE = 8;
 
+function getInitialViewMode(): ViewMode {
+  if (typeof window === "undefined") return "grid";
+  return window.matchMedia("(min-width: 768px)").matches ? "grid" : "list";
+}
+
 export function useFilterState(all: ConfiguratorMeta[]) {
   const [state, setState] = useState<FilterState>(createInitialFilterState);
-  const [viewMode, setViewMode] = useState<ViewMode>("grid");
+  const [viewMode, setViewMode] = useState<ViewMode>(getInitialViewMode);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [isPaginated, setIsPaginated] = useState(true);
 

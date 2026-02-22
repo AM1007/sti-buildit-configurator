@@ -122,17 +122,26 @@ export function HomePage() {
       <section ref={catalogRef} className="py-8 md:py-12">
         <div className="mx-auto w-full max-w-7xl px-4 md:px-6 xl:px-8">
           <div className="sticky top-16 z-40 -mx-4 border-b border-slate-200 bg-slate-50 px-4 py-3 md:hidden">
-            <div className="flex items-center gap-3">
-              <PrimaryNavigation value={state.primary} onChange={setPrimary} />
-              <FunctionalFilters
-                selected={state.functional}
-                counts={chipCounts}
-                onToggle={toggleFunctional}
-                onClear={clearFunctionalFilters}
-              />
-              <span className="ml-auto text-[10px] font-medium text-slate-400 whitespace-nowrap">
-                {displayed.length}/{filtered.length}
-              </span>
+            <div className="flex flex-col gap-2">
+              <div className="grid grid-cols-2 gap-2">
+                <PrimaryNavigation value={state.primary} onChange={setPrimary} />
+                <FunctionalFilters
+                  selected={state.functional}
+                  counts={chipCounts}
+                  onToggle={toggleFunctional}
+                  onClear={clearFunctionalFilters}
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <ResultCounter
+                  shown={displayed.length}
+                  total={filtered.length}
+                  viewMode={viewMode}
+                  onViewModeChange={setViewMode}
+                  isPaginated={isPaginated}
+                  onTogglePagination={togglePagination}
+                />
+              </div>
             </div>
           </div>
 

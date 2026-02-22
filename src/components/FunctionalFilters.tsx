@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Filter, ChevronDown, CloudRain, Volume2, RotateCcw, Flame, KeyRound } from "lucide-react";
+import { Filter, ChevronDown, SlidersHorizontal, CloudRain, Volume2, RotateCcw, Flame, KeyRound } from "lucide-react";
 import type { FunctionalTag } from "../data/catalog";
 import { FUNCTIONAL_TAGS } from "../utils/filterProducts";
 import { useTranslation } from "../i18n";
@@ -78,33 +78,23 @@ export function FunctionalFilters({ selected, counts, onToggle, onClear }: Funct
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const activeCount = selected.size;
 
-  const triggerButton = (
-    onClick: () => void,
-    extraClass: string = "",
-  ) => (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`flex h-9 items-center gap-2 rounded-sm border border-slate-200 bg-white px-4 text-xs font-medium text-slate-700 transition-colors hover:border-slate-300 hover:bg-slate-50 ${extraClass}`}
-    >
-      {t("filter.specs")}
-      {activeCount > 0 && (
-        <span className="flex h-4 min-w-4 items-center justify-center rounded-sm bg-brand-600 px-1 text-[10px] font-semibold text-white">
-          {activeCount}
-        </span>
-      )}
-      <ChevronDown
-        className={`ml-auto h-3 w-3 text-slate-400 transition-transform duration-150 ${
-          dropdownOpen ? "rotate-180" : ""
-        }`}
-      />
-    </button>
-  );
-
   return (
     <>
       <div className="md:hidden">
-        {triggerButton(() => setSheetOpen(true))}
+        <button
+          type="button"
+          onClick={() => setSheetOpen(true)}
+          className="flex h-9 w-full items-center gap-2 rounded-sm border border-slate-200 bg-white px-3 text-xs font-medium text-slate-700 transition-colors hover:border-slate-300 hover:bg-slate-50"
+        >
+          <SlidersHorizontal className="h-3.5 w-3.5 shrink-0 text-slate-400" />
+          <span className="truncate">{t("filter.specs")}</span>
+          {activeCount > 0 && (
+            <span className="flex h-4 min-w-4 items-center justify-center rounded-sm bg-brand-600 px-1 text-[10px] font-semibold text-white">
+              {activeCount}
+            </span>
+          )}
+          <ChevronDown className="ml-auto h-3 w-3 shrink-0 text-slate-400" />
+        </button>
 
         <FilterBottomSheet
           open={sheetOpen}
@@ -118,7 +108,24 @@ export function FunctionalFilters({ selected, counts, onToggle, onClear }: Funct
       </div>
 
       <div className="relative hidden md:block xl:hidden">
-        {triggerButton(() => setDropdownOpen((prev) => !prev))}
+        <button
+          type="button"
+          onClick={() => setDropdownOpen((prev) => !prev)}
+          className="flex h-9 items-center gap-2 rounded-sm border border-slate-200 bg-white px-4 text-xs font-medium text-slate-700 transition-colors hover:border-slate-300 hover:bg-slate-50"
+        >
+          <SlidersHorizontal className="h-3.5 w-3.5 shrink-0 text-slate-400" />
+          {t("filter.specs")}
+          {activeCount > 0 && (
+            <span className="flex h-4 min-w-4 items-center justify-center rounded-sm bg-brand-600 px-1 text-[10px] font-semibold text-white">
+              {activeCount}
+            </span>
+          )}
+          <ChevronDown
+            className={`ml-auto h-3 w-3 text-slate-400 transition-transform duration-150 ${
+              dropdownOpen ? "rotate-180" : ""
+            }`}
+          />
+        </button>
 
         <FilterDropdown
           open={dropdownOpen}

@@ -35,7 +35,7 @@ export function ResultCounter({
         }
       </button>
 
-      <div className="hidden md:flex items-center gap-1">
+      <div className="flex items-center gap-1">
         <button
           type="button"
           onClick={() => onViewModeChange("list")}

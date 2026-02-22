@@ -53,15 +53,16 @@ export function PrimaryNavigation({ value, onChange }: PrimaryNavigationProps) {
         <button
           type="button"
           onClick={() => setSheetOpen(true)}
-          className="flex h-9 items-center gap-2 rounded-sm border border-slate-200 bg-white px-4 text-xs font-medium text-slate-700 transition-colors hover:border-slate-300 hover:bg-slate-50"
+          className="flex h-9 w-full items-center gap-2 rounded-sm border border-slate-200 bg-white px-3 text-xs font-medium text-slate-700 transition-colors hover:border-slate-300 hover:bg-slate-50"
         >
-          {t("filter.type")}
+          <LayoutGrid className="h-3.5 w-3.5 shrink-0 text-slate-400" />
+          <span className="truncate">{t("filter.type")}</span>
           {isFiltered && (
             <span className="flex h-4 min-w-4 items-center justify-center rounded-sm bg-brand-600 px-1 text-[10px] font-semibold text-white">
               1
             </span>
           )}
-          <ChevronDown className="ml-auto h-3 w-3 text-slate-400" />
+          <ChevronDown className="ml-auto h-3 w-3 shrink-0 text-slate-400" />
         </button>
 
         <FilterBottomSheet
