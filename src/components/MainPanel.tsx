@@ -3,12 +3,10 @@ import { ClipLoader } from "react-spinners";
 import { SlidersHorizontal, FileCode, Box, FileText } from "lucide-react";
 import type { Configuration, ProductModel, ModelDefinition, StepId, CustomTextData } from "../types";
 import { ProductPreview } from "./ProductPreview";
-import { ActionButtons } from "./ActionButtons";
 import { CustomTextForm } from "./CustomTextForm";
 import { getCompletedDeviceImage } from "../utils/getCompletedDeviceImage";
 import { getModelDescription } from "../utils/getModelDescription";
-import { shouldShowCustomTextForm, getCustomTextConfig, getMaxLength, getEffectiveLineCount, isConfigurationReadyForActions } from "../utils/customTextHelpers";
-import { getHeroContent } from "../data/heroContent";
+import { shouldShowCustomTextForm, getCustomTextConfig, getMaxLength, getEffectiveLineCount } from "../utils/customTextHelpers";
 import { useTranslation, useLanguage } from "../i18n";
 
 type TabId = "edit" | "preview";
@@ -18,13 +16,8 @@ interface MainPanelProps {
   config: Configuration;
   customText: CustomTextData | null;
   productModel: ProductModel;
-  productName: string;
   onEditStep: (stepId: StepId) => void;
-  onReset: () => void;
-  onAddToMyList: () => void;
-  onRemoveFromMyList: () => void;
   onCustomTextSubmit: (data: Omit<CustomTextData, "submitted">) => void;
-  isInMyList?: boolean;
   className?: string;
 }
 
@@ -33,13 +26,8 @@ export function MainPanel({
   config,
   customText,
   productModel,
-  productName,
   onEditStep,
-  onReset,
-  onAddToMyList,
-  onRemoveFromMyList,
   onCustomTextSubmit,
-  isInMyList = false,
   className = "",
 }: MainPanelProps) {
   const { t } = useTranslation();
@@ -49,9 +37,6 @@ export function MainPanel({
 
   const showCustomTextForm = shouldShowCustomTextForm(model, config, customText);
   const customTextConfig = getCustomTextConfig(model.id);
-  const actionsReady = productModel.isComplete && isConfigurationReadyForActions(model.id, config, customText);
-
-  const heroContent = getHeroContent(model.id);
 
   useEffect(() => {
     if (customText?.submitted) {
@@ -113,22 +98,6 @@ export function MainPanel({
     );
 
     return getMaxLength(model.id, effectiveLineCount);
-  };
-
-  const actionButtonsProps = {
-    productModel,
-    modelId: model.id,
-    config,
-    customText,
-    onReset,
-    onAddToMyList,
-    onRemoveFromMyList,
-    isInMyList,
-    disabled: !actionsReady,
-    disabledReason: !actionsReady ? t("configurator.completeSelections") : undefined,
-    productName,
-    productDescription: heroContent?.description,
-    productImageUrl: imagePath,
   };
 
   const configuredStatus = productModel.isComplete;
@@ -233,10 +202,6 @@ export function MainPanel({
           </p>
         </div>
       )}
-
-      <div className="mt-4">
-        <ActionButtons {...actionButtonsProps} />
-      </div>
     </div>
   );
 }

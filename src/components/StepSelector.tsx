@@ -20,13 +20,6 @@ interface StepSelectorProps {
   getOptionLabel?: (stepId: string, optionId: string) => string;
 }
 
-function getGridClasses(optionCount: number): string {
-  if (optionCount <= 3) {
-    return "grid-cols-3";
-  }
-  return "grid-cols-3 md:grid-cols-4";
-}
-
 function formatStepNumber(index: number): string {
   return index.toString().padStart(2, "0");
 }
@@ -48,7 +41,6 @@ export function StepSelector({
   const { t } = useTranslation();
   const selectedOption = step.options.find((o) => o.id === selectedOptionId);
   const optionsWithStatus = getOptionsWithAvailability(step, config, modelId);
-  const gridClasses = getGridClasses(step.options.length);
 
   const handleOptionClick = (optionId: OptionId) => {
     if (optionId === selectedOptionId) {
@@ -121,7 +113,7 @@ export function StepSelector({
         <div className="px-4 pb-6 pl-[52px]">
           <div
             id={`step-${step.id}-content`}
-            className={`grid ${gridClasses} gap-x-2.5 gap-y-3`}
+            className="grid grid-cols-[repeat(auto-fill,minmax(90px,110px))] gap-2"
             role="listbox"
             aria-label={`${title} options`}
           >

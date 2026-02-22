@@ -31,15 +31,12 @@
     "navigation": "Navigation",
     "legal": "Legal"
   },
-
   "header": {
     "logo": "Build it"
   },
-
   "footer": {
     "copyright": "© {year} Product Configurator. All rights reserved."
   },
-
   "home": {
     "heroTitle": "Build It Configurators",
     "heroDescription": "STI's Build It Configurator collection brings together customizable push buttons, call points, protective covers, enclosures, and other activation and protection devices for fire, security, and access-control applications. Each product series includes an interactive configurator that lets you tailor materials, activation methods, mounting options, and protective features to fit your exact requirements.",
@@ -48,12 +45,10 @@
     "configuratorsTitle": "Choose a configurator",
     "inDevelopment": "In Development"
   },
-
   "hero": {
     "startConfig": "Start Configuration",
     "browseAll": "Browse All Models"
   },
-
   "filter": {
     "productType": "Product type",
     "label": "Filter",
@@ -75,17 +70,14 @@
     "noResults": "No products match selected filters.",
     "clearFilters": "Clear filters"
   },
-
   "grid": {
     "loadMore": "Load More Models",
     "showingAll": "Showing All Models"
   },
-
   "view": {
     "grid": "Grid",
     "list": "List"
   },
-
   "tag": {
     "weatherRated": "Weather Rated",
     "sounder": "Sounder",
@@ -93,8 +85,9 @@
     "resetDevice": "Resettable",
     "keyOperated": "Key Operated"
   },
-
   "configurator": {
+    "configuration": "Configuration",
+    "modelDescription": "Description",
     "editSelections": "Edit Selections",
     "productPreview": "Product Preview",
     "productModel": "Product Model",
@@ -128,7 +121,6 @@
     "stepsCompleted": "{completed} of {total} steps completed",
     "invalidDeepLink": "The shared configuration link is invalid or corrupted. Starting fresh."
   },
-
   "myList": {
     "title": "My List",
     "description": "Add products to your list by clicking the star icon on product pages or listings. Once added, your list of products can be easily emailed to one of our distributors or anyone of your choosing.",
@@ -154,7 +146,6 @@
     "note": "Note",
     "notePlaceholder": "Add a note..."
   },
-
   "share": {
     "menuTitle": "Share",
     "copyUrl": "Copy URL",
@@ -170,18 +161,15 @@
     "urlError": "Cannot generate URL: model ID is missing",
     "defaultProductName": "Product Configuration"
   },
-
   "pdf": {
     "descriptionLabel": "Description:",
     "modelNumberLabel": "Model Number:"
   },
-
   "validation": {
     "requiredField": "This field is required",
     "maxLength": "Maximum length: {max} characters",
     "invalidCharacters": "Invalid characters"
   },
-
   "toast": {
     "addedToMyList": "Added to My List",
     "removedFromMyList": "Removed from list",
@@ -189,19 +177,16 @@
     "copiedToClipboard": "Copied to clipboard",
     "errorOccurred": "An error occurred"
   },
-
   "notFound": {
     "title": "Page not found",
     "description": "The page you are looking for does not exist or has been moved.",
     "backHome": "Back to Home"
   },
-
   "inDevelopment": {
     "title": "Page is in development",
     "description": "This configurator is coming soon.",
     "descriptionWithName": "The configurator for {name} is coming soon."
   },
-
   "customText": {
     "enterLabel": "ENTER A CUSTOM LABEL FOR YOUR DEVICE",
     "label": "Label",
@@ -215,26 +200,22 @@
     "coverLineExceedsMax": "Cover Line {line} exceeds {max} characters",
     "nonReturnable": "CUSTOM PRODUCTS ARE NON-RETURNABLE"
   },
-
   "card": {
     "features": "Features",
     "colours": "Colours",
     "buildYourModel": "Build Your Model",
     "inDevelopment": "In Development"
   },
-
   "productCard": {
     "noPreview": "No preview",
     "customBuilt": "Custom built product",
     "viewDetails": "View Details"
   },
-
   "customTextDisplay": {
     "title": "Custom Text",
     "nonReturnable": "NON-RETURNABLE",
     "line": "Line {num}"
   },
-
   "notes": {
     "EXTENDED_LEAD_TIMES": "EXTENDED LEAD TIMES",
     "NOT_UL_LISTED": "NOT UL LISTED",

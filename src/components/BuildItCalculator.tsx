@@ -4,6 +4,9 @@ import { buildProductModel } from "../buildProductModel";
 import { Sidebar } from "./Sidebar";
 import { MainPanel } from "./MainPanel";
 import { useCustomText, useConfigurationStore, useIsProductInMyList, useMyListItemIdByProductCode } from "../stores/configurationStore";
+import { isConfigurationReadyForActions } from "../utils/customTextHelpers";
+import { getCompletedDeviceImage } from "../utils/getCompletedDeviceImage";
+import { getHeroContent } from "../data/heroContent";
 
 interface BuildItCalculatorProps {
   model: ModelDefinition;
@@ -38,6 +41,17 @@ export function BuildItCalculator({
 
   const totalSteps = model.stepOrder.length;
   const completedSteps = model.stepOrder.filter((stepId) => !!config[stepId]).length;
+
+  const actionsReady = productModel.isComplete && isConfigurationReadyForActions(model.id, config, customText);
+
+  const heroContent = getHeroContent(model.id);
+
+  const { imagePath } = getCompletedDeviceImage({
+    fullCode: productModel.fullCode,
+    modelId: model.id,
+    config,
+    isComplete: productModel.isComplete,
+  });
 
   const handleEditStep = (stepId: string) => {
     setCurrentStep(stepId);
@@ -83,6 +97,13 @@ export function BuildItCalculator({
         onSetCurrentStep={setCurrentStep}
         onEditStep={handleEditStep}
         onReset={handleReset}
+        onAddToMyList={handleAddToMyList}
+        onRemoveFromMyList={handleRemoveFromMyList}
+        isInMyList={isInMyList}
+        actionsReady={actionsReady}
+        productName={productName}
+        productDescription={heroContent?.description}
+        productImageUrl={imagePath}
         className="w-full shrink-0 lg:w-[420px]"
       />
 
@@ -91,13 +112,8 @@ export function BuildItCalculator({
         config={config}
         customText={customText}
         productModel={productModel}
-        productName={productName}
         onEditStep={handleEditStep}
-        onReset={handleReset}
-        onAddToMyList={handleAddToMyList}
-        onRemoveFromMyList={handleRemoveFromMyList}
         onCustomTextSubmit={handleCustomTextSubmit}
-        isInMyList={isInMyList}
         className="min-w-0 flex-1"
       />
     </div>

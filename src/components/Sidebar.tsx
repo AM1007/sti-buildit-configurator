@@ -1,11 +1,13 @@
+import { useState } from "react";
 import type { Configuration, StepId, OptionId, ModelDefinition, ProductModel, CustomTextData } from "../types";
 import { StepSelector } from "./StepSelector";
 import { CustomTextDisplay } from "./CustomTextDisplay";
 import { ProductModelDisplay } from "./ProductModelDisplay";
+import { ShareMenu } from "./ShareMenu";
 import { hasSubmittedCustomText } from "../utils/customTextHelpers";
 import { useModelTranslations } from "../hooks/useModelTranslations";
 import { useTranslation } from "../i18n";
-import { RotateCcw } from "lucide-react";
+import { RotateCcw, Share2, Star } from "lucide-react";
 
 interface SidebarProps {
   model: ModelDefinition;
@@ -21,6 +23,13 @@ interface SidebarProps {
   onSetCurrentStep: (stepId: StepId) => void;
   onEditStep: (stepId: StepId) => void;
   onReset: () => void;
+  onAddToMyList: () => void;
+  onRemoveFromMyList: () => void;
+  isInMyList: boolean;
+  actionsReady: boolean;
+  productName?: string;
+  productDescription?: string;
+  productImageUrl?: string | null;
   className?: string;
 }
 
@@ -38,16 +47,36 @@ export function Sidebar({
   onSetCurrentStep,
   onEditStep,
   onReset,
+  onAddToMyList,
+  onRemoveFromMyList,
+  isInMyList,
+  actionsReady,
+  productName,
+  productDescription,
+  productImageUrl,
   className = "",
 }: SidebarProps) {
   const { getStepTitle, getOptionLabel } = useModelTranslations(model.id);
   const { t } = useTranslation();
+  const [showShareMenu, setShowShareMenu] = useState(false);
 
   const orderedSteps = model.stepOrder
     .map((stepId) => model.steps.find((s) => s.id === stepId))
     .filter((step): step is NonNullable<typeof step> => step !== undefined);
 
   const showCustomTextDisplay = hasSubmittedCustomText(model.id, config, customText);
+
+  const handleStarClick = () => {
+    if (isInMyList) {
+      onRemoveFromMyList();
+    } else {
+      onAddToMyList();
+    }
+  };
+
+  const starTitle = isInMyList
+    ? t("configurator.removeFromMyList")
+    : t("configurator.addToMyList");
 
   return (
     <aside className={`flex flex-col gap-4 ${className}`}>
@@ -76,12 +105,58 @@ export function Sidebar({
           <span className="mb-2 block text-[10px] font-semibold uppercase tracking-wider text-slate-400">
             {t("configurator.productModel", { defaultValue: "Target SKU" })}
           </span>
-          <ProductModelDisplay
-            model={model}
-            productModel={productModel}
-            config={config}
-            onEditStep={onEditStep}
-          />
+          <div className="flex items-center gap-2">
+            <div className="min-w-0 flex-1">
+              <ProductModelDisplay
+                model={model}
+                productModel={productModel}
+                config={config}
+                onEditStep={onEditStep}
+              />
+            </div>
+            {actionsReady && (
+              <div className="flex shrink-0 items-center gap-1">
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setShowShareMenu((prev) => !prev)}
+                    className="inline-flex h-7 w-7 items-center justify-center rounded-sm border border-slate-200 bg-white text-slate-400 transition-colors hover:border-slate-300 hover:text-brand-600"
+                    aria-expanded={showShareMenu}
+                    aria-haspopup="true"
+                    aria-label={t("common.share")}
+                  >
+                    <Share2 className="h-3.5 w-3.5" />
+                  </button>
+                  {showShareMenu && (
+                    <ShareMenu
+                      productModel={productModel}
+                      modelId={model.id}
+                      config={config}
+                      customText={customText}
+                      onClose={() => setShowShareMenu(false)}
+                      productName={productName}
+                      productDescription={productDescription}
+                      productImageUrl={productImageUrl}
+                    />
+                  )}
+                </div>
+                <button
+                  type="button"
+                  onClick={handleStarClick}
+                  className={`inline-flex h-7 w-7 items-center justify-center rounded-sm border transition-colors ${
+                    isInMyList
+                      ? "border-brand-600 bg-brand-600 text-white hover:bg-brand-700"
+                      : "border-slate-200 bg-white text-slate-400 hover:border-slate-300 hover:text-brand-600"
+                  }`}
+                  aria-label={starTitle}
+                  aria-pressed={isInMyList}
+                  title={starTitle}
+                >
+                  <Star className={`h-3.5 w-3.5 ${isInMyList ? "fill-current" : ""}`} />
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
