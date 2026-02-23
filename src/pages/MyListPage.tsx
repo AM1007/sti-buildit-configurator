@@ -45,13 +45,11 @@ export function MyListPage() {
           <EmptyState />
         ) : (
           <div className="flex flex-col gap-7 xl:gap-12">
-            {/* Project header */}
             <ProjectHeader
               projectMeta={projectMeta}
               onUpdate={setProjectMeta}
             />
 
-            {/* Title + actions */}
             <div className="flex flex-col justify-between gap-4 xl:flex-row xl:gap-6">
               <div className="max-w-200 flex-1">
                 <h4 className="font-bold text-lg md:text-xl xl:text-2xl mb-4">{t("myList.title")}</h4>
@@ -59,28 +57,25 @@ export function MyListPage() {
                   {t("myList.description")}
                 </p>
               </div>
-              <div className="flex gap-3">
+              <div className="flex flex-col gap-3 md:flex-row md:gap-3">
                 <button
                   type="button"
                   onClick={handleDownloadMyList}
                   disabled={isDownloading}
-                  className="cursor-pointer inline-flex items-center justify-center relative ring-offset-0 transition-all duration-300 ease-in-out focus-visible:outline-none box-border font-bold text-sm gap-1 px-4.5 py-0.5 min-h-9 border-4 md:gap-1.5 md:px-6 md:py-1 md:min-h-11 xl:text-base bg-brand-600 border-brand-600 text-white hover:bg-brand-700 hover:border-brand-700 h-max w-full basis-1/2 text-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="cursor-pointer inline-flex items-center justify-center relative ring-offset-0 transition-all duration-300 ease-in-out focus-visible:outline-none box-border font-bold text-sm gap-1 px-4.5 py-0.5 min-h-11 border-4 md:gap-1.5 md:px-6 md:py-1 md:min-h-11 xl:text-base bg-brand-600 border-brand-600 text-white hover:bg-brand-700 hover:border-brand-700 h-max w-full md:w-auto text-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isDownloading ? t("common.loading") : t("myList.downloadList")}
                 </button>
-                <div className="w-full basis-1/2">
-                  <button
-                    type="button"
-                    onClick={handleClearAll}
-                    className="cursor-pointer inline-flex items-center justify-center relative ring-offset-0 transition-all duration-300 ease-in-out focus-visible:outline-none box-border font-bold text-sm gap-1 px-4.5 py-0.5 min-h-9 border-4 md:gap-1.5 md:px-6 md:py-1 md:min-h-11 xl:text-base bg-gray-500 border-gray-500 text-white hover:bg-gray-600 hover:border-gray-600 h-max w-full text-nowrap"
-                  >
-                    {t("myList.clearList")}
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  onClick={handleClearAll}
+                  className="cursor-pointer inline-flex items-center justify-center relative ring-offset-0 transition-all duration-300 ease-in-out focus-visible:outline-none box-border font-bold text-sm gap-1 px-4.5 py-0.5 min-h-11 border-4 md:gap-1.5 md:px-6 md:py-1 md:min-h-11 xl:text-base bg-gray-500 border-gray-500 text-white hover:bg-gray-600 hover:border-gray-600 h-max w-full md:w-auto text-nowrap"
+                >
+                  {t("myList.clearList")}
+                </button>
               </div>
             </div>
 
-            {/* Product cards grid */}
             <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3 xl:gap-8 2xl:grid-cols-4">
               {myList.map((item) => (
                 <div key={item.id} className="flex flex-col gap-3">
@@ -88,7 +83,6 @@ export function MyListPage() {
                     item={item}
                     onRemove={removeFromMyList}
                   />
-                  {/* Qty + Note fields */}
                   <ItemFields
                     id={item.id}
                     qty={item.qty}
@@ -105,8 +99,6 @@ export function MyListPage() {
     </div>
   );
 }
-
-// --- Project Header ---
 
 interface ProjectHeaderProps {
   projectMeta: { projectName: string; clientName: string; createdAt: number };
@@ -157,8 +149,6 @@ function ProjectHeader({ projectMeta, onUpdate }: ProjectHeaderProps) {
   );
 }
 
-// --- Item Qty + Note fields ---
-
 interface ItemFieldsProps {
   id: string;
   qty: number;
@@ -171,7 +161,7 @@ function ItemFields({ id, qty, note, onQtyChange, onNoteChange }: ItemFieldsProp
   const { t } = useTranslation();
 
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-3">
       <div className="flex flex-col gap-1 w-20 shrink-0">
         <label className="text-xs font-bold text-gray-500 uppercase">
           {t("myList.qty")}
@@ -200,8 +190,6 @@ function ItemFields({ id, qty, note, onQtyChange, onNoteChange }: ItemFieldsProp
   );
 }
 
-// --- Empty State ---
-
 function EmptyState() {
   const { t } = useTranslation();
 
@@ -226,7 +214,7 @@ function EmptyState() {
         </p>
         <Link
           to="/"
-          className="cursor-pointer inline-flex items-center justify-center font-bold text-sm gap-1 px-4.5 py-0.5 min-h-9 border-4 md:gap-1.5 md:px-6 md:py-1 md:min-h-11 xl:text-base bg-brand-600 border-brand-600 text-white hover:bg-brand-700 hover:border-brand-700 transition-all duration-300"
+          className="cursor-pointer inline-flex items-center justify-center font-bold text-sm gap-1 px-4.5 py-0.5 min-h-11 border-4 md:gap-1.5 md:px-6 md:py-1 md:min-h-11 xl:text-base bg-brand-600 border-brand-600 text-white hover:bg-brand-700 hover:border-brand-700 transition-all duration-300"
         >
           {t("myList.startConfiguring")}
         </Link>

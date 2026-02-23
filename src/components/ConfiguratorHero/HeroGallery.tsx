@@ -63,7 +63,7 @@ export function HeroGallery({ media, productName }: HeroGalleryProps) {
 
   return (
     <>
-      <div className="relative flex w-full flex-col gap-4 xl:flex-row xl:gap-6">
+      <div className="relative flex w-full flex-col gap-3 md:gap-4 xl:flex-row xl:gap-6">
         <div className="relative order-2 w-full xl:order-1 xl:w-22">
           {showFadeStart && (
             <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-16 bg-linear-to-r from-white to-transparent xl:h-16 xl:w-full xl:bg-linear-to-b" />
@@ -75,8 +75,8 @@ export function HeroGallery({ media, productName }: HeroGalleryProps) {
           <Swiper
             modules={[FreeMode, Mousewheel]}
             direction="horizontal"
-            slidesPerView={4}
-            spaceBetween={12}
+            slidesPerView={3.5}
+            spaceBetween={8}
             freeMode={{ enabled: true, momentum: true, momentumRatio: 0.5 }}
             speed={400}
             mousewheel={{ forceToAxis: true }}
@@ -88,13 +88,17 @@ export function HeroGallery({ media, productName }: HeroGalleryProps) {
             onScroll={updateScrollPosition}
             onProgress={updateScrollPosition}
             breakpoints={{
+              768: {
+                slidesPerView: 4,
+                spaceBetween: 12,
+              },
               1280: {
                 direction: "vertical",
                 slidesPerView: 4,
                 spaceBetween: 12,
               },
             }}
-            className="hero-gallery-swiper h-12 w-full xl:w-full"
+            className="hero-gallery-swiper h-16 w-full md:h-12 xl:w-full"
           >
             {media.map((item, index) => (
               <SwiperSlide
@@ -142,12 +146,12 @@ export function HeroGallery({ media, productName }: HeroGalleryProps) {
         </div>
 
         <div
-          className="hero-gallery-main group relative order-1 aspect-4/3 w-full overflow-hidden rounded-sm border border-slate-200 bg-slate-50 xl:order-2 xl:flex-1"
+          className="hero-gallery-main group relative order-1 aspect-3/2 w-full overflow-hidden rounded-sm border border-slate-200 bg-slate-50 md:aspect-4/3 xl:order-2 xl:flex-1"
         >
           <div className="tech-grid absolute inset-0 opacity-50" />
 
           {activeItem.type === "image" ? (
-            <div className="relative z-10 flex h-full w-full items-center justify-center p-8 transition-transform duration-500 group-hover:scale-105">
+            <div className="relative z-10 flex h-full w-full items-center justify-center p-6 transition-transform duration-500 group-hover:scale-105 md:p-8">
               <img
                 src={activeItem.src}
                 alt={activeItem.alt ?? productName}
@@ -166,9 +170,9 @@ export function HeroGallery({ media, productName }: HeroGalleryProps) {
                 className="max-h-full max-w-full object-contain"
               />
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-brand-600 text-white shadow-lg transition-transform hover:scale-110 xl:h-20 xl:w-20">
+                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-brand-600 text-white shadow-lg transition-transform hover:scale-110 md:h-16 md:w-16 xl:h-20 xl:w-20">
                   <svg
-                    className="ml-1 h-8 w-8 xl:h-10 xl:w-10"
+                    className="ml-1 h-7 w-7 md:h-8 md:w-8 xl:h-10 xl:w-10"
                     viewBox="0 0 24 24"
                     fill="currentColor"
                   >

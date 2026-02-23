@@ -29,7 +29,8 @@
     "contact": "Contact",
     "allRightsReserved": "All rights reserved",
     "navigation": "Navigation",
-    "legal": "Legal"
+    "legal": "Legal",
+    "readMore": "Read more"
   },
   "header": {
     "logo": "Build it"
@@ -99,6 +100,7 @@
     "addToMyList": "Add to My List",
     "removeFromMyList": "Remove from List",
     "inMyList": "In My List",
+    "configured": "CONFIGURED",
     "copyProductModel": "Copy Product Model",
     "copyUrl": "Copy URL",
     "downloadPdf": "Download PDF",

@@ -1,5 +1,7 @@
+import { Check } from "lucide-react";
 import type { Option } from "../types";
 import { useTranslation } from "../i18n";
+import { useIsMobile } from "../hooks/useMediaQuery";
 
 interface OptionCardProps {
   option: Option;
@@ -36,6 +38,7 @@ export function OptionCard({
   label,
 }: OptionCardProps) {
   const { t } = useTranslation();
+  const isMobile = useIsMobile();
   const displayLabel = label ?? option.label;
   const { code, name } = parseLabel(displayLabel);
 
@@ -47,6 +50,73 @@ export function OptionCard({
     : name.length > 40
       ? displayLabel
       : undefined;
+
+  if (isMobile) {
+    return (
+      <div
+        className={`
+          flex min-h-14 cursor-pointer items-center gap-3 rounded-sm border px-3 py-2.5
+          transition-all duration-150
+          ${isSelected
+            ? "border-brand-600 bg-white ring-1 ring-brand-600/20"
+            : "border-slate-200 bg-white active:border-slate-300"
+          }
+          ${!isAvailable ? "cursor-not-allowed opacity-40" : ""}
+        `}
+        aria-disabled={!isAvailable}
+        aria-selected={isSelected}
+        title={fullTooltip}
+        onClick={isAvailable ? onSelect : undefined}
+        role="option"
+      >
+        {option.image && (
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-sm bg-slate-50">
+            <img
+              alt={displayLabel}
+              loading="lazy"
+              width="48"
+              height="48"
+              className={`
+                h-full w-full select-none object-contain
+                ${!isAvailable ? "grayscale" : ""}
+              `}
+              src={option.image}
+            />
+          </div>
+        )}
+
+        <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+          {code && (
+            <span className="font-mono text-[10px] leading-tight text-slate-400">
+              {code}
+            </span>
+          )}
+          {name && (
+            <span className="text-sm leading-snug font-medium text-slate-700">
+              {name}
+            </span>
+          )}
+          {noteText && (
+            <span className="mt-0.5 inline-flex self-start rounded-sm bg-amber-50 px-1 py-0.5 text-[9px] font-semibold leading-tight text-amber-700">
+              {noteText}
+            </span>
+          )}
+        </div>
+
+        <div
+          className={`
+            flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2
+            ${isSelected
+              ? "border-brand-600 bg-brand-600 text-white"
+              : "border-slate-200"
+            }
+          `}
+        >
+          {isSelected && <Check className="h-3 w-3" strokeWidth={3} />}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div

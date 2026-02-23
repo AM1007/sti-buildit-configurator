@@ -102,8 +102,8 @@ export function MainPanel({
 
 
   return (
-    <div className={`flex flex-col ${className}`}>
-      <div className="flex min-h-[600px] flex-1 flex-col overflow-hidden rounded-sm border border-slate-200 bg-white shadow-sm">
+    <div className={`hidden md:flex md:flex-col ${className}`}>
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-sm border border-slate-200 bg-white shadow-sm md:min-h-[600px]">
         <div className="border-b border-slate-200">
           <div className="flex">
             <button

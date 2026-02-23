@@ -1,4 +1,7 @@
+import { useState } from "react";
 import { CircleCheck } from "lucide-react";
+import { useIsMobile } from "../../hooks/useMediaQuery";
+import { useTranslation } from "../../i18n";
 
 interface HeroContentProps {
   productName: string;
@@ -14,6 +17,9 @@ export function HeroContent({
   series,
   badges,
 }: HeroContentProps) {
+  const { t } = useTranslation();
+  const isMobile = useIsMobile();
+  const [expanded, setExpanded] = useState(false);
   const hasBadges = series || (badges && badges.length > 0);
 
   return (
@@ -54,10 +60,23 @@ export function HeroContent({
         {productName}
       </h1>
 
-      <article
-        className="max-w-2xl text-base leading-relaxed text-slate-500"
-        dangerouslySetInnerHTML={{ __html: description }}
-      />
+      <div className="relative">
+        <article
+          className={`max-w-2xl text-sm leading-relaxed text-slate-500 md:text-base ${
+            isMobile && !expanded ? "line-clamp-3" : ""
+          }`}
+          dangerouslySetInnerHTML={{ __html: description }}
+        />
+        {isMobile && !expanded && (
+          <button
+            type="button"
+            onClick={() => setExpanded(true)}
+            className="mt-1 text-xs font-semibold text-brand-600 active:text-brand-700"
+          >
+            {t("common.readMore", { defaultValue: "Read more" })} ▸
+          </button>
+        )}
+      </div>
     </div>
   );
 }

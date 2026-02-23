@@ -18,7 +18,7 @@ export function ProductModelDisplay({
   const { partsOrder, separatorMap } = model.productModelSchema;
 
   return (
-    <div className="flex items-center gap-1 font-mono text-sm">
+    <div className="flex flex-wrap items-center gap-1 font-mono text-sm">
       <span className="font-medium text-slate-900">{baseCode}</span>
 
       {partsOrder.map((stepId, index) => {
@@ -73,14 +73,14 @@ export function ProductModelDisplay({
             <button
               type="button"
               onClick={() => onEditStep(stepId)}
-              className={`group relative min-w-6 rounded-sm border px-1.5 py-0.5 text-center transition-colors ${
+              className={`group relative min-w-8 rounded-sm border px-2 py-1 text-center transition-colors md:min-w-6 md:px-1.5 md:py-0.5 ${
                 hasValue
                   ? "border-slate-300 bg-white text-slate-900 hover:border-slate-400"
                   : "border-slate-200 bg-slate-50 text-slate-300 hover:border-slate-300"
               }`}
             >
               {value || "?"}
-              <span className="absolute -right-1 -top-1 hidden text-slate-400 group-hover:block">
+              <span className="pointer-events-none absolute -right-1 -top-1 hidden text-slate-400 group-hover:block max-md:hidden!">
                 <Pencil className="h-2.5 w-2.5" />
               </span>
             </button>

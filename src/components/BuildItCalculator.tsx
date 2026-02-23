@@ -3,10 +3,12 @@ import { useConfiguration } from "../hooks/useConfiguration";
 import { buildProductModel } from "../buildProductModel";
 import { Sidebar } from "./Sidebar";
 import { MainPanel } from "./MainPanel";
+import { FloatingCompactBar } from "./FloatingCompactBar";
 import { useCustomText, useConfigurationStore, useIsProductInMyList, useMyListItemIdByProductCode } from "../stores/configurationStore";
 import { isConfigurationReadyForActions } from "../utils/customTextHelpers";
 import { getCompletedDeviceImage } from "../utils/getCompletedDeviceImage";
 import { getHeroContent } from "../data/heroContent";
+import { useIsMobile } from "../hooks/useMediaQuery";
 
 interface BuildItCalculatorProps {
   model: ModelDefinition;
@@ -45,6 +47,7 @@ export function BuildItCalculator({
   const actionsReady = productModel.isComplete && isConfigurationReadyForActions(model.id, config, customText);
 
   const heroContent = getHeroContent(model.id);
+  const isMobile = useIsMobile();
 
   const { imagePath } = getCompletedDeviceImage({
     fullCode: productModel.fullCode,
@@ -78,44 +81,65 @@ export function BuildItCalculator({
   };
 
   return (
-    <div className="mx-auto flex max-w-7xl flex-col items-start gap-6 px-4 py-8 md:px-6 lg:flex-row lg:px-8">
-      <Sidebar
-        model={model}
-        config={config}
-        customText={customText}
-        currentStep={currentStep}
-        completionPercent={completionPercent}
-        completedSteps={completedSteps}
-        totalSteps={totalSteps}
-        productModel={productModel}
-        onSelectOption={(stepId, optionId) => {
-          selectOption(stepId, optionId);
-        }}
-        onClearOption={(stepId) => {
-          clearSelection(stepId);
-        }}
-        onSetCurrentStep={setCurrentStep}
-        onEditStep={handleEditStep}
-        onReset={handleReset}
-        onAddToMyList={handleAddToMyList}
-        onRemoveFromMyList={handleRemoveFromMyList}
-        isInMyList={isInMyList}
-        actionsReady={actionsReady}
-        productName={productName}
-        productDescription={heroContent?.description}
-        productImageUrl={imagePath}
-        className="w-full shrink-0 lg:w-[520px]"
-      />
+    <>
+      <div className="mx-auto flex max-w-7xl flex-col items-start gap-6 px-4 pb-24 pt-8 md:flex-row md:px-6 md:pb-8 lg:px-8">
+        <Sidebar
+          model={model}
+          config={config}
+          customText={customText}
+          currentStep={currentStep}
+          completionPercent={completionPercent}
+          completedSteps={completedSteps}
+          totalSteps={totalSteps}
+          productModel={productModel}
+          onSelectOption={(stepId, optionId) => {
+            selectOption(stepId, optionId);
+          }}
+          onClearOption={(stepId) => {
+            clearSelection(stepId);
+          }}
+          onSetCurrentStep={setCurrentStep}
+          onEditStep={handleEditStep}
+          onReset={handleReset}
+          onAddToMyList={handleAddToMyList}
+          onRemoveFromMyList={handleRemoveFromMyList}
+          isInMyList={isInMyList}
+          actionsReady={actionsReady}
+          productName={productName}
+          productDescription={heroContent?.description}
+          productImageUrl={imagePath}
+          className="w-full shrink-0 md:w-[55%] lg:w-[520px]"
+        />
 
-      <MainPanel
-        model={model}
-        config={config}
-        customText={customText}
-        productModel={productModel}
-        onEditStep={handleEditStep}
-        onCustomTextSubmit={handleCustomTextSubmit}
-        className="min-w-0 flex-1"
-      />
-    </div>
+        <MainPanel
+          model={model}
+          config={config}
+          customText={customText}
+          productModel={productModel}
+          onEditStep={handleEditStep}
+          onCustomTextSubmit={handleCustomTextSubmit}
+          className="min-w-0 flex-1 md:sticky md:top-20"
+        />
+      </div>
+
+      {isMobile && (
+        <FloatingCompactBar
+          productModel={productModel}
+          modelId={model.id}
+          config={config}
+          customText={customText}
+          completedSteps={completedSteps}
+          totalSteps={totalSteps}
+          imagePath={imagePath}
+          actionsReady={actionsReady}
+          isInMyList={isInMyList}
+          onAddToMyList={handleAddToMyList}
+          onRemoveFromMyList={handleRemoveFromMyList}
+          productName={productName}
+          productDescription={heroContent?.description}
+          productImageUrl={imagePath}
+        />
+      )}
+    </>
   );
 }

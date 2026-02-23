@@ -113,7 +113,7 @@ export function StepSelector({
         <div className="px-3 pb-6 pl-9 md:px-4 md:pl-11">
           <div
             id={`step-${step.id}-content`}
-            className="grid grid-cols-3 gap-2"
+            className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3"
             role="listbox"
             aria-label={`${title} options`}
           >

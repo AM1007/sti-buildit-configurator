@@ -46,7 +46,7 @@ export function HomePage() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
-            className="flex flex-col justify-center px-4 py-12 md:px-6 md:py-16 xl:px-8 xl:py-24"
+            className="flex flex-col justify-center px-4 py-10 md:px-6 md:py-16 xl:px-8 xl:py-24"
           >
             <div className="mb-6 inline-flex w-fit items-center gap-2 rounded-sm bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
               <span className="h-1.5 w-1.5 rounded-full bg-brand-600" />
@@ -57,7 +57,7 @@ export function HomePage() {
               {t("home.heroTitle")}
             </h1>
 
-            <p className="mb-8 max-w-md text-base text-slate-500 md:text-lg">
+            <p className="mb-8 max-w-md text-sm text-slate-500 md:text-lg">
               {t("home.heroDescription")}
             </p>
 
@@ -65,7 +65,7 @@ export function HomePage() {
               <button
                 type="button"
                 onClick={scrollToCatalog}
-                className="inline-flex h-10 items-center justify-center gap-2 rounded-sm bg-brand-600 px-6 text-sm font-medium text-white transition-colors hover:bg-brand-700"
+                className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-sm bg-brand-600 px-6 text-sm font-medium text-white transition-colors hover:bg-brand-700 md:h-10 md:w-auto"
               >
                 {t("hero.startConfig")}
                 <ArrowRight className="h-4 w-4" />
@@ -73,7 +73,7 @@ export function HomePage() {
               <button
                 type="button"
                 onClick={scrollToCatalog}
-                className="inline-flex h-10 items-center justify-center gap-2 rounded-sm border border-slate-200 bg-white px-6 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 hover:border-slate-300"
+                className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-sm border border-slate-200 bg-white px-6 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 hover:border-slate-300 md:h-10 md:w-auto"
               >
                 {t("hero.browseAll")}
               </button>

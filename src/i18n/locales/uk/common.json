@@ -29,7 +29,8 @@
     "contact": "Контакти",
     "allRightsReserved": "Усі права захищені",
     "navigation": "Навігація",
-    "legal": "Правова інформація"
+    "legal": "Правова інформація",
+    "readMore": "Читати далі"
   },
   "header": {
     "logo": "Build it"
@@ -99,6 +100,7 @@
     "addToMyList": "Додати до мого списку",
     "removeFromMyList": "Видалити зі списку",
     "inMyList": "У моєму списку",
+    "configured": "СКОНФІГУРОВАНО",
     "copyProductModel": "Копіювати артикул",
     "copyUrl": "Копіювати посилання",
     "downloadPdf": "Завантажити PDF",
