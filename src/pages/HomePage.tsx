@@ -48,8 +48,8 @@ export function HomePage() {
             transition={{ duration: 0.5, ease: "easeOut" }}
             className="flex flex-col justify-center px-4 py-10 md:px-6 md:py-16 xl:px-8 xl:py-24"
           >
-            <div className="mb-6 inline-flex w-fit items-center gap-2 rounded-sm bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
-              <span className="h-1.5 w-1.5 rounded-full bg-brand-600" />
+            <div className="mb-6 inline-flex w-fit items-center gap-2 rounded-sm bg-slate-100 px-2.5 py-1.5 text-[13px] font-medium text-slate-600 md:px-2.5 md:py-1 md:text-xs">
+              <span className="h-2 w-2 rounded-full bg-brand-600 md:h-1.5 md:w-1.5" />
               {t("home.heroBadge")}
             </div>
 
@@ -57,7 +57,7 @@ export function HomePage() {
               {t("home.heroTitle")}
             </h1>
 
-            <p className="mb-8 max-w-md text-sm text-slate-500 md:text-lg">
+            <p className="mb-8 max-w-md text-[15px] text-slate-600 md:text-lg md:text-slate-500">
               {t("home.heroDescription")}
             </p>
 
@@ -65,7 +65,7 @@ export function HomePage() {
               <button
                 type="button"
                 onClick={scrollToCatalog}
-                className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-sm bg-brand-600 px-6 text-sm font-medium text-white transition-colors hover:bg-brand-700 md:h-10 md:w-auto"
+                className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-sm bg-brand-600 px-6 text-[15px] font-medium text-white transition-colors hover:bg-brand-700 md:h-10 md:w-auto md:text-sm"
               >
                 {t("hero.startConfig")}
                 <ArrowRight className="h-4 w-4" />
@@ -73,7 +73,7 @@ export function HomePage() {
               <button
                 type="button"
                 onClick={scrollToCatalog}
-                className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-sm border border-slate-200 bg-white px-6 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 hover:border-slate-300 md:h-10 md:w-auto"
+                className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-sm border border-slate-200 bg-white px-6 text-[15px] font-medium text-slate-700 transition-colors hover:bg-slate-50 hover:border-slate-300 md:h-10 md:w-auto md:text-sm"
               >
                 {t("hero.browseAll")}
               </button>
@@ -201,10 +201,10 @@ export function HomePage() {
                   <button
                     type="button"
                     onClick={loadMore}
-                    className="flex items-center gap-2 rounded-sm border border-slate-200 bg-white px-6 py-2 text-xs font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:border-slate-300 cursor-pointer"
+                    className="flex items-center gap-2 rounded-sm border border-slate-200 bg-white px-6 py-2.5 text-[13px] font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:border-slate-300 cursor-pointer md:py-2 md:text-xs"
                   >
                     {t("grid.loadMore")}
-                    <ChevronDown className="h-3 w-3" />
+                    <ChevronDown className="h-3.5 w-3.5 md:h-3 md:w-3" />
                   </button>
                 </div>
               )}

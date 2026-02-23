@@ -10,6 +10,7 @@ interface OptionCardProps {
   unavailableReason?: string;
   onSelect: () => void;
   label?: string;
+  forceTile?: boolean;
 }
 
 const NOTES_KEY_MAP: Record<string, string> = {
@@ -36,6 +37,7 @@ export function OptionCard({
   unavailableReason,
   onSelect,
   label,
+  forceTile,
 }: OptionCardProps) {
   const { t } = useTranslation();
   const isMobile = useIsMobile();
@@ -51,7 +53,7 @@ export function OptionCard({
       ? displayLabel
       : undefined;
 
-  if (isMobile) {
+  if (isMobile && !forceTile) {
     return (
       <div
         className={`
@@ -70,12 +72,12 @@ export function OptionCard({
         role="option"
       >
         {option.image && (
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-sm bg-slate-50">
+          <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-sm bg-slate-50">
             <img
               alt={displayLabel}
               loading="lazy"
-              width="48"
-              height="48"
+              width="56"
+              height="56"
               className={`
                 h-full w-full select-none object-contain
                 ${!isAvailable ? "grayscale" : ""}
@@ -87,17 +89,17 @@ export function OptionCard({
 
         <div className="flex min-w-0 flex-1 flex-col gap-0.5">
           {code && (
-            <span className="font-mono text-[10px] leading-tight text-slate-400">
+            <span className="font-mono text-xs leading-snug text-slate-500">
               {code}
             </span>
           )}
           {name && (
-            <span className="text-sm leading-snug font-medium text-slate-700">
+            <span className="text-[15px] leading-snug font-medium text-slate-700">
               {name}
             </span>
           )}
           {noteText && (
-            <span className="mt-0.5 inline-flex self-start rounded-sm bg-amber-50 px-1 py-0.5 text-[9px] font-semibold leading-tight text-amber-700">
+            <span className="mt-0.5 inline-flex self-start rounded-sm bg-amber-50 px-1 py-0.5 text-[11px] font-semibold leading-snug text-amber-700">
               {noteText}
             </span>
           )}
@@ -105,14 +107,14 @@ export function OptionCard({
 
         <div
           className={`
-            flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2
+            flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2
             ${isSelected
               ? "border-brand-600 bg-brand-600 text-white"
-              : "border-slate-200"
+              : "border-slate-300"
             }
           `}
         >
-          {isSelected && <Check className="h-3 w-3" strokeWidth={3} />}
+          {isSelected && <Check className="h-3.5 w-3.5" strokeWidth={3} />}
         </div>
       </div>
     );
@@ -152,17 +154,17 @@ export function OptionCard({
 
       <div className="flex h-[100px] flex-col gap-0.5 px-1.5 pt-3.5 pb-1.5">
         {code && (
-          <span className="font-mono text-[10px] leading-tight text-slate-400">
+          <span className="font-mono text-[11px] leading-snug text-slate-500">
             {code}
           </span>
         )}
         {name && (
-          <span className="line-clamp-3 text-xs leading-snug font-medium text-slate-700">
+          <span className="line-clamp-3 text-[13px] leading-snug font-medium text-slate-700">
             {name}
           </span>
         )}
         {noteText && (
-          <span className="mt-auto inline-flex self-start rounded-sm bg-amber-50 px-1 py-0.5 text-[9px] font-semibold leading-tight text-amber-700">
+          <span className="mt-auto inline-flex self-start rounded-sm bg-amber-50 px-1 py-0.5 text-[11px] font-semibold leading-snug text-amber-700">
             {noteText}
           </span>
         )}

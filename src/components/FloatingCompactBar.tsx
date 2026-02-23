@@ -55,17 +55,17 @@ export function FloatingCompactBar({
   return (
     <div className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white/95 backdrop-blur-sm md:hidden">
       <div
-        className={`mx-auto flex h-[72px] max-w-7xl items-center gap-3 px-4 ${
+        className={`mx-auto flex h-[76px] max-w-7xl items-center gap-3 px-4 ${
           productModel.isComplete ? "border-t-2 border-t-brand-600" : ""
         }`}
       >
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-sm border border-slate-200 bg-slate-50">
+        <div className="flex h-13 w-13 shrink-0 items-center justify-center overflow-hidden rounded-sm border border-slate-200 bg-slate-50">
           {imagePath ? (
             <img
               alt={productModel.fullCode}
               src={imagePath}
-              width="48"
-              height="48"
+              width="52"
+              height="52"
               className="h-full w-full object-contain"
             />
           ) : (
@@ -74,12 +74,12 @@ export function FloatingCompactBar({
         </div>
 
         <div className="min-w-0 flex-1">
-          <p className="truncate font-mono text-xs font-medium text-slate-800">
+          <p className="truncate font-mono text-[13px] font-medium text-slate-800">
             {productModel.fullCode}
           </p>
-          <p className="mt-0.5 flex items-center gap-1.5 text-[10px] text-slate-400">
+          <p className="mt-0.5 flex items-center gap-1.5 text-xs text-slate-500">
             <span
-              className={`inline-block h-1.5 w-1.5 rounded-full ${
+              className={`inline-block h-2 w-2 rounded-full ${
                 productModel.isComplete ? "bg-green-500" : "bg-slate-300"
               }`}
             />
@@ -96,16 +96,16 @@ export function FloatingCompactBar({
             type="button"
             onClick={() => setShowShareMenu((prev) => !prev)}
             disabled={!actionsReady}
-            className={`inline-flex h-10 w-10 items-center justify-center rounded-sm border transition-colors ${
+            className={`inline-flex h-11 w-11 items-center justify-center rounded-sm border transition-colors ${
               actionsReady
                 ? "border-slate-200 bg-white text-slate-500 active:bg-slate-50"
-                : "border-slate-100 bg-slate-50 text-slate-200"
+                : "border-slate-200 bg-slate-50 text-slate-300"
             }`}
             aria-expanded={showShareMenu}
             aria-haspopup="true"
             aria-label={t("common.share")}
           >
-            <Share2 className="h-4 w-4" />
+            <Share2 className="h-[18px] w-[18px]" />
           </button>
 
           {showShareMenu && actionsReady && (
@@ -125,9 +125,9 @@ export function FloatingCompactBar({
             type="button"
             onClick={actionsReady ? handleStarClick : undefined}
             disabled={!actionsReady}
-            className={`inline-flex h-10 w-10 items-center justify-center rounded-sm border transition-colors ${
+            className={`inline-flex h-11 w-11 items-center justify-center rounded-sm border transition-colors ${
               !actionsReady
-                ? "border-slate-100 bg-slate-50 text-slate-200"
+                ? "border-slate-200 bg-slate-50 text-slate-300"
                 : isInMyList
                   ? "border-brand-600 bg-brand-600 text-white active:bg-brand-700"
                   : "border-slate-200 bg-white text-slate-500 active:bg-slate-50"
@@ -135,7 +135,7 @@ export function FloatingCompactBar({
             aria-label={starTitle}
             aria-pressed={isInMyList}
           >
-            <Star className={`h-4 w-4 ${isInMyList ? "fill-current" : ""}`} />
+            <Star className={`h-[18px] w-[18px] ${isInMyList ? "fill-current" : ""}`} />
           </button>
         </div>
       </div>

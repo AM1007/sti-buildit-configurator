@@ -102,18 +102,18 @@ export function MainPanel({
 
 
   return (
-    <div className={`hidden md:flex md:flex-col ${className}`}>
-      <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-sm border border-slate-200 bg-white shadow-sm md:min-h-[600px]">
+    <div className={`flex flex-col ${className}`}>
+      <div className="flex min-h-[600px] flex-1 flex-col overflow-hidden rounded-sm border border-slate-200 bg-white shadow-sm">
         <div className="border-b border-slate-200">
           <div className="flex">
             <button
               type="button"
               onClick={() => setActiveTab("edit")}
               className={`
-                relative px-5 py-3 text-sm font-medium transition-colors
+                relative px-5 py-3 text-[15px] font-medium transition-colors md:text-sm
                 ${activeTab === "edit"
                   ? "text-slate-900"
-                  : "text-slate-400 hover:text-slate-600"
+                  : "text-slate-500 hover:text-slate-700 md:text-slate-400 md:hover:text-slate-600"
                 }
               `}
             >
@@ -126,10 +126,10 @@ export function MainPanel({
               type="button"
               onClick={() => setActiveTab("preview")}
               className={`
-                relative px-5 py-3 text-sm font-medium transition-colors
+                relative px-5 py-3 text-[15px] font-medium transition-colors md:text-sm
                 ${activeTab === "preview"
                   ? "text-slate-900"
-                  : "text-slate-400 hover:text-slate-600"
+                  : "text-slate-500 hover:text-slate-700 md:text-slate-400 md:hover:text-slate-600"
                 }
               `}
             >
@@ -143,7 +143,7 @@ export function MainPanel({
 
         <div className="tech-grid relative flex-1">
           {activeTab === "edit" && (
-            <div className="h-full p-5 md:p-8">
+            <div className="h-full p-8">
               {showCustomTextForm && customTextConfig ? (
                 <CustomTextForm
                   variant={customTextConfig.variant}
@@ -240,7 +240,7 @@ function ProductPreviewContent({
   }
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center p-5 md:p-8">
+    <div className="flex flex-1 flex-col items-center justify-center p-8">
       {hasError ? (
         <div className="flex w-full flex-col items-center gap-4 py-16 text-center">
           <p className="text-sm font-medium text-slate-500">
@@ -251,7 +251,7 @@ function ProductPreviewContent({
           </p>
         </div>
       ) : (
-        <div className="relative mx-auto flex w-full max-w-md items-center justify-center md:max-w-lg">
+        <div className="relative mx-auto flex w-full max-w-lg items-center justify-center">
           {isLoading && (
             <div className="absolute inset-0 flex items-center justify-center">
               <ClipLoader color="#c8102e" size={40} />

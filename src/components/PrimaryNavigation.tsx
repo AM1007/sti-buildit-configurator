@@ -53,16 +53,16 @@ export function PrimaryNavigation({ value, onChange }: PrimaryNavigationProps) {
         <button
           type="button"
           onClick={() => setSheetOpen(true)}
-          className="flex h-9 w-full items-center gap-2 rounded-sm border border-slate-200 bg-white px-3 text-xs font-medium text-slate-700 transition-colors hover:border-slate-300 hover:bg-slate-50"
+          className="flex h-11 w-full items-center gap-2 rounded-sm border border-slate-200 bg-white px-3 text-[13px] font-medium text-slate-700 transition-colors hover:border-slate-300 hover:bg-slate-50"
         >
-          <LayoutGrid className="h-3.5 w-3.5 shrink-0 text-slate-400" />
+          <LayoutGrid className="h-4 w-4 shrink-0 text-slate-500" />
           <span className="truncate">{t("filter.type")}</span>
           {isFiltered && (
-            <span className="flex h-4 min-w-4 items-center justify-center rounded-sm bg-brand-600 px-1 text-[10px] font-semibold text-white">
+            <span className="flex h-5 min-w-5 items-center justify-center rounded-sm bg-brand-600 px-1 text-[11px] font-semibold text-white">
               1
             </span>
           )}
-          <ChevronDown className="ml-auto h-3 w-3 shrink-0 text-slate-400" />
+          <ChevronDown className="ml-auto h-4 w-4 shrink-0 text-slate-500" />
         </button>
 
         <FilterBottomSheet
@@ -83,7 +83,7 @@ export function PrimaryNavigation({ value, onChange }: PrimaryNavigationProps) {
                   key={segment}
                   type="button"
                   onClick={() => handleSelect(segment)}
-                  className={`flex items-center gap-2 rounded-sm border px-3 py-2.5 text-xs font-medium transition-colors ${
+                  className={`flex items-center gap-2 rounded-sm border px-3 py-3 text-[13px] font-medium transition-colors md:py-2.5 md:text-xs ${
                     isAll ? "col-span-2" : ""
                   } ${
                     isActive
@@ -91,7 +91,7 @@ export function PrimaryNavigation({ value, onChange }: PrimaryNavigationProps) {
                       : "border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50"
                   }`}
                 >
-                  <Icon className="h-3.5 w-3.5" />
+                  <Icon className="h-4 w-4 md:h-3.5 md:w-3.5" />
                   {t(LABEL_KEYS[segment])}
                 </button>
               );

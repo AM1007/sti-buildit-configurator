@@ -40,13 +40,13 @@ export function PreviewTile({
           className="max-h-full max-w-full object-contain"
         />
       ) : (
-        <span className="w-full overflow-hidden text-center text-xs font-medium text-slate-500 wrap-break-word md:text-sm">
+        <span className="w-full overflow-hidden text-center text-[13px] font-medium text-slate-600 wrap-break-word md:text-sm md:text-slate-500">
           {label}
         </span>
       )}
 
       <div className="edit-box absolute inset-0 z-20 flex h-full w-full items-center justify-center bg-slate-900/10 opacity-0 transition-all duration-200">
-        <span className="flex items-center gap-1 rounded-sm bg-white px-2 py-1 text-xs font-medium text-slate-700 shadow-sm">
+        <span className="flex items-center gap-1 rounded-sm bg-white px-2 py-1 text-[13px] font-medium text-slate-700 shadow-sm md:text-xs">
           <Pencil className="h-3 w-3" />
           {t("common.edit")}
         </span>

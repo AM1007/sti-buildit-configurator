@@ -66,14 +66,14 @@ export function FilterBottomSheet({
             className="absolute bottom-0 left-0 right-0 flex max-h-[90vh] flex-col overflow-hidden rounded-t-sm border-t border-slate-200 bg-white"
           >
             <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
-              <h3 className="text-sm font-semibold text-slate-900">{title}</h3>
+              <h3 className="text-[15px] font-semibold text-slate-900">{title}</h3>
               <button
                 type="button"
                 onClick={onClose}
-                className="flex h-7 w-7 items-center justify-center rounded-sm border border-slate-200 bg-white text-slate-500 transition-colors hover:border-slate-300 hover:text-slate-900"
+                className="flex h-9 w-9 items-center justify-center rounded-sm border border-slate-200 bg-white text-slate-500 transition-colors hover:border-slate-300 hover:text-slate-900"
                 aria-label={t("common.close")}
               >
-                <X className="h-3.5 w-3.5" />
+                <X className="h-4 w-4" />
               </button>
             </div>
 
@@ -89,7 +89,7 @@ export function FilterBottomSheet({
                     onClear();
                     onClose();
                   }}
-                  className="h-9 rounded-sm border border-slate-200 bg-white px-5 text-xs font-medium text-slate-700 transition-colors hover:border-slate-300 hover:bg-slate-50"
+                  className="h-11 rounded-sm border border-slate-200 bg-white px-5 text-[13px] font-medium text-slate-700 transition-colors hover:border-slate-300 hover:bg-slate-50"
                 >
                   {t("common.clear")} ({activeCount})
                 </button>

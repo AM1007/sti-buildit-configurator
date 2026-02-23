@@ -56,8 +56,8 @@ function Header() {
             >
               {link.label}
               {"badge" in link && link.badge > 0 && (
-                <span className="flex items-center gap-1 rounded-sm bg-brand-600 px-1.5 py-0.5 text-[10px] font-semibold text-white">
-                  <Star className="h-2.5 w-2.5" />
+                <span className="flex items-center gap-1 rounded-sm bg-brand-600 px-1.5 py-0.5 text-[11px] font-semibold text-white md:text-[10px]">
+                  <Star className="h-3 w-3 md:h-2.5 md:w-2.5" />
                   {link.badge}
                 </span>
               )}
@@ -70,11 +70,11 @@ function Header() {
           <button
             type="button"
             onClick={() => setMobileMenuOpen((prev) => !prev)}
-            className="flex md:hidden items-center justify-center h-9 w-9 rounded-sm border border-slate-200 text-slate-600 hover:bg-slate-50"
+            className="flex md:hidden items-center justify-center h-11 w-11 rounded-sm border border-slate-200 text-slate-600 hover:bg-slate-50"
             aria-label="Toggle menu"
             aria-expanded={mobileMenuOpen}
           >
-            {mobileMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+            {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
       </div>
@@ -94,7 +94,7 @@ function Header() {
                   key={link.to}
                   to={link.to}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`flex items-center justify-between rounded-sm px-3 py-2.5 text-sm font-medium transition-colors ${
+                  className={`flex items-center justify-between rounded-sm px-3 py-3 text-[15px] font-medium transition-colors md:py-2.5 md:text-sm ${
                     isActive(link.to)
                       ? "bg-slate-100 text-slate-900"
                       : "text-slate-600 hover:bg-slate-50"
@@ -102,8 +102,8 @@ function Header() {
                 >
                   {link.label}
                   {"badge" in link && link.badge > 0 && (
-                    <span className="flex items-center gap-1 rounded-sm bg-brand-600 px-1.5 py-0.5 text-[10px] font-semibold text-white">
-                      <Star className="h-2.5 w-2.5" />
+                    <span className="flex items-center gap-1 rounded-sm bg-brand-600 px-1.5 py-0.5 text-[11px] font-semibold text-white">
+                      <Star className="h-3 w-3" />
                       {link.badge}
                     </span>
                   )}
@@ -129,19 +129,19 @@ function Footer() {
             <div className="flex items-center gap-1.5 mb-4">
               <div className="h-5 w-5 bg-brand-600" />
               <span className="text-base font-semibold tracking-tighter text-white">
-                BUILD<span className="font-normal text-slate-400">IT</span>
+                BUILD<span className="font-normal text-slate-300">IT</span>
               </span>
             </div>
-            <p className="max-w-xs text-xs text-slate-400 leading-relaxed">
+            <p className="max-w-xs text-[13px] text-slate-300 leading-relaxed md:text-xs">
               {t("home.heroDescription")}
             </p>
           </div>
 
           <div>
-            <h4 className="mb-4 text-xs font-semibold uppercase tracking-wider text-white">
+            <h4 className="mb-4 text-[13px] font-semibold uppercase tracking-wider text-white md:text-xs">
               {t("common.navigation")}
             </h4>
-            <ul className="space-y-3 text-xs text-slate-400">
+            <ul className="space-y-3 text-[13px] text-slate-300 md:text-xs">
               <li>
                 <Link to="/" className="hover:text-white transition-colors">
                   {t("common.home")}
@@ -156,10 +156,10 @@ function Footer() {
           </div>
 
           <div>
-            <h4 className="mb-4 text-xs font-semibold uppercase tracking-wider text-white">
+            <h4 className="mb-4 text-[13px] font-semibold uppercase tracking-wider text-white md:text-xs">
               {t("common.legal")}
             </h4>
-            <ul className="space-y-3 text-xs text-slate-400">
+            <ul className="space-y-3 text-[13px] text-slate-300 md:text-xs">
               <li>
                 <a href="#" className="hover:text-white transition-colors">
                   {t("common.privacy")}
@@ -180,7 +180,7 @@ function Footer() {
         </div>
 
         <div className="mt-10 border-t border-slate-800 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-[10px] text-slate-500">
+          <p className="text-xs text-slate-400">
             {t("footer.copyright", { year })}
           </p>
         </div>

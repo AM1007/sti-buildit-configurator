@@ -82,15 +82,15 @@ export function Sidebar({
     <aside className={`flex flex-col gap-4 ${className}`}>
       <div className="rounded-sm border border-slate-200 bg-white p-5 shadow-sm">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-slate-900">
+          <h2 className="text-[15px] font-semibold text-slate-900 md:text-sm">
             {t("configurator.configuration", { defaultValue: "Configuration" })}
           </h2>
           <button
             type="button"
             onClick={onReset}
-            className="flex items-center gap-1 text-xs text-slate-400 transition-colors hover:text-brand-600"
+            className="flex items-center gap-1 text-[13px] text-slate-500 transition-colors hover:text-brand-600 md:text-xs md:text-slate-400"
           >
-            <RotateCcw className="h-3 w-3" />
+            <RotateCcw className="h-3.5 w-3.5 md:h-3 md:w-3" />
             {t("common.reset")}
           </button>
         </div>
@@ -102,7 +102,7 @@ export function Sidebar({
         />
 
         <div className="mt-6 border-t border-slate-100 pt-4">
-          <span className="mb-2 block text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+          <span className="mb-2 block text-xs font-semibold uppercase tracking-wider text-slate-500 md:text-[10px] md:text-slate-400">
             {t("configurator.productModel", { defaultValue: "Target SKU" })}
           </span>
           <div className="flex items-center gap-2">
@@ -120,12 +120,12 @@ export function Sidebar({
                   <button
                     type="button"
                     onClick={() => setShowShareMenu((prev) => !prev)}
-                    className="inline-flex h-7 w-7 items-center justify-center rounded-sm border border-slate-200 bg-white text-slate-400 transition-colors hover:border-slate-300 hover:text-brand-600"
+                    className="inline-flex h-9 w-9 items-center justify-center rounded-sm border border-slate-200 bg-white text-slate-500 transition-colors hover:border-slate-300 hover:text-brand-600 md:h-7 md:w-7 md:text-slate-400"
                     aria-expanded={showShareMenu}
                     aria-haspopup="true"
                     aria-label={t("common.share")}
                   >
-                    <Share2 className="h-3.5 w-3.5" />
+                    <Share2 className="h-4 w-4 md:h-3.5 md:w-3.5" />
                   </button>
                   {showShareMenu && (
                     <ShareMenu
@@ -143,16 +143,16 @@ export function Sidebar({
                 <button
                   type="button"
                   onClick={handleStarClick}
-                  className={`inline-flex h-7 w-7 items-center justify-center rounded-sm border transition-colors ${
+                  className={`inline-flex h-9 w-9 items-center justify-center rounded-sm border transition-colors md:h-7 md:w-7 ${
                     isInMyList
                       ? "border-brand-600 bg-brand-600 text-white hover:bg-brand-700"
-                      : "border-slate-200 bg-white text-slate-400 hover:border-slate-300 hover:text-brand-600"
+                      : "border-slate-200 bg-white text-slate-500 hover:border-slate-300 hover:text-brand-600 md:text-slate-400"
                   }`}
                   aria-label={starTitle}
                   aria-pressed={isInMyList}
                   title={starTitle}
                 >
-                  <Star className={`h-3.5 w-3.5 ${isInMyList ? "fill-current" : ""}`} />
+                  <Star className={`h-4 w-4 md:h-3.5 md:w-3.5 ${isInMyList ? "fill-current" : ""}`} />
                 </button>
               </div>
             )}
@@ -203,15 +203,15 @@ function ProgressBar({ completedSteps, totalSteps, completionPercent }: Progress
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-end justify-between">
-        <span className="text-xs font-medium text-slate-500">
+        <span className="text-[13px] font-medium text-slate-600 md:text-xs md:text-slate-500">
           {t("configurator.stepsCompleted", {
             completed: completedSteps.toString(),
             total: totalSteps.toString(),
           })}
         </span>
-        <span className="font-mono text-xs text-slate-400">{clampedPercent}%</span>
+        <span className="font-mono text-[13px] text-slate-500 md:text-xs md:text-slate-400">{clampedPercent}%</span>
       </div>
-      <div className="h-1 w-full overflow-hidden rounded-full bg-slate-100">
+      <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-100 md:h-1">
         <div
           className="h-full bg-brand-600 transition-all duration-300"
           style={{ width: `${clampedPercent}%` }}
