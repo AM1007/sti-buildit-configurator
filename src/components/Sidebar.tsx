@@ -67,6 +67,7 @@ export function Sidebar({
   const showCustomTextDisplay = hasSubmittedCustomText(model.id, config, customText);
 
   const handleStarClick = () => {
+    if (!actionsReady) return;
     if (isInMyList) {
       onRemoveFromMyList();
     } else {
@@ -74,9 +75,15 @@ export function Sidebar({
     }
   };
 
-  const starTitle = isInMyList
-    ? t("configurator.removeFromMyList")
-    : t("configurator.addToMyList");
+  const starTitle = !actionsReady
+    ? t("configurator.submitCustomTextHint")
+    : isInMyList
+      ? t("configurator.removeFromMyList")
+      : t("configurator.addToMyList");
+
+  const shareTitle = !actionsReady
+    ? t("configurator.submitCustomTextHint")
+    : t("common.share");
 
   return (
     <aside className={`flex flex-col gap-4 ${className}`}>
@@ -114,20 +121,26 @@ export function Sidebar({
                 onEditStep={onEditStep}
               />
             </div>
-            {actionsReady && (
+            {productModel.isComplete && (
               <div className="flex shrink-0 items-center gap-1">
                 <div className="relative">
                   <button
                     type="button"
-                    onClick={() => setShowShareMenu((prev) => !prev)}
-                    className="inline-flex h-9 w-9 items-center justify-center rounded-sm border border-slate-200 bg-white text-slate-500 transition-colors hover:border-slate-300 hover:text-brand-600 md:h-7 md:w-7 md:text-slate-400"
+                    onClick={() => actionsReady && setShowShareMenu((prev) => !prev)}
+                    disabled={!actionsReady}
+                    className={`inline-flex h-9 w-9 items-center justify-center rounded-sm border transition-colors md:h-7 md:w-7 ${
+                      actionsReady
+                        ? "border-slate-200 bg-white text-slate-500 hover:border-slate-300 hover:text-brand-600 md:text-slate-400"
+                        : "border-slate-200 bg-slate-50 text-slate-300 cursor-not-allowed"
+                    }`}
                     aria-expanded={showShareMenu}
                     aria-haspopup="true"
-                    aria-label={t("common.share")}
+                    aria-label={shareTitle}
+                    title={shareTitle}
                   >
                     <Share2 className="h-4 w-4 md:h-3.5 md:w-3.5" />
                   </button>
-                  {showShareMenu && (
+                  {showShareMenu && actionsReady && (
                     <ShareMenu
                       productModel={productModel}
                       modelId={model.id}
@@ -143,10 +156,13 @@ export function Sidebar({
                 <button
                   type="button"
                   onClick={handleStarClick}
+                  disabled={!actionsReady}
                   className={`inline-flex h-9 w-9 items-center justify-center rounded-sm border transition-colors md:h-7 md:w-7 ${
-                    isInMyList
-                      ? "border-brand-600 bg-brand-600 text-white hover:bg-brand-700"
-                      : "border-slate-200 bg-white text-slate-500 hover:border-slate-300 hover:text-brand-600 md:text-slate-400"
+                    !actionsReady
+                      ? "border-slate-200 bg-slate-50 text-slate-300 cursor-not-allowed"
+                      : isInMyList
+                        ? "border-brand-600 bg-brand-600 text-white hover:bg-brand-700"
+                        : "border-slate-200 bg-white text-slate-500 hover:border-slate-300 hover:text-brand-600 md:text-slate-400"
                   }`}
                   aria-label={starTitle}
                   aria-pressed={isInMyList}

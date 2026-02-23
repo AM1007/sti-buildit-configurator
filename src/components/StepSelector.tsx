@@ -2,7 +2,7 @@ import type { Step, OptionId, Configuration, ModelId } from "../types";
 import { OptionCard } from "./OptionCard";
 import { getOptionsWithAvailability } from "../filterOptions";
 import { useTranslation } from "../i18n";
-import { ChevronDown, ChevronRight, Check } from "lucide-react";
+import { ChevronDown, ChevronRight, Check, EyeOff } from "lucide-react";
 
 interface StepSelectorProps {
   step: Step;
@@ -41,6 +41,9 @@ export function StepSelector({
   const { t } = useTranslation();
   const selectedOption = step.options.find((o) => o.id === selectedOptionId);
   const optionsWithStatus = getOptionsWithAvailability(step, config, modelId);
+
+  const availableOptions = optionsWithStatus.filter(({ availability }) => availability.available);
+  const hiddenCount = optionsWithStatus.length - availableOptions.length;
 
   const handleOptionClick = (optionId: OptionId) => {
     if (optionId === selectedOptionId) {
@@ -117,18 +120,24 @@ export function StepSelector({
             role="listbox"
             aria-label={`${title} options`}
           >
-            {optionsWithStatus.map(({ option, availability }) => (
+            {availableOptions.map(({ option }) => (
               <OptionCard
                 key={option.id}
                 option={option}
                 isSelected={option.id === selectedOptionId}
-                isAvailable={availability.available}
-                unavailableReason={availability.reason}
+                isAvailable={true}
                 onSelect={() => handleOptionClick(option.id)}
                 label={getOptionLabel ? getOptionLabel(step.id, option.id) : option.label}
               />
             ))}
           </div>
+
+          {hiddenCount > 0 && (
+            <div className="mt-3 flex items-center gap-1.5 text-xs text-slate-400">
+              <EyeOff className="h-3 w-3" />
+              <span>{t("configurator.optionsHidden", { count: hiddenCount.toString() })}</span>
+            </div>
+          )}
         </div>
       </div>
     </div>

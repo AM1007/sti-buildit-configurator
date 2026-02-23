@@ -119,9 +119,12 @@
     "charactersRemaining": "Characters remaining",
     "textPreview": "Text preview",
     "submitCustomText": "Apply text",
+    "clearSelection": "Clear selection",
     "noSelection": "NO SELECTION",
     "stepsCompleted": "{completed} of {total} steps completed",
-    "invalidDeepLink": "The shared configuration link is invalid or corrupted. Starting fresh."
+    "invalidDeepLink": "The shared configuration link is invalid or corrupted. Starting fresh.",
+    "optionsHidden": "{count} options hidden",
+    "submitCustomTextHint": "Submit custom text to enable sharing"
   },
   "myList": {
     "title": "My List",

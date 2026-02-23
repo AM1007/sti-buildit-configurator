@@ -128,16 +128,16 @@ export function OptionBottomSheet({
             </div>
 
             {selectedOptionId && (
-              <div className="flex justify-end border-t border-slate-200 bg-slate-50 px-5 py-3">
+              <div className="border-t border-slate-200 bg-slate-50 px-5 py-3">
                 <button
                   type="button"
                   onClick={() => {
                     onClear();
                     onClose();
                   }}
-                  className="h-10 rounded-sm border border-slate-200 bg-white px-5 text-[13px] font-medium text-slate-700 transition-colors hover:border-slate-300 hover:bg-slate-50 md:h-9 md:text-xs"
+                  className="h-10 w-full rounded-sm border border-slate-200 bg-white text-[13px] font-medium text-slate-700 transition-colors hover:border-slate-300 hover:bg-slate-50 md:h-9 md:w-auto md:px-5 md:text-xs"
                 >
-                  {t("configurator.clearSelection", { defaultValue: "Clear selection" })}
+                  {t("configurator.clearSelection")}
                 </button>
               </div>
             )}

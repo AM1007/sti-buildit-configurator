@@ -1,6 +1,5 @@
 import { useEffect, useRef, type ReactNode } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { X } from "lucide-react";
 import { useTranslation } from "../i18n";
 
 interface FilterBottomSheetProps {
@@ -65,16 +64,8 @@ export function FilterBottomSheet({
             transition={{ duration: 0.2, ease: "easeOut" }}
             className="absolute bottom-0 left-0 right-0 flex max-h-[90vh] flex-col overflow-hidden rounded-t-sm border-t border-slate-200 bg-white"
           >
-            <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
+            <div className="flex items-center border-b border-slate-200 px-6 py-4">
               <h3 className="text-[15px] font-semibold text-slate-900">{title}</h3>
-              <button
-                type="button"
-                onClick={onClose}
-                className="flex h-9 w-9 items-center justify-center rounded-sm border border-slate-200 bg-white text-slate-500 transition-colors hover:border-slate-300 hover:text-slate-900"
-                aria-label={t("common.close")}
-              >
-                <X className="h-4 w-4" />
-              </button>
             </div>
 
             <div className="flex-1 overflow-y-auto px-6 py-6">
@@ -82,14 +73,14 @@ export function FilterBottomSheet({
             </div>
 
             {activeCount > 0 && (
-              <div className="flex justify-end gap-3 border-t border-slate-200 bg-slate-50 px-6 py-4">
+              <div className="border-t border-slate-200 bg-slate-50 px-6 py-4">
                 <button
                   type="button"
                   onClick={() => {
                     onClear();
                     onClose();
                   }}
-                  className="h-11 rounded-sm border border-slate-200 bg-white px-5 text-[13px] font-medium text-slate-700 transition-colors hover:border-slate-300 hover:bg-slate-50"
+                  className="h-11 w-full rounded-sm border border-slate-200 bg-white text-[13px] font-medium text-slate-700 transition-colors hover:border-slate-300 hover:bg-slate-50"
                 >
                   {t("common.clear")} ({activeCount})
                 </button>

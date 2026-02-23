@@ -171,10 +171,10 @@ export function CustomTextForm({ variant, maxLength, onSubmit, initialData }: Cu
   );
 
   const inputClassName = `flex min-h-10 w-full items-center justify-start border border-solid 
-                          border-gray-300 bg-gray-100 px-3 py-1.5 text-sm font-normal 
+                          border-gray-300 bg-gray-100 px-3 py-1.5 text-base font-normal 
                           text-gray-800 placeholder:text-gray-500 
                           hover:border-gray-500 focus:border-gray-500 focus:outline-none 
-                          md:min-h-11 md:py-2`;
+                          md:min-h-11 md:py-2 md:text-sm`;
 
   return (
     <div className="flex w-full justify-center">

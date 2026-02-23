@@ -48,11 +48,6 @@ export function HomePage() {
             transition={{ duration: 0.5, ease: "easeOut" }}
             className="flex flex-col justify-center px-4 py-10 md:px-6 md:py-16 xl:px-8 xl:py-24"
           >
-            <div className="mb-6 inline-flex w-fit items-center gap-2 rounded-sm bg-slate-100 px-2.5 py-1.5 text-[13px] font-medium text-slate-600 md:px-2.5 md:py-1 md:text-xs">
-              <span className="h-2 w-2 rounded-full bg-brand-600 md:h-1.5 md:w-1.5" />
-              {t("home.heroBadge")}
-            </div>
-
             <h1 className="mb-4 text-3xl font-semibold tracking-tight text-slate-900 md:text-4xl xl:text-5xl">
               {t("home.heroTitle")}
             </h1>
@@ -61,7 +56,7 @@ export function HomePage() {
               {t("home.heroDescription")}
             </p>
 
-            <div className="flex flex-col gap-3 md:flex-row">
+            <div>
               <button
                 type="button"
                 onClick={scrollToCatalog}
@@ -69,13 +64,6 @@ export function HomePage() {
               >
                 {t("hero.startConfig")}
                 <ArrowRight className="h-4 w-4" />
-              </button>
-              <button
-                type="button"
-                onClick={scrollToCatalog}
-                className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-sm border border-slate-200 bg-white px-6 text-[15px] font-medium text-slate-700 transition-colors hover:bg-slate-50 hover:border-slate-300 md:h-10 md:w-auto md:text-sm"
-              >
-                {t("hero.browseAll")}
               </button>
             </div>
           </motion.div>
@@ -119,7 +107,7 @@ export function HomePage() {
         </div>
       </section>
 
-      <section ref={catalogRef} className="py-8 md:py-12">
+      <section ref={catalogRef} className="scroll-mt-16 py-8 md:scroll-mt-0 md:py-12">
         <div className="mx-auto w-full max-w-7xl px-4 md:px-6 xl:px-8">
           <div className="sticky top-16 z-40 -mx-4 border-b border-slate-200 bg-slate-50 px-4 py-3 md:hidden">
             <div className="flex flex-col gap-2">

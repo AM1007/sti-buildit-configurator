@@ -119,9 +119,12 @@
     "charactersRemaining": "Залишилось символів",
     "textPreview": "Попередній перегляд тексту",
     "submitCustomText": "Застосувати текст",
+    "clearSelection": "Очистити вибір",
     "noSelection": "НЕ ВИБРАНО",
     "stepsCompleted": "{completed} з {total} кроків виконано",
-    "invalidDeepLink": "Посилання на конфігурацію недійсне або пошкоджене. Починаємо заново."
+    "invalidDeepLink": "Посилання на конфігурацію недійсне або пошкоджене. Починаємо заново.",
+    "optionsHidden": "{count} опцій приховано",
+    "submitCustomTextHint": "Надішліть власний текст, щоб увімкнути можливість поділитися"
   },
   "myList": {
     "title": "Мій список",

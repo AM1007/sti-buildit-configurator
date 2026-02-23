@@ -90,7 +90,7 @@ export function ConfiguratorCard({ config, index = 0, viewMode = "grid" }: Confi
                 {config.name}
               </h3>
 
-              <p className="text-[13px] text-slate-600 line-clamp-1 md:text-xs md:text-slate-500">
+              <p className="text-[13px] text-slate-600 line-clamp-2 md:line-clamp-1 md:text-xs md:text-slate-500">
                 {displayDescription}
               </p>
 
