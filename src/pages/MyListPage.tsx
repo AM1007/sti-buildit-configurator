@@ -1,22 +1,57 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { useConfigurationStore, useMyList, useProjectMeta } from "../stores/configurationStore";
-import { ProductCard } from "../components/ProductCard";
-import { toast } from "../utils/toast";
-import { downloadMyListXlsx } from "../utils/generateMyListXlsx";
+import { Info, Plus } from "lucide-react";
+import {
+  useConfigurationStore,
+  useMyList,
+  useProjectMeta,
+} from "../stores/configurationStore";
+import { SpecificationTable } from "../components/SpecificationTable";
+import { SpecificationMobileList } from "../components/SpecificationMobileItem";
+import { DetailDrawer } from "../components/DetailDrawer";
+import { DetailBottomSheet } from "../components/DetailBottomSheet";
+import { StickyExportBar } from "../components/StickyExportBar";
+import { ExportModal } from "../components/ExportModal";
+import { useIsMobile } from "../hooks/useMediaQuery";
 import { useTranslation, useLanguage } from "../i18n";
+import { downloadMyListXlsx } from "../utils/generateMyListXlsx";
+import { toast } from "../utils/toast";
 
 export function MyListPage() {
-  const { t } = useTranslation();
-  const { lang } = useLanguage();
   const myList = useMyList();
   const projectMeta = useProjectMeta();
-  const removeFromMyList = useConfigurationStore((state) => state.removeFromMyList);
-  const clearMyList = useConfigurationStore((state) => state.clearMyList);
-  const updateItemQty = useConfigurationStore((state) => state.updateItemQty);
-  const updateItemNote = useConfigurationStore((state) => state.updateItemNote);
-  const setProjectMeta = useConfigurationStore((state) => state.setProjectMeta);
+  const { lang } = useLanguage();
+  const { t } = useTranslation();
+  const removeFromMyList = useConfigurationStore((s) => s.removeFromMyList);
+  const clearMyList = useConfigurationStore((s) => s.clearMyList);
+  const updateItemQty = useConfigurationStore((s) => s.updateItemQty);
+  const updateItemNote = useConfigurationStore((s) => s.updateItemNote);
+  const setProjectMeta = useConfigurationStore((s) => s.setProjectMeta);
+  const isMobile = useIsMobile();
+
+  const [drawerItemId, setDrawerItemId] = useState<string | null>(null);
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
+
+  const drawerItem = useMemo(
+    () => myList.find((item) => item.id === drawerItemId) ?? null,
+    [myList, drawerItemId]
+  );
+  const isDrawerOpen = drawerItem !== null;
+
+  const summary = useMemo(() => {
+    const uniqueModels = myList.length;
+    const totalUnits = myList.reduce((sum, item) => sum + item.qty, 0);
+    return { uniqueModels, totalUnits };
+  }, [myList]);
+
+  const handleViewDetails = (id: string) => {
+    setDrawerItemId(id);
+  };
+
+  const handleCloseDrawer = () => {
+    setDrawerItemId(null);
+  };
 
   const handleClearAll = () => {
     toast.confirm(t("myList.clearListConfirm"), () => {
@@ -24,197 +59,212 @@ export function MyListPage() {
     });
   };
 
-  const handleDownloadMyList = async () => {
-    if (isDownloading) return;
-    
+  const handleOpenExportModal = () => {
+    setIsExportModalOpen(true);
+  };
+
+  const handleExport = async (meta: { projectName: string; clientName: string; date: string }) => {
+    setProjectMeta({
+      projectName: meta.projectName,
+      clientName: meta.clientName,
+      date: meta.date,
+    });
+
+    setIsExportModalOpen(false);
     setIsDownloading(true);
+
     try {
-      await downloadMyListXlsx(myList, lang as "en" | "uk", projectMeta);
-    } catch (error) {
-      console.error("Failed to download My List:", error);
+      const updatedMeta = {
+        ...projectMeta,
+        projectName: meta.projectName,
+        clientName: meta.clientName,
+        date: meta.date,
+      };
+      await downloadMyListXlsx(myList, lang as "en" | "uk", updatedMeta);
+      setProjectMeta({ lastExportedAt: Date.now(), updatedAt: Date.now() });
+    } catch {
       toast.error(t("toast.errorOccurred"));
     } finally {
       setIsDownloading(false);
     }
   };
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <main className="max-w-7xl mx-auto px-4 md:px-6 xl:px-8 py-8 xl:py-12">
-        {myList.length === 0 ? (
-          <EmptyState />
-        ) : (
-          <div className="flex flex-col gap-7 xl:gap-12">
-            <ProjectHeader
-              projectMeta={projectMeta}
-              onUpdate={setProjectMeta}
-            />
-
-            <div className="flex flex-col justify-between gap-4 xl:flex-row xl:gap-6">
-              <div className="max-w-200 flex-1">
-                <h4 className="font-bold text-lg md:text-xl xl:text-2xl mb-4">{t("myList.title")}</h4>
-                <p className="font-medium text-base md:text-md">
-                  {t("myList.description")}
-                </p>
-              </div>
-              <div className="flex flex-col gap-3 md:flex-row md:gap-3">
-                <button
-                  type="button"
-                  onClick={handleDownloadMyList}
-                  disabled={isDownloading}
-                  className="cursor-pointer inline-flex items-center justify-center relative ring-offset-0 transition-all duration-300 ease-in-out focus-visible:outline-none box-border font-bold text-sm gap-1 px-4.5 py-0.5 min-h-11 border-4 md:gap-1.5 md:px-6 md:py-1 md:min-h-11 xl:text-base bg-brand-600 border-brand-600 text-white hover:bg-brand-700 hover:border-brand-700 h-max w-full md:w-auto text-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isDownloading ? t("common.loading") : t("myList.downloadList")}
-                </button>
-                <button
-                  type="button"
-                  onClick={handleClearAll}
-                  className="cursor-pointer inline-flex items-center justify-center relative ring-offset-0 transition-all duration-300 ease-in-out focus-visible:outline-none box-border font-bold text-sm gap-1 px-4.5 py-0.5 min-h-11 border-4 md:gap-1.5 md:px-6 md:py-1 md:min-h-11 xl:text-base bg-gray-500 border-gray-500 text-white hover:bg-gray-600 hover:border-gray-600 h-max w-full md:w-auto text-nowrap"
-                >
-                  {t("myList.clearList")}
-                </button>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3 xl:gap-8 2xl:grid-cols-4">
-              {myList.map((item) => (
-                <div key={item.id} className="flex flex-col gap-3">
-                  <ProductCard
-                    item={item}
-                    onRemove={removeFromMyList}
-                  />
-                  <ItemFields
-                    id={item.id}
-                    qty={item.qty}
-                    note={item.note}
-                    onQtyChange={updateItemQty}
-                    onNoteChange={updateItemNote}
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </main>
-    </div>
-  );
-}
-
-interface ProjectHeaderProps {
-  projectMeta: { projectName: string; clientName: string; createdAt: number };
-  onUpdate: (meta: Partial<{ projectName: string; clientName: string }>) => void;
-}
-
-function ProjectHeader({ projectMeta, onUpdate }: ProjectHeaderProps) {
-  const { t } = useTranslation();
-  const dateStr = new Date(projectMeta.createdAt).toLocaleDateString();
+  if (myList.length === 0) {
+    return <EmptyState />;
+  }
 
   return (
-    <div className="bg-white border-2 border-gray-200 p-4 md:p-6">
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6">
-        <div className="flex flex-col gap-1">
-          <label className="text-xs font-bold text-gray-500 uppercase tracking-wide">
-            {t("myList.projectName")}
-          </label>
-          <input
-            type="text"
-            value={projectMeta.projectName}
-            onChange={(e) => onUpdate({ projectName: e.target.value })}
-            placeholder={t("myList.projectNamePlaceholder")}
-            className="border border-gray-300 bg-gray-50 px-3 py-2 text-sm font-normal text-gray-800 placeholder:text-gray-400 hover:border-gray-400 focus:border-gray-500 focus:outline-none"
-          />
-        </div>
-        <div className="flex flex-col gap-1">
-          <label className="text-xs font-bold text-gray-500 uppercase tracking-wide">
-            {t("myList.clientName")}
-          </label>
-          <input
-            type="text"
-            value={projectMeta.clientName}
-            onChange={(e) => onUpdate({ clientName: e.target.value })}
-            placeholder={t("myList.clientNamePlaceholder")}
-            className="border border-gray-300 bg-gray-50 px-3 py-2 text-sm font-normal text-gray-800 placeholder:text-gray-400 hover:border-gray-400 focus:border-gray-500 focus:outline-none"
-          />
-        </div>
-        <div className="flex flex-col gap-1">
-          <label className="text-xs font-bold text-gray-500 uppercase tracking-wide">
-            {t("myList.date")}
-          </label>
-          <span className="px-3 py-2 text-sm font-normal text-gray-600">
-            {dateStr}
-          </span>
-        </div>
+    <div className="w-full max-w-7xl mx-auto px-4 md:px-6 xl:px-8 py-8 md:py-10 pb-24">
+      <PageHeader />
+      <ProjectSummary
+        uniqueModels={summary.uniqueModels}
+        totalUnits={summary.totalUnits}
+        updatedAt={projectMeta.updatedAt}
+      />
+
+      <div className="hidden md:block">
+        <SpecificationTable
+          items={myList}
+          onQtyChange={updateItemQty}
+          onNoteChange={updateItemNote}
+          onViewDetails={handleViewDetails}
+          onRemove={removeFromMyList}
+        />
       </div>
+
+      <div className="md:hidden">
+        <SpecificationMobileList
+          items={myList}
+          onQtyChange={updateItemQty}
+          onNoteChange={updateItemNote}
+          onViewDetails={handleViewDetails}
+          onRemove={removeFromMyList}
+        />
+      </div>
+
+      {isMobile ? (
+        <DetailBottomSheet
+          item={drawerItem}
+          isOpen={isDrawerOpen}
+          onClose={handleCloseDrawer}
+          onRemove={removeFromMyList}
+        />
+      ) : (
+        <DetailDrawer
+          item={drawerItem}
+          isOpen={isDrawerOpen}
+          onClose={handleCloseDrawer}
+          onRemove={removeFromMyList}
+        />
+      )}
+
+      <StickyExportBar
+        totalUnits={summary.totalUnits}
+        onDownload={handleOpenExportModal}
+        onClear={handleClearAll}
+        isDownloading={isDownloading}
+      />
+
+      <ExportModal
+        isOpen={isExportModalOpen}
+        projectMeta={projectMeta}
+        onClose={() => setIsExportModalOpen(false)}
+        onExport={handleExport}
+      />
     </div>
   );
 }
 
-interface ItemFieldsProps {
-  id: string;
-  qty: number;
-  note: string;
-  onQtyChange: (id: string, qty: number) => void;
-  onNoteChange: (id: string, note: string) => void;
-}
-
-function ItemFields({ id, qty, note, onQtyChange, onNoteChange }: ItemFieldsProps) {
+function PageHeader() {
   const { t } = useTranslation();
 
   return (
-    <div className="flex gap-3">
-      <div className="flex flex-col gap-1 w-20 shrink-0">
-        <label className="text-xs font-bold text-gray-500 uppercase">
-          {t("myList.qty")}
-        </label>
-        <input
-          type="number"
-          min={1}
-          value={qty}
-          onChange={(e) => onQtyChange(id, parseInt(e.target.value, 10) || 1)}
-          className="border border-gray-300 bg-white px-2 py-1.5 text-sm text-center font-normal text-gray-800 focus:border-gray-500 focus:outline-none"
+    <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between mb-6">
+      <div>
+        <h1 className="text-2xl font-semibold tracking-tight text-slate-900 mb-1">
+          {t("myList.title")}
+        </h1>
+        <p className="text-sm text-slate-500">
+          {t("myList.subtitle")}
+        </p>
+      </div>
+      <Link
+        to="/"
+        className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors group"
+      >
+        <Plus className="h-4 w-4 text-slate-400 group-hover:text-slate-600 transition-colors" />
+        {t("myList.continueConfiguring")}
+      </Link>
+    </div>
+  );
+}
+
+interface ProjectSummaryProps {
+  uniqueModels: number;
+  totalUnits: number;
+  updatedAt: number;
+}
+
+function ProjectSummary({ uniqueModels, totalUnits, updatedAt }: ProjectSummaryProps) {
+  const { t } = useTranslation();
+
+  const formattedDate = useMemo(() => {
+    const d = new Date(updatedAt);
+    return d.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+  }, [updatedAt]);
+
+  return (
+    <div className="bg-slate-50 border border-slate-200 rounded-sm px-4 py-3 mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-8">
+      <div className="flex items-center gap-6">
+        <SummaryMetric
+          label={t("projectSummary.uniqueModels")}
+          value={String(uniqueModels).padStart(2, "0")}
+        />
+        <Divider />
+        <SummaryMetric
+          label={t("projectSummary.totalUnits")}
+          value={String(totalUnits).padStart(2, "0")}
+        />
+        <Divider />
+        <SummaryMetric
+          label={t("projectSummary.lastUpdated")}
+          value={formattedDate}
         />
       </div>
-      <div className="flex flex-col gap-1 flex-1">
-        <label className="text-xs font-bold text-gray-500 uppercase">
-          {t("myList.note")}
-        </label>
-        <input
-          type="text"
-          value={note}
-          onChange={(e) => onNoteChange(id, e.target.value)}
-          placeholder={t("myList.notePlaceholder")}
-          className="border border-gray-300 bg-white px-2 py-1.5 text-sm font-normal text-gray-800 placeholder:text-gray-400 focus:border-gray-500 focus:outline-none"
-        />
+      <div className="sm:ml-auto flex items-center gap-1.5 text-xs text-slate-400">
+        <Info className="h-3.5 w-3.5" />
+        {t("projectSummary.storedLocally")}
       </div>
     </div>
   );
+}
+
+function SummaryMetric({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex flex-col">
+      <span className="text-[10px] font-semibold text-slate-500 mb-0.5 uppercase tracking-wider">
+        {label}
+      </span>
+      <span className="text-sm font-mono text-slate-900">{value}</span>
+    </div>
+  );
+}
+
+function Divider() {
+  return <div className="w-px h-8 bg-slate-200 hidden sm:block" />;
 }
 
 function EmptyState() {
   const { t } = useTranslation();
 
   return (
-    <div className="flex flex-col gap-7 xl:gap-12">
-      <div className="flex flex-col justify-between gap-4 xl:flex-row xl:gap-6">
-        <div className="max-w-200 flex-1">
-          <h4 className="font-bold text-lg md:text-xl xl:text-2xl mb-4">{t("myList.title")}</h4>
-          <p className="font-medium text-base md:text-md">
-            {t("myList.description")}
-          </p>
-        </div>
+    <div className="w-full max-w-7xl mx-auto px-4 md:px-6 xl:px-8 py-8 md:py-10">
+      <div className="mb-6">
+        <h1 className="text-2xl font-semibold tracking-tight text-slate-900 mb-1">
+          {t("myList.title")}
+        </h1>
+        <p className="text-sm text-slate-500">
+          {t("myList.subtitle")}
+        </p>
       </div>
 
-      <div className="text-center py-16 bg-white border-2 border-gray-200">
-        <div className="text-6xl mb-4">☆</div>
-        <h2 className="text-xl font-bold text-gray-800 mb-2">
+      <div className="flex flex-col items-center justify-center py-20 border border-slate-200 rounded-sm bg-white text-center">
+        <div className="h-12 w-12 rounded-sm bg-slate-100 flex items-center justify-center mb-5">
+          <span className="text-slate-400 text-2xl">☆</span>
+        </div>
+        <h2 className="text-lg font-semibold text-slate-900 mb-2">
           {t("myList.emptyTitle")}
         </h2>
-        <p className="text-gray-600 mb-6">
+        <p className="text-sm text-slate-500 mb-6 max-w-xs">
           {t("myList.emptyDescription")}
         </p>
         <Link
           to="/"
-          className="cursor-pointer inline-flex items-center justify-center font-bold text-sm gap-1 px-4.5 py-0.5 min-h-11 border-4 md:gap-1.5 md:px-6 md:py-1 md:min-h-11 xl:text-base bg-brand-600 border-brand-600 text-white hover:bg-brand-700 hover:border-brand-700 transition-all duration-300"
+          className="inline-flex items-center justify-center px-5 py-2 bg-slate-900 text-white text-sm font-medium rounded-sm hover:bg-slate-800 transition-colors"
         >
           {t("myList.startConfiguring")}
         </Link>

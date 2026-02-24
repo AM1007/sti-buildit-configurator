@@ -5,58 +5,40 @@ import { getModelDescription } from "./getModelDescription";
 
 type Language = "en" | "uk";
 
-interface MyListRowEn {
+interface SpecRowEn {
   "№": number;
   "Product Code": string;
   "Model": string;
   "Description": string;
   "Qty": number;
-  "Comment": string;
-  "Date Added": string;
+  "Note": string;
 }
 
-interface MyListRowUk {
+interface SpecRowUk {
   "№": number;
   "Код продукту": string;
   "Модель": string;
   "Опис": string;
   "К-сть": number;
-  "Коментар": string;
-  "Дата додавання": string;
+  "Нотатка": string;
 }
 
-type MyListRow = MyListRowEn | MyListRowUk;
+type SpecRow = SpecRowEn | SpecRowUk;
 
-function formatDate(timestamp: number): string {
-  const date = new Date(timestamp);
-  const day = String(date.getDate()).padStart(2, "0");
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const year = date.getFullYear();
-  return `${day}.${month}.${year}`;
+function sanitizeFilename(name: string): string {
+  return name.replace(/[^a-zA-Z0-9а-яА-ЯіІїЇєЄґҐ _-]/g, "").trim().replace(/\s+/g, "_");
 }
 
-function formatTimestamp(): string {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, "0");
-  const day = String(now.getDate()).padStart(2, "0");
-  const hours = String(now.getHours()).padStart(2, "0");
-  const minutes = String(now.getMinutes()).padStart(2, "0");
-  const seconds = String(now.getSeconds()).padStart(2, "0");
-  return `${year}-${month}-${day}-${hours}${minutes}${seconds}`;
-}
-
-async function buildRows(
+async function buildSpecRows(
   items: SavedConfiguration[],
   lang: Language
-): Promise<MyListRow[]> {
-  const rows: MyListRow[] = [];
+): Promise<SpecRow[]> {
+  const rows: SpecRow[] = [];
 
   for (let index = 0; index < items.length; index++) {
     const item = items[index];
     const modelName = MODEL_NAMES[item.modelId] ?? item.modelId;
-    const dateAdded = formatDate(item.savedAt);
-    
+
     const description = await getModelDescription(
       item.productCode,
       item.modelId,
@@ -70,8 +52,7 @@ async function buildRows(
         "Модель": modelName,
         "Опис": description,
         "К-сть": item.qty,
-        "Коментар": item.note,
-        "Дата додавання": dateAdded,
+        "Нотатка": item.note,
       });
     } else {
       rows.push({
@@ -80,8 +61,7 @@ async function buildRows(
         "Model": modelName,
         "Description": description,
         "Qty": item.qty,
-        "Comment": item.note,
-        "Date Added": dateAdded,
+        "Note": item.note,
       });
     }
   }
@@ -89,27 +69,48 @@ async function buildRows(
   return rows;
 }
 
-function buildProjectHeaderRows(
+function buildSummarySheet(
   projectMeta: ProjectMeta,
+  totalUnits: number,
+  uniqueModels: number,
   lang: Language
-): string[][] {
-  const date = formatDate(projectMeta.createdAt);
+): XLSX.WorkSheet {
+  const rows: string[][] = lang === "uk"
+    ? [
+        ["Назва проєкту", projectMeta.projectName || "—"],
+        ["Клієнт / Підрядник", projectMeta.clientName || "—"],
+        ["Дата документа", projectMeta.date || "—"],
+        [],
+        ["Унікальних моделей", String(uniqueModels)],
+        ["Загальна кількість", String(totalUnits)],
+      ]
+    : [
+        ["Project Name", projectMeta.projectName || "—"],
+        ["Client / Contractor", projectMeta.clientName || "—"],
+        ["Document Date", projectMeta.date || "—"],
+        [],
+        ["Unique Models", String(uniqueModels)],
+        ["Total Units", String(totalUnits)],
+      ];
 
-  if (lang === "uk") {
-    return [
-      ["Назва проєкту:", projectMeta.projectName || "—"],
-      ["Клієнт:", projectMeta.clientName || "—"],
-      ["Дата:", date],
-      [], // empty row separator
-    ];
-  }
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  ws["!cols"] = [{ wch: 22 }, { wch: 40 }];
+  return ws;
+}
 
-  return [
-    ["Project Name:", projectMeta.projectName || "—"],
-    ["Client:", projectMeta.clientName || "—"],
-    ["Date:", date],
-    [], // empty row separator
+function buildSpecificationSheet(
+  rows: SpecRow[]
+): XLSX.WorkSheet {
+  const ws = XLSX.utils.json_to_sheet(rows);
+  ws["!cols"] = [
+    { wch: 5 },
+    { wch: 25 },
+    { wch: 30 },
+    { wch: 80 },
+    { wch: 6 },
+    { wch: 30 },
   ];
+  return ws;
 }
 
 export async function downloadMyListXlsx(
@@ -121,39 +122,35 @@ export async function downloadMyListXlsx(
     return;
   }
 
-  const rows = await buildRows(items, lang);
+  const totalUnits = items.reduce((sum, item) => sum + item.qty, 0);
+  const uniqueModels = items.length;
 
-  const worksheet = XLSX.utils.aoa_to_sheet([]);
+  const specRows = await buildSpecRows(items, lang);
+  const workbook = XLSX.utils.book_new();
 
-  // Add project header if available
+  const summarySheetName = lang === "uk" ? "Зведення" : "Summary";
+  const specSheetName = lang === "uk" ? "Специфікація" : "Specification";
+
   if (projectMeta) {
-    const headerRows = buildProjectHeaderRows(projectMeta, lang);
-    XLSX.utils.sheet_add_aoa(worksheet, headerRows, { origin: "A1" });
-    
-    // Add data rows after header
-    const startRow = headerRows.length;
-    XLSX.utils.sheet_add_json(worksheet, rows, { origin: `A${startRow + 1}` });
-  } else {
-    XLSX.utils.sheet_add_json(worksheet, rows);
+    const summarySheet = buildSummarySheet(projectMeta, totalUnits, uniqueModels, lang);
+    XLSX.utils.book_append_sheet(workbook, summarySheet, summarySheetName);
   }
 
-  const columnWidths = [
-    { wch: 5 },   // №
-    { wch: 25 },  // Product Code
-    { wch: 30 },  // Model
-    { wch: 80 },  // Description
-    { wch: 6 },   // Qty
-    { wch: 30 },  // Comment
-    { wch: 14 },  // Date Added
-  ];
-  worksheet["!cols"] = columnWidths;
+  const specSheet = buildSpecificationSheet(specRows);
+  XLSX.utils.book_append_sheet(workbook, specSheet, specSheetName);
 
-  const workbook = XLSX.utils.book_new();
-  const sheetName = lang === "uk" ? "Мій список" : "My List";
-  XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
-
-  const timestamp = formatTimestamp();
-  const filename = `my-list-${timestamp}.xlsx`;
+  let filename: string;
+  if (projectMeta?.projectName) {
+    const safeName = sanitizeFilename(projectMeta.projectName);
+    const date = projectMeta.date || new Date().toISOString().slice(0, 10);
+    filename = `${safeName}_${date}.xlsx`;
+  } else {
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth() + 1).padStart(2, "0");
+    const d = String(now.getDate()).padStart(2, "0");
+    filename = `project-specification_${y}-${m}-${d}.xlsx`;
+  }
 
   XLSX.writeFile(workbook, filename);
 }

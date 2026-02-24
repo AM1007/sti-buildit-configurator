@@ -25,6 +25,26 @@ export function buildProductModelUrl(modelId: ModelId, productCode: string): str
   return `?model=${modelId}&productModel=${encodedProductModel}#build-it`;
 }
 
+function getTodayISO(): string {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, "0");
+  const d = String(now.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
+function createDefaultProjectMeta(): ProjectMeta {
+  const now = Date.now();
+  return {
+    projectName: "",
+    clientName: "",
+    createdAt: now,
+    updatedAt: now,
+    date: getTodayISO(),
+    lastExportedAt: null,
+  };
+}
+
 interface ConfigurationState {
   currentModelId: ModelId | null;
   config: Configuration;
@@ -54,16 +74,6 @@ interface ConfigurationState {
   getProductCode: () => string | null;
 }
 
-const DEFAULT_PROJECT_META: ProjectMeta = {
-  projectName: "",
-  clientName: "",
-  createdAt: Date.now(),
-};
-
-/**
- * Migration: ensure old SavedConfiguration entries without qty/note
- * get default values when loaded from localStorage.
- */
 function migrateMyList(myList: SavedConfiguration[]): SavedConfiguration[] {
   return myList.map((item) => ({
     ...item,
@@ -80,7 +90,7 @@ export const useConfigurationStore = create<ConfigurationState>()(
       customText: null,
       currentStep: null,
       myList: [],
-      projectMeta: { ...DEFAULT_PROJECT_META },
+      projectMeta: createDefaultProjectMeta(),
 
       setModel: (modelId) => {
         const { currentModelId } = get();
@@ -199,7 +209,7 @@ export const useConfigurationStore = create<ConfigurationState>()(
       },
 
       addToMyList: (name) => {
-        const { currentModelId, config, customText, myList } = get();
+        const { currentModelId, config, customText, myList, projectMeta } = get();
 
         if (!currentModelId) {
           console.warn("Cannot add to My List: no model selected");
@@ -227,18 +237,24 @@ export const useConfigurationStore = create<ConfigurationState>()(
           note: "",
         };
 
-        set({ myList: [...myList, savedConfig] });
+        set({
+          myList: [...myList, savedConfig],
+          projectMeta: { ...projectMeta, updatedAt: Date.now() },
+        });
       },
 
       removeFromMyList: (id) => {
-        const { myList } = get();
-        set({ myList: myList.filter((item) => item.id !== id) });
+        const { myList, projectMeta } = get();
+        set({
+          myList: myList.filter((item) => item.id !== id),
+          projectMeta: { ...projectMeta, updatedAt: Date.now() },
+        });
       },
 
       clearMyList: () => {
         set({
           myList: [],
-          projectMeta: { ...DEFAULT_PROJECT_META, createdAt: Date.now() },
+          projectMeta: createDefaultProjectMeta(),
         });
       },
 
@@ -289,21 +305,23 @@ export const useConfigurationStore = create<ConfigurationState>()(
       },
 
       updateItemQty: (id, qty) => {
-        const { myList } = get();
+        const { myList, projectMeta } = get();
         const clamped = Math.max(1, Math.floor(qty));
         set({
           myList: myList.map((item) =>
             item.id === id ? { ...item, qty: clamped } : item
           ),
+          projectMeta: { ...projectMeta, updatedAt: Date.now() },
         });
       },
 
       updateItemNote: (id, note) => {
-        const { myList } = get();
+        const { myList, projectMeta } = get();
         set({
           myList: myList.map((item) =>
             item.id === id ? { ...item, note } : item
           ),
+          projectMeta: { ...projectMeta, updatedAt: Date.now() },
         });
       },
 
@@ -342,24 +360,41 @@ export const useConfigurationStore = create<ConfigurationState>()(
     }),
     {
       name: "configurator-storage",
-      version: 1,
+      version: 2,
       partialize: (state) => ({
         myList: state.myList,
         projectMeta: state.projectMeta,
       }),
       migrate: (persisted: unknown, version: number) => {
-        const state = persisted as {
-          myList?: SavedConfiguration[];
-          projectMeta?: ProjectMeta;
-        };
+        const state = persisted as Record<string, any>;
 
         if (version === 0 || !version) {
-          // v0 → v1: add qty/note to old entries, ensure projectMeta exists
+          const migratedList = migrateMyList(state.myList ?? []);
+          const now = Date.now();
           return {
-            myList: migrateMyList(state.myList ?? []),
+            myList: migratedList,
             projectMeta: {
-              ...DEFAULT_PROJECT_META,
-              ...state.projectMeta,
+              projectName: state.projectMeta?.projectName ?? "",
+              clientName: state.projectMeta?.clientName ?? "",
+              createdAt: state.projectMeta?.createdAt ?? now,
+              updatedAt: now,
+              date: getTodayISO(),
+              lastExportedAt: null,
+            },
+          };
+        }
+
+        if (version === 1) {
+          const now = Date.now();
+          return {
+            myList: state.myList ?? [],
+            projectMeta: {
+              projectName: state.projectMeta?.projectName ?? "",
+              clientName: state.projectMeta?.clientName ?? "",
+              createdAt: state.projectMeta?.createdAt ?? now,
+              updatedAt: state.projectMeta?.createdAt ?? now,
+              date: getTodayISO(),
+              lastExportedAt: null,
             },
           };
         }

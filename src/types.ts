@@ -110,6 +110,9 @@ export interface ProjectMeta {
   projectName: string;
   clientName: string;
   createdAt: number;
+  updatedAt: number;
+  date: string;
+  lastExportedAt: number | null;
 }
 
 export interface CustomTextConfig {
