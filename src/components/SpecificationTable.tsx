@@ -127,7 +127,7 @@ function SpecificationRow({
           <button
             type="button"
             onClick={() => onViewDetails(item.id)}
-            className="p-1 text-slate-300 hover:text-slate-900 rounded-sm hover:bg-slate-200/50 transition-colors"
+            className="p-1 text-slate-500 hover:text-slate-900 rounded-sm hover:bg-slate-200/50 transition-colors"
             title={t("productCard.viewDetails")}
           >
             <Eye className="h-3.5 w-3.5" />
@@ -135,7 +135,7 @@ function SpecificationRow({
           <button
             type="button"
             onClick={() => onRemove(item.id)}
-            className="p-1 text-slate-300 hover:text-red-600 rounded-sm hover:bg-red-50 transition-colors"
+            className="p-1 text-slate-500 hover:text-red-600 rounded-sm hover:bg-red-50 transition-colors"
             title={t("myList.removeItem")}
           >
             <Trash2 className="h-3.5 w-3.5" />

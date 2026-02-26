@@ -34,7 +34,7 @@ export function StickyExportBar({
             type="button"
             onClick={onDownload}
             disabled={isDownloading}
-            className="px-4 py-1.5 text-xs font-medium text-white bg-slate-900 rounded-sm hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-4 py-1.5 text-xs font-medium text-white bg-brand-600 rounded-sm hover:bg-brand-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isDownloading ? t("common.loading") : t("myList.downloadList")}
           </button>

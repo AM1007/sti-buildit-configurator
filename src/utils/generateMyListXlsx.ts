@@ -5,35 +5,48 @@ import { getModelDescription } from "./getModelDescription";
 
 type Language = "en" | "uk";
 
-interface SpecRowEn {
-  "№": number;
-  "Product Code": string;
-  "Model": string;
-  "Description": string;
-  "Qty": number;
-  "Note": string;
-}
-
-interface SpecRowUk {
-  "№": number;
-  "Код продукту": string;
-  "Модель": string;
-  "Опис": string;
-  "К-сть": number;
-  "Нотатка": string;
-}
-
-type SpecRow = SpecRowEn | SpecRowUk;
-
 function sanitizeFilename(name: string): string {
   return name.replace(/[^a-zA-Z0-9а-яА-ЯіІїЇєЄґҐ _-]/g, "").trim().replace(/\s+/g, "_");
 }
 
-async function buildSpecRows(
+function buildSummaryRows(
+  projectMeta: ProjectMeta,
+  totalUnits: number,
+  uniqueModels: number,
+  lang: Language
+): string[][] {
+  if (lang === "uk") {
+    return [
+      ["Назва проєкту", projectMeta.projectName || "—"],
+      ["Клієнт / Підрядник", projectMeta.clientName || "—"],
+      ["Дата документа", projectMeta.date || "—"],
+      [],
+      ["Унікальних моделей", String(uniqueModels)],
+      ["Загальна кількість", String(totalUnits)],
+    ];
+  }
+  return [
+    ["Project Name", projectMeta.projectName || "—"],
+    ["Client / Contractor", projectMeta.clientName || "—"],
+    ["Document Date", projectMeta.date || "—"],
+    [],
+    ["Unique Models", String(uniqueModels)],
+    ["Total Units", String(totalUnits)],
+  ];
+}
+
+function buildSpecHeader(lang: Language): string[] {
+  if (lang === "uk") {
+    return ["№", "Код продукту", "Модель", "Опис", "К-сть", "Нотатка"];
+  }
+  return ["№", "Product Code", "Model", "Description", "Qty", "Note"];
+}
+
+async function buildSpecDataRows(
   items: SavedConfiguration[],
   lang: Language
-): Promise<SpecRow[]> {
-  const rows: SpecRow[] = [];
+): Promise<(string | number)[][]> {
+  const rows: (string | number)[][] = [];
 
   for (let index = 0; index < items.length; index++) {
     const item = items[index];
@@ -45,72 +58,17 @@ async function buildSpecRows(
       lang
     ) ?? "";
 
-    if (lang === "uk") {
-      rows.push({
-        "№": index + 1,
-        "Код продукту": item.productCode,
-        "Модель": modelName,
-        "Опис": description,
-        "К-сть": item.qty,
-        "Нотатка": item.note,
-      });
-    } else {
-      rows.push({
-        "№": index + 1,
-        "Product Code": item.productCode,
-        "Model": modelName,
-        "Description": description,
-        "Qty": item.qty,
-        "Note": item.note,
-      });
-    }
+    rows.push([
+      index + 1,
+      item.productCode,
+      modelName,
+      description,
+      item.qty,
+      item.note,
+    ]);
   }
 
   return rows;
-}
-
-function buildSummarySheet(
-  projectMeta: ProjectMeta,
-  totalUnits: number,
-  uniqueModels: number,
-  lang: Language
-): XLSX.WorkSheet {
-  const rows: string[][] = lang === "uk"
-    ? [
-        ["Назва проєкту", projectMeta.projectName || "—"],
-        ["Клієнт / Підрядник", projectMeta.clientName || "—"],
-        ["Дата документа", projectMeta.date || "—"],
-        [],
-        ["Унікальних моделей", String(uniqueModels)],
-        ["Загальна кількість", String(totalUnits)],
-      ]
-    : [
-        ["Project Name", projectMeta.projectName || "—"],
-        ["Client / Contractor", projectMeta.clientName || "—"],
-        ["Document Date", projectMeta.date || "—"],
-        [],
-        ["Unique Models", String(uniqueModels)],
-        ["Total Units", String(totalUnits)],
-      ];
-
-  const ws = XLSX.utils.aoa_to_sheet(rows);
-  ws["!cols"] = [{ wch: 22 }, { wch: 40 }];
-  return ws;
-}
-
-function buildSpecificationSheet(
-  rows: SpecRow[]
-): XLSX.WorkSheet {
-  const ws = XLSX.utils.json_to_sheet(rows);
-  ws["!cols"] = [
-    { wch: 5 },
-    { wch: 25 },
-    { wch: 30 },
-    { wch: 80 },
-    { wch: 6 },
-    { wch: 30 },
-  ];
-  return ws;
 }
 
 export async function downloadMyListXlsx(
@@ -125,19 +83,46 @@ export async function downloadMyListXlsx(
   const totalUnits = items.reduce((sum, item) => sum + item.qty, 0);
   const uniqueModels = items.length;
 
-  const specRows = await buildSpecRows(items, lang);
-  const workbook = XLSX.utils.book_new();
-
-  const summarySheetName = lang === "uk" ? "Зведення" : "Summary";
-  const specSheetName = lang === "uk" ? "Специфікація" : "Specification";
+  const aoa: (string | number)[][] = [];
 
   if (projectMeta) {
-    const summarySheet = buildSummarySheet(projectMeta, totalUnits, uniqueModels, lang);
-    XLSX.utils.book_append_sheet(workbook, summarySheet, summarySheetName);
+    const summaryRows = buildSummaryRows(projectMeta, totalUnits, uniqueModels, lang);
+    aoa.push(...summaryRows);
+    aoa.push([]);
   }
 
-  const specSheet = buildSpecificationSheet(specRows);
-  XLSX.utils.book_append_sheet(workbook, specSheet, specSheetName);
+  const headerRowIndex = aoa.length;
+  aoa.push(buildSpecHeader(lang));
+
+  const dataRows = await buildSpecDataRows(items, lang);
+  aoa.push(...dataRows);
+
+  const ws = XLSX.utils.aoa_to_sheet(aoa);
+
+  ws["!cols"] = [
+    { wch: 5 },
+    { wch: 25 },
+    { wch: 30 },
+    { wch: 80 },
+    { wch: 8 },
+    { wch: 30 },
+  ];
+
+  const headerRef = {
+    s: { r: headerRowIndex, c: 0 },
+    e: { r: headerRowIndex, c: 5 },
+  };
+
+  for (let c = headerRef.s.c; c <= headerRef.e.c; c++) {
+    const cellRef = XLSX.utils.encode_cell({ r: headerRowIndex, c });
+    if (ws[cellRef]) {
+      ws[cellRef].s = { font: { bold: true } };
+    }
+  }
+
+  const workbook = XLSX.utils.book_new();
+  const sheetName = lang === "uk" ? "Специфікація" : "Specification";
+  XLSX.utils.book_append_sheet(workbook, ws, sheetName);
 
   let filename: string;
   if (projectMeta?.projectName) {

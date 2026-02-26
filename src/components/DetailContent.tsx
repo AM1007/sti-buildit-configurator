@@ -9,10 +9,6 @@ import { buildShareableUrl } from "../utils/configSerializer";
 import { useModelTranslations } from "../hooks/useModelTranslations";
 import { useTranslation } from "../i18n";
 
-// -----------------------------------------------------------------------------
-// Shared helper
-// -----------------------------------------------------------------------------
-
 export function isCustomBuiltItem(item: SavedConfiguration): boolean {
   return Object.values(item.configuration).some((v) => v !== null);
 }
@@ -27,10 +23,6 @@ export function buildItemConfiguratorUrl(item: SavedConfiguration): string {
     item.customText
   );
 }
-
-// -----------------------------------------------------------------------------
-// Header
-// -----------------------------------------------------------------------------
 
 interface DetailHeaderProps {
   item: SavedConfiguration;
@@ -73,10 +65,6 @@ export function DetailHeader({ item, onClose, closeButtonRef }: DetailHeaderProp
   );
 }
 
-// -----------------------------------------------------------------------------
-// Scrollable Body
-// -----------------------------------------------------------------------------
-
 interface DetailBodyProps {
   item: SavedConfiguration;
 }
@@ -93,7 +81,6 @@ export function DetailBody({ item }: DetailBodyProps) {
 
   return (
     <div className="flex-1 overflow-y-auto p-5 flex flex-col gap-6">
-      {/* Image */}
       <div className="aspect-4/3 w-full bg-slate-50 border border-slate-200 rounded-sm flex items-center justify-center overflow-hidden">
         {imagePath ? (
           <img
@@ -107,22 +94,16 @@ export function DetailBody({ item }: DetailBodyProps) {
         )}
       </div>
 
-      {/* Configuration Summary or Product Details */}
       {isCustom ? (
         <ConfigurationSummary item={item} />
       ) : (
         <ProductDetails modelId={item.modelId} />
       )}
 
-      {/* Project Info */}
       <ProjectInfo qty={item.qty} note={item.note} />
     </div>
   );
 }
-
-// -----------------------------------------------------------------------------
-// Footer
-// -----------------------------------------------------------------------------
 
 interface DetailFooterProps {
   item: SavedConfiguration;
@@ -169,10 +150,6 @@ export function DetailFooter({ item, onClose, onRemove }: DetailFooterProps) {
   );
 }
 
-// -----------------------------------------------------------------------------
-// Configuration Summary (Custom Built)
-// -----------------------------------------------------------------------------
-
 function ConfigurationSummary({ item }: { item: SavedConfiguration }) {
   const { t } = useTranslation();
   const { getStepTitle, getOptionLabel, isLoaded } = useModelTranslations(item.modelId);
@@ -202,12 +179,14 @@ function ConfigurationSummary({ item }: { item: SavedConfiguration }) {
           entries.map((entry, index) => (
             <div
               key={entry.stepId}
-              className={`flex justify-between py-2 px-3 ${
-                index % 2 === 1 ? "bg-slate-50" : ""
-              }`}
+              className={`py-2 px-3 ${index % 2 === 1 ? "bg-slate-50" : ""}`}
             >
-              <span className="text-xs text-slate-500">{entry.label}</span>
-              <span className="text-xs font-medium text-slate-900">{entry.value}</span>
+              <span className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold block mb-0.5">
+                {entry.label}
+              </span>
+              <span className="text-xs font-medium text-slate-900 block text-left">
+                {entry.value}
+              </span>
             </div>
           ))
         )}
@@ -215,13 +194,6 @@ function ConfigurationSummary({ item }: { item: SavedConfiguration }) {
     </div>
   );
 }
-
-// -----------------------------------------------------------------------------
-// Product Details (Standard)
-// ASSUMPTION: Standard products currently have no structured metadata
-// (category, certification, material). Showing model name and ID as fallback.
-// When catalog metadata is available, this section should be extended.
-// -----------------------------------------------------------------------------
 
 function ProductDetails({ modelId }: { modelId: string }) {
   const { t } = useTranslation();
@@ -236,23 +208,19 @@ function ProductDetails({ modelId }: { modelId: string }) {
         {!isLoaded ? (
           <div className="py-3 px-3 text-xs text-slate-400">{t("common.loading")}</div>
         ) : (
-          <>
-            <div className="flex justify-between py-2 px-3">
-              <span className="text-xs text-slate-500">Category</span>
-              <span className="text-xs font-medium text-slate-900">
-                {meta?.series ?? MODEL_NAMES[modelId as keyof typeof MODEL_NAMES] ?? modelId}
-              </span>
-            </div>
-          </>
+          <div className="py-2 px-3">
+            <span className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold block mb-0.5">
+              Category
+            </span>
+            <span className="text-xs font-medium text-slate-900 block text-left">
+              {meta?.series ?? MODEL_NAMES[modelId as keyof typeof MODEL_NAMES] ?? modelId}
+            </span>
+          </div>
         )}
       </div>
     </div>
   );
 }
-
-// -----------------------------------------------------------------------------
-// Project Info (read-only)
-// -----------------------------------------------------------------------------
 
 function ProjectInfo({ qty, note }: { qty: number; note: string }) {
   const { t } = useTranslation();
@@ -268,7 +236,7 @@ function ProjectInfo({ qty, note }: { qty: number; note: string }) {
             {t("drawer.quantityAssigned")}
           </span>
           <span className="text-xs font-mono font-medium text-slate-900 bg-slate-50 border border-slate-200 px-2 py-1 rounded-sm inline-block">
-            {qty} {t("drawer.units")}
+            {qty}
           </span>
         </div>
         <div>
@@ -284,10 +252,6 @@ function ProjectInfo({ qty, note }: { qty: number; note: string }) {
   );
 }
 
-// -----------------------------------------------------------------------------
-// Copy SKU (minimal: clipboard + tooltip)
-// -----------------------------------------------------------------------------
-
 function CopySku({ sku }: { sku: string }) {
   const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
@@ -298,7 +262,6 @@ function CopySku({ sku }: { sku: string }) {
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
     } catch {
-      // Clipboard API unavailable — silent fail
     }
   };
 
