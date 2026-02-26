@@ -1,32 +1,32 @@
 {
   "meta": {
     "name": "GF Fire Alarm Push Button",
-    "description": "GF fire alarm push button with optional camera",
+    "description": "Fire alarm push button with optional IP camera module",
     "series": "GF Series",
     "badges": ["UL Listed", "Fire Safety", "ADA Compliant"],
     "heroTitle": "Fire Alarm Push Button with Optional IP Camera",
-    "heroDescription": "UL-listed fire alarm push button with optional integrated IP camera for individual identification upon activation. Push-to-Activate and Key-to-Reset operation.\nAvailable with optional protective cover with or without sounder for vandalism and accidental activation prevention.\nDesigned specifically for fire alarm system integration in regulated environments.\n\nTo view the G3 Multipurpose Push Button, please <a href=\"/configurator/g3-multipurpose-push-button\" class=\"text-brand-600 underline hover:text-brand-700\">click here</a>."
+    "heroDescription": "UL Listed fire alarm push button with optional integrated IP camera for visual verification upon activation. Operating modes: Push-to-Activate and Key-to-Reset.\n\nAvailable with optional protective cover, with or without integral sounder, to reduce misuse and accidental activation.\n\nDesigned for integration into regulated fire alarm systems."
   },
   "steps": {
     "model": {
       "title": "MODEL",
       "options": {
-        "A": "#A No Camera",
+        "A": "#A Without camera",
         "C": "#C With camera (includes back box)"
       }
     },
     "cover": {
-      "title": "COVER",
+      "title": "PROTECTIVE COVER",
       "options": {
-        "0": "#0 No Cover",
-        "2": "#2 Shield"
+        "0": "#0 No cover",
+        "2": "#2 Protective shield"
       }
     },
     "text": {
-      "title": "TEXT",
+      "title": "MARKING",
       "options": {
         "FR": "#FR FIRE",
-        "HF": "#HF FireHouseFlame Symbol"
+        "HF": "#HF Fire flame symbol"
       }
     },
     "language": {

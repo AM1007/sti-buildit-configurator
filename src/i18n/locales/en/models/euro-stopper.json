@@ -1,49 +1,49 @@
 {
   "meta": {
     "name": "Euro Stopper®",
-    "description": "European protective cover for buttons",
+    "description": "Protective enclosure for manual call points",
     "series": "Euro Series",
     "badges": ["CE Marked", "UV Stabilised", "Glow Guide"],
-    "heroTitle": "Low-Profile Protective Cover with Optional Sounder",
-    "heroDescription": "Tamper-proof UV-stabilised polycarbonate cover with integrated Glow Guide for low-light visibility, designed to retrofit over break-glass call points.\nAvailable with optional sounder module, relay output and seven colour options including custom labelling.\nSuitable for schools, hospitals, hotels and public buildings where false activation prevention is required."
+    "heroTitle": "Low-Profile Protective Enclosure with Optional Sounder",
+    "heroDescription": "UV-stabilised polycarbonate enclosure designed to restrict unauthorised access to manual call points while maintaining operational access. Integrated Glow Guide improves visibility in low-light conditions.\n\nAvailable with optional sounder, relay output and multiple colour and marking configurations.\n\nSuitable for installations where protection against false activation or misuse is required."
   },
   "steps": {
     "mounting": {
-      "title": "MOUNTING",
+      "title": "MOUNTING TYPE",
       "options": {
-        "0": "#0 Flush Mount",
-        "C": "#C Surface Mount, 32mm Spacer",
-        "D": "#D Surface Mount, 50mm Spacer"
+        "0": "#0 Flush mount",
+        "C": "#C Surface mount, 32 mm spacer",
+        "D": "#D Surface mount, 50 mm spacer"
       }
     },
     "sounder": {
-      "title": "SOUNDER",
+      "title": "HOOD / SOUNDER OPTION",
       "options": {
-        "10": "#10 Label Hood without Sounder",
-        "20": "#20 Label Hood with Sounder",
-        "30": "#30 Label Hood with Sounder and Relay"
+        "10": "#10 Marked hood, no sounder",
+        "20": "#20 Marked hood with sounder",
+        "30": "#30 Marked hood with sounder and relay"
       }
     },
     "colourLabel": {
-      "title": "COLOUR & LABEL",
+      "title": "COLOUR AND MARKING",
       "options": {
-        "ML": "#ML Multi-Language Kit (Red & Green Cover)",
-        "FR": "#FR Fire Alarm label (Red)",
-        "EG": "#EG Emergency Exit label (Green)",
-        "NR": "#NR Red, no label",
-        "NG": "#NG Green, no label",
-        "NY": "#NY Yellow, no label",
-        "NW": "#NW White, no label",
-        "NB": "#NB Blue, no label",
-        "NE": "#NE Orange, no label",
-        "NK": "#NK Black, no label",
-        "CR": "#CR Red, custom label",
-        "CG": "#CG Green, custom label",
-        "CY": "#CY Yellow, custom label",
-        "CW": "#CW White, custom label",
-        "CB": "#CB Blue, custom label",
-        "CE": "#CE Orange, custom label",
-        "CK": "#CK Black, custom label"
+        "ML": "#ML Multilingual kit (red and green enclosure)",
+        "FR": "#FR Red, 'FIRE ALARM'",
+        "EG": "#EG Green, 'EMERGENCY EXIT'",
+        "NR": "#NR Red, no marking",
+        "NG": "#NG Green, no marking",
+        "NY": "#NY Yellow, no marking",
+        "NW": "#NW White, no marking",
+        "NB": "#NB Blue, no marking",
+        "NE": "#NE Orange, no marking",
+        "NK": "#NK Black, no marking",
+        "CR": "#CR Red, custom marking",
+        "CG": "#CG Green, custom marking",
+        "CY": "#CY Yellow, custom marking",
+        "CW": "#CW White, custom marking",
+        "CB": "#CB Blue, custom marking",
+        "CE": "#CE Orange, custom marking",
+        "CK": "#CK Black, custom marking"
       }
     }
   }

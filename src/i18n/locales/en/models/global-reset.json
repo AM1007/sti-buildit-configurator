@@ -1,11 +1,11 @@
 {
   "meta": {
     "name": "Global ReSet®",
-    "description": "Resettable call point",
+    "description": "Resettable manual call point",
     "series": "Global ReSet Series",
     "badges": ["UL Listed", "Resettable", "Fire Safety"],
-    "heroTitle": "Resettable Manual Call Point for Global Mounting Standards",
-    "heroDescription": "UL-listed resettable fire alarm call point that simulates break-glass activation without broken glass. Key-to-Reset DPDT with 2 Form C contacts and visible activation indicator.\nUniversal mounting plate compatible with U.S., European (GLR models), double-gang and single-gang boxes. Available in five housing colours with custom labelling.\nDesigned for fire alarm systems requiring rapid reset capability across multiple regional installation standards.\n\n<strong>MOUNTING</strong> — Global ReSet (GLR models only) are supplied as flush mount only. Back boxes are available for surface mount applications."
+    "heroTitle": "Resettable Manual Call Point for International Mounting Standards",
+    "heroDescription": "UL Listed resettable manual call point simulating break-glass activation without glass replacement. Key-operated reset mechanism. DPDT contacts (2 Form C) with visible activation indicator.\n\nUniversal mounting plate compatible with US, European (GLR models), single and double gang back boxes.\n\nIntended for fire alarm systems requiring rapid reset and compatibility with regional installation standards.\n\nMounting note: GLR models are supplied for flush installation only. Surface back boxes are available separately."
   },
   "steps": {
     "colour": {
@@ -19,14 +19,14 @@
       }
     },
     "cover": {
-      "title": "COVER",
+      "title": "PROTECTIVE COVER",
       "options": {
-        "01": "#01 No Cover",
-        "21": "#21 Shield"
+        "01": "#01 No cover",
+        "21": "#21 Protective shield"
       }
     },
     "text": {
-      "title": "TEXT",
+      "title": "MARKING",
       "options": {
         "AB": "#AB ABORT",
         "EM": "#EM EMERGENCY",
@@ -39,7 +39,7 @@
         "PO": "#PO EMERGENCY POWER OFF",
         "PS": "#PS FUEL PUMP SHUT-DOWN",
         "PX": "#PX PUSH TO EXIT",
-        "RM": "#RM Running Man Logo",
+        "RM": "#RM Running Man Symbol",
         "XT": "#XT EXIT",
         "ZA": "#ZA Custom text (NON-RETURNABLE)"
       }

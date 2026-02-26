@@ -1,52 +1,52 @@
 {
   "meta": {
     "name": "Enviro Stopper®",
-    "description": "Protective cover for outdoor use",
+    "description": "IP-rated protective enclosure for manual call points and switches",
     "series": "Enviro Series",
-    "badges": ["IP66/56 Rated", "Outdoor Rated", "Weather Resistant"],
-    "heroTitle": "IP66/56 Protective Cover for Harsh Environments",
-    "heroDescription": "IP-rated polycarbonate cover engineered to protect manual call points and switches against dust, water ingress, tampering and vandalism.\nAvailable with optional sounder, label hood and multiple colour configurations.\nDesigned for wash-down areas, outdoor installations and environments requiring elevated ingress protection."
+    "badges": ["IP66/56 Rated", "Outdoor Use", "Weather Resistant"],
+    "heroTitle": "IP66/56 Protective Enclosure for Harsh Environments",
+    "heroDescription": "Polycarbonate enclosure with IP66/56 rating designed to protect manual call points and switches against dust ingress, water penetration and unauthorised access.\n\nAvailable with optional sounder, marked hood and multiple colour configurations.\n\nSuitable for washdown areas, external installations and environments requiring increased ingress protection."
   },
   "steps": {
     "cover": {
-      "title": "COVER",
+      "title": "ENCLOSURE TYPE",
       "options": {
-        "13": "#13 Dome Cover",
-        "14": "#14 Low Profile Cover"
+        "13": "#13 Dome enclosure",
+        "14": "#14 Low-profile enclosure"
       }
     },
     "mounting": {
-      "title": "MOUNTING",
+      "title": "MOUNTING CONFIGURATION",
       "options": {
-        "6": "#6 European Enclosed Back Box, 20mm Entry Point, Sealed Mounting Plate",
-        "7": "#7 European Enclosed Back Box, 20mm Entry Point, Open Mounting Plate"
+        "6": "#6 European back box, 20 mm cable entry, sealed mounting plate",
+        "7": "#7 European back box, 20 mm cable entry, open mounting plate"
       }
     },
     "hoodSounder": {
-      "title": "HOOD, SOUNDER & WIRELESS",
+      "title": "HOOD / SOUNDER OPTIONS",
       "options": {
-        "00": "#00 No Label Hood",
-        "10": "#10 Label Hood without Sounder",
-        "20": "#20 Label Hood with Sounder",
-        "30": "#30 Label Hood with Sounder and Relay"
+        "00": "#00 Hood without marking",
+        "10": "#10 Marked hood, no sounder",
+        "20": "#20 Marked hood with sounder",
+        "30": "#30 Marked hood with sounder and relay"
       }
     },
     "colourLabel": {
-      "title": "COLOUR & LABEL",
+      "title": "COLOUR AND MARKING",
       "options": {
-        "FR": "#FR Red 'FIRE ALARM' label",
-        "NR": "#NR Red no label",
-        "CR": "#CR Red custom label (NON-RETURNABLE)",
-        "EG": "#EG Green 'Emergency Exit' label",
-        "NG": "#NG Green no label",
-        "CG": "#CG Green custom label (NON-RETURNABLE)",
-        "NC": "#NC Clear no label",
-        "NB": "#NB Blue no label",
-        "CB": "#CB Blue custom label (NON-RETURNABLE)",
-        "NW": "#NW White no label",
-        "CW": "#CW White custom label (NON-RETURNABLE)",
-        "NY": "#NY Yellow no label",
-        "CY": "#CY Yellow custom label (NON-RETURNABLE)"
+        "FR": "#FR Red, 'FIRE ALARM'",
+        "NR": "#NR Red, no marking",
+        "CR": "#CR Red, custom marking (NON-RETURNABLE)",
+        "EG": "#EG Green, 'Emergency Exit'",
+        "NG": "#NG Green, no marking",
+        "CG": "#CG Green, custom marking (NON-RETURNABLE)",
+        "NC": "#NC Clear, no marking",
+        "NB": "#NB Blue, no marking",
+        "CB": "#CB Blue, custom marking (NON-RETURNABLE)",
+        "NW": "#NW White, no marking",
+        "CW": "#CW White, custom marking (NON-RETURNABLE)",
+        "NY": "#NY Yellow, no marking",
+        "CY": "#CY Yellow, custom marking (NON-RETURNABLE)"
       }
     }
   }

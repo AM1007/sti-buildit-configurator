@@ -1,15 +1,15 @@
 {
   "meta": {
     "name": "Key Switches",
-    "description": "Key switches for access control systems",
+    "description": "Key-operated switches for access control and system reset",
     "series": "StopperSwitch Series",
-    "badges": ["Key Operated", "Dual Mount", "Indoor Only"],
+    "badges": ["Key Operated", "Dual Mount", "Indoor Use Only"],
     "heroTitle": "Key-Operated Switches for Access Control and Signalling",
-    "heroDescription": "Low/high-voltage key switches with four switch types and multiple electrical configurations including single-pole changeover, double-pole and 3-position wiring. Optional protective cover and pre-alarm.\nDual-mount design for flush or surface installation with 35mm back box included. Available in six colours with function marking or custom labelling.\nDesigned for indoor access control, system reset and safety-critical switching applications.\n\n<strong>Not suitable for outdoor use. Not compatible with the Enviro Stopper.</strong>"
+    "heroDescription": "Low and high voltage key-operated switches available in multiple switch types and electrical configurations, including single-pole, double-pole and three-position arrangements. Optional protective cover and pre-alarm indication available.\n\nDual mounting system for flush or surface installation. Supplied with 35 mm back box.\n\nIntended for indoor access control, system reset and controlled switching applications.\n\nNot suitable for outdoor use. Not compatible with Enviro Stopper."
   },
   "steps": {
     "colourMounting": {
-      "title": "COLOUR & MOUNTING",
+      "title": "COLOUR AND MOUNTING",
       "options": {
         "10": "#10 Red (Dual Mount)",
         "30": "#30 Green (Dual Mount)",
@@ -22,26 +22,26 @@
     "switchType": {
       "title": "SWITCH TYPE",
       "options": {
-        "2": "#2 Switch Type 2",
-        "3": "#3 Switch Type 3",
-        "4": "#4 Switch Type 4",
-        "5": "#5 Switch Type 5"
+        "2": "#2 Type 2",
+        "3": "#3 Type 3",
+        "4": "#4 Type 4",
+        "5": "#5 Type 5"
       }
     },
     "electricalArrangement": {
-      "title": "ELECTRICAL ARRANGEMENT",
+      "title": "ELECTRICAL CONFIGURATION",
       "options": {
-        "0": "#0 Single Pole Changeover",
-        "1": "#1 Double Pole Normally Open",
-        "2": "#2 Double Pole Normally Closed",
-        "3": "#3 3-Position Key Switch Wiring"
+        "0": "#0 Single-pole",
+        "1": "#1 Double-pole, normally open",
+        "2": "#2 Double-pole, normally closed",
+        "3": "#3 Three-position key switch"
       }
     },
     "label": {
-      "title": "LABEL",
+      "title": "MARKING",
       "options": {
-        "SAK": "Self Assemble Label Kit",
-        "CL": "Custom Label (NON-RETURNABLE)"
+        "SAK": "#SAK Self-adhesive label kit",
+        "CL": "#CL Custom marking (NON-RETURNABLE)"
       }
     }
   }

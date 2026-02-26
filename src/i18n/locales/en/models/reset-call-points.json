@@ -1,11 +1,11 @@
 {
   "meta": {
     "name": "ReSet Call Points",
-    "description": "Resettable call points for fire alarm systems",
+    "description": "Resettable manual call points for fire alarm systems",
     "series": "ReSet Series",
     "badges": ["Resettable", "Fire Safety", "Key-to-Reset"],
     "heroTitle": "Resettable Manual Call Point with Break-Glass Simulation",
-    "heroDescription": "Manual call point with resettable operating element that simulates break-glass activation without replacement parts. Visible activation indicator with key reset for immediate re-use.\nAvailable in six colours with dual, flush or surface mounting and four electrical configurations including conventional fire and Sav-wire models.\nDesigned for fire alarm systems in commercial and public buildings requiring rapid service restoration."
+    "heroDescription": "Resettable manual call point simulating break-glass activation without glass replacement. Visible activation indicator with key-operated reset for immediate reuse.\n\nAvailable in multiple colours with flush, surface or dual mounting configurations and four electrical arrangements, including standard fire and Sav-wire models.\n\nIntended for fire alarm systems requiring rapid reset and reduced maintenance."
   },
   "steps": {
     "colour": {
@@ -20,29 +20,29 @@
       }
     },
     "mounting": {
-      "title": "MOUNTING",
+      "title": "MOUNTING TYPE",
       "options": {
-        "D2": "#D2 Dual Mount (Wall Plate + Back Box)",
-        "F2": "#F2 Flush Mount (Wall Plate)",
-        "S2": "#S2 Surface Mount (Back Box)"
+        "D2": "#D2 Dual mount (plate and back box)",
+        "F2": "#F2 Flush mount (plate)",
+        "S2": "#S2 Surface mount (back box)"
       }
     },
     "electricalArrangement": {
-      "title": "ELECTRICAL ARRANGEMENT",
+      "title": "ELECTRICAL CONFIGURATION",
       "options": {
-        "01": "#01 Conventional Fire Model with 470/680Ω Resistor, Series 01",
-        "02": "#02 Single Pole Changeover, Series 02",
-        "05": "#05 Sav-wire (2-wire) with 470/680Ω Resistor and Diode, Series 05",
-        "11": "#11 Double Pole Changeover, Series 11"
+        "01": "#01 Standard fire model with 470/680 Ω resistor, Series 01",
+        "02": "#02 Single-pole switching, Series 02",
+        "05": "#05 Sav-wire (2-wire) with 470/680 Ω resistor and diode, Series 05",
+        "11": "#11 Double-pole switching, Series 11"
       }
     },
     "label": {
-      "title": "LABEL",
+      "title": "MARKING",
       "options": {
-        "HF": "House Flame Logo",
-        "RM": "Running Man Logo",
-        "SAK": "Self-Assemble Label Kit",
-        "CL": "Custom Label (NON-RETURNABLE)"
+        "HF": "#HF House Flame symbol",
+        "RM": "#RM Running Man symbol",
+        "SAK": "#SAK Self-adhesive label kit",
+        "CL": "#CL Custom marking (NON-RETURNABLE)"
       }
     }
   }

@@ -1,11 +1,11 @@
 {
   "meta": {
     "name": "Stopper® Stations",
-    "description": "Customisable UL Listed Push Buttons and Key Switches",
-    "series": "SERIES 2000",
+    "description": "Configurable push buttons and key switches, UL Listed",
+    "series": "Series 2000",
     "badges": ["UL Listed", "ADA Compliant"],
-    "heroTitle": "Configurable Push Buttons and Key Switches with Patented Design",
-    "heroDescription": "UL-listed, ADA-compliant multipurpose push buttons with patented anti-activation design. Ten activation types including Key-to-Reset, Momentary, Pneumatic, Turn-to-Reset and illuminated variants.\nAvailable in six colours with standard or custom text in any language, optional protective cover and surface mounting kits. Universal Mounting Plate included.\nDesigned for emergency, access control, HVAC and industrial signalling applications."
+    "heroTitle": "Configurable Push Buttons and Key Switches",
+    "heroDescription": "UL Listed push buttons and key-operated switches designed to reduce accidental activation. Multiple operating modes available, including Key-to-Reset, Turn-to-Reset, Momentary, Pneumatic and illuminated variants.\n\nAvailable in multiple colour configurations with standard or custom marking, optional protective cover and surface mounting kits. Universal mounting plate included.\n\nIntended for emergency systems, access control, HVAC shutdown and industrial signalling applications."
   },
   "steps": {
     "colour": {
@@ -20,31 +20,31 @@
       }
     },
     "cover": {
-      "title": "COVER",
+      "title": "PROTECTIVE COVER",
       "options": {
-        "0": "#0 No Cover"
+        "0": "#0 No cover"
       }
     },
     "activation": {
-      "title": "ACTIVATION",
+      "title": "OPERATING MODE",
       "options": {
         "0": "#0 Key-to-Reset",
         "1": "#1 Turn-to-Reset",
-        "2": "#2 Key-to-Reset Illuminates green, red or white",
-        "3": "#3 Key-to-Activate",
+        "2": "#2 Key-to-Reset, illuminated (red/green/white)",
+        "3": "#3 Key-operated",
         "4": "#4 Momentary",
-        "5": "#5 Momentary Illuminates green, red or white",
-        "6-red": "#6 Red Illuminated",
-        "6-green": "#6 Green Illuminated",
-        "6-blue": "#6 Blue Illuminated",
-        "7-red": "#7 Weather Resistant Momentary Illuminated Red",
-        "7-green": "#7 Weather Resistant Green Illuminated",
-        "8": "#8 Pneumatic Illuminates green, red or white",
-        "9": "#9 Turn-to-Reset Illuminates green, red or white"
+        "5": "#5 Momentary, illuminated (red/green/white)",
+        "6-red": "#6 Red illuminated",
+        "6-green": "#6 Green illuminated",
+        "6-blue": "#6 Blue illuminated",
+        "7-red": "#7 Weather-resistant momentary, red illuminated",
+        "7-green": "#7 Weather-resistant momentary, green illuminated",
+        "8": "#8 Pneumatic, illuminated (red/green/white)",
+        "9": "#9 Turn-to-Reset, illuminated (red/green/white)"
       }
     },
     "text": {
-      "title": "TEXT",
+      "title": "MARKING",
       "options": {
         "AB": "#AB ABORT",
         "EM": "#EM EMERGENCY",
@@ -57,8 +57,8 @@
         "HV": "#HV HVAC SHUT-DOWN",
         "LD": "#LD LOCKDOWN",
         "PX": "#PX PUSH TO EXIT",
-        "NT": "#NT NO TEXT, blank button and/or cover",
-        "ZA": "#ZA NON-RETURNABLE custom text"
+        "NT": "#NT No text",
+        "ZA": "#ZA Custom text (NON-RETURNABLE)"
       }
     },
     "language": {
@@ -66,25 +66,25 @@
       "options": {
         "EN": "#EN English",
         "ES": "#ES Spanish",
-        "ZL": "#ZL NON-RETURNABLE other language"
+        "ZL": "#ZL Other language (NON-RETURNABLE)"
       }
     },
     "installationOptions": {
-      "title": "INSTALLATION OPTIONS",
+      "title": "INSTALLATION ACCESSORIES",
       "options": {
-        "none": "# No additional mounting accessories are required",
-        "&KIT-71100A-R": "#&KIT-71100A-R Red Back Box for Surface Mounting",
-        "&KIT-71100A-G": "#&KIT-71100A-G Green Back Box for Surface Mounting",
-        "&KIT-71100A-Y": "#&KIT-71100A-Y Yellow Back Box for Surface Mounting",
-        "&KIT-71100A-W": "#&KIT-71100A-W White Back Box for Surface Mounting",
-        "&KIT-71100A-B": "#&KIT-71100A-B Blue Back Box for Surface Mounting",
-        "&KIT-71100A-E": "#&KIT-71100A-E Orange Back Box for Surface Mounting",
-        "&KIT-71101B-R": "#&KIT-71101B-R Red Back Box & Spacer Kit for Deep Mounting",
-        "&KIT-71101B-G": "#&KIT-71101B-G Green Back Box & Spacer Kit for Deep Surface Mounting",
-        "&KIT-71101B-Y": "#&KIT-71101B-Y Yellow Back Box & Spacer Kit for Deep Surface Mounting",
-        "&KIT-71101B-W": "#&KIT-71101B-W White Back Box & Spacer Kit for Deep Surface Mounting",
-        "&KIT-71101B-B": "#&KIT-71101B-B Blue Back Box & Spacer Kit for Deep Surface Mounting",
-        "&KIT-71101B-E": "#&KIT-71101B-E Orange Back Box & Spacer Kit for Deep Surface Mounting"
+        "none": "# No additional mounting accessories required",
+        "&KIT-71100A-R": "#&KIT-71100A-R Red surface back box",
+        "&KIT-71100A-G": "#&KIT-71100A-G Green surface back box",
+        "&KIT-71100A-Y": "#&KIT-71100A-Y Yellow surface back box",
+        "&KIT-71100A-W": "#&KIT-71100A-W White surface back box",
+        "&KIT-71100A-B": "#&KIT-71100A-B Blue surface back box",
+        "&KIT-71100A-E": "#&KIT-71100A-E Orange surface back box",
+        "&KIT-71101B-R": "#&KIT-71101B-R Red deep surface mounting kit",
+        "&KIT-71101B-G": "#&KIT-71101B-G Green deep surface mounting kit",
+        "&KIT-71101B-Y": "#&KIT-71101B-Y Yellow deep surface mounting kit",
+        "&KIT-71101B-W": "#&KIT-71101B-W White deep surface mounting kit",
+        "&KIT-71101B-B": "#&KIT-71101B-B Blue deep surface mounting kit",
+        "&KIT-71101B-E": "#&KIT-71101B-E Orange deep surface mounting kit"
       }
     }
   }

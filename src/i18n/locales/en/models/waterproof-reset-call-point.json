@@ -1,11 +1,11 @@
 {
   "meta": {
     "name": "Waterproof ReSet Call Point",
-    "description": "Waterproof call point with resettable function",
+    "description": "IP67 resettable manual call point",
     "series": "ReSet Series",
     "badges": ["IP67 Rated", "Resettable", "EN54-11"],
-    "heroTitle": "IP67 Waterproof Resettable Manual Call Point",
-    "heroDescription": "IP67-rated manual call point with resettable operating element that simulates break-glass activation. Visible activation indicator with key reset for immediate re-use.\nAvailable in six colours with three electrical configurations including EN54-11 approved conventional fire model. Multiple label options.\nDesigned for outdoor and harsh-environment fire alarm systems compatible with most conventional panels."
+    "heroTitle": "IP67 Resettable Manual Call Point, EN54-11",
+    "heroDescription": "IP67-rated resettable manual call point with break-glass simulation element. Visible activation indicator and key-operated reset mechanism for immediate reinstatement.\n\nAvailable in multiple colour options with three electrical configurations, including EN54-11 certified fire model.\n\nIntended for outdoor fire alarm installations requiring sealed enclosure and compliance with EN54-11."
   },
   "steps": {
     "colour": {
@@ -20,20 +20,20 @@
       }
     },
     "label": {
-      "title": "LABEL",
+      "title": "MARKING",
       "options": {
-        "HOUSE_FLAME": "House Flame Logo",
-        "RUNNING_MAN": "Running Man Logo",
-        "SELF_ASSEMBLE": "Self Assemble Label Kit",
-        "CL": "Custom Label (NON-RETURNABLE)"
+        "HOUSE_FLAME": "#HF House Flame symbol",
+        "RUNNING_MAN": "#RM Running Man symbol",
+        "SELF_ASSEMBLE": "#SAK Self-adhesive label kit",
+        "CL": "#CL Custom marking (NON-RETURNABLE)"
       }
     },
     "electricalArrangement": {
-      "title": "ELECTRICAL ARRANGEMENT",
+      "title": "ELECTRICAL CONFIGURATION",
       "options": {
-        "01": "#01 Conventional Fire Model (EN54-11 approved)",
-        "02": "#02 Single Pole Changeover",
-        "11": "#11 Double Pole Changeover"
+        "01": "#01 Standard fire model (EN54-11 certified)",
+        "02": "#02 Single-pole switching",
+        "11": "#11 Double-pole switching"
       }
     }
   }

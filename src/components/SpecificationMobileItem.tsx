@@ -5,11 +5,8 @@ import type { SavedConfiguration } from "../types";
 import { MODEL_NAMES } from "../types";
 import { getModelById } from "../data/models";
 import { buildShareableUrl } from "../utils/configSerializer";
+import { getCompletedDeviceImage } from "../utils/getCompletedDeviceImage";
 import { useTranslation } from "../i18n";
-
-// -----------------------------------------------------------------------------
-// Props
-// -----------------------------------------------------------------------------
 
 interface SpecificationMobileListProps {
   items: SavedConfiguration[];
@@ -18,10 +15,6 @@ interface SpecificationMobileListProps {
   onViewDetails: (id: string) => void;
   onRemove: (id: string) => void;
 }
-
-// -----------------------------------------------------------------------------
-// List (mobile only — caller wraps with md:hidden)
-// -----------------------------------------------------------------------------
 
 export function SpecificationMobileList({
   items,
@@ -46,10 +39,6 @@ export function SpecificationMobileList({
   );
 }
 
-// -----------------------------------------------------------------------------
-// Single Item Block
-// -----------------------------------------------------------------------------
-
 interface SpecificationMobileItemProps {
   item: SavedConfiguration;
   onQtyChange: (id: string, qty: number) => void;
@@ -68,17 +57,35 @@ function SpecificationMobileItem({
   const { t } = useTranslation();
   const modelName = MODEL_NAMES[item.modelId] ?? item.modelId;
   const isCustomBuilt = Object.values(item.configuration).some((v) => v !== null);
-
   const configuratorUrl = buildItemConfiguratorUrl(item);
+
+  const { imagePath } = getCompletedDeviceImage({
+    fullCode: item.productCode,
+    modelId: item.modelId,
+    config: item.configuration,
+    isComplete: true,
+  });
 
   return (
     <div className="border border-slate-200 rounded-sm bg-white p-3">
-      {/* Header: SKU + Model Name + Remove */}
-      <div className="flex justify-between items-start mb-2">
-        <div>
+      <div className="flex gap-3 mb-2">
+        <div className="h-14 w-14 shrink-0 bg-slate-50 border border-slate-200 rounded-sm flex items-center justify-center overflow-hidden">
+          {imagePath ? (
+            <img
+              src={imagePath}
+              alt={item.productCode}
+              className="object-contain w-full h-full"
+              loading="lazy"
+            />
+          ) : (
+            <span className="text-slate-300 text-[9px] text-center leading-tight">No img</span>
+          )}
+        </div>
+
+        <div className="flex-1 min-w-0">
           <Link
             to={configuratorUrl}
-            className={`text-[10px] font-mono block mb-0.5 ${
+            className={`text-[10px] font-mono block mb-0.5 truncate ${
               isCustomBuilt
                 ? "text-blue-600"
                 : "text-slate-600"
@@ -86,21 +93,21 @@ function SpecificationMobileItem({
           >
             {item.productCode}
           </Link>
-          <span className="text-xs font-medium text-slate-900">
+          <span className="text-xs font-medium text-slate-900 block truncate">
             {modelName}
           </span>
         </div>
+
         <button
           type="button"
           onClick={() => onRemove(item.id)}
-          className="text-slate-300 hover:text-red-600 transition-colors p-1"
+          className="text-slate-500 hover:text-red-600 transition-colors p-1 shrink-0 self-start"
           aria-label={t("myList.removeItem")}
         >
           <Trash2 className="h-4 w-4" />
         </button>
       </div>
 
-      {/* Qty + Note inputs */}
       <div className="grid grid-cols-3 gap-2 mb-3">
         <div className="col-span-1">
           <label className="text-[9px] uppercase tracking-wider text-slate-400 font-semibold block mb-1">
@@ -125,7 +132,6 @@ function SpecificationMobileItem({
         </div>
       </div>
 
-      {/* View Details button */}
       <button
         type="button"
         onClick={() => onViewDetails(item.id)}
@@ -136,10 +142,6 @@ function SpecificationMobileItem({
     </div>
   );
 }
-
-// -----------------------------------------------------------------------------
-// Mobile Qty Input
-// -----------------------------------------------------------------------------
 
 interface MobileQtyInputProps {
   id: string;
@@ -182,10 +184,6 @@ function MobileQtyInput({ id, value, onChange }: MobileQtyInputProps) {
   );
 }
 
-// -----------------------------------------------------------------------------
-// Mobile Note Input
-// -----------------------------------------------------------------------------
-
 interface MobileNoteInputProps {
   id: string;
   value: string;
@@ -211,10 +209,6 @@ function MobileNoteInput({ id, value, placeholder, onChange }: MobileNoteInputPr
     />
   );
 }
-
-// -----------------------------------------------------------------------------
-// Helper
-// -----------------------------------------------------------------------------
 
 function buildItemConfiguratorUrl(item: SavedConfiguration): string {
   const model = getModelById(item.modelId);

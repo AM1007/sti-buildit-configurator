@@ -1,53 +1,53 @@
 {
   "meta": {
     "name": "Waterproof Push Buttons",
-    "description": "Waterproof push buttons for outdoor use",
+    "description": "IP67 push buttons for outdoor and wet environments",
     "series": "StopperSwitch Series",
-    "badges": ["IP67 Rated", "Outdoor Rated", "Key-to-Reset"],
-    "heroTitle": "IP67 Waterproof Push Buttons for Outdoor Installations",
-    "heroDescription": "IP67-rated low/high-voltage push buttons with Momentary (StopperPush) and Latching Key-to-Reset (StopperLatch) activation modes. Multi-functional signal electrical configuration.\nSurface-mount design available in six housing and six button colours with function marking or custom labelling. Compatible with STI Universal Stopper for additional protection.\nDesigned for outdoor and moisture-prone environments requiring weather-resistant signalling and control."
+    "badges": ["IP67 Rated", "Outdoor Use", "Key-to-Reset"],
+    "heroTitle": "IP67 Push Buttons for Outdoor Installation",
+    "heroDescription": "IP67-rated low and high voltage push buttons available in Momentary (StopperPush) and Latching Key-to-Reset (StopperLatch) configurations. Multifunction electrical signal configuration (SPC & DPC).\n\nSurface-mounted housing. Multiple housing and button colour combinations with standard or custom marking options. Compatible with Universal Stopper protective enclosures.\n\nIntended for outdoor installations and wet environments requiring sealed signalling and control devices."
   },
   "steps": {
     "housingColour": {
-      "title": "HOUSING COLOUR & MOUNTING",
+      "title": "HOUSING COLOUR (SURFACE MOUNT)",
       "options": {
-        "1": "#1 Red (Surface Mount)",
-        "3": "#3 Green (Surface Mount)",
-        "5": "#5 Yellow (Surface Mount)",
-        "7": "#7 White (Surface Mount)",
-        "9": "#9 Blue (Surface Mount)",
-        "E": "#E Orange (Surface Mount)"
+        "1": "#1 Red",
+        "3": "#3 Green",
+        "5": "#5 Yellow",
+        "7": "#7 White",
+        "9": "#9 Blue",
+        "E": "#E Orange"
       }
     },
     "buttonColour": {
       "title": "BUTTON COLOUR",
       "options": {
-        "R": "#R Red Button",
-        "G": "#G Green Button",
-        "Y": "#Y Yellow Button",
-        "W": "#W White Button",
-        "B": "#B Blue Button",
-        "E": "#E Orange Button"
+        "R": "#R Red button",
+        "G": "#G Green button",
+        "Y": "#Y Yellow button",
+        "W": "#W White button",
+        "B": "#B Blue button",
+        "E": "#E Orange button"
       }
     },
     "buttonType": {
-      "title": "BUTTON TYPE",
+      "title": "OPERATING MODE",
       "options": {
-        "0": "#0 Latching (Key-to-Reset)",
+        "0": "#0 Latching, Key-to-Reset",
         "1": "#1 Momentary"
       }
     },
     "electricalArrangements": {
-      "title": "ELECTRICAL ARRANGEMENTS",
+      "title": "ELECTRICAL CONFIGURATION",
       "options": {
-        "4": "#4 Multi-Functional Signal (SPC & DPC)"
+        "4": "#4 Multifunction signal (SPC & DPC)"
       }
     },
     "label": {
-      "title": "LABEL",
+      "title": "MARKING",
       "options": {
-        "SAK": "# Self-Assemble Label Kit",
-        "CL": "#CL Custom Label (NON-RETURNABLE)"
+        "SAK": "#SAK Self-adhesive label kit",
+        "CL": "#CL Custom marking (NON-RETURNABLE)"
       }
     }
   }

@@ -1,15 +1,15 @@
 {
   "meta": {
     "name": "Indoor Push Buttons",
-    "description": "Push buttons for indoor use",
+    "description": "Push buttons for indoor applications",
     "series": "StopperSwitch Series",
     "badges": ["Dual Mount", "Low / High Voltage"],
     "heroTitle": "Indoor Push Buttons for Signalling and Control",
-    "heroDescription": "Versatile low/high-voltage push buttons with Key-to-Reset, Momentary and Pneumatic activation options. Single-pole changeover and multi-functional signal configurations.\nDual-mount design fits any standard UK-type switch socket box with flush or surface installation. Available in six colours with custom labelling.\nDesigned for indoor access control, emergency signalling and building management applications."
+    "heroDescription": "Low and high voltage push buttons supporting Key-to-Reset, Momentary and Pneumatic operating modes. Available in single-pole switching and multifunction signal configurations.\n\nDual mounting system compatible with standard UK back boxes for flush or surface installation.\n\nIntended for indoor access control, emergency signalling and building management systems."
   },
   "steps": {
     "colour": {
-      "title": "COLOUR",
+      "title": "HOUSING COLOUR",
       "options": {
         "1": "#1 Red (Dual Mount)",
         "3": "#3 Green (Dual Mount)",
@@ -22,34 +22,34 @@
     "buttonColour": {
       "title": "BUTTON COLOUR",
       "options": {
-        "R": "#R Red Button",
-        "G": "#G Green Button",
-        "Y": "#Y Yellow Button",
-        "W": "#W White Button",
-        "B": "#B Blue Button",
-        "E": "#E Orange Button"
+        "R": "#R Red button",
+        "G": "#G Green button",
+        "Y": "#Y Yellow button",
+        "W": "#W White button",
+        "B": "#B Blue button",
+        "E": "#E Orange button"
       }
     },
     "pushButtonType": {
-      "title": "PUSH BUTTON TYPE",
+      "title": "OPERATING MODE",
       "options": {
         "0": "#0 Key-to-Reset",
         "1": "#1 Momentary",
-        "6": "#6 Pneumatic (EXTENDED LEAD TIMES)"
+        "6": "#6 Pneumatic (EXTENDED LEAD TIME)"
       }
     },
     "electricalArrangements": {
-      "title": "ELECTRICAL ARRANGEMENTS",
+      "title": "ELECTRICAL CONFIGURATION",
       "options": {
-        "0": "#0 Single Pole Changeover",
-        "4": "#4 Multi-Functional Signal (SPC & DPC)"
+        "0": "#0 Single-pole switching",
+        "4": "#4 Multifunction signal (SPC & DPC)"
       }
     },
     "label": {
-      "title": "LABEL",
+      "title": "MARKING",
       "options": {
-        "SAK": "Self-Assemble Label Kit",
-        "CL": "Custom Label (NON-RETURNABLE)"
+        "SAK": "#SAK Self-adhesive label kit",
+        "CL": "#CL Custom marking (NON-RETURNABLE)"
       }
     }
   }

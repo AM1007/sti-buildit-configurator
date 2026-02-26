@@ -10,28 +10,18 @@ import { SpecificationTable } from "../components/SpecificationTable";
 import { SpecificationMobileList } from "../components/SpecificationMobileItem";
 import { DetailDrawer } from "../components/DetailDrawer";
 import { DetailBottomSheet } from "../components/DetailBottomSheet";
-import { StickyExportBar } from "../components/StickyExportBar";
-import { ExportModal } from "../components/ExportModal";
 import { useIsMobile } from "../hooks/useMediaQuery";
-import { useTranslation, useLanguage } from "../i18n";
-import { downloadMyListXlsx } from "../utils/generateMyListXlsx";
-import { toast } from "../utils/toast";
+import { useTranslation } from "../i18n";
 
 export function MyListPage() {
   const myList = useMyList();
   const projectMeta = useProjectMeta();
-  const { lang } = useLanguage();
-  const { t } = useTranslation();
   const removeFromMyList = useConfigurationStore((s) => s.removeFromMyList);
-  const clearMyList = useConfigurationStore((s) => s.clearMyList);
   const updateItemQty = useConfigurationStore((s) => s.updateItemQty);
   const updateItemNote = useConfigurationStore((s) => s.updateItemNote);
-  const setProjectMeta = useConfigurationStore((s) => s.setProjectMeta);
   const isMobile = useIsMobile();
 
   const [drawerItemId, setDrawerItemId] = useState<string | null>(null);
-  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
-  const [isDownloading, setIsDownloading] = useState(false);
 
   const drawerItem = useMemo(
     () => myList.find((item) => item.id === drawerItemId) ?? null,
@@ -53,48 +43,12 @@ export function MyListPage() {
     setDrawerItemId(null);
   };
 
-  const handleClearAll = () => {
-    toast.confirm(t("myList.clearListConfirm"), () => {
-      clearMyList();
-    });
-  };
-
-  const handleOpenExportModal = () => {
-    setIsExportModalOpen(true);
-  };
-
-  const handleExport = async (meta: { projectName: string; clientName: string; date: string }) => {
-    setProjectMeta({
-      projectName: meta.projectName,
-      clientName: meta.clientName,
-      date: meta.date,
-    });
-
-    setIsExportModalOpen(false);
-    setIsDownloading(true);
-
-    try {
-      const updatedMeta = {
-        ...projectMeta,
-        projectName: meta.projectName,
-        clientName: meta.clientName,
-        date: meta.date,
-      };
-      await downloadMyListXlsx(myList, lang as "en" | "uk", updatedMeta);
-      setProjectMeta({ lastExportedAt: Date.now(), updatedAt: Date.now() });
-    } catch {
-      toast.error(t("toast.errorOccurred"));
-    } finally {
-      setIsDownloading(false);
-    }
-  };
-
   if (myList.length === 0) {
     return <EmptyState />;
   }
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 md:px-6 xl:px-8 py-8 md:py-10 pb-24">
+    <div className="w-full max-w-7xl mx-auto px-4 md:px-6 xl:px-8 py-8 md:py-10">
       <PageHeader />
       <ProjectSummary
         uniqueModels={summary.uniqueModels}
@@ -137,20 +91,6 @@ export function MyListPage() {
           onRemove={removeFromMyList}
         />
       )}
-
-      <StickyExportBar
-        totalUnits={summary.totalUnits}
-        onDownload={handleOpenExportModal}
-        onClear={handleClearAll}
-        isDownloading={isDownloading}
-      />
-
-      <ExportModal
-        isOpen={isExportModalOpen}
-        projectMeta={projectMeta}
-        onClose={() => setIsExportModalOpen(false)}
-        onExport={handleExport}
-      />
     </div>
   );
 }

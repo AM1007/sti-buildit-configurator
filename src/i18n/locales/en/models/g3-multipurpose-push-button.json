@@ -1,18 +1,18 @@
 {
   "meta": {
     "name": "G3 Multipurpose Push Button",
-    "description": "G3 multipurpose push button with optional camera",
+    "description": "Multipurpose signalling push button with optional IP camera module",
     "series": "G3 Series",
     "badges": ["UL Listed", "ADA Compliant"],
     "heroTitle": "Multipurpose Signalling Push Button with Optional IP Camera",
-    "heroDescription": "UL-listed multipurpose push button with optional integrated IP camera for identification upon activation. Supports Key-to-Reset, Momentary and Turn-to-Reset operation modes.\nAvailable in six colours with standard or custom labelling in any language, optional protective cover and camera module.\nDesigned for security, access control, emergency and industrial signalling applications.\n\nTo view the GF Fire Alarm Push Button, please <a href=\"/configurator/gf-fire-alarm-push-button\" class=\"text-brand-600 underline hover:text-brand-700\">click here</a>."
+    "heroDescription": "UL Listed multipurpose push button with optional integrated IP camera for visual verification upon activation. Supports Key-to-Reset, Momentary and Turn-to-Reset operating modes.\n\nAvailable in multiple colour configurations with standard or custom marking, optional protective cover and camera module.\n\nIntended for security systems, access control, emergency signalling and industrial applications."
   },
   "steps": {
     "model": {
       "title": "MODEL",
       "options": {
-        "A": "#A Without Camera",
-        "C": "#C With Camera (includes back box)"
+        "A": "#A Without camera",
+        "C": "#C With camera (includes back box)"
       }
     },
     "colour": {
@@ -27,7 +27,7 @@
       }
     },
     "buttonType": {
-      "title": "BUTTON TYPE",
+      "title": "OPERATING MODE",
       "options": {
         "2": "#2 Key-to-Reset",
         "5": "#5 Momentary",
@@ -35,14 +35,14 @@
       }
     },
     "cover": {
-      "title": "COVER",
+      "title": "PROTECTIVE COVER",
       "options": {
-        "0": "#0 No Cover",
-        "2": "#2 Shield"
+        "0": "#0 No cover",
+        "2": "#2 Protective shield"
       }
     },
     "text": {
-      "title": "TEXT",
+      "title": "MARKING",
       "options": {
         "AB": "#AB ABORT",
         "EM": "#EM EMERGENCY",

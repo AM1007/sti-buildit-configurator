@@ -1,47 +1,47 @@
 {
   "meta": {
     "name": "Universal Stopper®",
-    "description": "Protective cover for buttons and switches",
+    "description": "Protective enclosure for push buttons and switches",
     "series": "Universal Stopper Series",
-    "badges": ["IP54 Rated", "Indoor / Outdoor", "With Sounder"],
-    "heroTitle": "Dome IP54 Protective Cover with Optional Sounder",
-    "heroDescription": "Dome polycarbonate cover for manual call points, emergency buttons, pull stations and electrical devices. IP54-rated mounting options for protection against physical damage, dust and moisture ingress.\nAvailable with optional label hood, sounder with relay, and multiple colour options including custom labelling. Flush, surface and colour-matched frame mounting.\nDesigned for indoor and outdoor installations requiring robust device protection against tampering, vandalism and accidental activation."
+    "badges": ["IP54 Rated", "Indoor / Outdoor Use", "Optional Sounder"],
+    "heroTitle": "Dome Polycarbonate Protective Enclosure, IP54",
+    "heroDescription": "Dome polycarbonate enclosure for manual call points, emergency push buttons, control panels and electrical devices. IP54-rated configurations provide protection against impact, dust ingress and water splashes.\n\nAvailable with optional marked hood, sounder with relay and multiple colour and marking configurations. Supports flush, surface and coloured spacer mounting.\n\nIntended for indoor and outdoor installations requiring protection against unauthorised access or accidental activation."
   },
   "steps": {
     "mounting": {
-      "title": "MOUNTING",
+      "title": "MOUNTING TYPE",
       "options": {
-        "0": "#0 Flush Mount Open Backed",
-        "1": "#1 Surface Mount - Clear Spacer (Dual Mount)",
-        "2": "#2 Surface Mount with Matching Coloured Frame"
+        "0": "#0 Flush mount, open back",
+        "1": "#1 Surface mount with transparent spacer (Dual Mount)",
+        "2": "#2 Surface mount with coloured spacer"
       }
     },
     "hoodSounder": {
-      "title": "HOOD & SOUNDER",
+      "title": "HOOD / SOUNDER OPTION",
       "options": {
-        "00": "#00 No Label Hood",
-        "10": "#10 Label Hood without Sounder",
-        "20": "#20 Label Hood with Sounder",
-        "30": "#30 Label Hood with Sounder and Relay"
+        "00": "#00 Hood without marking",
+        "10": "#10 Marked hood, no sounder",
+        "20": "#20 Marked hood with sounder",
+        "30": "#30 Marked hood with sounder and relay"
       }
     },
     "colourLabel": {
-      "title": "COLOUR & LABEL",
+      "title": "COLOUR AND MARKING",
       "options": {
-        "FR": "#FR Red 'FIRE ALARM' label",
-        "NR": "#NR Red no label",
-        "CR": "#CR Red custom label (NON-RETURNABLE)",
-        "EG": "#EG Green 'Emergency Exit' label",
-        "NG": "#NG Green no label",
-        "CG": "#CG Green custom label (NON-RETURNABLE)",
-        "NC": "#NC Clear no label",
-        "CK": "#CK Black custom label (NON-RETURNABLE)",
-        "NB": "#NB Blue no label",
-        "CB": "#CB Blue custom label (NON-RETURNABLE)",
-        "NW": "#NW White no label",
-        "CW": "#CW White custom label (NON-RETURNABLE)",
-        "NY": "#NY Yellow no label",
-        "CY": "#CY Yellow custom label (NON-RETURNABLE)"
+        "FR": "#FR Red, 'FIRE ALARM'",
+        "NR": "#NR Red, no marking",
+        "CR": "#CR Red, custom marking (NON-RETURNABLE)",
+        "EG": "#EG Green, 'EMERGENCY EXIT'",
+        "NG": "#NG Green, no marking",
+        "CG": "#CG Green, custom marking (NON-RETURNABLE)",
+        "NC": "#NC Clear, no marking",
+        "CK": "#CK Black, custom marking (NON-RETURNABLE)",
+        "NB": "#NB Blue, no marking",
+        "CB": "#CB Blue, custom marking (NON-RETURNABLE)",
+        "NW": "#NW White, no marking",
+        "CW": "#CW White, custom marking (NON-RETURNABLE)",
+        "NY": "#NY Yellow, no marking",
+        "CY": "#CY Yellow, custom marking (NON-RETURNABLE)"
       }
     }
   }

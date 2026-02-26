@@ -33,46 +33,46 @@
     "readMore": "Читати далі"
   },
   "header": {
-    "logo": "Build it"
+    "account": "Кабінет"
   },
   "footer": {
     "copyright": "© {year} Product Configurator. Усі права захищені."
   },
   "home": {
-    "heroTitle": "Конфігуратор продуктів",
-    "heroDescription": "Колекція конфігураторів Build It від STI об'єднує кнопки, сповіщувачі, захисні корпуси та інші пристрої активації і захисту для систем пожежної безпеки, охорони та контролю доступу. Кожна серія продуктів включає інтерактивний конфігуратор, який дозволяє налаштувати матеріали, методи активації, варіанти монтажу та захисні функції відповідно до ваших вимог.",
-    "heroSubtitle": "Створіть свій ідеальний пристрій",
-    "heroBadge": "Конфігуратор продуктів",
-    "configuratorsTitle": "Оберіть конфігуратор",
-    "inDevelopment": "В розробці"
-  },
+    "heroTitle": "Конфігуратори обладнання STI",
+    "heroDescription": "Набір інструментів для конфігурування кнопок, ручних сповіщувачів, захисних кришок, корпусів та пристроїв активації для систем пожежної сигналізації, охорони та контролю доступу. Кожна серія забезпечує параметричний вибір матеріалу виконання, типу активації, способу монтажу, ступеня захисту та додаткових опцій. Результат – визначена конфігурація виробу, готова до включення в специфікацію та проєктну документацію.",
+    "heroSubtitle": "Сконфігуруйте пристрій відповідно до вимог проєкту",
+    "heroBadge": "Інструмент конфігурування продукту",
+    "configuratorsTitle": "Оберіть серію для конфігурування",
+    "inDevelopment": "У розробці"
+  }
+,
   "hero": {
-    "startConfig": "Почати конфігурацію",
-    "browseAll": "Переглянути всі моделі"
+    "startConfig": "Розпочати конфігурування"
   },
   "filter": {
-    "productType": "Тип продукту",
+    "productType": "Тип виробу",
     "label": "Фільтр",
     "type": "Тип",
-    "specs": "Хар-ки",
+    "specs": "Характеристики",
     "all": "Усі",
     "pushButtons": "Кнопки",
-    "callPoints": "Сповіщувачі",
+    "callPoints": "Ручні сповіщувачі",
     "covers": "Захисні кришки",
     "enclosures": "Корпуси",
-    "weatherRated": "Вологозахист",
-    "sounder": "Сирена",
+    "weatherRated": "Для зовнішнього встановлення",
+    "sounder": "Оповіщувач",
     "resetDevice": "Пристрій скидання",
     "fireAlarm": "Пожежна сигналізація",
-    "keyOperated": "Ключовий",
+    "keyOperated": "З керуванням ключем",
     "filters": "Фільтри",
-    "filtersActive": "Фільтри ({count} активних)",
+    "filtersActive": "Активні фільтри ({count})",
     "showingOf": "Показано {shown} з {total}",
-    "noResults": "Жоден продукт не відповідає обраним фільтрам.",
-    "clearFilters": "Очистити фільтри"
+    "noResults": "За вибраними фільтрами виробів не знайдено.",
+    "clearFilters": "Скинути фільтри"
   },
   "grid": {
-    "loadMore": "Завантажити більше",
+    "loadMore": "Показати більше моделей",
     "showingAll": "Показано всі моделі"
   },
   "view": {
@@ -80,193 +80,194 @@
     "list": "Список"
   },
   "tag": {
-    "weatherRated": "Вологозахист",
-    "sounder": "Сирена",
-    "fireAlarm": "Пожежна",
-    "resetDevice": "Скидання",
-    "keyOperated": "Ключ"
+    "weatherRated": "Для зовнішнього встановлення",
+    "sounder": "Оповіщувач",
+    "fireAlarm": "Пожежна сигналізація",
+    "resetDevice": "З можливістю скидання",
+    "keyOperated": "З керуванням ключем"
   },
-  "configurator": {
+"configurator": {
     "configuration": "Конфігурація",
     "modelDescription": "Опис",
     "editSelections": "Редагувати вибір",
-    "productPreview": "Попередній перегляд",
-    "productModel": "Модель продукту",
-    "previewNotAvailable": "ПОПЕРЕДНІЙ ПЕРЕГЛЯД\nНЕДОСТУПНИЙ",
-    "completeSelections": "Будь ласка, завершіть вибір опцій",
+    "productPreview": "Перегляд",
+    "productModel": "Модель",
+    "previewNotAvailable": "ПЕРЕГЛЯД НЕДОСТУПНИЙ",
+    "completeSelections": "Завершіть усі обов’язкові вибори",
     "imageFailedToLoad": "Не вдалося завантажити зображення",
-    "missingSelections": "Відсутні вибори",
+    "missingSelections": "Неповний вибір",
     "configurationComplete": "Конфігурацію завершено",
-    "addToMyList": "Додати до мого списку",
+    "addToMyList": "Додати до списку",
     "removeFromMyList": "Видалити зі списку",
-    "inMyList": "У моєму списку",
+    "inMyList": "У списку",
     "configured": "СКОНФІГУРОВАНО",
-    "copyProductModel": "Копіювати артикул",
+    "copyProductModel": "Копіювати модель",
     "copyUrl": "Копіювати посилання",
     "downloadPdf": "Завантажити PDF",
-    "resetConfiguration": "Скинути конфігурацію",
-    "whereToBuy": "Де купити",
-    "selectOption": "Оберіть опцію",
-    "optionDisabled": "Опція недоступна",
-    "extendedLeadTimes": "ПОДОВЖЕНІ ТЕРМІНИ ПОСТАВКИ",
+    "resetConfiguration": "Скинути",
+    "whereToBuy": "Де придбати",
+    "selectOption": "Оберіть параметр",
+    "optionDisabled": "Параметр недоступний",
+    "extendedLeadTimes": "ПОДОВЖЕНИЙ ТЕРМІН ПОСТАЧАННЯ",
     "notUlListed": "НЕ СЕРТИФІКОВАНО UL",
-    "nonReturnable": "БЕЗ ПОВЕРНЕННЯ",
+    "nonReturnable": "ПОВЕРНЕННЮ НЕ ПІДЛЯГАЄ",
     "customText": "Власний текст",
-    "enterCustomText": "Введіть власний текст",
+    "enterCustomText": "Введіть текст",
     "lineCount": "Кількість рядків",
     "lines": "рядків",
-    "maxCharacters": "Максимум символів",
+    "maxCharacters": "Макс. кількість символів",
     "charactersRemaining": "Залишилось символів",
     "textPreview": "Попередній перегляд тексту",
-    "submitCustomText": "Застосувати текст",
-    "clearSelection": "Очистити вибір",
-    "noSelection": "НЕ ВИБРАНО",
-    "stepsCompleted": "{completed} з {total} кроків виконано",
-    "invalidDeepLink": "Посилання на конфігурацію недійсне або пошкоджене. Починаємо заново.",
-    "optionsHidden": "{count} опцій приховано",
-    "submitCustomTextHint": "Надішліть власний текст, щоб увімкнути можливість поділитися"
+    "submitCustomText": "Застосувати",
+    "clearSelection": "Очистити",
+    "noSelection": "НЕ ОБРАНО",
+    "stepsCompleted": "Завершено {completed} з {total} кроків",
+    "invalidDeepLink": "Некоректне посилання на конфігурацію. Розпочато нову конфігурацію.",
+    "optionsHidden": "Приховано параметрів: {count}",
+    "submitCustomTextHint": "Застосуйте текст, щоб активувати спільний доступ"
   },
   "myList": {
     "title": "Специфікація проєкту",
-    "subtitle": "Ваші обрані моделі готові до експорту.",
-    "continueConfiguring": "Продовжити конфігурацію",
-    "description": "Додавайте продукти до свого списку, натискаючи значок зірочки на сторінках продуктів. Після додавання ваш список продуктів можна легко надіслати електронною поштою одному з наших дистриб'юторів або будь-кому на ваш вибір.",
-    "emptyTitle": "Ваш проєкт порожній.",
-    "emptyDescription": "Почніть конфігурацію моделей, щоб створити специфікацію.",
-    "startConfiguring": "Почати конфігурацію",
+    "subtitle": "Обрані моделі, готові до експорту",
+    "continueConfiguring": "Продовжити конфігурування",
+    "description": "Додавайте моделі через іконку зірки у списку або на сторінці виробу. Сформований перелік можна експортувати або передати дистриб’ютору чи учасникам проєкту.",
+    "emptyTitle": "Моделі не додані",
+    "emptyDescription": "Сконфігуруйте моделі для формування специфікації",
+    "startConfiguring": "Сконфігурувати",
     "browseConfigurators": "Переглянути конфігуратори",
     "itemsCount": "{count} позицій",
     "savedAt": "Збережено",
-    "loadConfiguration": "Завантажити конфігурацію",
+    "loadConfiguration": "Завантажити",
     "removeItem": "Видалити",
     "clearList": "Очистити проєкт",
-    "clearListConfirm": "Ви впевнені, що хочете очистити всі збережені конфігурації? Цю дію неможливо скасувати.",
-    "downloadList": "Завантажити специфікацію проєкту",
-    "exportXlsx": "Експорт в Excel",
-    "copyAllModels": "Копіювати всі артикули",
+    "clearListConfirm": "Очистити всі збережені конфігурації? Дію неможливо скасувати.",
+    "downloadList": "Завантажити специфікацію",
+    "exportXlsx": "Експорт у Excel",
+    "copyAllModels": "Копіювати перелік моделей",
     "projectName": "Назва проєкту",
-    "projectNamePlaceholder": "напр. Модернізація об'єкта Q3",
-    "clientName": "Клієнт / Підрядник",
-    "clientNamePlaceholder": "Опціонально",
+    "projectNamePlaceholder": "напр. Модернізація об’єкта Q3",
+    "clientName": "Замовник / Підрядник",
+    "clientNamePlaceholder": "Необов’язково",
     "date": "Дата документа",
-    "qty": "К-сть",
-    "note": "Нотатка",
-    "notePlaceholder": "Додати нотатку...",
-    "removeFromProject": "Видалити з проєкту",
+    "qty": "Кількість",
+    "note": "Примітка",
+    "notePlaceholder": "Додати примітку",
+    "removeFromProject": "Видалити",
     "openInConfigurator": "Відкрити в конфігураторі",
-    "viewProductPage": "Переглянути продукт",
-    "skuCopied": "Артикул скопійовано"
+    "viewProductPage": "Перейти на сторінку виробу",
+    "skuCopied": "SKU скопійовано"
   },
   "projectSummary": {
-    "uniqueModels": "Унікальних моделей",
+    "uniqueModels": "Унікальні моделі",
     "totalUnits": "Загальна кількість",
     "lastUpdated": "Останнє оновлення",
-    "storedLocally": "Зберігається локально у вашому браузері"
+    "storedLocally": "Збережено локально в браузері"
   },
   "specTable": {
     "sku": "Артикул",
-    "modelName": "Назва моделі",
-    "qty": "К-сть",
-    "note": "Нотатка",
-    "actions": "Дії"
+    "modelName": "Модель",
+    "qty": "Кількість",
+    "note": "Примітка",
+    "actions": "Дії",
+    "customText": "Користувацький текст"
   },
   "drawer": {
-    "customBuilt": "Індивідуальна збірка",
-    "standardProduct": "Стандартний продукт",
-    "configurationSummary": "Зведення конфігурації",
-    "productDetails": "Деталі продукту",
+    "customBuilt": "Індивідуальна конфігурація",
+    "standardProduct": "Стандартний виріб",
+    "configurationSummary": "Підсумок конфігурації",
+    "productDetails": "Дані виробу",
     "projectInfo": "Інформація про проєкт",
     "quantityAssigned": "Призначена кількість",
-    "units": "Одиниць",
-    "attachedNote": "Прикріплена нотатка",
+    "units": "Одиниці",
+    "attachedNote": "Примітка",
     "noNote": "—"
   },
   "exportModal": {
-    "title": "Експорт специфікації проєкту",
-    "description": "Ці дані відображатимуться у заголовку експортованого .xlsx документа.",
+    "title": "Експорт специфікації",
+    "description": "Наведена інформація буде включена до заголовка експортованого файлу .xlsx.",
     "projectName": "Назва проєкту",
-    "projectNameRequired": "Назва проєкту обов'язкова (мін. 3 символи)",
-    "client": "Клієнт / Підрядник",
+    "projectNameRequired": "Назва проєкту обов’язкова (мінімум 3 символи)",
+    "client": "Замовник / Підрядник",
     "documentDate": "Дата документа",
-    "generateExcel": "Створити Excel",
+    "generateExcel": "Експорт у Excel",
     "lastExported": "Останній експорт: {date}"
   },
   "stickyBar": {
-    "totalUnits": "{count} одиниць загалом"
+    "totalUnits": "Загальна кількість: {count}"
   },
   "share": {
-    "menuTitle": "Поділитися",
+    "menuTitle": "Передача",
     "copyUrl": "Копіювати посилання",
-    "copyModelId": "Копіювати артикул",
-    "savePdf": "Зберегти PDF",
+    "copyModelId": "Копіювати ID моделі",
+    "savePdf": "Завантажити PDF",
     "print": "Друк",
-    "generating": "Генерація...",
+    "generating": "Формування",
     "urlCopied": "Посилання скопійовано",
-    "modelCopied": "Артикул скопійовано",
-    "pdfDownloaded": "PDF успішно завантажено",
-    "pdfGenerated": "PDF створено",
-    "pdfError": "Не вдалося створити PDF. Спробуйте ще раз.",
-    "urlError": "Неможливо створити посилання: відсутній ідентифікатор моделі",
-    "defaultProductName": "Конфігурація продукту"
+    "modelCopied": "ID моделі скопійовано",
+    "pdfDownloaded": "PDF завантажено",
+    "pdfGenerated": "PDF сформовано",
+    "pdfError": "Не вдалося сформувати PDF. Спробуйте ще раз.",
+    "urlError": "Неможливо створити посилання: відсутній ID моделі",
+    "defaultProductName": "Сконфігурована модель"
   },
   "pdf": {
-    "descriptionLabel": "Опис:",
-    "modelNumberLabel": "Артикул:"
+    "descriptionLabel": "Опис",
+    "modelNumberLabel": "Номер моделі"
   },
   "validation": {
-    "requiredField": "Це поле обов'язкове",
-    "maxLength": "Максимальна довжина: {max} символів",
+    "requiredField": "Обов’язкове поле",
+    "maxLength": "Максимум {max} символів",
     "invalidCharacters": "Недопустимі символи"
   },
   "toast": {
-    "addedToMyList": "Додано до мого списку",
+    "addedToMyList": "Додано до списку",
     "removedFromMyList": "Видалено зі списку",
     "configurationReset": "Конфігурацію скинуто",
-    "copiedToClipboard": "Скопійовано в буфер обміну",
+    "copiedToClipboard": "Скопійовано",
     "errorOccurred": "Сталася помилка"
   },
   "notFound": {
     "title": "Сторінку не знайдено",
-    "description": "Сторінка, яку ви шукаєте, не існує або була переміщена.",
-    "backHome": "На головну"
+    "description": "Запитувана сторінка не існує або більше недоступна.",
+    "backHome": "Повернутися на головну"
   },
   "inDevelopment": {
-    "title": "Сторінка в розробці",
-    "description": "Цей конфігуратор скоро буде доступний.",
-    "descriptionWithName": "Конфігуратор для {name} скоро буде доступний."
+    "title": "У розробці",
+    "description": "Цей конфігуратор наразі недоступний.",
+    "descriptionWithName": "Конфігуратор для {name} наразі недоступний."
   },
   "customText": {
-    "enterLabel": "ВВЕДІТЬ ВЛАСНИЙ НАПИС ДЛЯ ВАШОГО ПРИСТРОЮ",
-    "label": "Напис",
+    "enterLabel": "ВВЕДІТЬ КОРИСТУВАЦЬКИЙ ТЕКСТ",
+    "label": "Маркування",
     "cover": "Кришка",
     "lineCount": "{count} рядок",
     "linePlaceholder": "Рядок {line}",
-    "maxCharacters": "Максимум {max} символів для кожного рядка будь-якою мовою",
-    "labelLine1Required": "Рядок 1 напису обов'язковий",
-    "coverLine1Required": "Рядок 1 кришки обов'язковий",
-    "lineExceedsMax": "Рядок {line} напису перевищує {max} символів",
-    "coverLineExceedsMax": "Рядок {line} кришки перевищує {max} символів",
-    "nonReturnable": "ПРОДУКТИ З ВЛАСНИМ НАПИСОМ НЕ ПІДЛЯГАЮТЬ ПОВЕРНЕННЮ"
+    "maxCharacters": "Максимум {max} символів у кожному рядку",
+    "labelLine1Required": "Обов’язковий рядок 1 маркування",
+    "coverLine1Required": "Обов’язковий рядок 1 для кришки",
+    "lineExceedsMax": "Рядок {line} перевищує {max} символів",
+    "coverLineExceedsMax": "Рядок {line} для кришки перевищує {max} символів",
+    "nonReturnable": "ІНДИВІДУАЛЬНІ ВИРОБИ ПОВЕРНЕННЮ НЕ ПІДЛЯГАЮТЬ"
   },
   "card": {
     "features": "Характеристики",
     "colours": "Кольори",
-    "buildYourModel": "Створити модель",
-    "inDevelopment": "В розробці"
+    "buildYourModel": "Сконфігурувати модель",
+    "inDevelopment": "У розробці"
   },
   "productCard": {
-    "noPreview": "Без перегляду",
-    "customBuilt": "Продукт індивідуальної збірки",
-    "viewDetails": "Детальніше"
+    "noPreview": "Перегляд недоступний",
+    "customBuilt": "Індивідуальна конфігурація",
+    "viewDetails": "Переглянути дані"
   },
   "customTextDisplay": {
-    "title": "Власний текст",
-    "nonReturnable": "БЕЗ ПОВЕРНЕННЯ",
+    "title": "Користувацький текст",
+    "nonReturnable": "ПОВЕРНЕННЮ НЕ ПІДЛЯГАЄ",
     "line": "Рядок {num}"
   },
   "notes": {
-    "EXTENDED_LEAD_TIMES": "ПОДОВЖЕНІ ТЕРМІНИ ПОСТАВКИ",
+    "EXTENDED_LEAD_TIMES": "ПОДОВЖЕНИЙ ТЕРМІН ПОСТАЧАННЯ",
     "NOT_UL_LISTED": "НЕ СЕРТИФІКОВАНО UL",
-    "NON-RETURNABLE": "БЕЗ ПОВЕРНЕННЯ"
+    "NON-RETURNABLE": "ПОВЕРНЕННЮ НЕ ПІДЛЯГАЄ"
   }
 }

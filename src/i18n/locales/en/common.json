@@ -33,22 +33,21 @@
     "readMore": "Read more"
   },
   "header": {
-    "logo": "Build it"
+    "account": "Account"
   },
   "footer": {
     "copyright": "© {year} Product Configurator. All rights reserved."
   },
   "home": {
-    "heroTitle": "Build It Configurators",
-    "heroDescription": "STI's Build It Configurator collection brings together customizable push buttons, call points, protective covers, enclosures, and other activation and protection devices for fire, security, and access-control applications. Each product series includes an interactive configurator that lets you tailor materials, activation methods, mounting options, and protective features to fit your exact requirements.",
-    "heroSubtitle": "Build your perfect device",
-    "heroBadge": "Product Configurator",
-    "configuratorsTitle": "Choose a configurator",
-    "inDevelopment": "In Development"
-  },
+      "heroTitle": "STI Equipment Configurators",
+      "heroDescription": "A set of configuration tools for selecting push buttons, manual call points, protective covers, enclosures, and activation devices for fire alarm, security, and access control systems. Each product series provides parameter-based selection of material, activation type, mounting method, protection rating, and additional options. The output is a defined product configuration ready for specification and project documentation.",
+      "heroSubtitle": "Configure a device according to project requirements",
+      "heroBadge": "Product Configuration Tool",
+      "configuratorsTitle": "Select a product series",
+      "inDevelopment": "In development"
+    },
   "hero": {
-    "startConfig": "Start Configuration",
-    "browseAll": "Browse All Models"
+    "startConfig": "Configure"
   },
   "filter": {
     "productType": "Product type",
@@ -80,183 +79,184 @@
     "list": "List"
   },
   "tag": {
-    "weatherRated": "Weather Rated",
+    "weatherRated": "Outdoor Rated",
     "sounder": "Sounder",
     "fireAlarm": "Fire Alarm",
     "resetDevice": "Resettable",
     "keyOperated": "Key Operated"
   },
-  "configurator": {
+"configurator": {
     "configuration": "Configuration",
     "modelDescription": "Description",
     "editSelections": "Edit Selections",
-    "productPreview": "Product Preview",
-    "productModel": "Product Model",
-    "previewNotAvailable": "PRODUCT PREVIEW\nNOT AVAILABLE",
-    "completeSelections": "Please complete build it selections",
+    "productPreview": "Preview",
+    "productModel": "Model",
+    "previewNotAvailable": "PREVIEW NOT AVAILABLE",
+    "completeSelections": "Complete all required selections",
     "imageFailedToLoad": "Image failed to load",
-    "missingSelections": "Missing selections",
+    "missingSelections": "Incomplete selections",
     "configurationComplete": "Configuration complete",
-    "addToMyList": "Add to My List",
+    "addToMyList": "Add to List",
     "removeFromMyList": "Remove from List",
-    "inMyList": "In My List",
+    "inMyList": "In List",
     "configured": "CONFIGURED",
-    "copyProductModel": "Copy Product Model",
-    "copyUrl": "Copy URL",
+    "copyProductModel": "Copy Model",
+    "copyUrl": "Copy Link",
     "downloadPdf": "Download PDF",
-    "resetConfiguration": "Reset Configuration",
+    "resetConfiguration": "Reset",
     "whereToBuy": "Where to Buy",
-    "selectOption": "Select an option",
+    "selectOption": "Select option",
     "optionDisabled": "Option unavailable",
-    "extendedLeadTimes": "EXTENDED LEAD TIMES",
+    "extendedLeadTimes": "EXTENDED LEAD TIME",
     "notUlListed": "NOT UL LISTED",
     "nonReturnable": "NON-RETURNABLE",
     "customText": "Custom Text",
-    "enterCustomText": "Enter custom text",
-    "lineCount": "Number of lines",
+    "enterCustomText": "Enter text",
+    "lineCount": "Lines",
     "lines": "lines",
     "maxCharacters": "Max characters",
     "charactersRemaining": "Characters remaining",
-    "textPreview": "Text preview",
-    "submitCustomText": "Apply text",
-    "clearSelection": "Clear selection",
+    "textPreview": "Text Preview",
+    "submitCustomText": "Apply",
+    "clearSelection": "Clear",
     "noSelection": "NO SELECTION",
     "stepsCompleted": "{completed} of {total} steps completed",
-    "invalidDeepLink": "The shared configuration link is invalid or corrupted. Starting fresh.",
+    "invalidDeepLink": "Invalid configuration link. Starting new configuration.",
     "optionsHidden": "{count} options hidden",
-    "submitCustomTextHint": "Submit custom text to enable sharing"
+    "submitCustomTextHint": "Apply text to enable sharing"
   },
   "myList": {
     "title": "Project Specification",
-    "subtitle": "Your selected models ready for export.",
-    "continueConfiguring": "Continue Configuring",
-    "description": "Add products to your list by clicking the star icon on product pages or listings. Once added, your list of products can be easily emailed to one of our distributors or anyone of your choosing.",
-    "emptyTitle": "Your project is empty.",
-    "emptyDescription": "Start configuring models to build your specification.",
-    "startConfiguring": "Start Configuration",
-    "browseConfigurators": "Browse Configurators",
+    "subtitle": "Selected models ready for export",
+    "continueConfiguring": "Continue Configuration",
+    "description": "Add models using the star icon in listings or on product pages. The compiled list can be exported or shared with distributors or project stakeholders.",
+    "emptyTitle": "No models added",
+    "emptyDescription": "Configure models to build the project specification",
+    "startConfiguring": "Configure",
+    "browseConfigurators": "View Configurators",
     "itemsCount": "{count} items",
     "savedAt": "Saved",
-    "loadConfiguration": "Load Configuration",
+    "loadConfiguration": "Load",
     "removeItem": "Remove",
     "clearList": "Clear Project",
-    "clearListConfirm": "Are you sure you want to clear all saved configurations? This action cannot be undone.",
-    "downloadList": "Download Project Specification",
+    "clearListConfirm": "Clear all saved configurations? This action cannot be undone.",
+    "downloadList": "Download Specification",
     "exportXlsx": "Export to Excel",
-    "copyAllModels": "Copy All Models",
+    "copyAllModels": "Copy Model List",
     "projectName": "Project Name",
     "projectNamePlaceholder": "e.g. Facility Upgrade Q3",
     "clientName": "Client / Contractor",
     "clientNamePlaceholder": "Optional",
     "date": "Document Date",
-    "qty": "Qty",
+    "qty": "Quantity",
     "note": "Note",
-    "notePlaceholder": "Add note...",
-    "removeFromProject": "Remove from Project",
+    "notePlaceholder": "Add note",
+    "removeFromProject": "Remove",
     "openInConfigurator": "Open in Configurator",
     "viewProductPage": "View Product Page",
     "skuCopied": "SKU copied"
   },
   "projectSummary": {
     "uniqueModels": "Unique Models",
-    "totalUnits": "Total Units",
+    "totalUnits": "Total Quantity",
     "lastUpdated": "Last Updated",
-    "storedLocally": "Stored locally in your browser"
+    "storedLocally": "Stored locally in browser"
   },
   "specTable": {
     "sku": "SKU",
-    "modelName": "Model Name",
-    "qty": "Qty",
+    "modelName": "Model",
+    "qty": "Quantity",
     "note": "Note",
-    "actions": "Actions"
+    "actions": "Actions",
+    "customText": "Custom Text"
   },
   "drawer": {
-    "customBuilt": "Custom Built",
+    "customBuilt": "Custom Configuration",
     "standardProduct": "Standard Product",
     "configurationSummary": "Configuration Summary",
     "productDetails": "Product Details",
     "projectInfo": "Project Information",
-    "quantityAssigned": "Quantity Assigned",
+    "quantityAssigned": "Assigned Quantity",
     "units": "Units",
-    "attachedNote": "Attached Note",
+    "attachedNote": "Note",
     "noNote": "—"
   },
   "exportModal": {
-    "title": "Export Project Specification",
-    "description": "These details will appear in the header of the exported .xlsx document.",
+    "title": "Export Specification",
+    "description": "The following information will be included in the header of the exported .xlsx file.",
     "projectName": "Project Name",
-    "projectNameRequired": "Project name is required (min 3 characters)",
+    "projectNameRequired": "Project name is required (minimum 3 characters)",
     "client": "Client / Contractor",
     "documentDate": "Document Date",
-    "generateExcel": "Generate Excel",
-    "lastExported": "Last exported: {date}"
+    "generateExcel": "Export to Excel",
+    "lastExported": "Last export: {date}"
   },
   "stickyBar": {
-    "totalUnits": "{count} total units"
+    "totalUnits": "Total quantity: {count}"
   },
   "share": {
     "menuTitle": "Share",
-    "copyUrl": "Copy URL",
+    "copyUrl": "Copy Link",
     "copyModelId": "Copy Model ID",
-    "savePdf": "Save PDF",
+    "savePdf": "Download PDF",
     "print": "Print",
-    "generating": "Generating...",
-    "urlCopied": "URL copied to clipboard",
-    "modelCopied": "Model ID copied to clipboard",
-    "pdfDownloaded": "PDF downloaded successfully",
+    "generating": "Generating",
+    "urlCopied": "Link copied",
+    "modelCopied": "Model ID copied",
+    "pdfDownloaded": "PDF downloaded",
     "pdfGenerated": "PDF generated",
-    "pdfError": "Failed to generate PDF. Please try again.",
-    "urlError": "Cannot generate URL: model ID is missing",
-    "defaultProductName": "Product Configuration"
+    "pdfError": "PDF generation failed. Try again.",
+    "urlError": "Cannot generate link: Model ID missing",
+    "defaultProductName": "Configured Model"
   },
   "pdf": {
-    "descriptionLabel": "Description:",
-    "modelNumberLabel": "Model Number:"
+    "descriptionLabel": "Description",
+    "modelNumberLabel": "Model Number"
   },
   "validation": {
-    "requiredField": "This field is required",
-    "maxLength": "Maximum length: {max} characters",
+    "requiredField": "Required field",
+    "maxLength": "Maximum {max} characters",
     "invalidCharacters": "Invalid characters"
   },
   "toast": {
-    "addedToMyList": "Added to My List",
+    "addedToMyList": "Added to list",
     "removedFromMyList": "Removed from list",
     "configurationReset": "Configuration reset",
-    "copiedToClipboard": "Copied to clipboard",
-    "errorOccurred": "An error occurred"
+    "copiedToClipboard": "Copied",
+    "errorOccurred": "Error occurred"
   },
   "notFound": {
-    "title": "Page not found",
-    "description": "The page you are looking for does not exist or has been moved.",
-    "backHome": "Back to Home"
+    "title": "Page Not Found",
+    "description": "The requested page does not exist or is no longer available.",
+    "backHome": "Return to Home"
   },
   "inDevelopment": {
-    "title": "Page is in development",
-    "description": "This configurator is coming soon.",
-    "descriptionWithName": "The configurator for {name} is coming soon."
+    "title": "Under Development",
+    "description": "This configurator is not yet available.",
+    "descriptionWithName": "The configurator for {name} is not yet available."
   },
   "customText": {
-    "enterLabel": "ENTER A CUSTOM LABEL FOR YOUR DEVICE",
+    "enterLabel": "ENTER CUSTOM TEXT",
     "label": "Label",
     "cover": "Cover",
     "lineCount": "{count} Line",
     "linePlaceholder": "Line {line}",
-    "maxCharacters": "{max}-Character maximum for each line in any language",
-    "labelLine1Required": "Label Line 1 is required",
-    "coverLine1Required": "Cover Line 1 is required",
-    "lineExceedsMax": "Label Line {line} exceeds {max} characters",
-    "coverLineExceedsMax": "Cover Line {line} exceeds {max} characters",
+    "maxCharacters": "Maximum {max} characters per line",
+    "labelLine1Required": "Label line 1 is required",
+    "coverLine1Required": "Cover line 1 is required",
+    "lineExceedsMax": "Label line {line} exceeds {max} characters",
+    "coverLineExceedsMax": "Cover line {line} exceeds {max} characters",
     "nonReturnable": "CUSTOM PRODUCTS ARE NON-RETURNABLE"
   },
   "card": {
-    "features": "Features",
+    "features": "Specifications",
     "colours": "Colours",
-    "buildYourModel": "Build Your Model",
-    "inDevelopment": "In Development"
+    "buildYourModel": "Configure Model",
+    "inDevelopment": "Under Development"
   },
   "productCard": {
-    "noPreview": "No preview",
-    "customBuilt": "Custom built product",
+    "noPreview": "Preview not available",
+    "customBuilt": "Custom configuration",
     "viewDetails": "View Details"
   },
   "customTextDisplay": {
@@ -265,7 +265,7 @@
     "line": "Line {num}"
   },
   "notes": {
-    "EXTENDED_LEAD_TIMES": "EXTENDED LEAD TIMES",
+    "EXTENDED_LEAD_TIMES": "EXTENDED LEAD TIME",
     "NOT_UL_LISTED": "NOT UL LISTED",
     "NON-RETURNABLE": "NON-RETURNABLE"
   }

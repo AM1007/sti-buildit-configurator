@@ -180,6 +180,10 @@ export function BuildItCalculator({
   );
 }
 
+/* ═══════════════════════════════════════════════════════════════════
+   Desktop Layout
+   ═══════════════════════════════════════════════════════════════════ */
+
 interface DesktopLayoutProps {
   model: ModelDefinition;
   config: Configuration;
@@ -234,13 +238,21 @@ function DesktopLayout({
         config={config}
         customText={customText}
         currentStep={currentStep}
-        completionPercent={completionPercent}
-        completedSteps={completedSteps}
-        totalSteps={totalSteps}
-        productModel={productModel}
+        modelId={model.id}
         onSelectOption={(stepId, optionId) => selectOption(stepId, optionId)}
         onClearOption={(stepId) => clearSelection(stepId)}
         onSetCurrentStep={setCurrentStep}
+        className="w-[520px] shrink-0"
+      />
+
+      <MainPanel
+        model={model}
+        config={config}
+        customText={customText}
+        productModel={productModel}
+        completionPercent={completionPercent}
+        completedSteps={completedSteps}
+        totalSteps={totalSteps}
         onEditStep={onEditStep}
         onReset={onReset}
         onAddToMyList={onAddToMyList}
@@ -250,21 +262,16 @@ function DesktopLayout({
         productName={productName}
         productDescription={heroDescription}
         productImageUrl={imagePath}
-        className="w-[520px] shrink-0"
-      />
-
-      <MainPanel
-        model={model}
-        config={config}
-        customText={customText}
-        productModel={productModel}
-        onEditStep={onEditStep}
         onCustomTextSubmit={onCustomTextSubmit}
         className="min-w-0 flex-1 sticky top-20"
       />
     </div>
   );
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   Mobile / Tablet Layout
+   ═══════════════════════════════════════════════════════════════════ */
 
 interface MobileTabletLayoutProps {
   model: ModelDefinition;
@@ -382,6 +389,7 @@ function MobileTabletLayout({
 
   return (
     <div className="mx-auto max-w-7xl px-4 pb-8 pt-6 md:px-6">
+      {/* ── 1. Main panel (preview / custom text form / product preview) ── */}
       <div className="overflow-hidden rounded-sm border border-slate-200 bg-white shadow-sm">
         <AnimatePresence mode="wait" initial={false}>
           {showCustomTextForm && customTextConfig ? (
@@ -472,12 +480,14 @@ function MobileTabletLayout({
         </AnimatePresence>
       </div>
 
+      {/* ── 2. Custom text display (if submitted) ── */}
       {showCustomTextDisplay && customText && (
         <div className="mt-4 rounded-sm border border-slate-200 bg-white p-4 shadow-sm md:p-5">
           <CustomTextDisplay customText={customText} />
         </div>
       )}
 
+      {/* ── 3. Configuration block (progress + SKU + actions) ── */}
       <div className="mt-4 rounded-sm border border-slate-200 bg-white p-5 shadow-sm">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-[15px] font-semibold text-slate-900">
@@ -585,6 +595,7 @@ function MobileTabletLayout({
         </div>
       </div>
 
+      {/* ── 4. Model description (always last) ── */}
       {modelDescription && (
         <div className="mt-4 rounded-sm border border-slate-200 bg-white p-5 shadow-sm">
           <span className="mb-2 block text-xs font-semibold uppercase tracking-wider text-slate-500">
