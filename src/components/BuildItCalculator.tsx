@@ -14,7 +14,7 @@ import { CustomTextDisplay } from "./CustomTextDisplay";
 import { useCustomText, useConfigurationStore, useIsProductInMyList, useMyListItemIdByProductCode } from "../stores/configurationStore";
 import { isConfigurationReadyForActions, shouldShowCustomTextForm, hasSubmittedCustomText, getCustomTextConfig, getMaxLength, getEffectiveLineCount } from "../utils/customTextHelpers";
 import { getCompletedDeviceImage } from "../utils/getCompletedDeviceImage";
-import { getModelDescription } from "../utils/getModelDescription";
+import { getModelSummary } from "../utils/getModelSummary";
 import { getHeroContent } from "../data/heroContent";
 import { useTranslation, useLanguage } from "../i18n";
 import { RotateCcw, Share2, Star, Pencil } from "lucide-react";
@@ -343,7 +343,7 @@ function MobileTabletLayout({
 
     if (productModel.isComplete) {
       const currentLang = lang as "en" | "uk";
-      getModelDescription(productModel.fullCode, model.id, currentLang).then(
+      getModelSummary(productModel.fullCode, model.id, currentLang).then(
         (desc) => {
           if (!cancelled) {
             setModelDescription(desc);

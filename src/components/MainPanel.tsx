@@ -8,7 +8,7 @@ import { CustomTextForm } from "./CustomTextForm";
 import { CustomTextDisplay } from "./CustomTextDisplay";
 import { ShareMenu } from "./ShareMenu";
 import { getCompletedDeviceImage } from "../utils/getCompletedDeviceImage";
-import { getModelDescription } from "../utils/getModelDescription";
+import { getModelSummary } from "../utils/getModelSummary";
 import {
   shouldShowCustomTextForm,
   hasSubmittedCustomText,
@@ -93,7 +93,7 @@ export function MainPanel({
 
     if (productModel.isComplete) {
       const currentLang = lang as "en" | "uk";
-      getModelDescription(productModel.fullCode, model.id, currentLang).then(
+      getModelSummary(productModel.fullCode, model.id, currentLang).then(
         (desc) => {
           if (!cancelled) {
             setModelDescription(desc);

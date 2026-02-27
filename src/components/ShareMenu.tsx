@@ -4,7 +4,7 @@ import { toast } from "../utils/toast";
 import { downloadProductPdf, printProductPdf } from "../utils/generateProductPdf";
 import { stripHtml } from "../utils/stripHtml";
 import { buildShareableUrl } from "../utils/configSerializer";
-import { getModelDescription } from "../utils/getModelDescription";
+import { getModelSummary } from "../utils/getModelSummary";
 import { getHeroDescription } from "../utils/getHeroDescription";
 import { useTranslation, useLanguage } from "../i18n";
 import type { ProductPdfData } from "./ProductPdfDocument";
@@ -82,7 +82,7 @@ export function ShareMenu({
     
     let modelDescription: string | null = null;
     if (modelId) {
-      modelDescription = await getModelDescription(
+      modelDescription = await getModelSummary(
         productModel.fullCode,
         modelId,
         currentLang
