@@ -72,9 +72,9 @@ export function HomePage() {
             initial={{ opacity: 0, x: 40 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.15, ease: "easeOut" }}
-            className="relative hidden min-h-[300px] items-center justify-center overflow-hidden border-l border-slate-200 bg-slate-50 tech-grid md:flex"
+            className="relative hidden min-h-[300px] items-center justify-center overflow-hidden border-l border-slate-200 bg-white tech-grid md:flex"
           >
-            <div className="relative flex h-64 w-64 flex-col border border-slate-300 bg-white/50 p-4 shadow-sm backdrop-blur-sm xl:h-80 xl:w-80">
+            <div className="relative flex h-80 w-72 flex-col border border-slate-300 bg-white/50 p-4 shadow-sm backdrop-blur-sm xl:h-96 xl:w-96">
               <div className="mb-4 flex justify-between border-b border-slate-200 pb-2">
                 <div className="h-2 w-12 rounded-sm bg-slate-200" />
                 <div className="h-2 w-4 rounded-sm bg-slate-200" />
