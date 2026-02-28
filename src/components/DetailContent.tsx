@@ -7,6 +7,7 @@ import { getModelById } from "../data/models";
 import { getCompletedDeviceImage } from "../utils/getCompletedDeviceImage";
 import { buildShareableUrl } from "../utils/configSerializer";
 import { useModelTranslations } from "../hooks/useModelTranslations";
+import { CustomTextDisplay } from "./CustomTextDisplay";
 import { useTranslation } from "../i18n";
 
 export function isCustomBuiltItem(item: SavedConfiguration): boolean {
@@ -81,7 +82,7 @@ export function DetailBody({ item }: DetailBodyProps) {
 
   return (
     <div className="flex-1 overflow-y-auto p-5 flex flex-col gap-6">
-      <div className="aspect-4/3 w-full bg-slate-50 border border-slate-200 rounded-sm flex items-center justify-center overflow-hidden">
+      <div className="aspect-4/3 w-full shrink-0 bg-slate-50 border border-slate-200 rounded-sm flex items-center justify-center overflow-hidden">
         {imagePath ? (
           <img
             src={imagePath}
@@ -98,6 +99,10 @@ export function DetailBody({ item }: DetailBodyProps) {
         <ConfigurationSummary item={item} />
       ) : (
         <ProductDetails modelId={item.modelId} />
+      )}
+
+      {item.customText?.submitted && (
+        <CustomTextDisplay customText={item.customText} />
       )}
 
       <ProjectInfo qty={item.qty} note={item.note} />

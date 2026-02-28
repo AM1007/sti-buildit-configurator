@@ -18,7 +18,7 @@ import {
   getMissingRequiredSteps,
 } from "../filterOptions";
 import { buildProductModel } from "../buildProductModel";
-import { shouldClearCustomText, getCustomTextTrigger } from "../utils/customTextHelpers";
+import { shouldClearCustomText, getCustomTextTrigger, buildCustomTextFingerprint } from "../utils/customTextHelpers";
 
 export function buildProductModelUrl(modelId: ModelId, productCode: string): string {
   const encodedProductModel = encodeURIComponent(productCode).replace(/%2D/g, "-");
@@ -426,15 +426,25 @@ export const useMyListCount = () =>
 export const useProjectMeta = () =>
   useConfigurationStore((state) => state.projectMeta);
 
-export const useIsProductInMyList = (productCode: string | null) =>
+export const useIsProductInMyList = (productCode: string | null, customText?: CustomTextData | null) =>
   useConfigurationStore((state) => {
     if (!productCode) return false;
-    return state.myList.some((item) => item.productCode === productCode);
+    const fingerprint = buildCustomTextFingerprint(customText);
+    return state.myList.some(
+      (item) =>
+        item.productCode === productCode &&
+        buildCustomTextFingerprint(item.customText) === fingerprint
+    );
   });
 
-export const useMyListItemIdByProductCode = (productCode: string | null) =>
+export const useMyListItemIdByProductCode = (productCode: string | null, customText?: CustomTextData | null) =>
   useConfigurationStore((state) => {
     if (!productCode) return null;
-    const item = state.myList.find((item) => item.productCode === productCode);
+    const fingerprint = buildCustomTextFingerprint(customText);
+    const item = state.myList.find(
+      (item) =>
+        item.productCode === productCode &&
+        buildCustomTextFingerprint(item.customText) === fingerprint
+    );
     return item?.id ?? null;
   });

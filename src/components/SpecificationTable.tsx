@@ -5,6 +5,7 @@ import type { SavedConfiguration } from "../types";
 import { MODEL_NAMES } from "../types";
 import { getModelById } from "../data/models";
 import { buildShareableUrl } from "../utils/configSerializer";
+import { formatCustomTextInline } from "../utils/customTextHelpers";
 import { useTranslation } from "../i18n";
 
 interface SpecificationTableProps {
@@ -101,8 +102,16 @@ function SpecificationRow({
         </Link>
       </td>
 
-      <td className="py-1.5 px-3 text-xs text-slate-900">
-        {modelName}
+      <td className="py-1.5 px-3">
+        <span className="text-xs text-slate-900 block">{modelName}</span>
+        {item.customText?.submitted && (
+          <span
+            className="text-[10px] text-slate-400 block truncate max-w-[260px]"
+            title={formatCustomTextInline(item.customText)}
+          >
+            {formatCustomTextInline(item.customText)}
+          </span>
+        )}
       </td>
 
       <td className="py-1.5 px-3">

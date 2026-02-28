@@ -6,6 +6,7 @@ import { MODEL_NAMES } from "../types";
 import { getModelById } from "../data/models";
 import { buildShareableUrl } from "../utils/configSerializer";
 import { getCompletedDeviceImage } from "../utils/getCompletedDeviceImage";
+import { formatCustomTextInline } from "../utils/customTextHelpers";
 import { useTranslation } from "../i18n";
 
 interface SpecificationMobileListProps {
@@ -96,6 +97,11 @@ function SpecificationMobileItem({
           <span className="text-xs font-medium text-slate-900 block truncate">
             {modelName}
           </span>
+          {item.customText?.submitted && (
+            <span className="text-[10px] text-slate-400 block truncate">
+              {formatCustomTextInline(item.customText)}
+            </span>
+          )}
         </div>
 
         <button

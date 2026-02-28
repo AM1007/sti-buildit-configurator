@@ -49,8 +49,8 @@ export function BuildItCalculator({
   const setCustomText = useConfigurationStore((state) => state.setCustomText);
 
   const productModel = buildProductModel(config, model);
-  const isInMyList = useIsProductInMyList(productModel.isComplete ? productModel.fullCode : null);
-  const myListItemId = useMyListItemIdByProductCode(productModel.isComplete ? productModel.fullCode : null);
+  const isInMyList = useIsProductInMyList(productModel.isComplete ? productModel.fullCode : null, customText);
+  const myListItemId = useMyListItemIdByProductCode(productModel.isComplete ? productModel.fullCode : null, customText);
 
   const totalSteps = model.stepOrder.length;
   const completedSteps = model.stepOrder.filter((stepId) => !!config[stepId]).length;

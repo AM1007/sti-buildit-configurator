@@ -2,6 +2,7 @@ import * as XLSX from "xlsx-js-style";
 import type { SavedConfiguration, ProjectMeta } from "../types";
 import { MODEL_NAMES } from "../types";
 import { getModelDescription } from "./getModelDescription";
+import { formatCustomTextBlock } from "./customTextHelpers";
 
 type Language = "en" | "uk";
 
@@ -142,11 +143,18 @@ async function buildSpecDataRows(
     const item = items[index];
     const modelName = MODEL_NAMES[item.modelId] ?? item.modelId;
 
-    const description = await getModelDescription(
+    let description = await getModelDescription(
       item.productCode,
       item.modelId,
       lang
     ) ?? "";
+
+    if (item.customText?.submitted) {
+      const customBlock = formatCustomTextBlock(item.customText, lang);
+      if (customBlock) {
+        description = description ? `${description}\n\n${customBlock}` : customBlock;
+      }
+    }
 
     rows.push([
       index + 1,
