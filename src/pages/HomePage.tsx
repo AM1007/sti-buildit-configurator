@@ -12,6 +12,7 @@ import { useTranslation } from "../i18n";
 export function HomePage() {
   const { t } = useTranslation();
   const catalogRef = useRef<HTMLElement>(null);
+  const heroEndRef = useRef<HTMLDivElement>(null);
   const {
     state,
     displayed,
@@ -29,7 +30,7 @@ export function HomePage() {
   } = useFilterState(allConfigurators);
 
   const scrollToCatalog = () => {
-    catalogRef.current?.scrollIntoView({ behavior: "smooth" });
+    heroEndRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   const clearFunctionalFilters = () => {
@@ -52,7 +53,7 @@ export function HomePage() {
               {t("home.heroTitle")}
             </h1>
 
-            <p className="mb-8 max-w-lg text-[15px] text-slate-600 md:text-lg md:text-slate-500">
+            <p className="mb-8 max-w-md text-[15px] text-slate-600 md:text-lg md:text-slate-500">
               {t("home.heroDescription")}
             </p>
 
@@ -105,6 +106,7 @@ export function HomePage() {
             </div>
           </motion.div>
         </div>
+        <div ref={heroEndRef} className="scroll-mt-14 md:scroll-mt-16" />
       </section>
 
       <section ref={catalogRef} className="scroll-mt-16 py-8 md:scroll-mt-0 md:py-12">
