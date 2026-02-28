@@ -15,13 +15,23 @@ export function DetailBottomSheet({ item, isOpen, onClose, onRemove }: DetailBot
 
   useEffect(() => {
     if (isOpen) {
+      const scrollY = window.scrollY;
+      document.documentElement.style.overflow = "hidden";
       document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.left = "0";
+      document.body.style.right = "0";
+      return () => {
+        document.documentElement.style.overflow = "";
+        document.body.style.overflow = "";
+        document.body.style.position = "";
+        document.body.style.top = "";
+        document.body.style.left = "";
+        document.body.style.right = "";
+        window.scrollTo(0, scrollY);
+      };
     }
-    return () => {
-      document.body.style.overflow = "";
-    };
   }, [isOpen]);
 
   useEffect(() => {
@@ -58,13 +68,13 @@ export function DetailBottomSheet({ item, isOpen, onClose, onRemove }: DetailBot
       <div
         ref={overlayRef}
         onClick={handleOverlayClick}
-        className={`fixed inset-0 z-40 bg-black/35 transition-opacity duration-150 ease-out ${
+        className={`fixed inset-0 z-60 bg-black/35 transition-opacity duration-150 ease-out ${
           isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
       />
 
       <div
-        className={`fixed inset-x-0 bottom-0 z-50 max-h-[92vh] bg-white rounded-t-lg shadow-xl flex flex-col transition-transform ${
+        className={`fixed inset-x-0 bottom-0 z-70 max-h-[92vh] bg-white rounded-t-lg shadow-xl flex flex-col transition-transform ${
           isOpen ? "translate-y-0 duration-260" : "translate-y-full duration-220"
         }`}
         style={{

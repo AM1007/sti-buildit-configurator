@@ -15,13 +15,23 @@ export function DetailDrawer({ item, isOpen, onClose, onRemove }: DetailDrawerPr
 
   useEffect(() => {
     if (isOpen) {
+      const scrollY = window.scrollY;
+      document.documentElement.style.overflow = "hidden";
       document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.left = "0";
+      document.body.style.right = "0";
+      return () => {
+        document.documentElement.style.overflow = "";
+        document.body.style.overflow = "";
+        document.body.style.position = "";
+        document.body.style.top = "";
+        document.body.style.left = "";
+        document.body.style.right = "";
+        window.scrollTo(0, scrollY);
+      };
     }
-    return () => {
-      document.body.style.overflow = "";
-    };
   }, [isOpen]);
 
   useEffect(() => {
@@ -58,13 +68,13 @@ export function DetailDrawer({ item, isOpen, onClose, onRemove }: DetailDrawerPr
       <div
         ref={overlayRef}
         onClick={handleOverlayClick}
-        className={`fixed inset-0 z-40 bg-black/35 transition-opacity duration-150 ease-out ${
+        className={`fixed inset-0 z-60 bg-black/35 transition-opacity duration-150 ease-out ${
           isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
       />
 
       <aside
-        className={`fixed inset-y-0 right-0 z-50 w-full max-w-[420px] bg-white border-l border-slate-200 shadow-xl flex flex-col transition-transform duration-220 ${
+        className={`fixed inset-y-0 right-0 z-70 w-full max-w-[420px] bg-white border-l border-slate-200 shadow-xl flex flex-col transition-transform duration-220 ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
         style={{ transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)" }}

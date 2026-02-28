@@ -123,7 +123,11 @@
     "stepsCompleted": "{completed} of {total} steps completed",
     "invalidDeepLink": "Invalid configuration link. Starting new configuration.",
     "optionsHidden": "{count} options hidden",
-    "submitCustomTextHint": "Apply text to enable sharing"
+    "submitCustomTextHint": "Apply text to enable sharing",
+    "optionsAvailable": "options available",
+    "optionsAvailable_one": "option available",
+    "optionsAvailable_few": "options available",
+    "optionsAvailable_many": "options available"
   },
   "myList": {
     "title": "Project Specification",

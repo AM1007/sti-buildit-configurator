@@ -124,7 +124,11 @@
     "stepsCompleted": "Завершено {completed} з {total} кроків",
     "invalidDeepLink": "Некоректне посилання на конфігурацію. Розпочато нову конфігурацію.",
     "optionsHidden": "Приховано параметрів: {count}",
-    "submitCustomTextHint": "Застосуйте текст, щоб активувати спільний доступ"
+    "submitCustomTextHint": "Застосуйте текст, щоб активувати спільний доступ",
+    "optionsAvailable": "опцій доступно",
+    "optionsAvailable_one": "опція доступна",
+    "optionsAvailable_few": "опції доступно",
+    "optionsAvailable_many": "опцій доступно"
   },
   "myList": {
     "title": "Специфікація проєкту",
