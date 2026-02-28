@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { ClipLoader } from "react-spinners";
-import { SlidersHorizontal, RotateCcw, Share2, Star } from "lucide-react";
+import { SlidersHorizontal, RotateCcw, Share2, Star, FileText } from "lucide-react";
 import type { Configuration, ProductModel, ModelDefinition, StepId, CustomTextData } from "../types";
 import { ProductPreview } from "./ProductPreview";
 import { ProductModelDisplay } from "./ProductModelDisplay";
 import { CustomTextForm } from "./CustomTextForm";
 import { CustomTextDisplay } from "./CustomTextDisplay";
 import { ShareMenu } from "./ShareMenu";
+import { PdfMenu } from "./PdfMenu";
 import { getCompletedDeviceImage } from "../utils/getCompletedDeviceImage";
 import { getModelSummary } from "../utils/getModelSummary";
 import {
@@ -304,6 +305,7 @@ function ConfigurationBlock({
 }: ConfigurationBlockProps) {
   const { t } = useTranslation();
   const [showShareMenu, setShowShareMenu] = useState(false);
+  const [showPdfMenu, setShowPdfMenu] = useState(false);
 
   const clampedPercent = Math.min(100, Math.max(0, completionPercent));
 
@@ -387,7 +389,45 @@ function ConfigurationBlock({
               <div className="relative">
                 <button
                   type="button"
-                  onClick={() => actionsReady && setShowShareMenu((prev) => !prev)}
+                  onClick={() => {
+                    if (!actionsReady) return;
+                    setShowPdfMenu((prev) => !prev);
+                    setShowShareMenu(false);
+                  }}
+                  disabled={!actionsReady}
+                  className={`inline-flex h-9 w-9 items-center justify-center rounded-sm border transition-colors md:h-7 md:w-7 ${
+                    actionsReady
+                      ? "border-slate-200 bg-white text-slate-500 hover:border-slate-300 hover:text-brand-600 md:text-slate-400"
+                      : "border-slate-200 bg-slate-50 text-slate-300 cursor-not-allowed"
+                  }`}
+                  aria-expanded={showPdfMenu}
+                  aria-haspopup="true"
+                  aria-label="PDF"
+                  title="PDF"
+                >
+                  <FileText className="h-4 w-4 md:h-3.5 md:w-3.5" />
+                </button>
+                {showPdfMenu && actionsReady && (
+                  <PdfMenu
+                    productModel={productModel}
+                    modelId={model.id}
+                    config={config}
+                    customText={customText}
+                    onClose={() => setShowPdfMenu(false)}
+                    productName={productName}
+                    productDescription={productDescription}
+                    productImageUrl={productImageUrl}
+                  />
+                )}
+              </div>
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!actionsReady) return;
+                    setShowShareMenu((prev) => !prev);
+                    setShowPdfMenu(false);
+                  }}
                   disabled={!actionsReady}
                   className={`inline-flex h-9 w-9 items-center justify-center rounded-sm border transition-colors md:h-7 md:w-7 ${
                     actionsReady
@@ -408,9 +448,6 @@ function ConfigurationBlock({
                     config={config}
                     customText={customText}
                     onClose={() => setShowShareMenu(false)}
-                    productName={productName}
-                    productDescription={productDescription}
-                    productImageUrl={productImageUrl}
                   />
                 )}
               </div>

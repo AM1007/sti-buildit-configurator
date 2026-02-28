@@ -9,6 +9,7 @@ import { ProductPreview } from "./ProductPreview";
 import { ProductModelDisplay } from "./ProductModelDisplay";
 import { OptionBottomSheet } from "./OptionBottomSheet";
 import { ShareMenu } from "./ShareMenu";
+import { PdfMenu } from "./PdfMenu";
 import { CustomTextForm } from "./CustomTextForm";
 import { CustomTextDisplay } from "./CustomTextDisplay";
 import { useCustomText, useConfigurationStore, useIsProductInMyList, useMyListItemIdByProductCode } from "../stores/configurationStore";
@@ -17,7 +18,7 @@ import { getCompletedDeviceImage } from "../utils/getCompletedDeviceImage";
 import { getModelSummary } from "../utils/getModelSummary";
 import { getHeroContent } from "../data/heroContent";
 import { useTranslation, useLanguage } from "../i18n";
-import { RotateCcw, Share2, Star, Pencil } from "lucide-react";
+import { RotateCcw, Share2, Star, Pencil, FileText } from "lucide-react";
 import { ClipLoader } from "react-spinners";
 
 interface BuildItCalculatorProps {
@@ -315,6 +316,7 @@ function MobileTabletLayout({
   const { t } = useTranslation();
   const { lang } = useLanguage();
   const [showShareMenu, setShowShareMenu] = useState(false);
+  const [showPdfMenu, setShowPdfMenu] = useState(false);
   const [modelDescription, setModelDescription] = useState<string | null>(null);
   const [userOverrideEdit, setUserOverrideEdit] = useState(false);
   const [previewImageLoading, setPreviewImageLoading] = useState(true);
@@ -545,7 +547,45 @@ function MobileTabletLayout({
                 <div className="relative">
                   <button
                     type="button"
-                    onClick={() => actionsReady && setShowShareMenu((prev) => !prev)}
+                    onClick={() => {
+                      if (!actionsReady) return;
+                      setShowPdfMenu((prev) => !prev);
+                      setShowShareMenu(false);
+                    }}
+                    disabled={!actionsReady}
+                    className={`inline-flex h-9 w-9 items-center justify-center rounded-sm border transition-colors ${
+                      actionsReady
+                        ? "border-slate-200 bg-white text-slate-500 hover:border-slate-300 hover:text-brand-600"
+                        : "border-slate-200 bg-slate-50 text-slate-300 cursor-not-allowed"
+                    }`}
+                    aria-expanded={showPdfMenu}
+                    aria-haspopup="true"
+                    aria-label="PDF"
+                    title="PDF"
+                  >
+                    <FileText className="h-4 w-4" />
+                  </button>
+                  {showPdfMenu && actionsReady && (
+                    <PdfMenu
+                      productModel={productModel}
+                      modelId={model.id}
+                      config={config}
+                      customText={customText}
+                      onClose={() => setShowPdfMenu(false)}
+                      productName={productName}
+                      productDescription={heroDescription}
+                      productImageUrl={imagePath}
+                    />
+                  )}
+                </div>
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (!actionsReady) return;
+                      setShowShareMenu((prev) => !prev);
+                      setShowPdfMenu(false);
+                    }}
                     disabled={!actionsReady}
                     className={`inline-flex h-9 w-9 items-center justify-center rounded-sm border transition-colors ${
                       actionsReady
@@ -566,9 +606,6 @@ function MobileTabletLayout({
                       config={config}
                       customText={customText}
                       onClose={() => setShowShareMenu(false)}
-                      productName={productName}
-                      productDescription={heroDescription}
-                      productImageUrl={imagePath}
                     />
                   )}
                 </div>
