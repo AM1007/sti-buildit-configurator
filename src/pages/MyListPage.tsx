@@ -155,7 +155,7 @@ function ProjectSummary({ uniqueModels, totalUnits, updatedAt }: ProjectSummaryP
           value={formattedDate}
         />
       </div>
-      <div className="sm:ml-auto flex items-center gap-1.5 text-xs text-slate-400">
+      <div className="sm:ml-auto flex items-center gap-1.5 text-xs text-brand-600">
         <Info className="h-3.5 w-3.5" />
         {t("projectSummary.storedLocally")}
       </div>

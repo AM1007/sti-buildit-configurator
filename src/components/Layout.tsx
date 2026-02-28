@@ -4,6 +4,7 @@ import { useMyListCount } from "../stores/configurationStore";
 import { useTranslation, useLanguage } from "../i18n";
 import type { Language } from "../i18n";
 import { StickyExportBar } from "./StickyExportBar";
+import { ScrollToTopButton } from "./ScrollToTopButton";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -15,6 +16,7 @@ export function Layout({ children }: LayoutProps) {
       <Header />
       <main className="flex-1">{children}</main>
       <StickyExportBar />
+      <ScrollToTopButton />
       <Footer />
     </div>
   );
@@ -67,7 +69,7 @@ function MobileNav() {
         <span className="relative">
           <Star className="h-5 w-5" />
           {myListCount > 0 && (
-            <span className="absolute -top-2 -right-3 flex items-center justify-center min-w-4 h-4 rounded-full bg-икфтв-600 px-0.5 text-[9px] font-bold text-white leading-none">
+            <span className="absolute -top-2 -right-3 flex items-center justify-center min-w-4 h-4 rounded-full bg-brand-600 px-0.5 text-[9px] font-bold text-white leading-none">
               {myListCount}
             </span>
           )}

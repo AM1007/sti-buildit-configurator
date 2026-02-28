@@ -52,7 +52,7 @@ export function HomePage() {
               {t("home.heroTitle")}
             </h1>
 
-            <p className="mb-8 max-w-md text-[15px] text-slate-600 md:text-lg md:text-slate-500">
+            <p className="mb-8 max-w-lg text-[15px] text-slate-600 md:text-lg md:text-slate-500">
               {t("home.heroDescription")}
             </p>
 

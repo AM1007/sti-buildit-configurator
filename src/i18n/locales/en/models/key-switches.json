@@ -22,10 +22,10 @@
     "switchType": {
       "title": "SWITCH TYPE",
       "options": {
-        "2": "#2 Type 2",
-        "3": "#3 Type 3",
-        "4": "#4 Type 4",
-        "5": "#5 Type 5"
+        "2": "#2 2 Position Key Switch Single Pole",
+        "3": "#3 2 Position Key Switch - Key Trapped in 'on' position",
+        "4": "#4 2 Position Key Switch Double Pole",
+        "5": "#5 3 Position Key Switch"
       }
     },
     "electricalArrangement": {
