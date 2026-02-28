@@ -33,9 +33,6 @@ export function FloatingCompactBar({
   isInMyList,
   onAddToMyList,
   onRemoveFromMyList,
-  productName,
-  productDescription,
-  productImageUrl,
 }: FloatingCompactBarProps) {
   const { t } = useTranslation();
   const [showShareMenu, setShowShareMenu] = useState(false);
@@ -115,9 +112,6 @@ export function FloatingCompactBar({
               config={config}
               customText={customText}
               onClose={() => setShowShareMenu(false)}
-              productName={productName}
-              productDescription={productDescription}
-              productImageUrl={productImageUrl}
             />
           )}
 
