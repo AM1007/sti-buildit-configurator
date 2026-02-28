@@ -181,10 +181,6 @@ export function BuildItCalculator({
   );
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   Desktop Layout
-   ═══════════════════════════════════════════════════════════════════ */
-
 interface DesktopLayoutProps {
   model: ModelDefinition;
   config: Configuration;
@@ -269,10 +265,6 @@ function DesktopLayout({
     </div>
   );
 }
-
-/* ═══════════════════════════════════════════════════════════════════
-   Mobile / Tablet Layout
-   ═══════════════════════════════════════════════════════════════════ */
 
 interface MobileTabletLayoutProps {
   model: ModelDefinition;
@@ -391,7 +383,6 @@ function MobileTabletLayout({
 
   return (
     <div className="mx-auto max-w-7xl px-4 pb-8 pt-6 md:px-6">
-      {/* ── 1. Main panel (preview / custom text form / product preview) ── */}
       <div className="overflow-hidden rounded-sm border border-slate-200 bg-white shadow-sm">
         <AnimatePresence mode="wait" initial={false}>
           {showCustomTextForm && customTextConfig ? (
@@ -482,14 +473,12 @@ function MobileTabletLayout({
         </AnimatePresence>
       </div>
 
-      {/* ── 2. Custom text display (if submitted) ── */}
       {showCustomTextDisplay && customText && (
         <div className="mt-4 rounded-sm border border-slate-200 bg-white p-4 shadow-sm md:p-5">
           <CustomTextDisplay customText={customText} />
         </div>
       )}
 
-      {/* ── 3. Configuration block (progress + SKU + actions) ── */}
       <div className="mt-4 rounded-sm border border-slate-200 bg-white p-5 shadow-sm">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-[15px] font-semibold text-slate-900">
@@ -533,8 +522,8 @@ function MobileTabletLayout({
           <span className="mb-2 block text-xs font-semibold uppercase tracking-wider text-slate-500">
             {t("configurator.productModel", { defaultValue: "Target SKU" })}
           </span>
-          <div className="flex items-center gap-2">
-            <div className="min-w-0 flex-1">
+          <div className="flex flex-col gap-2 md:flex-row md:items-center">
+            <div className="min-w-0">
               <ProductModelDisplay
                 model={model}
                 productModel={productModel}
@@ -543,7 +532,7 @@ function MobileTabletLayout({
               />
             </div>
             {productModel.isComplete && (
-              <div className="flex shrink-0 items-center gap-1">
+              <div className="flex shrink-0 items-center gap-1 self-end md:self-auto md:ml-auto">
                 <div className="relative">
                   <button
                     type="button"
@@ -632,7 +621,6 @@ function MobileTabletLayout({
         </div>
       </div>
 
-      {/* ── 4. Model description (always last) ── */}
       {modelDescription && (
         <div className="mt-4 rounded-sm border border-slate-200 bg-white p-5 shadow-sm">
           <span className="mb-2 block text-xs font-semibold uppercase tracking-wider text-slate-500">
