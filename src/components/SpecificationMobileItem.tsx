@@ -70,7 +70,7 @@ function SpecificationMobileItem({
   return (
     <div className="border border-slate-200 rounded-sm bg-white p-3">
       <div className="flex gap-3 mb-2">
-        <div className="h-14 w-14 shrink-0 bg-slate-50 border border-slate-200 rounded-sm flex items-center justify-center overflow-hidden">
+        <div className="h-16 w-16 shrink-0 bg-slate-50 border border-slate-200 rounded-sm flex items-center justify-center overflow-hidden">
           {imagePath ? (
             <img
               src={imagePath}
@@ -79,14 +79,14 @@ function SpecificationMobileItem({
               loading="lazy"
             />
           ) : (
-            <span className="text-slate-300 text-[9px] text-center leading-tight">No img</span>
+            <span className="text-slate-300 text-[10px] text-center leading-tight">No img</span>
           )}
         </div>
 
         <div className="flex-1 min-w-0">
           <Link
             to={configuratorUrl}
-            className={`text-[10px] font-mono block mb-0.5 truncate ${
+            className={`text-[11px] font-mono block mb-0.5 truncate ${
               isCustomBuilt
                 ? "text-blue-600"
                 : "text-slate-600"
@@ -94,11 +94,11 @@ function SpecificationMobileItem({
           >
             {item.productCode}
           </Link>
-          <span className="text-xs font-medium text-slate-900 block truncate">
+          <span className="text-sm font-medium text-slate-900 block truncate">
             {modelName}
           </span>
           {item.customText?.submitted && (
-            <span className="text-[10px] text-slate-400 block truncate">
+            <span className="text-[11px] text-slate-400 block truncate">
               {formatCustomTextInline(item.customText)}
             </span>
           )}
@@ -116,7 +116,7 @@ function SpecificationMobileItem({
 
       <div className="grid grid-cols-3 gap-2 mb-3">
         <div className="col-span-1">
-          <label className="text-[9px] uppercase tracking-wider text-slate-400 font-semibold block mb-1">
+          <label className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold block mb-1">
             {t("specTable.qty")}
           </label>
           <MobileQtyInput
@@ -126,7 +126,7 @@ function SpecificationMobileItem({
           />
         </div>
         <div className="col-span-2">
-          <label className="text-[9px] uppercase tracking-wider text-slate-400 font-semibold block mb-1">
+          <label className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold block mb-1">
             {t("specTable.note")}
           </label>
           <MobileNoteInput
@@ -141,7 +141,7 @@ function SpecificationMobileItem({
       <button
         type="button"
         onClick={() => onViewDetails(item.id)}
-        className="w-full py-1.5 bg-slate-50 border border-slate-200 text-[11px] font-medium text-slate-600 rounded-sm flex items-center justify-center gap-1.5 hover:bg-slate-100 transition-colors"
+        className="w-full py-2 bg-white border border-slate-300 text-sm font-medium text-slate-600 rounded-sm flex items-center justify-center gap-1.5 hover:bg-slate-50 hover:border-slate-400 transition-colors"
       >
         {t("productCard.viewDetails")}
       </button>
@@ -185,7 +185,7 @@ function MobileQtyInput({ id, value, onChange }: MobileQtyInputProps) {
       value={value}
       onChange={handleChange}
       onBlur={handleBlur}
-      className="w-full bg-slate-50 border border-slate-200 rounded-sm px-2 py-1 text-xs font-mono text-slate-900 outline-none focus:border-slate-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+      className="w-full bg-slate-50 border border-slate-200 rounded-sm px-2 py-1.5 text-sm font-mono text-slate-900 outline-none focus:border-slate-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
     />
   );
 }
@@ -211,7 +211,7 @@ function MobileNoteInput({ id, value, placeholder, onChange }: MobileNoteInputPr
       value={value}
       placeholder={placeholder}
       onChange={handleChange}
-      className="w-full bg-slate-50 border border-slate-200 rounded-sm px-2 py-1 text-xs text-slate-600 outline-none focus:border-slate-400 placeholder:text-slate-300"
+      className="w-full bg-slate-50 border border-slate-200 rounded-sm px-2 py-1.5 text-sm text-slate-600 outline-none focus:border-slate-400 placeholder:text-slate-300"
     />
   );
 }

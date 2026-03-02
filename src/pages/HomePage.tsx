@@ -111,7 +111,7 @@ export function HomePage() {
 
       <section ref={catalogRef} className="scroll-mt-16 py-8 md:scroll-mt-0 md:py-12">
         <div className="mx-auto w-full max-w-7xl px-4 md:px-6 xl:px-8">
-          <div className="sticky top-16 z-40 -mx-4 border-b border-slate-200 bg-slate-50 px-4 py-3 md:hidden">
+          <div className="sticky top-14 z-40 -mx-4 border-b border-slate-200 bg-slate-50 px-4 py-3 md:hidden">
             <div className="flex flex-col gap-2">
               <div className="grid grid-cols-2 gap-2">
                 <PrimaryNavigation value={state.primary} onChange={setPrimary} />
