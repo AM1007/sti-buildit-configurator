@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams, useSearchParams, Navigate } from "react-router-dom";
 import { getConfiguratorBySlug } from "../data/catalog";
 import { getModelBySlug } from "../data/models";
@@ -6,6 +6,9 @@ import { BuildItCalculator } from "../components/BuildItCalculator";
 import { ConfiguratorHero } from "../components/ConfiguratorHero";
 import { getHeroContent } from "../data/heroContent";
 import { useConfigurationStore } from "../stores/configurationStore";
+import { useProjectStore } from "../stores/projectStore";
+import { useIsAuthenticated } from "../stores/authStore";
+import { ProjectPicker } from "../components/ProjectPicker";
 import { InDevelopmentPage } from "./InDevelopmentPage";
 import { parseConfigFromUrl } from "../utils/configSerializer";
 import { toast } from "../utils/toast";
@@ -17,12 +20,17 @@ export function ConfiguratorPage() {
   const hasLoadedFromUrl = useRef(false);
   const { t } = useTranslation();
 
-  const addToMyList = useConfigurationStore((state) => state.addToMyList);
-  const removeFromMyList = useConfigurationStore((state) => state.removeFromMyList);
   const setModel = useConfigurationStore((state) => state.setModel);
   const currentModelId = useConfigurationStore((state) => state.currentModelId);
-
+  const config = useConfigurationStore((state) => state.config);
+  const customText = useConfigurationStore((state) => state.customText);
   const setConfigFromUrl = useConfigurationStore((state) => state.loadConfigFromUrl);
+
+  const addConfiguration = useProjectStore((s) => s.addConfiguration);
+  const removeConfiguration = useProjectStore((s) => s.removeConfiguration);
+
+  const isAuthenticated = useIsAuthenticated();
+  const [showProjectPicker, setShowProjectPicker] = useState(false);
 
   if (!slug) {
     return <Navigate to="/" replace />;
@@ -78,12 +86,20 @@ export function ConfiguratorPage() {
   const heroContent = getHeroContent(model.id);
 
   const handleAddToMyList = () => {
-    setModel(model.id);
-    addToMyList();
+    if (isAuthenticated) {
+      setShowProjectPicker(true);
+    } else {
+      setModel(model.id);
+      addConfiguration(model.id, config, customText, model);
+    }
   };
 
   const handleRemoveFromMyList = (itemId: string) => {
-    removeFromMyList(itemId);
+    removeConfiguration(itemId);
+  };
+
+  const handleProjectPickerSaved = () => {
+    toast.success(t("projectPicker.saved"));
   };
 
   return (
@@ -100,6 +116,16 @@ export function ConfiguratorPage() {
           onRemoveFromMyList={handleRemoveFromMyList}
         />
       </section>
+
+      <ProjectPicker
+        isOpen={showProjectPicker}
+        onClose={() => setShowProjectPicker(false)}
+        onSaved={handleProjectPickerSaved}
+        modelId={model.id}
+        config={config}
+        customText={customText}
+        model={model}
+      />
     </div>
   );
 }

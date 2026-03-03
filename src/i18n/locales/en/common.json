@@ -272,5 +272,86 @@
     "EXTENDED_LEAD_TIMES": "EXTENDED LEAD TIME",
     "NOT_UL_LISTED": "NOT UL LISTED",
     "NON-RETURNABLE": "NON-RETURNABLE"
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signInDescription": "Sign in to access your projects and configurations",
+    "createAccount": "Create Account",
+    "createAccountDescription": "Register to save projects across devices",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "forgotPassword": "Forgot password?",
+    "resetPassword": "Reset Password",
+    "resetPasswordDescription": "Enter your email and we'll send you a reset link",
+    "sendResetLink": "Send Reset Link",
+    "checkYourEmail": "Check your email",
+    "resetEmailSent": "We sent a password reset link to {email}",
+    "backToSignIn": "Back to Sign In",
+    "continueWithGoogle": "Continue with Google",
+    "or": "or",
+    "noAccount": "Don't have an account?",
+    "haveAccount": "Already have an account?",
+    "passwordMinLength": "Password must be at least 6 characters",
+    "passwordsDoNotMatch": "Passwords do not match",
+    "passwordHint": "Minimum 6 characters",
+    "confirmationEmailSent": "We sent a confirmation link to {email}. Please check your inbox."
+  },
+  "account": {
+    "title": "Account",
+    "subtitle": "Manage your account settings",
+    "email": "Email",
+    "authProvider": "Auth Provider",
+    "language": "Language",
+    "signOut": "Sign Out"
+  },
+  "projects": {
+    "title": "Projects",
+    "subtitle": "Your saved configuration projects",
+    "newProject": "New Project",
+    "projectName": "Project Name",
+    "projectNamePlaceholder": "Enter project name...",
+    "create": "Create",
+    "createFirst": "Create Your First Project",
+    "rename": "Rename",
+    "delete": "Delete",
+    "deleteConfirm": "Are you sure you want to delete this project? This cannot be undone.",
+    "untitled": "Untitled Project",
+    "item": "item",
+    "items": "items",
+    "emptyTitle": "No Projects Yet",
+    "emptyDescription": "Create a project to organize your device configurations.",
+    "emptyProjectTitle": "No Configurations",
+    "emptyProjectDescription": "Start configuring devices and save them to this project.",
+    "guestListLink": "View guest list (local)",
+    "backToProjects": "Back to Projects"
+  },
+  "projectPicker": {
+    "title": "Save to Project",
+    "noProjects": "No projects yet. Create one to save your configuration.",
+    "createNew": "New Project",
+    "saved": "Configuration saved to project"
+  },
+  "authPrompt": {
+    "title": "Save across devices",
+    "description": "Create a free account to keep your configurations synced and organized into projects.",
+    "cta": "Create account"
+  },
+  "merge": {
+    "success": "{count} configuration(s) transferred to your account",
+    "error": "Failed to transfer guest configurations. They remain in your local list."
+  },
+  "authError": {
+    "invalidCredentials": "Invalid email or password",
+    "emailNotConfirmed": "Please confirm your email address before signing in",
+    "sessionExpired": "Your session has expired. Please sign in again.",
+    "userAlreadyRegistered": "An account with this email already exists",
+    "passwordTooShort": "Password must be at least 6 characters",
+    "invalidPassword": "Please enter a valid password",
+    "invalidEmail": "Please enter a valid email address",
+    "rateLimited": "Too many attempts. Please wait 60 seconds and try again.",
+    "userNotFound": "No account found with this email",
+    "oauthEmailError": "Could not retrieve your email from the sign-in provider",
+    "networkError": "Network error. Check your connection and try again."
   }
 }

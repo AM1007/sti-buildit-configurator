@@ -159,3 +159,30 @@ export function createEmptyCustomText(): CustomTextData {
     submitted: false,
   };
 }
+
+export type AuthProvider = "email" | "google";
+
+export interface AuthUser {
+  id: string;
+  email: string;
+  provider: AuthProvider;
+}
+
+export type AuthStatus = "idle" | "loading" | "authenticated" | "unauthenticated";
+
+export interface Project {
+  id: string;
+  userId: string;
+  name: string;
+  clientName: string;
+  date: string;
+  createdAt: string;
+  updatedAt: string;
+  lastExportedAt: string | null;
+}
+
+export interface ProjectWithConfigurations extends Project {
+  configurations: SavedConfiguration[];
+}
+
+export const GUEST_PROJECT_ID = "guest-default" as const;

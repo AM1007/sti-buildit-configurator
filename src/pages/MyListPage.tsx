@@ -2,14 +2,15 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { Info, Plus } from "lucide-react";
 import {
-  useConfigurationStore,
   useMyList,
   useProjectMeta,
 } from "../stores/configurationStore";
+import { useProjectStore } from "../stores/projectStore";
 import { SpecificationTable } from "../components/SpecificationTable";
 import { SpecificationMobileList } from "../components/SpecificationMobileItem";
 import { DetailDrawer } from "../components/DetailDrawer";
 import { DetailBottomSheet } from "../components/DetailBottomSheet";
+import { AuthPromptBanner } from "../components/AuthPromptBanner";
 import { useIsMobile } from "../hooks/useMediaQuery";
 import { useTranslation, useLanguage } from "../i18n";
 import { deserializeMyList } from "../utils/configSerializer";
@@ -21,7 +22,8 @@ function useMyListFromUrl() {
   const hasProcessed = useRef(false);
   const { lang } = useLanguage();
 
-  const setProjectMeta = useConfigurationStore((s) => s.setProjectMeta);
+  const setGuestState = useProjectStore((s) => s.setGuestState);
+  const setGuestProjectMeta = useProjectStore((s) => s.setGuestProjectMeta);
 
   useEffect(() => {
     if (hasProcessed.current) return;
@@ -40,43 +42,40 @@ function useMyListFromUrl() {
     }
 
     const now = Date.now();
-    useConfigurationStore.setState({
-      myList: parsed.items,
-      projectMeta: {
-        projectName: parsed.projectMeta.projectName ?? "",
-        clientName: parsed.projectMeta.clientName ?? "",
-        date: parsed.projectMeta.date ?? new Date().toISOString().slice(0, 10),
-        createdAt: now,
-        updatedAt: now,
-        lastExportedAt: null,
-      },
+    setGuestState(parsed.items, {
+      projectName: parsed.projectMeta.projectName ?? "",
+      clientName: parsed.projectMeta.clientName ?? "",
+      date: parsed.projectMeta.date ?? new Date().toISOString().slice(0, 10),
+      createdAt: now,
+      updatedAt: now,
+      lastExportedAt: null,
     });
 
     searchParams.delete("list");
     setSearchParams(searchParams, { replace: true });
 
-    const meta = useConfigurationStore.getState().projectMeta;
+    const meta = useProjectStore.getState().guestProjectMeta;
 
     setTimeout(async () => {
       try {
-        const currentItems = useConfigurationStore.getState().myList;
+        const currentItems = useProjectStore.getState().guestConfigurations;
         if (currentItems.length > 0) {
           await downloadMyListXlsx(currentItems, lang as "en" | "uk", meta);
-          setProjectMeta({ lastExportedAt: Date.now(), updatedAt: Date.now() });
+          setGuestProjectMeta({ lastExportedAt: Date.now(), updatedAt: Date.now() });
         }
       } catch {
         toast.error("Download failed. Try exporting manually.");
       }
     }, 500);
-  }, [searchParams, setSearchParams, setProjectMeta, lang]);
+  }, [searchParams, setSearchParams, setGuestState, setGuestProjectMeta, lang]);
 }
 
 export function MyListPage() {
   const myList = useMyList();
   const projectMeta = useProjectMeta();
-  const removeFromMyList = useConfigurationStore((s) => s.removeFromMyList);
-  const updateItemQty = useConfigurationStore((s) => s.updateItemQty);
-  const updateItemNote = useConfigurationStore((s) => s.updateItemNote);
+  const removeConfiguration = useProjectStore((s) => s.removeConfiguration);
+  const updateConfigurationQty = useProjectStore((s) => s.updateConfigurationQty);
+  const updateConfigurationNote = useProjectStore((s) => s.updateConfigurationNote);
   const isMobile = useIsMobile();
 
   const [drawerItemId, setDrawerItemId] = useState<string | null>(null);
@@ -110,6 +109,7 @@ export function MyListPage() {
   return (
     <div className="w-full max-w-7xl mx-auto px-4 md:px-6 xl:px-8 py-8 md:py-10">
       <PageHeader />
+      <AuthPromptBanner />
       <ProjectSummary
         uniqueModels={summary.uniqueModels}
         totalUnits={summary.totalUnits}
@@ -119,20 +119,20 @@ export function MyListPage() {
       <div className="hidden md:block">
         <SpecificationTable
           items={myList}
-          onQtyChange={updateItemQty}
-          onNoteChange={updateItemNote}
+          onQtyChange={updateConfigurationQty}
+          onNoteChange={updateConfigurationNote}
           onViewDetails={handleViewDetails}
-          onRemove={removeFromMyList}
+          onRemove={removeConfiguration}
         />
       </div>
 
       <div className="md:hidden">
         <SpecificationMobileList
           items={myList}
-          onQtyChange={updateItemQty}
-          onNoteChange={updateItemNote}
+          onQtyChange={updateConfigurationQty}
+          onNoteChange={updateConfigurationNote}
           onViewDetails={handleViewDetails}
-          onRemove={removeFromMyList}
+          onRemove={removeConfiguration}
         />
       </div>
 
@@ -141,14 +141,14 @@ export function MyListPage() {
           item={drawerItem}
           isOpen={isDrawerOpen}
           onClose={handleCloseDrawer}
-          onRemove={removeFromMyList}
+          onRemove={removeConfiguration}
         />
       ) : (
         <DetailDrawer
           item={drawerItem}
           isOpen={isDrawerOpen}
           onClose={handleCloseDrawer}
-          onRemove={removeFromMyList}
+          onRemove={removeConfiguration}
         />
       )}
     </div>
@@ -251,6 +251,8 @@ function EmptyState() {
           {t("myList.subtitle")}
         </p>
       </div>
+
+      <AuthPromptBanner />
 
       <div className="flex flex-col items-center justify-center py-20 border border-slate-200 rounded-sm bg-white text-center">
         <div className="h-12 w-12 rounded-sm bg-slate-100 flex items-center justify-center mb-5">

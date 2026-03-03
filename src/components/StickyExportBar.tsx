@@ -4,26 +4,14 @@ import { X, ExternalLink, Copy, Check } from "lucide-react";
 import {
   useMyList,
   useProjectMeta,
-  useConfigurationStore,
 } from "../stores/configurationStore";
+import { useProjectStore } from "../stores/projectStore";
 import { useTranslation, useLanguage } from "../i18n";
 import { downloadMyListXlsx } from "../utils/generateMyListXlsx";
 import { buildMyListShareUrl } from "../utils/configSerializer";
 import { ExportModal } from "./ExportModal";
 import { toast } from "../utils/toast";
 
-/**
- * Detects iOS in-app browsers (Telegram, Facebook, Instagram, etc.)
- * where programmatic file downloads via <a download> are broken.
- *
- * Telegram on iOS uses a plain WKWebView with a standard Safari UA string —
- * there is no "Telegram" token in navigator.userAgent, and window.safari
- * was removed by Apple in Safari 16+.
- *
- * Reliable detection: native apps that embed WKWebView register message
- * handlers via window.webkit.messageHandlers. Standalone Safari does NOT
- * have this object. If we detect iOS + messageHandlers present → in-app browser.
- */
 function isIOSInAppBrowser(): boolean {
   if (typeof navigator === "undefined" || typeof window === "undefined") return false;
 
@@ -31,11 +19,8 @@ function isIOSInAppBrowser(): boolean {
   const isIOS = /iPhone|iPad|iPod/.test(ua);
   if (!isIOS) return false;
 
-  // PWA / home screen shortcut — not an in-app browser
   if ((navigator as { standalone?: boolean }).standalone === true) return false;
 
-  // Native apps register message handlers on WKWebView.
-  // Standalone Safari does not have this object.
   const webkit = (window as { webkit?: { messageHandlers?: unknown } }).webkit;
   if (webkit && typeof webkit.messageHandlers === "object" && webkit.messageHandlers !== null) {
     return true;
@@ -50,8 +35,8 @@ export function StickyExportBar() {
   const projectMeta = useProjectMeta();
   const { lang } = useLanguage();
   const { t } = useTranslation();
-  const clearMyList = useConfigurationStore((s) => s.clearMyList);
-  const setProjectMeta = useConfigurationStore((s) => s.setProjectMeta);
+  const clearConfigurations = useProjectStore((s) => s.clearConfigurations);
+  const setGuestProjectMeta = useProjectStore((s) => s.setGuestProjectMeta);
 
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
@@ -65,7 +50,7 @@ export function StickyExportBar() {
 
   const handleClearAll = () => {
     toast.confirm(t("myList.clearListConfirm"), () => {
-      clearMyList();
+      clearConfigurations();
     });
   };
 
@@ -75,7 +60,6 @@ export function StickyExportBar() {
       setIsCopied(true);
       setTimeout(() => setIsCopied(false), 2000);
     } catch {
-      // Clipboard API may fail in WebView — use textarea fallback
       try {
         const textarea = document.createElement("textarea");
         textarea.value = shareUrl;
@@ -89,13 +73,12 @@ export function StickyExportBar() {
         setIsCopied(true);
         setTimeout(() => setIsCopied(false), 2000);
       } catch {
-        // Both methods failed — the URL is displayed and can be long-pressed
       }
     }
   };
 
   const handleExport = async (meta: { projectName: string; clientName: string; date: string }) => {
-    setProjectMeta({
+    setGuestProjectMeta({
       projectName: meta.projectName,
       clientName: meta.clientName,
       date: meta.date,
@@ -103,7 +86,6 @@ export function StickyExportBar() {
 
     setIsExportModalOpen(false);
 
-    // iOS in-app browsers cannot download files — show transfer banner
     if (isIOSInAppBrowser()) {
       const updatedMeta = {
         ...projectMeta,
@@ -128,7 +110,7 @@ export function StickyExportBar() {
         date: meta.date,
       };
       await downloadMyListXlsx(myList, lang as "en" | "uk", updatedMeta);
-      setProjectMeta({ lastExportedAt: Date.now(), updatedAt: Date.now() });
+      setGuestProjectMeta({ lastExportedAt: Date.now(), updatedAt: Date.now() });
     } catch {
       toast.error(t("toast.errorOccurred"));
     } finally {
@@ -171,7 +153,6 @@ export function StickyExportBar() {
         onExport={handleExport}
       />
 
-      {/* iOS WebView transfer banner */}
       {showWebViewBanner && (
         <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
           <div className="w-full max-w-sm bg-white rounded-sm shadow-xl">

@@ -1,6 +1,8 @@
-import { Link, useLocation } from "react-router-dom";
-import { Home, Star, Type, User, Globe, BookOpen, FileText } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Home, Star, FolderOpen, Type, User, Globe, BookOpen, FileText, LogOut, ChevronDown } from "lucide-react";
 import { useMyListCount } from "../stores/configurationStore";
+import { useAuthStore, useIsAuthenticated, useUser } from "../stores/authStore";
 import { useTranslation, useLanguage } from "../i18n";
 import type { Language } from "../i18n";
 import { StickyExportBar } from "./StickyExportBar";
@@ -40,20 +42,30 @@ function MobileNav() {
   const { t } = useTranslation();
   const { lang, setLang } = useLanguage();
   const location = useLocation();
+  const isAuthenticated = useIsAuthenticated();
+  const user = useUser();
 
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (path: string) => location.pathname === path || location.pathname.startsWith(path + "/");
 
   const toggleLanguage = () => {
     const next: Language = lang === "uk" ? "en" : "uk";
     setLang(next);
   };
 
+  const initial = user?.email?.charAt(0).toUpperCase() ?? "";
+
+  const listPath = isAuthenticated ? "/projects" : "/my-list";
+  const listLabel = isAuthenticated ? t("projects.title") : t("common.myList");
+  const ListIcon = isAuthenticated ? FolderOpen : Star;
+
   return (
     <div className="h-14 flex items-center justify-center gap-10">
       <Link
         to="/"
         className={`flex flex-col items-center gap-0.5 transition-colors ${
-          isActive("/") ? "text-slate-900" : "text-slate-400 hover:text-slate-700"
+          isActive("/") && !isActive("/projects") && !isActive("/my-list") && !isActive("/configurator") && !isActive("/login") && !isActive("/account")
+            ? "text-slate-900"
+            : "text-slate-400 hover:text-slate-700"
         }`}
       >
         <Home className="h-5 w-5" />
@@ -61,20 +73,20 @@ function MobileNav() {
       </Link>
 
       <Link
-        to="/my-list"
+        to={listPath}
         className={`relative flex flex-col items-center gap-0.5 transition-colors ${
-          isActive("/my-list") ? "text-slate-900" : "text-slate-400 hover:text-slate-700"
+          isActive(listPath) ? "text-slate-900" : "text-slate-400 hover:text-slate-700"
         }`}
       >
         <span className="relative">
-          <Star className="h-5 w-5" />
-          {myListCount > 0 && (
+          <ListIcon className="h-5 w-5" />
+          {!isAuthenticated && myListCount > 0 && (
             <span className="absolute -top-2 -right-3 flex items-center justify-center min-w-4 h-4 rounded-full bg-brand-600 px-0.5 text-[9px] font-bold text-white leading-none">
               {myListCount}
             </span>
           )}
         </span>
-        <span className="text-[10px] font-medium leading-none">{t("common.myList")}</span>
+        <span className="text-[10px] font-medium leading-none">{listLabel}</span>
       </Link>
 
       <button
@@ -86,13 +98,29 @@ function MobileNav() {
         <span className="text-[10px] font-medium leading-none uppercase">{lang === "uk" ? "UA" : "EN"}</span>
       </button>
 
-      <a
-        href="#"
-        className="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-700 transition-colors"
-      >
-        <User className="h-5 w-5" />
-        <span className="text-[10px] font-medium leading-none">{t("header.account")}</span>
-      </a>
+      {isAuthenticated ? (
+        <Link
+          to="/account"
+          className={`flex flex-col items-center gap-0.5 transition-colors ${
+            isActive("/account") ? "text-slate-900" : "text-slate-400 hover:text-slate-700"
+          }`}
+        >
+          <span className="flex items-center justify-center h-5 w-5 rounded-full bg-slate-900 text-[10px] font-bold text-white leading-none">
+            {initial}
+          </span>
+          <span className="text-[10px] font-medium leading-none">{t("header.account")}</span>
+        </Link>
+      ) : (
+        <Link
+          to="/login"
+          className={`flex flex-col items-center gap-0.5 transition-colors ${
+            isActive("/login") ? "text-slate-900" : "text-slate-400 hover:text-slate-700"
+          }`}
+        >
+          <User className="h-5 w-5" />
+          <span className="text-[10px] font-medium leading-none">{t("auth.signIn")}</span>
+        </Link>
+      )}
     </div>
   );
 }
@@ -102,8 +130,13 @@ function DesktopNav() {
   const { t } = useTranslation();
   const { lang, setLang } = useLanguage();
   const location = useLocation();
+  const isAuthenticated = useIsAuthenticated();
+  const user = useUser();
 
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (path: string) => location.pathname === path || location.pathname.startsWith(path + "/");
+
+  const listPath = isAuthenticated ? "/projects" : "/my-list";
+  const listLabel = isAuthenticated ? t("projects.title") : t("common.myList");
 
   return (
     <div className="mx-auto max-w-7xl h-16 grid grid-cols-3 items-center px-6 xl:px-8">
@@ -121,7 +154,7 @@ function DesktopNav() {
         <Link
           to="/"
           className={`text-sm font-medium transition-colors ${
-            isActive("/")
+            isActive("/") && !isActive("/projects") && !isActive("/my-list")
               ? "text-slate-900"
               : "text-slate-500 hover:text-slate-900"
           }`}
@@ -129,15 +162,15 @@ function DesktopNav() {
           {t("common.home")}
         </Link>
         <Link
-          to="/my-list"
+          to={listPath}
           className={`text-sm font-medium transition-colors flex items-center gap-2 ${
-            isActive("/my-list")
+            isActive(listPath)
               ? "text-slate-900"
               : "text-slate-500 hover:text-slate-900"
           }`}
         >
-          {t("common.myList")}
-          {myListCount > 0 && (
+          {listLabel}
+          {!isAuthenticated && myListCount > 0 && (
             <span className="flex items-center justify-center min-w-5 h-5 rounded-full bg-brand-600 px-1.5 text-[10px] font-bold text-white leading-none">
               {myListCount}
             </span>
@@ -174,17 +207,110 @@ function DesktopNav() {
 
         <div className="w-px h-5 bg-slate-200" />
 
-        <a
-          href="#"
-          className="flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors"
-        >
-          <User className="h-4 w-4" />
-          <span>{t("header.account")}</span>
-        </a>
+        {isAuthenticated && user ? (
+          <UserDropdown user={user} />
+        ) : (
+          <Link
+            to="/login"
+            className="flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors"
+          >
+            <User className="h-4 w-4" />
+            <span>{t("auth.signIn")}</span>
+          </Link>
+        )}
       </div>
     </div>
   );
 }
+
+function UserDropdown({ user }: { user: { email: string } }) {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const signOut = useAuthStore((s) => s.signOut);
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  const initial = user.email.charAt(0).toUpperCase();
+
+  useEffect(() => {
+    if (!open) return;
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [open]);
+
+  const handleSignOut = async () => {
+    setOpen(false);
+    await signOut();
+    navigate("/");
+  };
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        className="flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors"
+      >
+        <span className="flex items-center justify-center h-6 w-6 rounded-full bg-slate-900 text-[11px] font-bold text-white leading-none">
+          {initial}
+        </span>
+        <ChevronDown className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : ""}`} />
+      </button>
+
+      {open && (
+        <div className="absolute right-0 top-full mt-2 w-56 rounded-sm border border-slate-200 bg-white shadow-sm">
+          <div className="px-3 py-2.5 border-b border-slate-100">
+            <p className="text-xs text-slate-500 truncate">{user.email}</p>
+          </div>
+
+          <div className="py-1">
+            <button
+              type="button"
+              onClick={() => {
+                setOpen(false);
+                navigate("/account");
+              }}
+              className="w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 transition-colors text-left"
+            >
+              <User className="h-4 w-4 text-slate-400" />
+              {t("header.account")}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setOpen(false);
+                navigate("/projects");
+              }}
+              className="w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 transition-colors text-left"
+            >
+              <FolderOpen className="h-4 w-4 text-slate-400" />
+              {t("projects.title")}
+            </button>
+
+            <button
+              type="button"
+              onClick={handleSignOut}
+              className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors text-left"
+            >
+              <LogOut className="h-4 w-4" />
+              {t("account.signOut")}
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+const LINKEDIN_PATH = "M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z";
 
 function Footer() {
   const year = new Date().getFullYear().toString();
@@ -216,7 +342,7 @@ function Footer() {
               fill="currentColor"
               aria-hidden="true"
             >
-              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+              <path d={LINKEDIN_PATH} />
             </svg>
           </a>
           <a
