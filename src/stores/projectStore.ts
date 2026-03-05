@@ -88,6 +88,10 @@ interface ProjectState {
   clearRemoteConfigurations: (projectId: string) => Promise<void>;
   updateProjectMeta: (projectId: string, meta: Partial<Pick<Project, "name" | "clientName" | "date" | "lastExportedAt">>) => Promise<void>;
 
+  checkDuplicateInProject: (projectId: string, productCode: string) => Promise<boolean>;
+  fetchProjectsWithProduct: (productCode: string) => Promise<Map<string, string>>;
+  checkProductInAnyProject: (userId: string, productCode: string) => Promise<boolean>;
+
   mergeGuestToRemote: (userId: string) => Promise<string | null>;
   clearGuestData: () => void;
 }
@@ -393,6 +397,54 @@ export const useProjectStore = create<ProjectState>()(
         set({
           remoteConfigurations: { ...remoteConfigurations, [projectId]: configs },
         });
+      },
+
+      checkDuplicateInProject: async (projectId, productCode) => {
+        const { data, error } = await supabase
+          .from("saved_configurations")
+          .select("id")
+          .eq("project_id", projectId)
+          .eq("product_code", productCode)
+          .limit(1);
+
+        if (error) {
+          console.error("Failed to check duplicate:", error.message);
+          return false;
+        }
+
+        return (data ?? []).length > 0;
+      },
+
+      fetchProjectsWithProduct: async (productCode) => {
+        const { data, error } = await supabase
+          .from("saved_configurations")
+          .select("id, project_id")
+          .eq("product_code", productCode);
+
+        if (error) {
+          console.error("Failed to fetch projects with product:", error.message);
+          return new Map<string, string>();
+        }
+
+        return new Map<string, string>(
+          (data ?? []).map((row) => [row.project_id as string, row.id as string])
+        );
+      },
+
+      checkProductInAnyProject: async (userId, productCode) => {
+        const { data, error } = await supabase
+          .from("saved_configurations")
+          .select("id")
+          .eq("user_id", userId)
+          .eq("product_code", productCode)
+          .limit(1);
+
+        if (error) {
+          console.error("Failed to check product in any project:", error.message);
+          return false;
+        }
+
+        return (data ?? []).length > 0;
       },
 
       addRemoteConfiguration: async (userId, projectId, modelId, config, customText, model, name) => {

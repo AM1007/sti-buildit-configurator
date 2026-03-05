@@ -39,7 +39,9 @@ export const toast = {
     });
   },
 
-  confirm(message: string, onConfirm: () => void): void {
+  confirm(message: string, onConfirm: () => void, labels?: { confirm?: string; cancel?: string }): void {
+    const confirmLabel = labels?.confirm ?? "Confirm";
+    const cancelLabel = labels?.cancel ?? "Cancel";
     iziToast.question({
       timeout: false,
       close: false,
@@ -50,7 +52,7 @@ export const toast = {
       position: "center",
       buttons: [
         [
-          "<button type='button' style='background:#c8102e;color:white;font-weight:bold;'>Confirm</button>",
+          `<button type='button' style='background:#c8102e;color:white;font-weight:bold;'>${confirmLabel}</button>`,
           (instance, toastEl) => {
             instance.hide({ transitionOut: "fadeOut" }, toastEl, "button");
             onConfirm();
@@ -58,7 +60,7 @@ export const toast = {
           false,
         ],
         [
-          "<button type='button'>Cancel</button>",
+          `<button type='button'>${cancelLabel}</button>`,
           (instance, toastEl) => {
             instance.hide({ transitionOut: "fadeOut" }, toastEl, "button");
           },

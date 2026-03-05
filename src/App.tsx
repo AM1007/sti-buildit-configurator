@@ -33,7 +33,6 @@ function AuthInitializer({ children }: { children: React.ReactNode }) {
     return unsubscribe;
   }, [initialize]);
 
-  // Merge guest data to remote on auth transition
   useEffect(() => {
     const prevStatus = prevStatusRef.current;
     prevStatusRef.current = status;
@@ -41,7 +40,7 @@ function AuthInitializer({ children }: { children: React.ReactNode }) {
     const guestCount = guestConfigurations.length;
 
     if (
-      prevStatus === "unauthenticated" &&
+      (prevStatus === "unauthenticated" || prevStatus === "idle") &&
       status === "authenticated" &&
       user &&
       guestCount > 0 &&

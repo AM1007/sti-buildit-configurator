@@ -6,6 +6,7 @@ import {
   useProjectMeta,
 } from "../stores/configurationStore";
 import { useProjectStore } from "../stores/projectStore";
+import { useIsAuthenticated } from "../stores/authStore";
 import { useTranslation, useLanguage } from "../i18n";
 import { downloadMyListXlsx } from "../utils/generateMyListXlsx";
 import { buildMyListShareUrl } from "../utils/configSerializer";
@@ -35,8 +36,11 @@ export function StickyExportBar() {
   const projectMeta = useProjectMeta();
   const { lang } = useLanguage();
   const { t } = useTranslation();
+  const isAuthenticated = useIsAuthenticated();
   const clearConfigurations = useProjectStore((s) => s.clearConfigurations);
   const setGuestProjectMeta = useProjectStore((s) => s.setGuestProjectMeta);
+  const updateProjectMeta = useProjectStore((s) => s.updateProjectMeta);
+  const activeProjectId = useProjectStore((s) => s.activeProjectId);
 
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
@@ -44,7 +48,10 @@ export function StickyExportBar() {
   const [shareUrl, setShareUrl] = useState("");
   const [isCopied, setIsCopied] = useState(false);
 
-  if (location.pathname !== "/my-list" || myList.length === 0) return null;
+  const isMyList = location.pathname === "/my-list";
+  const isProjectDetail = location.pathname.startsWith("/projects/");
+
+  if ((!isMyList && !isProjectDetail) || myList.length === 0) return null;
 
   const totalUnits = myList.reduce((sum, item) => sum + item.qty, 0);
 
@@ -78,21 +85,27 @@ export function StickyExportBar() {
   };
 
   const handleExport = async (meta: { projectName: string; clientName: string; date: string }) => {
-    setGuestProjectMeta({
-      projectName: meta.projectName,
-      clientName: meta.clientName,
-      date: meta.date,
-    });
+    const updatedMeta = { ...projectMeta, ...meta };
+
+    if (isAuthenticated && isProjectDetail) {
+      // remote project: persist meta changes to Supabase
+      await updateProjectMeta(activeProjectId, {
+        name: meta.projectName,
+        clientName: meta.clientName,
+        date: meta.date,
+      });
+    } else {
+      // guest: persist to localStorage
+      setGuestProjectMeta({
+        projectName: meta.projectName,
+        clientName: meta.clientName,
+        date: meta.date,
+      });
+    }
 
     setIsExportModalOpen(false);
 
     if (isIOSInAppBrowser()) {
-      const updatedMeta = {
-        ...projectMeta,
-        projectName: meta.projectName,
-        clientName: meta.clientName,
-        date: meta.date,
-      };
       const url = buildMyListShareUrl(myList, updatedMeta);
       setShareUrl(url);
       setIsCopied(false);
@@ -103,14 +116,13 @@ export function StickyExportBar() {
     setIsDownloading(true);
 
     try {
-      const updatedMeta = {
-        ...projectMeta,
-        projectName: meta.projectName,
-        clientName: meta.clientName,
-        date: meta.date,
-      };
       await downloadMyListXlsx(myList, lang as "en" | "uk", updatedMeta);
-      setGuestProjectMeta({ lastExportedAt: Date.now(), updatedAt: Date.now() });
+      const exportedAt = Date.now();
+      if (isAuthenticated && isProjectDetail) {
+        await updateProjectMeta(activeProjectId, { lastExportedAt: new Date(exportedAt).toISOString() });
+      } else {
+        setGuestProjectMeta({ lastExportedAt: exportedAt, updatedAt: exportedAt });
+      }
     } catch {
       toast.error(t("toast.errorOccurred"));
     } finally {

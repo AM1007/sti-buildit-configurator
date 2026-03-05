@@ -44,14 +44,10 @@ export function mapAuthError(rawError: string, t: (key: string) => string): stri
   const i18nKey = ERROR_MAP[rawError];
   if (i18nKey) {
     const translated = t(i18nKey);
-    // If t() returns the key itself (missing translation), fall back to raw
     if (translated !== i18nKey) {
       return translated;
     }
   }
-  // Unknown error: return raw message
-  // ASSUMPTION: Supabase may add new error messages over time.
-  // Unknown errors display in English. Log for future mapping.
   console.warn(`[mapAuthError] Unmapped Supabase error: "${rawError}"`);
   return rawError;
 }

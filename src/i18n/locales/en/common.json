@@ -330,7 +330,9 @@
     "title": "Save to Project",
     "noProjects": "No projects yet. Create one to save your configuration.",
     "createNew": "New Project",
-    "saved": "Configuration saved to project"
+    "saved": "Configuration saved to project",
+    "duplicateWarning": "This configuration already exists in this project.",
+    "saveAnyway": "Save anyway"
   },
   "authPrompt": {
     "title": "Save across devices",

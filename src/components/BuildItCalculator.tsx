@@ -12,7 +12,8 @@ import { ShareMenu } from "./ShareMenu";
 import { PdfMenu } from "./PdfMenu";
 import { CustomTextForm } from "./CustomTextForm";
 import { CustomTextDisplay } from "./CustomTextDisplay";
-import { useCustomText, useConfigurationStore, useIsProductInMyList, useMyListItemIdByProductCode } from "../stores/configurationStore";
+import { useCustomText, useConfigurationStore, useIsProductInMyList, useIsProductInAnyProject, useMyListItemIdByProductCode } from "../stores/configurationStore";
+import { useIsAuthenticated } from "../stores/authStore";
 import { isConfigurationReadyForActions, shouldShowCustomTextForm, hasSubmittedCustomText, getCustomTextConfig, getMaxLength, getEffectiveLineCount } from "../utils/customTextHelpers";
 import { getCompletedDeviceImage } from "../utils/getCompletedDeviceImage";
 import { getModelSummary } from "../utils/getModelSummary";
@@ -26,6 +27,7 @@ interface BuildItCalculatorProps {
   productName: string;
   onAddToMyList?: (productCode: string) => void;
   onRemoveFromMyList?: (itemId: string) => void;
+  projectRefreshToken?: number;
   onBack?: () => void;
 }
 
@@ -34,6 +36,7 @@ export function BuildItCalculator({
   productName,
   onAddToMyList,
   onRemoveFromMyList,
+  projectRefreshToken = 0,
 }: BuildItCalculatorProps) {
   const {
     config,
@@ -49,8 +52,12 @@ export function BuildItCalculator({
   const setCustomText = useConfigurationStore((state) => state.setCustomText);
 
   const productModel = buildProductModel(config, model);
-  const isInMyList = useIsProductInMyList(productModel.isComplete ? productModel.fullCode : null, customText);
-  const myListItemId = useMyListItemIdByProductCode(productModel.isComplete ? productModel.fullCode : null, customText);
+  const isAuthenticated = useIsAuthenticated();
+  const productCode = productModel.isComplete ? productModel.fullCode : null;
+  const isInMyListGuest = useIsProductInMyList(productCode, customText);
+  const isInMyListAuth = useIsProductInAnyProject(productCode, projectRefreshToken);
+  const isInMyList = isAuthenticated ? isInMyListAuth : isInMyListGuest;
+  const myListItemId = useMyListItemIdByProductCode(productCode, customText);
 
   const totalSteps = model.stepOrder.length;
   const completedSteps = model.stepOrder.filter((stepId) => !!config[stepId]).length;
@@ -102,8 +109,14 @@ export function BuildItCalculator({
   };
 
   const handleRemoveFromMyList = () => {
-    if (myListItemId && onRemoveFromMyList) {
-      onRemoveFromMyList(myListItemId);
+    if (isAuthenticated) {
+      if (productModel.isComplete && onAddToMyList) {
+        onAddToMyList(productModel.fullCode);
+      }
+    } else {
+      if (myListItemId && onRemoveFromMyList) {
+        onRemoveFromMyList(myListItemId);
+      }
     }
   };
 

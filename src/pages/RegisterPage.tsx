@@ -40,8 +40,6 @@ export function RegisterPage() {
       setError(mapAuthError(result.error, t));
       setIsSubmitting(false);
     } else {
-      // Supabase sends confirmation email.
-      // Show "check your email" state instead of navigating.
       setIsSubmitting(false);
       setEmailSent(true);
     }
@@ -55,7 +53,6 @@ export function RegisterPage() {
     }
   };
 
-  // Email confirmation sent state
   if (emailSent) {
     return (
       <div className="w-full max-w-sm mx-auto px-4 py-12 md:py-20 text-center">

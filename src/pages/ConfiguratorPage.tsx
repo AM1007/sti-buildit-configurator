@@ -31,6 +31,7 @@ export function ConfiguratorPage() {
 
   const isAuthenticated = useIsAuthenticated();
   const [showProjectPicker, setShowProjectPicker] = useState(false);
+  const [projectRefreshToken, setProjectRefreshToken] = useState(0);
 
   if (!slug) {
     return <Navigate to="/" replace />;
@@ -95,10 +96,15 @@ export function ConfiguratorPage() {
   };
 
   const handleRemoveFromMyList = (itemId: string) => {
-    removeConfiguration(itemId);
+    if (isAuthenticated) {
+      setShowProjectPicker(true);
+    } else {
+      removeConfiguration(itemId);
+    }
   };
 
   const handleProjectPickerSaved = () => {
+    setProjectRefreshToken((t) => t + 1);
     toast.success(t("projectPicker.saved"));
   };
 
@@ -114,6 +120,7 @@ export function ConfiguratorPage() {
           productName={catalogConfig.name}
           onAddToMyList={handleAddToMyList}
           onRemoveFromMyList={handleRemoveFromMyList}
+          projectRefreshToken={projectRefreshToken}
         />
       </section>
 

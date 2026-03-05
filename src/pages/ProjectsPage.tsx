@@ -7,6 +7,7 @@ import {
 import { useProjectStore } from "../stores/projectStore";
 import { useAuthStore } from "../stores/authStore";
 import { useTranslation } from "../i18n";
+import { toast } from "../utils/toast";
 import type { Project } from "../types";
 
 export function ProjectsPage() {
@@ -249,7 +250,11 @@ function ProjectCard({ project, configCount, onRename, onDelete }: ProjectCardPr
         <button
           onClick={(e) => {
             e.preventDefault();
-            if (window.confirm(t("projects.deleteConfirm"))) handleDelete();
+            toast.confirm(
+              t("projects.deleteConfirm"),
+              () => handleDelete(),
+              { confirm: t("common.confirm"), cancel: t("common.cancel") }
+            );
           }}
           disabled={isDeleting}
           className="inline-flex items-center gap-1 px-2 py-1 text-xs text-red-500 hover:text-red-700 hover:bg-red-50 rounded-sm transition-colors disabled:opacity-50"
@@ -261,10 +266,6 @@ function ProjectCard({ project, configCount, onRename, onDelete }: ProjectCardPr
     </div>
   );
 }
-
-/* ------------------------------------------------------------------ */
-/*  EmptyState                                                        */
-/* ------------------------------------------------------------------ */
 
 function EmptyState({ onCreateClick }: { onCreateClick: () => void }) {
   const { t } = useTranslation();

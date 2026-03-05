@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Mail, AlertCircle, CheckCircle, ArrowLeft } from "lucide-react";
 import { useAuthStore } from "../stores/authStore";
 import { useTranslation } from "../i18n";
+import { mapAuthError } from "../utils/mapAuthError";
 
 export function ResetPasswordPage() {
   const { t } = useTranslation();
@@ -21,7 +22,7 @@ export function ResetPasswordPage() {
     const result = await resetPassword(email);
 
     if (result.error) {
-      setError(result.error);
+      setError(mapAuthError(result.error, t));
       setIsSubmitting(false);
     } else {
       setIsSent(true);
