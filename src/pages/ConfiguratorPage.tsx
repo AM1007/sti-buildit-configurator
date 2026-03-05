@@ -10,13 +10,13 @@ import { useProjectStore } from "../stores/projectStore";
 import { useIsAuthenticated } from "../stores/authStore";
 import { ProjectPicker } from "../components/ProjectPicker";
 import { InDevelopmentPage } from "./InDevelopmentPage";
-import { parseConfigFromUrl } from "../utils/configSerializer";
+import { parseConfigFromUrl, serializeConfig } from "../utils/configSerializer";
 import { toast } from "../utils/toast";
 import { useTranslation } from "../i18n";
 
 export function ConfiguratorPage() {
   const { slug } = useParams<{ slug: string }>();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const hasLoadedFromUrl = useRef(false);
   const { t } = useTranslation();
 
@@ -55,6 +55,7 @@ export function ConfiguratorPage() {
 
   useEffect(() => {
     if (hasLoadedFromUrl.current) return;
+    hasLoadedFromUrl.current = true;
 
     const stateParam = searchParams.get("state");
 
@@ -64,17 +65,10 @@ export function ConfiguratorPage() {
       if (state) {
         setModel(model.id);
         setConfigFromUrl(model.id, state.config, state.customText ?? null);
-        hasLoadedFromUrl.current = true;
-
-        setSearchParams({}, { replace: true });
       } else {
-        hasLoadedFromUrl.current = true;
-        setSearchParams({}, { replace: true });
-
         if (currentModelId !== model.id) {
           setModel(model.id);
         }
-
         toast.error(t("configurator.invalidDeepLink"));
       }
     } else {
@@ -82,7 +76,25 @@ export function ConfiguratorPage() {
         setModel(model.id);
       }
     }
-  }, [model.id, searchParams, setModel, setConfigFromUrl, setSearchParams, currentModelId, t]);
+  }, []);
+
+  useEffect(() => {
+    if (!hasLoadedFromUrl.current) return;
+    if (currentModelId !== model.id) return;
+
+    const isComplete = Object.values(config).some((v) => v !== null);
+    if (!isComplete) {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("state");
+      window.history.replaceState(null, "", url.toString());
+      return;
+    }
+
+    const serialized = serializeConfig(config, customText);
+    const url = new URL(window.location.href);
+    url.searchParams.set("state", serialized);
+    window.history.replaceState(null, "", url.toString());
+  }, [config, customText, currentModelId, model.id]);
 
   const heroContent = getHeroContent(model.id);
 

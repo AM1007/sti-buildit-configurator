@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import { Mail, Shield, Globe, LogOut } from "lucide-react";
+import { Mail, Shield, LogOut } from "lucide-react";
 import { useAuthStore, useUser } from "../stores/authStore";
-import { useTranslation, useLanguage, type Language } from "../i18n";
+import { useTranslation } from "../i18n";
 
 const GOOGLE_ICON_PATHS = [
   { d: "M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z", fill: "#4285F4" },
@@ -12,7 +12,6 @@ const GOOGLE_ICON_PATHS = [
 
 export function AccountPage() {
   const { t } = useTranslation();
-  const { lang, setLang } = useLanguage();
   const navigate = useNavigate();
   const user = useUser();
   const signOut = useAuthStore((s) => s.signOut);
@@ -69,41 +68,6 @@ export function AccountPage() {
                 </svg>
               )}
               <span className="text-sm font-medium text-slate-900">{providerLabel}</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="px-4 py-4 flex items-center gap-3">
-          <div className="h-9 w-9 rounded-sm bg-slate-100 flex items-center justify-center shrink-0">
-            <Globe className="h-4 w-4 text-slate-500" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
-              {t("account.language")}
-            </p>
-            <div className="flex items-center gap-1">
-              <button
-                type="button"
-                onClick={() => setLang("en" as Language)}
-                className={`px-3 py-1.5 text-xs font-medium rounded-sm border transition-colors ${
-                  lang === "en"
-                    ? "border-slate-900 bg-slate-900 text-white"
-                    : "border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50"
-                }`}
-              >
-                English
-              </button>
-              <button
-                type="button"
-                onClick={() => setLang("uk" as Language)}
-                className={`px-3 py-1.5 text-xs font-medium rounded-sm border transition-colors ${
-                  lang === "uk"
-                    ? "border-slate-900 bg-slate-900 text-white"
-                    : "border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50"
-                }`}
-              >
-                Українська
-              </button>
             </div>
           </div>
         </div>

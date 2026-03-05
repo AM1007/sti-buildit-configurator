@@ -90,7 +90,7 @@ export function ProjectsPage() {
           <label className="block text-sm font-medium text-slate-700 mb-2">
             {t("projects.projectName")}
           </label>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
             <input
               type="text"
               value={createName}
@@ -98,22 +98,24 @@ export function ProjectsPage() {
               onKeyDown={handleCreateKeyDown}
               placeholder={t("projects.projectNamePlaceholder")}
               autoFocus
-              className="flex-1 h-10 px-3 border border-slate-200 rounded-sm text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400"
+              className="w-full sm:flex-1 h-10 px-3 border border-slate-200 rounded-sm text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400"
             />
-            <button
-              onClick={handleCreate}
-              disabled={!createName.trim() || isCreating}
-              className="h-10 px-4 bg-slate-900 text-white text-sm font-medium rounded-sm hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-1.5"
-            >
-              {isCreating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
-              {t("projects.create")}
-            </button>
-            <button
-              onClick={() => { setShowCreateForm(false); setCreateName(""); }}
-              className="h-10 w-10 flex items-center justify-center text-slate-400 hover:text-slate-600 transition-colors"
-            >
-              <X className="h-4 w-4" />
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleCreate}
+                disabled={!createName.trim() || isCreating}
+                className="flex-1 sm:flex-none h-10 px-4 bg-slate-900 text-white text-sm font-medium rounded-sm hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-1.5"
+              >
+                {isCreating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
+                {t("projects.create")}
+              </button>
+              <button
+                onClick={() => { setShowCreateForm(false); setCreateName(""); }}
+                className="h-10 w-10 flex items-center justify-center text-slate-400 hover:text-slate-600 transition-colors shrink-0"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
           </div>
         </div>
       )}
