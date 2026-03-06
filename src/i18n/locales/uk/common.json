@@ -296,7 +296,15 @@
     "passwordMinLength": "Пароль має містити щонайменше 6 символів",
     "passwordsDoNotMatch": "Паролі не збігаються",
     "passwordHint": "Мінімум 6 символів",
-    "confirmationEmailSent": "Ми надіслали посилання для підтвердження на {email}. Перевірте вашу скриньку."
+    "confirmationEmailSent": "Ми надіслали посилання для підтвердження на {email}. Перевірте вашу скриньку.",
+    "updatePassword": "Встановити новий пароль",
+    "updatePasswordDescription": "Введіть новий пароль нижче",
+    "newPassword": "Новий пароль",
+    "passwordUpdated": "Пароль оновлено",
+    "passwordUpdatedDescription": "Ваш пароль змінено. Перенаправлення до кабінету...",
+    "invalidResetLink": "Недійсне або застаріле посилання",
+    "invalidResetLinkDescription": "Це посилання для скидання пароля більше не діє. Запросіть нове.",
+    "requestNewLink": "Надіслати нове посилання"
   },
   "account": {
     "title": "Кабінет",
@@ -304,7 +312,9 @@
     "email": "Електронна пошта",
     "authProvider": "Спосіб авторизації",
     "language": "Мова",
-    "signOut": "Вийти"
+    "signOut": "Вийти",
+    "changePassword": "Змінити пароль",
+    "changePasswordDescription": "Оновити пароль облікового запису"
   },
   "projects": {
     "title": "Проєкти",

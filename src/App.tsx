@@ -12,6 +12,7 @@ import { ProjectDetailPage } from "./pages/ProjectDetailPage";
 import { LoginPage } from "./pages/LoginPage";
 import { RegisterPage } from "./pages/RegisterPage";
 import { ResetPasswordPage } from "./pages/ResetPasswordPage";
+import { UpdatePasswordPage } from "./pages/UpdatePasswordPage";
 import { AccountPage } from "./pages/AccountPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 import { Layout } from "./components/Layout";
@@ -168,6 +169,15 @@ function App() {
                   <GuestOnly>
                     <ResetPasswordPage />
                   </GuestOnly>
+                </Layout>
+              }
+            />
+
+            <Route
+              path="/update-password"
+              element={
+                <Layout>
+                  <UpdatePasswordPage />
                 </Layout>
               }
             />

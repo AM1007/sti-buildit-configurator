@@ -39,13 +39,13 @@
     "copyright": "© {year} Product Configurator. All rights reserved."
   },
   "home": {
-      "heroTitle": "STI Equipment Configurators",
-      "heroDescription": "A set of configuration tools for selecting push buttons, manual call points, protective covers, enclosures, and activation devices for fire alarm, security, and access control systems. Each product series provides parameter-based selection of material, activation type, mounting method, protection rating, and additional options. The output is a defined product configuration ready for specification and project documentation.",
-      "heroSubtitle": "Configure a device according to project requirements",
-      "heroBadge": "Product Configuration Tool",
-      "configuratorsTitle": "Select a product series",
-      "inDevelopment": "In development"
-    },
+    "heroTitle": "STI Equipment Configurators",
+    "heroDescription": "A set of configuration tools for selecting push buttons, manual call points, protective covers, enclosures, and activation devices for fire alarm, security, and access control systems. Each product series provides parameter-based selection of material, activation type, mounting method, protection rating, and additional options. The output is a defined product configuration ready for specification and project documentation.",
+    "heroSubtitle": "Configure a device according to project requirements",
+    "heroBadge": "Product Configuration Tool",
+    "configuratorsTitle": "Select a product series",
+    "inDevelopment": "In development"
+  },
   "hero": {
     "startConfig": "Configure"
   },
@@ -85,7 +85,7 @@
     "resetDevice": "Resettable",
     "keyOperated": "Key Operated"
   },
-"configurator": {
+  "configurator": {
     "configuration": "Configuration",
     "modelDescription": "Description",
     "editSelections": "Edit Selections",
@@ -295,7 +295,15 @@
     "passwordMinLength": "Password must be at least 6 characters",
     "passwordsDoNotMatch": "Passwords do not match",
     "passwordHint": "Minimum 6 characters",
-    "confirmationEmailSent": "We sent a confirmation link to {email}. Please check your inbox."
+    "confirmationEmailSent": "We sent a confirmation link to {email}. Please check your inbox.",
+    "updatePassword": "Set New Password",
+    "updatePasswordDescription": "Enter your new password below",
+    "newPassword": "New Password",
+    "passwordUpdated": "Password updated",
+    "passwordUpdatedDescription": "Your password has been changed. Redirecting to your account...",
+    "invalidResetLink": "Invalid or expired link",
+    "invalidResetLinkDescription": "This password reset link is no longer valid. Request a new one.",
+    "requestNewLink": "Request New Link"
   },
   "account": {
     "title": "Account",
@@ -303,7 +311,9 @@
     "email": "Email",
     "authProvider": "Auth Provider",
     "language": "Language",
-    "signOut": "Sign Out"
+    "signOut": "Sign Out",
+    "changePassword": "Change Password",
+    "changePasswordDescription": "Update your account password"
   },
   "projects": {
     "title": "Projects",

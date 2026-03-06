@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from "react";
+import { X, Copy, Check, ExternalLink } from "lucide-react";
 import type { ProductModel, ModelId, Configuration, CustomTextData } from "../types";
 import { toast } from "../utils/toast";
 import { downloadProductPdf, printProductPdf } from "../utils/generateProductPdf";
 import { stripHtml } from "../utils/stripHtml";
 import { getModelSummary } from "../utils/getModelSummary";
 import { getHeroDescription } from "../utils/getHeroDescription";
+import { isIOSInAppBrowser } from "../utils/detectWebView";
 import { useTranslation, useLanguage } from "../i18n";
 import type { ProductPdfData } from "./ProductPdfDocument";
 
@@ -31,17 +33,25 @@ export function PdfMenu({
   const { lang } = useLanguage();
   const menuRef = useRef<HTMLDivElement>(null);
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+  const [showWebViewBanner, setShowWebViewBanner] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
+
+  const shareUrl = typeof window !== "undefined" ? window.location.href : "";
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        onClose();
+        if (showWebViewBanner) {
+          setShowWebViewBanner(false);
+        } else {
+          onClose();
+        }
       }
     };
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [onClose]);
+  }, [onClose, showWebViewBanner]);
 
   useEffect(() => {
     const firstButton = menuRef.current?.querySelector("button");
@@ -94,6 +104,12 @@ export function PdfMenu({
   const handleSavePDF = async () => {
     if (isGeneratingPdf) return;
 
+    if (isIOSInAppBrowser()) {
+      setIsCopied(false);
+      setShowWebViewBanner(true);
+      return;
+    }
+
     setIsGeneratingPdf(true);
     try {
       const pdfData = await getPdfData();
@@ -124,6 +140,29 @@ export function PdfMenu({
     }
   };
 
+  const handleCopyUrl = async () => {
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 2000);
+    } catch {
+      try {
+        const textarea = document.createElement("textarea");
+        textarea.value = shareUrl;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+        setIsCopied(true);
+        setTimeout(() => setIsCopied(false), 2000);
+      } catch {
+      }
+    }
+  };
+
   const menuItems = [
     {
       icon: <SaveIcon />,
@@ -138,6 +177,93 @@ export function PdfMenu({
       disabled: isGeneratingPdf,
     },
   ];
+
+  if (showWebViewBanner) {
+    return (
+      <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
+        <div className="w-full max-w-sm bg-white rounded-sm shadow-xl">
+          <div className="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <ExternalLink className="h-4 w-4 text-slate-500" />
+              <h2 className="text-sm font-semibold text-slate-900">
+                {lang === "uk" ? "Відкрийте в браузері" : "Open in browser"}
+              </h2>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setShowWebViewBanner(false);
+                onClose();
+              }}
+              className="p-1 text-slate-400 hover:text-slate-900 rounded-sm hover:bg-slate-100 transition-colors"
+              aria-label={t("common.close")}
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+
+          <div className="px-5 py-5 flex flex-col gap-3">
+            <p className="text-xs text-slate-600 leading-relaxed">
+              {lang === "uk"
+                ? "Завантаження PDF не підтримується у вбудованому браузері. Скопіюйте посилання нижче та відкрийте його в Safari — файл можна буде зберегти через меню «Поділитися»."
+                : "PDF download is not supported in the in-app browser. Copy the link below and open it in Safari — you can save the file via the Share menu."}
+            </p>
+
+            <button
+              type="button"
+              onClick={handleCopyUrl}
+              className="w-full flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-sm px-3 py-2.5 text-left hover:bg-slate-100 transition-colors active:bg-slate-200"
+            >
+              <span className="text-[11px] font-mono text-slate-500 truncate flex-1 select-all">
+                {shareUrl}
+              </span>
+              {isCopied ? (
+                <Check className="h-3.5 w-3.5 text-green-600 shrink-0" />
+              ) : (
+                <Copy className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+              )}
+            </button>
+
+            {isCopied && (
+              <p className="text-[11px] text-green-600 font-medium">
+                {lang === "uk" ? "Скопійовано" : "Copied"}
+              </p>
+            )}
+          </div>
+
+          <div className="px-5 py-4 border-t border-slate-200 flex justify-end gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                setShowWebViewBanner(false);
+                onClose();
+              }}
+              className="px-4 py-1.5 text-xs font-medium text-slate-600 border border-slate-300 rounded-sm hover:bg-slate-50 transition-colors"
+            >
+              {t("common.close")}
+            </button>
+            <button
+              type="button"
+              onClick={handleCopyUrl}
+              className="px-4 py-1.5 text-xs font-medium text-white bg-slate-900 rounded-sm hover:bg-slate-800 transition-colors flex items-center gap-1.5"
+            >
+              {isCopied ? (
+                <>
+                  <Check className="h-3 w-3" />
+                  {lang === "uk" ? "Скопійовано" : "Copied"}
+                </>
+              ) : (
+                <>
+                  <Copy className="h-3 w-3" />
+                  {lang === "uk" ? "Копіювати посилання" : "Copy link"}
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>

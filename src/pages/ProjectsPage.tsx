@@ -6,9 +6,18 @@ import {
 } from "lucide-react";
 import { useProjectStore } from "../stores/projectStore";
 import { useAuthStore } from "../stores/authStore";
-import { useTranslation } from "../i18n";
+import { useTranslation, useLanguage } from "../i18n";
 import { toast } from "../utils/toast";
 import type { Project } from "../types";
+
+function pluralUk(count: number): string {
+  const mod10 = count % 10;
+  const mod100 = count % 100;
+  if (mod100 >= 11 && mod100 <= 20) return `${count} елементів`;
+  if (mod10 === 1) return `${count} елемент`;
+  if (mod10 >= 2 && mod10 <= 4) return `${count} елементи`;
+  return `${count} елементів`;
+}
 
 export function ProjectsPage() {
   const { t } = useTranslation();
@@ -22,6 +31,7 @@ export function ProjectsPage() {
   const deleteProject = useProjectStore((s) => s.deleteProject);
   const fetchConfigurations = useProjectStore((s) => s.fetchConfigurations);
   const remoteConfigurations = useProjectStore((s) => s.remoteConfigurations);
+  const guestConfigurations = useProjectStore((s) => s.guestConfigurations);
 
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [createName, setCreateName] = useState("");
@@ -52,7 +62,6 @@ export function ProjectsPage() {
     return (remoteConfigurations[projectId] ?? []).length;
   };
 
-  // Lazy-load configurations for each project to show item count
   useEffect(() => {
     for (const project of projects) {
       if (!remoteConfigurations[project.id]) {
@@ -65,7 +74,6 @@ export function ProjectsPage() {
 
   return (
     <div className="w-full max-w-4xl mx-auto px-4 md:px-6 py-8 md:py-10">
-      {/* Page header */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between mb-8">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight text-slate-900 mb-1">
@@ -84,7 +92,6 @@ export function ProjectsPage() {
         )}
       </div>
 
-      {/* Inline create form */}
       {showCreateForm && (
         <div className="mb-6 bg-white border border-slate-200 rounded-sm p-4">
           <label className="block text-sm font-medium text-slate-700 mb-2">
@@ -120,7 +127,6 @@ export function ProjectsPage() {
         </div>
       )}
 
-      {/* Project list */}
       {isLoading && projects.length === 0 ? (
         <div className="flex items-center justify-center py-20">
           <Loader2 className="h-6 w-6 animate-spin text-slate-400" />
@@ -141,23 +147,20 @@ export function ProjectsPage() {
         </div>
       )}
 
-      {/* Link to guest list */}
-      <div className="mt-8 pt-6 border-t border-slate-100">
-        <Link
-          to="/my-list"
-          className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-700 transition-colors"
-        >
-          {t("projects.guestListLink")}
-          <ChevronRight className="h-3.5 w-3.5" />
-        </Link>
-      </div>
+      {guestConfigurations.length > 0 && (
+        <div className="mt-8 pt-6 border-t border-slate-100">
+          <Link
+            to="/my-list"
+            className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-700 transition-colors"
+          >
+            {t("projects.guestListLink")}
+            <ChevronRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
+      )}
     </div>
   );
 }
-
-/* ------------------------------------------------------------------ */
-/*  ProjectCard                                                       */
-/* ------------------------------------------------------------------ */
 
 interface ProjectCardProps {
   project: Project;
@@ -168,6 +171,7 @@ interface ProjectCardProps {
 
 function ProjectCard({ project, configCount, onRename, onDelete }: ProjectCardProps) {
   const { t } = useTranslation();
+  const { lang } = useLanguage();
   const [isEditing, setIsEditing] = useState(false);
   const [editName, setEditName] = useState(project.name);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -175,6 +179,10 @@ function ProjectCard({ project, configCount, onRename, onDelete }: ProjectCardPr
   const formattedDate = new Date(project.updatedAt).toLocaleDateString("en-GB", {
     day: "2-digit", month: "short", year: "numeric",
   });
+
+  const countLabel = lang === "uk"
+    ? pluralUk(configCount)
+    : `${configCount} ${configCount === 1 ? t("projects.item") : t("projects.items")}`;
 
   const handleRename = async () => {
     if (!editName.trim() || editName.trim() === project.name) {
@@ -224,7 +232,7 @@ function ProjectCard({ project, configCount, onRename, onDelete }: ProjectCardPr
                 </h3>
               )}
               <div className="flex items-center gap-3 mt-1 text-xs text-slate-500">
-                <span>{configCount} {configCount === 1 ? t("projects.item") : t("projects.items")}</span>
+                <span>{countLabel}</span>
                 <span className="text-slate-300">|</span>
                 <span>{formattedDate}</span>
                 {project.clientName && (
@@ -240,7 +248,6 @@ function ProjectCard({ project, configCount, onRename, onDelete }: ProjectCardPr
         </div>
       </Link>
 
-      {/* Actions bar */}
       <div className="border-t border-slate-100 px-4 py-2 sm:px-5 flex items-center gap-1">
         <button
           onClick={(e) => { e.preventDefault(); setIsEditing(true); setEditName(project.name); }}

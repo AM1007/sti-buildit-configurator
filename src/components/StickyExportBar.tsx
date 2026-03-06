@@ -10,25 +10,9 @@ import { useIsAuthenticated } from "../stores/authStore";
 import { useTranslation, useLanguage } from "../i18n";
 import { downloadMyListXlsx } from "../utils/generateMyListXlsx";
 import { buildMyListShareUrl } from "../utils/configSerializer";
+import { isIOSInAppBrowser } from "../utils/detectWebView";
 import { ExportModal } from "./ExportModal";
 import { toast } from "../utils/toast";
-
-function isIOSInAppBrowser(): boolean {
-  if (typeof navigator === "undefined" || typeof window === "undefined") return false;
-
-  const ua = navigator.userAgent;
-  const isIOS = /iPhone|iPad|iPod/.test(ua);
-  if (!isIOS) return false;
-
-  if ((navigator as { standalone?: boolean }).standalone === true) return false;
-
-  const webkit = (window as { webkit?: { messageHandlers?: unknown } }).webkit;
-  if (webkit && typeof webkit.messageHandlers === "object" && webkit.messageHandlers !== null) {
-    return true;
-  }
-
-  return false;
-}
 
 export function StickyExportBar() {
   const location = useLocation();
@@ -88,14 +72,12 @@ export function StickyExportBar() {
     const updatedMeta = { ...projectMeta, ...meta };
 
     if (isAuthenticated && isProjectDetail) {
-      // remote project: persist meta changes to Supabase
       await updateProjectMeta(activeProjectId, {
         name: meta.projectName,
         clientName: meta.clientName,
         date: meta.date,
       });
     } else {
-      // guest: persist to localStorage
       setGuestProjectMeta({
         projectName: meta.projectName,
         clientName: meta.clientName,
@@ -172,9 +154,7 @@ export function StickyExportBar() {
               <div className="flex items-center gap-2">
                 <ExternalLink className="h-4 w-4 text-slate-500" />
                 <h2 className="text-sm font-semibold text-slate-900">
-                  {lang === "uk"
-                    ? "Відкрийте в браузері"
-                    : "Open in browser"}
+                  {lang === "uk" ? "Відкрийте в браузері" : "Open in browser"}
                 </h2>
               </div>
               <button
