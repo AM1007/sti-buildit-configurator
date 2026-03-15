@@ -1,809 +1,25 @@
 import type { Option, Configuration, Step, ModelId, ModelDefinition } from "./types";
 import type { ModelConstraints } from "./rules/types";
 import { createConstraintEngine, getStepAvailability } from "./rules/constraintEngine";
-import { G3_MULTIPURPOSE_PUSH_BUTTON_CONSTRAINTS } from "./rules/g3multipurposepushbuttonrules";
-import {
-  getValidOptionsForStep as getValidG3Options,
-  type G3SelectionState,
-} from "./rules/g3multipurposepushbuttonrules";
-import { STOPPER_STATIONS_CONSTRAINTS } from "./rules/stopperStationsRules";
-import {
-  getValidSSOptionsForStep as getValidSSOptions,
-  type SSSelectionState,
-} from "./rules/stopperStationsRules";
-import { GF_FIRE_ALARM_PUSH_BUTTON_CONSTRAINTS } from "./rules/gfFireAlarmPushButtonRules";
-import {
-  getValidGFOptionsForStep,
-  type GFSelectionState,
-} from "./rules/gfFireAlarmPushButtonRules";
-import { GLOBAL_RESET_CONSTRAINTS } from "./rules/globalResetRules";
-import {
-  getValidGLROptionsForStep,
-  type GLRSelectionState,
-} from "./rules/globalResetRules";
-import { RESET_CALL_POINTS_CONSTRAINTS } from "./rules/resetCallPointsRules";
-import {
-  getValidRPOptionsForStep,
-  type RPSelectionState,
-} from "./rules/resetCallPointsRules";
-import { WATERPROOF_RESET_CALL_POINT_CONSTRAINTS } from "./rules/waterproofResetCallPointRules";
-import {
-  getValidWRPOptionsForStep,
-  type WRPSelectionState,
-} from "./rules/waterproofResetCallPointRules";
-import { INDOOR_PUSH_BUTTONS_CONSTRAINTS } from "./rules/indoorPushButtonsRules";
-import {
-  getValidIPBOptionsForStep,
-  type IPBSelectionState,
-} from "./rules/indoorPushButtonsRules";
-import { KEY_SWITCHES_CONSTRAINTS } from "./rules/keySwitchesRules";
-import {
-  getValidKSOptionsForStep,
-  type KSSelectionState,
-} from "./rules/keySwitchesRules";
-import { WATERPROOF_PUSH_BUTTONS_CONSTRAINTS } from "./rules/waterproofPushButtonsRules";
-import {
-  getValidWPBOptionsForStep,
-  type WPBSelectionState,
-} from "./rules/waterproofPushButtonsRules";
-import { UNIVERSAL_STOPPER_CONSTRAINTS } from "./rules/universalStopperRules";
-import {
-  getValidUSOptionsForStep,
-  type USSelectionState,
-} from "./rules/universalStopperRules";
-// ++ LPUS
-import { LOW_PROFILE_UNIVERSAL_STOPPER_CONSTRAINTS } from "./rules/lowProfileUniversalStopperRules";
-import {
-  getValidLPUSOptionsForStep,
-  type LPUSSelectionState,
-} from "./rules/lowProfileUniversalStopperRules";
-// ++ ES (Enviro Stopper)
-import { ENVIRO_STOPPER_CONSTRAINTS } from "./rules/enviroStopperRules";
-import {
-  getValidESOptionsForStep,
-  type ESSelectionState,
-} from "./rules/enviroStopperRules";
-// ++ CPS (Call Point Stopper)
-import { CALL_POINT_STOPPER_CONSTRAINTS } from "./rules/callPointStopperRules";
-import {
-  getValidCPSOptionsForStep,
-  type CPSSelectionState,
-} from "./rules/callPointStopperRules";
-// ++ EA (EnviroArmour)
-import { ENVIRO_ARMOUR_CONSTRAINTS } from "./rules/enviroArmourRules";
-import {
-  getValidEAOptionsForStep,
-  type EASelectionState,
-} from "./rules/enviroArmourRules";
-// ++ EUS (Euro Stopper)
-import { EURO_STOPPER_CONSTRAINTS } from "./rules/euroStopperRules";
-import {
-  getValidEUSOptionsForStep,
-  type EUSSelectionState,
-} from "./rules/euroStopperRules";
+
+import { G3_MULTIPURPOSE_PUSH_BUTTON_CONSTRAINTS, getValidOptionsForStep as getValidG3Options } from "./rules/g3multipurposepushbuttonrules";
+import { STOPPER_STATIONS_CONSTRAINTS, getValidSSOptionsForStep } from "./rules/stopperStationsRules";
+import { GF_FIRE_ALARM_PUSH_BUTTON_CONSTRAINTS, getValidGFOptionsForStep } from "./rules/gfFireAlarmPushButtonRules";
+import { GLOBAL_RESET_CONSTRAINTS, getValidGLROptionsForStep } from "./rules/globalResetRules";
+import { RESET_CALL_POINTS_CONSTRAINTS, getValidRPOptionsForStep } from "./rules/resetCallPointsRules";
+import { WATERPROOF_RESET_CALL_POINT_CONSTRAINTS, getValidWRPOptionsForStep } from "./rules/waterproofResetCallPointRules";
+import { INDOOR_PUSH_BUTTONS_CONSTRAINTS, getValidIPBOptionsForStep } from "./rules/indoorPushButtonsRules";
+import { KEY_SWITCHES_CONSTRAINTS, getValidKSOptionsForStep } from "./rules/keySwitchesRules";
+import { WATERPROOF_PUSH_BUTTONS_CONSTRAINTS, getValidWPBOptionsForStep } from "./rules/waterproofPushButtonsRules";
+import { UNIVERSAL_STOPPER_CONSTRAINTS, getValidUSOptionsForStep } from "./rules/universalStopperRules";
+import { LOW_PROFILE_UNIVERSAL_STOPPER_CONSTRAINTS, getValidLPUSOptionsForStep } from "./rules/lowProfileUniversalStopperRules";
+import { ENVIRO_STOPPER_CONSTRAINTS, getValidESOptionsForStep } from "./rules/enviroStopperRules";
+import { CALL_POINT_STOPPER_CONSTRAINTS, getValidCPSOptionsForStep } from "./rules/callPointStopperRules";
+import { ENVIRO_ARMOUR_CONSTRAINTS, getValidEAOptionsForStep } from "./rules/enviroArmourRules";
+import { EURO_STOPPER_CONSTRAINTS, getValidEUSOptionsForStep } from "./rules/euroStopperRules";
 
 // ============================================================================
-// Constraints registry
-// ============================================================================
-
-const CONSTRAINTS_MAP: Record<string, ModelConstraints> = {
-  "g3-multipurpose-push-button": G3_MULTIPURPOSE_PUSH_BUTTON_CONSTRAINTS,
-  "stopper-stations": STOPPER_STATIONS_CONSTRAINTS,
-  "gf-fire-alarm-push-button": GF_FIRE_ALARM_PUSH_BUTTON_CONSTRAINTS,
-  "global-reset": GLOBAL_RESET_CONSTRAINTS,
-  "reset-call-points": RESET_CALL_POINTS_CONSTRAINTS,
-  "waterproof-reset-call-point": WATERPROOF_RESET_CALL_POINT_CONSTRAINTS,
-  "indoor-push-buttons": INDOOR_PUSH_BUTTONS_CONSTRAINTS,
-  "key-switches": KEY_SWITCHES_CONSTRAINTS,
-  "waterproof-push-buttons": WATERPROOF_PUSH_BUTTONS_CONSTRAINTS,
-  "universal-stopper": UNIVERSAL_STOPPER_CONSTRAINTS,
-  "low-profile-universal-stopper": LOW_PROFILE_UNIVERSAL_STOPPER_CONSTRAINTS, // ++ LPUS
-  "enviro-stopper": ENVIRO_STOPPER_CONSTRAINTS, // ++ ES
-  "call-point-stopper": CALL_POINT_STOPPER_CONSTRAINTS, // ++ CPS
-  "enviro-armour": ENVIRO_ARMOUR_CONSTRAINTS, // ++ EA
-  "euro-stopper": EURO_STOPPER_CONSTRAINTS, // ++ EUS
-};
-
-function getModelConstraints(modelId: ModelId): ModelConstraints | null {
-  return CONSTRAINTS_MAP[modelId] ?? null;
-}
-
-// ============================================================================
-// Basic option availability (legacy)
-// ============================================================================
-
-export function isOptionAvailable(
-  option: Option,
-  config: Configuration
-): boolean {
-  if (!option.availableFor) {
-    return true;
-  }
-
-  if (!config.colour) {
-    return false;
-  }
-
-  return option.availableFor.includes(config.colour);
-}
-
-export function filterAvailableOptions(
-  options: Option[],
-  config: Configuration
-): Option[] {
-  return options.filter((option) => isOptionAvailable(option, config));
-}
-
-export function isSelectionStillValid(
-  optionId: string | null,
-  options: Option[],
-  config: Configuration
-): boolean {
-  if (!optionId) {
-    return true;
-  }
-
-  const option = options.find((o) => o.id === optionId);
-
-  if (!option) {
-    return false;
-  }
-
-  return isOptionAvailable(option, config);
-}
-
-// ============================================================================
-// Allowlist validation for G3 model
-// ============================================================================
-
-function configToG3Selection(config: Configuration): G3SelectionState {
-  return {
-    model: config.model ?? undefined,
-    colour: config.colour ?? undefined,
-    cover: config.cover ?? undefined,
-    buttonType: config.buttonType ?? undefined,
-    text: config.text ?? undefined,
-    language: config.language ?? undefined,
-  };
-}
-
-function isG3Model(modelId: ModelId): boolean {
-  return modelId === "g3-multipurpose-push-button";
-}
-
-function getG3AllowlistValidOptions(
-  stepId: string,
-  config: Configuration
-): Set<string> | null {
-  const g3Selection = configToG3Selection(config);
-  
-  const { [stepId as keyof G3SelectionState]: _, ...otherSelections } = g3Selection;
-  
-  const validOptions = getValidG3Options(
-    stepId as keyof G3SelectionState,
-    otherSelections
-  );
-  
-  return new Set(validOptions);
-}
-
-// ============================================================================
-// Allowlist validation for Stopper Stations model
-// ============================================================================
-
-function configToSSSelection(config: Configuration): SSSelectionState {
-  return {
-    colour: config.colour ?? undefined,
-    cover: config.cover ?? undefined,
-    activation: config.activation ?? undefined,
-    text: config.text ?? undefined,
-    language: config.language ?? undefined,
-  };
-}
-
-function isSSModel(modelId: ModelId): boolean {
-  return modelId === "stopper-stations";
-}
-
-const SS_ALLOWLIST_STEPS: ReadonlySet<string> = new Set<keyof SSSelectionState>([
-  "colour", "cover", "activation", "text", "language",
-]);
-
-function getSSAllowlistValidOptions(
-  stepId: string,
-  config: Configuration
-): Set<string> | null {
-  if (!SS_ALLOWLIST_STEPS.has(stepId)) return null;
-
-  const ssSelection = configToSSSelection(config);
-
-  const otherSelections: Partial<SSSelectionState> = {};
-  for (const key of Object.keys(ssSelection) as (keyof SSSelectionState)[]) {
-    if (key === stepId) continue;
-    otherSelections[key] = ssSelection[key];
-  }
-
-  if (otherSelections.activation) {
-    otherSelections.activation = normalizeActivationToCode(otherSelections.activation);
-  }
-
-  const validCodes = getValidSSOptions(
-    stepId as keyof SSSelectionState,
-    otherSelections as Omit<SSSelectionState, typeof stepId>
-  );
-
-  if (stepId === "activation") {
-    const expandedIds = new Set<string>();
-    for (const code of validCodes) {
-      const uiIds = expandActivationCodeToIds(code);
-      for (const id of uiIds) {
-        expandedIds.add(id);
-      }
-    }
-    return expandedIds;
-  }
-
-  return new Set(validCodes);
-}
-
-function normalizeActivationToCode(activationId: string): string {
-  if (activationId.startsWith("6-")) return "6";
-  if (activationId.startsWith("7-")) return "7";
-  return activationId;
-}
-
-function expandActivationCodeToIds(code: string): string[] {
-  if (code === "6") return ["6-red", "6-green", "6-blue"];
-  if (code === "7") return ["7-red", "7-green", "7-blue"];
-  return [code];
-}
-
-// ============================================================================
-// Allowlist validation for GF Fire Alarm Push Button model
-// ============================================================================
-
-function configToGFSelection(config: Configuration): GFSelectionState {
-  return {
-    model: config.model ?? undefined,
-    cover: config.cover ?? undefined,
-    text: config.text ?? undefined,
-    language: config.language ?? undefined,
-  };
-}
-
-function isGFModel(modelId: ModelId): boolean {
-  return modelId === "gf-fire-alarm-push-button";
-}
-
-function getGFAllowlistValidOptions(
-  stepId: string,
-  config: Configuration
-): Set<string> | null {
-  const gfSelection = configToGFSelection(config);
-
-  const { [stepId as keyof GFSelectionState]: _, ...otherSelections } = gfSelection;
-
-  const validOptions = getValidGFOptionsForStep(
-    stepId as keyof GFSelectionState,
-    otherSelections
-  );
-
-  return new Set(validOptions);
-}
-
-// ============================================================================
-// Allowlist validation for Global ReSet model
-// ============================================================================
-
-function configToGLRSelection(config: Configuration): GLRSelectionState {
-  return {
-    colour: config.colour ?? undefined,
-    cover: config.cover ?? undefined,
-    text: config.text ?? undefined,
-    language: config.language ?? undefined,
-  };
-}
-
-function isGLRModel(modelId: ModelId): boolean {
-  return modelId === "global-reset";
-}
-
-const GLR_ALLOWLIST_STEPS: ReadonlySet<string> = new Set<keyof GLRSelectionState>([
-  "colour", "cover", "text", "language",
-]);
-
-function getGLRAllowlistValidOptions(
-  stepId: string,
-  config: Configuration
-): Set<string> | null {
-  if (!GLR_ALLOWLIST_STEPS.has(stepId)) return null;
-
-  const glrSelection = configToGLRSelection(config);
-
-  const otherSelections: Partial<GLRSelectionState> = {};
-  for (const key of Object.keys(glrSelection) as (keyof GLRSelectionState)[]) {
-    if (key === stepId) continue;
-    otherSelections[key] = glrSelection[key];
-  }
-
-  const validOptions = getValidGLROptionsForStep(
-    stepId as keyof GLRSelectionState,
-    otherSelections as Omit<GLRSelectionState, typeof stepId>
-  );
-
-  return new Set(validOptions);
-}
-
-// ============================================================================
-// Allowlist validation for ReSet Call Points model
-// ============================================================================
-
-function configToRPSelection(config: Configuration): RPSelectionState {
-  return {
-    colour: config.colour ?? undefined,
-    mounting: config.mounting ?? undefined,
-    electricalArrangement: config.electricalArrangement ?? undefined,
-    label: config.label ?? undefined,
-  };
-}
-
-function isRPModel(modelId: ModelId): boolean {
-  return modelId === "reset-call-points";
-}
-
-const RP_ALLOWLIST_STEPS: ReadonlySet<string> = new Set<keyof RPSelectionState>([
-  "colour", "mounting", "electricalArrangement", "label",
-]);
-
-function getRPAllowlistValidOptions(
-  stepId: string,
-  config: Configuration
-): Set<string> | null {
-  if (!RP_ALLOWLIST_STEPS.has(stepId)) return null;
-
-  const rpSelection = configToRPSelection(config);
-
-  const otherSelections: Partial<RPSelectionState> = {};
-  for (const key of Object.keys(rpSelection) as (keyof RPSelectionState)[]) {
-    if (key === stepId) continue;
-    otherSelections[key] = rpSelection[key];
-  }
-
-  const validOptions = getValidRPOptionsForStep(
-    stepId as keyof RPSelectionState,
-    otherSelections as Omit<RPSelectionState, typeof stepId>
-  );
-
-  return new Set(validOptions);
-}
-
-// ============================================================================
-// Allowlist validation for Waterproof ReSet Call Point model
-// ============================================================================
-
-function configToWRPSelection(config: Configuration): WRPSelectionState {
-  return {
-    colour: config.colour ?? undefined,
-    electricalArrangement: config.electricalArrangement ?? undefined,
-    label: config.label ?? undefined,
-  };
-}
-
-function isWRPModel(modelId: ModelId): boolean {
-  return modelId === "waterproof-reset-call-point";
-}
-
-const WRP_ALLOWLIST_STEPS: ReadonlySet<string> = new Set<keyof WRPSelectionState>([
-  "colour", "electricalArrangement", "label",
-]);
-
-function getWRPAllowlistValidOptions(
-  stepId: string,
-  config: Configuration
-): Set<string> | null {
-  if (!WRP_ALLOWLIST_STEPS.has(stepId)) return null;
-
-  const wrpSelection = configToWRPSelection(config);
-
-  const otherSelections: Partial<WRPSelectionState> = {};
-  for (const key of Object.keys(wrpSelection) as (keyof WRPSelectionState)[]) {
-    if (key === stepId) continue;
-    otherSelections[key] = wrpSelection[key];
-  }
-
-  const validOptions = getValidWRPOptionsForStep(
-    stepId as keyof WRPSelectionState,
-    otherSelections as Omit<WRPSelectionState, typeof stepId>,
-  );
-
-  return new Set(validOptions);
-}
-
-// ============================================================================
-// Allowlist validation for Indoor Push Buttons model
-// ============================================================================
-
-function configToIPBSelection(config: Configuration): IPBSelectionState {
-  return {
-    colour: config.colour ?? undefined,
-    buttonColour: config.buttonColour ?? undefined,
-    pushButtonType: config.pushButtonType ?? undefined,
-    electricalArrangements: config.electricalArrangements ?? undefined,
-    label: config.label ?? undefined,
-  };
-}
-
-function isIPBModel(modelId: ModelId): boolean {
-  return modelId === "indoor-push-buttons";
-}
-
-const IPB_ALLOWLIST_STEPS: ReadonlySet<string> = new Set<keyof IPBSelectionState>([
-  "colour", "buttonColour", "pushButtonType", "electricalArrangements", "label",
-]);
-
-function getIPBAllowlistValidOptions(
-  stepId: string,
-  config: Configuration
-): Set<string> | null {
-  if (!IPB_ALLOWLIST_STEPS.has(stepId)) return null;
-
-  const ipbSelection = configToIPBSelection(config);
-
-  const otherSelections: Partial<IPBSelectionState> = {};
-  for (const key of Object.keys(ipbSelection) as (keyof IPBSelectionState)[]) {
-    if (key === stepId) continue;
-    otherSelections[key] = ipbSelection[key];
-  }
-
-  const validOptions = getValidIPBOptionsForStep(
-    stepId as keyof IPBSelectionState,
-    otherSelections as Omit<IPBSelectionState, typeof stepId>,
-  );
-
-  return new Set(validOptions);
-}
-
-// ============================================================================
-// Allowlist validation for Key Switches model
-// ============================================================================
-
-function configToKSSelection(config: Configuration): KSSelectionState {
-  return {
-    colourMounting: config.colourMounting ?? undefined,
-    switchType: config.switchType ?? undefined,
-    electricalArrangement: config.electricalArrangement ?? undefined,
-    label: config.label ?? undefined,
-  };
-}
-
-function isKSModel(modelId: ModelId): boolean {
-  return modelId === "key-switches";
-}
-
-const KS_ALLOWLIST_STEPS: ReadonlySet<string> = new Set<keyof KSSelectionState>([
-  "colourMounting", "switchType", "electricalArrangement", "label",
-]);
-
-function getKSAllowlistValidOptions(
-  stepId: string,
-  config: Configuration
-): Set<string> | null {
-  if (!KS_ALLOWLIST_STEPS.has(stepId)) return null;
-
-  const ksSelection = configToKSSelection(config);
-
-  const otherSelections: Partial<KSSelectionState> = {};
-  for (const key of Object.keys(ksSelection) as (keyof KSSelectionState)[]) {
-    if (key === stepId) continue;
-    otherSelections[key] = ksSelection[key];
-  }
-
-  const validOptions = getValidKSOptionsForStep(
-    stepId as keyof KSSelectionState,
-    otherSelections as Omit<KSSelectionState, typeof stepId>
-  );
-
-  return new Set(validOptions);
-}
-
-// ============================================================================
-// Allowlist validation for Waterproof Push Buttons model
-// ============================================================================
-
-function configToWPBSelection(config: Configuration): WPBSelectionState {
-  return {
-    housingColour: config.housingColour ?? undefined,
-    buttonColour: config.buttonColour ?? undefined,
-    buttonType: config.buttonType ?? undefined,
-    label: config.label ?? undefined,
-  };
-}
-
-function isWPBModel(modelId: ModelId): boolean {
-  return modelId === "waterproof-push-buttons";
-}
-
-const WPB_ALLOWLIST_STEPS: ReadonlySet<string> = new Set<keyof WPBSelectionState>([
-  "housingColour", "buttonColour", "buttonType", "label",
-]);
-
-function getWPBAllowlistValidOptions(
-  stepId: string,
-  config: Configuration
-): Set<string> | null {
-  if (!WPB_ALLOWLIST_STEPS.has(stepId)) return null;
-
-  const wpbSelection = configToWPBSelection(config);
-
-  const otherSelections: Partial<WPBSelectionState> = {};
-  for (const key of Object.keys(wpbSelection) as (keyof WPBSelectionState)[]) {
-    if (key === stepId) continue;
-    otherSelections[key] = wpbSelection[key];
-  }
-
-  const validOptions = getValidWPBOptionsForStep(
-    stepId as keyof WPBSelectionState,
-    otherSelections as Omit<WPBSelectionState, typeof stepId>,
-  );
-
-  return new Set(validOptions);
-}
-
-// ============================================================================
-// Allowlist validation for Universal Stopper model
-// ============================================================================
-
-function configToUSSelection(config: Configuration): USSelectionState {
-  return {
-    mounting: config.mounting ?? undefined,
-    hoodSounder: config.hoodSounder ?? undefined,
-    colourLabel: config.colourLabel ?? undefined,
-  };
-}
-
-function isUSModel(modelId: ModelId): boolean {
-  return modelId === "universal-stopper";
-}
-
-const US_ALLOWLIST_STEPS: ReadonlySet<string> = new Set<keyof USSelectionState>([
-  "mounting", "hoodSounder", "colourLabel",
-]);
-
-function getUSAllowlistValidOptions(
-  stepId: string,
-  config: Configuration
-): Set<string> | null {
-  if (!US_ALLOWLIST_STEPS.has(stepId)) return null;
-
-  const usSelection = configToUSSelection(config);
-
-  const otherSelections: Partial<USSelectionState> = {};
-  for (const key of Object.keys(usSelection) as (keyof USSelectionState)[]) {
-    if (key === stepId) continue;
-    otherSelections[key] = usSelection[key];
-  }
-
-  const validOptions = getValidUSOptionsForStep(
-    stepId as keyof USSelectionState,
-    otherSelections as Omit<USSelectionState, typeof stepId>,
-  );
-
-  return new Set(validOptions);
-}
-
-// ============================================================================
-// ++ LPUS: Allowlist validation for Low Profile Universal Stopper model
-// ============================================================================
-
-function configToLPUSSelection(config: Configuration): LPUSSelectionState {
-  return {
-    mounting: config.mounting ?? undefined,
-    hoodSounder: config.hoodSounder ?? undefined,
-    colourLabel: config.colourLabel ?? undefined,
-  };
-}
-
-function isLPUSModel(modelId: ModelId): boolean {
-  return modelId === "low-profile-universal-stopper";
-}
-
-const LPUS_ALLOWLIST_STEPS: ReadonlySet<string> = new Set<keyof LPUSSelectionState>([
-  "mounting", "hoodSounder", "colourLabel",
-]);
-
-function getLPUSAllowlistValidOptions(
-  stepId: string,
-  config: Configuration
-): Set<string> | null {
-  if (!LPUS_ALLOWLIST_STEPS.has(stepId)) return null;
-
-  const lpusSelection = configToLPUSSelection(config);
-
-  const otherSelections: Partial<LPUSSelectionState> = {};
-  for (const key of Object.keys(lpusSelection) as (keyof LPUSSelectionState)[]) {
-    if (key === stepId) continue;
-    otherSelections[key] = lpusSelection[key];
-  }
-
-  const validOptions = getValidLPUSOptionsForStep(
-    stepId as keyof LPUSSelectionState,
-    otherSelections as Omit<LPUSSelectionState, typeof stepId>,
-  );
-
-  return new Set(validOptions);
-}
-
-// ============================================================================
-// ++ ES: Allowlist validation for Enviro Stopper model
-// ============================================================================
-
-function configToESSelection(config: Configuration): ESSelectionState {
-  return {
-    cover: config.cover ?? undefined,
-    mounting: config.mounting ?? undefined,
-    hoodSounder: config.hoodSounder ?? undefined,
-    colourLabel: config.colourLabel ?? undefined,
-  };
-}
-
-function isESModel(modelId: ModelId): boolean {
-  return modelId === "enviro-stopper";
-}
-
-const ES_ALLOWLIST_STEPS: ReadonlySet<string> = new Set<keyof ESSelectionState>([
-  "cover", "mounting", "hoodSounder", "colourLabel",
-]);
-
-function getESAllowlistValidOptions(
-  stepId: string,
-  config: Configuration
-): Set<string> | null {
-  if (!ES_ALLOWLIST_STEPS.has(stepId)) return null;
-
-  const esSelection = configToESSelection(config);
-
-  const otherSelections: Partial<ESSelectionState> = {};
-  for (const key of Object.keys(esSelection) as (keyof ESSelectionState)[]) {
-    if (key === stepId) continue;
-    otherSelections[key] = esSelection[key];
-  }
-
-  const validOptions = getValidESOptionsForStep(
-    stepId as keyof ESSelectionState,
-    otherSelections as Omit<ESSelectionState, typeof stepId>,
-  );
-
-  return new Set(validOptions);
-}
-
-// ============================================================================
-// ++ CPS: Allowlist validation for Call Point Stopper model
-// ============================================================================
-
-function configToCPSSelection(config: Configuration): CPSSelectionState {
-  return {
-    mounting: config.mounting ?? undefined,
-    colour: config.colour ?? undefined,
-    label: config.label ?? undefined,
-  };
-}
-
-function isCPSModel(modelId: ModelId): boolean {
-  return modelId === "call-point-stopper";
-}
-
-const CPS_ALLOWLIST_STEPS: ReadonlySet<string> = new Set<keyof CPSSelectionState>([
-  "mounting", "colour", "label",
-]);
-
-function getCPSAllowlistValidOptions(
-  stepId: string,
-  config: Configuration
-): Set<string> | null {
-  if (!CPS_ALLOWLIST_STEPS.has(stepId)) return null;
-
-  const cpsSelection = configToCPSSelection(config);
-
-  const otherSelections: Partial<CPSSelectionState> = {};
-  for (const key of Object.keys(cpsSelection) as (keyof CPSSelectionState)[]) {
-    if (key === stepId) continue;
-    otherSelections[key] = cpsSelection[key];
-  }
-
-  const validOptions = getValidCPSOptionsForStep(
-    stepId as keyof CPSSelectionState,
-    otherSelections as Omit<CPSSelectionState, typeof stepId>,
-  );
-
-  return new Set(validOptions);
-}
-
-// ============================================================================
-// ++ EA: Allowlist validation for EnviroArmour model
-// ============================================================================
-
-function configToEASelection(config: Configuration): EASelectionState {
-  return {
-    material: config.material ?? undefined,
-    size: config.size ?? undefined,
-    doorType: config.doorType ?? undefined,
-  };
-}
-
-function isEAModel(modelId: ModelId): boolean {
-  return modelId === "enviro-armour";
-}
-
-const EA_ALLOWLIST_STEPS: ReadonlySet<string> = new Set<keyof EASelectionState>([
-  "material", "size", "doorType",
-]);
-
-function getEAAllowlistValidOptions(
-  stepId: string,
-  config: Configuration
-): Set<string> | null {
-  if (!EA_ALLOWLIST_STEPS.has(stepId)) return null;
-
-  const eaSelection = configToEASelection(config);
-
-  const otherSelections: Partial<EASelectionState> = {};
-  for (const key of Object.keys(eaSelection) as (keyof EASelectionState)[]) {
-    if (key === stepId) continue;
-    otherSelections[key] = eaSelection[key];
-  }
-
-  const validOptions = getValidEAOptionsForStep(
-    stepId as keyof EASelectionState,
-    otherSelections as Omit<EASelectionState, typeof stepId>,
-  );
-
-  return new Set(validOptions);
-}
-
-// ============================================================================
-// ++ EUS: Allowlist validation for Euro Stopper model
-// ============================================================================
-
-function configToEUSSelection(config: Configuration): EUSSelectionState {
-  return {
-    mounting: config.mounting ?? undefined,
-    sounder: config.sounder ?? undefined,
-    colourLabel: config.colourLabel ?? undefined,
-  };
-}
-
-function isEUSModel(modelId: ModelId): boolean {
-  return modelId === "euro-stopper";
-}
-
-const EUS_ALLOWLIST_STEPS: ReadonlySet<string> = new Set<keyof EUSSelectionState>([
-  "mounting", "sounder", "colourLabel",
-]);
-
-function getEUSAllowlistValidOptions(
-  stepId: string,
-  config: Configuration
-): Set<string> | null {
-  if (!EUS_ALLOWLIST_STEPS.has(stepId)) return null;
-
-  const eusSelection = configToEUSSelection(config);
-
-  const otherSelections: Partial<EUSSelectionState> = {};
-  for (const key of Object.keys(eusSelection) as (keyof EUSSelectionState)[]) {
-    if (key === stepId) continue;
-    otherSelections[key] = eusSelection[key];
-  }
-
-  const validOptions = getValidEUSOptionsForStep(
-    stepId as keyof EUSSelectionState,
-    otherSelections as Omit<EUSSelectionState, typeof stepId>,
-  );
-
-  return new Set(validOptions);
-}
-
-// ============================================================================
-// Enhanced option availability with constraint engine + allowlist
+// Types
 // ============================================================================
 
 export interface OptionAvailabilityResult {
@@ -816,110 +32,253 @@ export interface OptionWithAvailability {
   availability: OptionAvailabilityResult;
 }
 
-/**
- * Gets all options for a step with their availability status.
- * Combines constraint matrix checks with allowlist validation for
- * G3, SS, GF, GLR, RP, WRP, IPB, KS, WPB, US, LPUS, ES, CPS, and EA models.
- */
+const CONSTRAINTS_MAP: Record<string, ModelConstraints> = {
+  "g3-multipurpose-push-button": G3_MULTIPURPOSE_PUSH_BUTTON_CONSTRAINTS,
+  "stopper-stations": STOPPER_STATIONS_CONSTRAINTS,
+  "gf-fire-alarm-push-button": GF_FIRE_ALARM_PUSH_BUTTON_CONSTRAINTS,
+  "global-reset": GLOBAL_RESET_CONSTRAINTS,
+  "reset-call-points": RESET_CALL_POINTS_CONSTRAINTS,
+  "waterproof-reset-call-point": WATERPROOF_RESET_CALL_POINT_CONSTRAINTS,
+  "indoor-push-buttons": INDOOR_PUSH_BUTTONS_CONSTRAINTS,
+  "key-switches": KEY_SWITCHES_CONSTRAINTS,
+  "waterproof-push-buttons": WATERPROOF_PUSH_BUTTONS_CONSTRAINTS,
+  "universal-stopper": UNIVERSAL_STOPPER_CONSTRAINTS,
+  "low-profile-universal-stopper": LOW_PROFILE_UNIVERSAL_STOPPER_CONSTRAINTS,
+  "enviro-stopper": ENVIRO_STOPPER_CONSTRAINTS,
+  "call-point-stopper": CALL_POINT_STOPPER_CONSTRAINTS,
+  "enviro-armour": ENVIRO_ARMOUR_CONSTRAINTS,
+  "euro-stopper": EURO_STOPPER_CONSTRAINTS,
+};
+
+function getModelConstraints(modelId: ModelId): ModelConstraints | null {
+  return CONSTRAINTS_MAP[modelId] ?? null;
+}
+
+type AllowlistFn = (stepId: string, config: Configuration) => Set<string> | null;
+
+function configKeys(config: Configuration, keys: string[]): Record<string, string | undefined> {
+  const out: Record<string, string | undefined> = {};
+  for (const k of keys) {
+    const v = config[k as keyof Configuration];
+    out[k] = v ?? undefined;
+  }
+  return out;
+}
+
+function buildAllowlistSet(
+  stepId: string,
+  config: Configuration,
+  keys: string[],
+  getValid: (stepId: string, others: Record<string, string | undefined>) => string[]
+): Set<string> | null {
+  const selection = configKeys(config, keys);
+  const others: Record<string, string | undefined> = {};
+  for (const k of keys) {
+    if (k !== stepId) others[k] = selection[k];
+  }
+  return new Set(getValid(stepId, others));
+}
+
+function normalizeActivationToCode(id: string): string {
+  if (id.startsWith("6-")) return "6";
+  if (id.startsWith("7-")) return "7";
+  return id;
+}
+
+function expandActivationCodeToIds(code: string): string[] {
+  if (code === "6") return ["6-red", "6-green", "6-blue"];
+  if (code === "7") return ["7-red", "7-green", "7-blue"];
+  return [code];
+}
+
+const SS_STEPS = ["colour", "cover", "activation", "text", "language"];
+
+function getSSAllowlist(stepId: string, config: Configuration): Set<string> | null {
+  if (!SS_STEPS.includes(stepId)) return null;
+
+  const others: Record<string, string | undefined> = {};
+  for (const k of SS_STEPS) {
+    if (k === stepId) continue;
+    const v = config[k as keyof Configuration] ?? undefined;
+    others[k] = k === "activation" && v ? normalizeActivationToCode(v) : v;
+  }
+
+  const validCodes = getValidSSOptionsForStep(stepId as never, others as never);
+
+  if (stepId === "activation") {
+    const expanded = new Set<string>();
+    for (const code of validCodes) {
+      for (const id of expandActivationCodeToIds(code)) expanded.add(id);
+    }
+    return expanded;
+  }
+
+  return new Set(validCodes);
+}
+
+const ALLOWLIST_REGISTRY: Record<string, AllowlistFn> = {
+  "g3-multipurpose-push-button": (stepId, config) =>
+    buildAllowlistSet(
+      stepId, config,
+      ["model", "colour", "cover", "buttonType", "text", "language"],
+      (s, o) => getValidG3Options(s as never, o as never)
+    ),
+
+  "stopper-stations": getSSAllowlist,
+
+  "gf-fire-alarm-push-button": (stepId, config) =>
+    buildAllowlistSet(
+      stepId, config,
+      ["model", "cover", "text", "language"],
+      (s, o) => getValidGFOptionsForStep(s as never, o as never)
+    ),
+
+  "global-reset": (stepId, config) =>
+    buildAllowlistSet(
+      stepId, config,
+      ["colour", "cover", "text", "language"],
+      (s, o) => getValidGLROptionsForStep(s as never, o as never)
+    ),
+
+  "reset-call-points": (stepId, config) =>
+    buildAllowlistSet(
+      stepId, config,
+      ["colour", "mounting", "electricalArrangement", "label"],
+      (s, o) => getValidRPOptionsForStep(s as never, o as never)
+    ),
+
+  "waterproof-reset-call-point": (stepId, config) =>
+    buildAllowlistSet(
+      stepId, config,
+      ["colour", "electricalArrangement", "label"],
+      (s, o) => getValidWRPOptionsForStep(s as never, o as never)
+    ),
+
+  "indoor-push-buttons": (stepId, config) =>
+    buildAllowlistSet(
+      stepId, config,
+      ["colour", "buttonColour", "pushButtonType", "electricalArrangements", "label"],
+      (s, o) => getValidIPBOptionsForStep(s as never, o as never)
+    ),
+
+  "key-switches": (stepId, config) =>
+    buildAllowlistSet(
+      stepId, config,
+      ["colourMounting", "switchType", "electricalArrangement", "label"],
+      (s, o) => getValidKSOptionsForStep(s as never, o as never)
+    ),
+
+  "waterproof-push-buttons": (stepId, config) =>
+    buildAllowlistSet(
+      stepId, config,
+      ["housingColour", "buttonColour", "buttonType", "label"],
+      (s, o) => getValidWPBOptionsForStep(s as never, o as never)
+    ),
+
+  "universal-stopper": (stepId, config) =>
+    buildAllowlistSet(
+      stepId, config,
+      ["mounting", "hoodSounder", "colourLabel"],
+      (s, o) => getValidUSOptionsForStep(s as never, o as never)
+    ),
+
+  "low-profile-universal-stopper": (stepId, config) =>
+    buildAllowlistSet(
+      stepId, config,
+      ["mounting", "hoodSounder", "colourLabel"],
+      (s, o) => getValidLPUSOptionsForStep(s as never, o as never)
+    ),
+
+  "enviro-stopper": (stepId, config) =>
+    buildAllowlistSet(
+      stepId, config,
+      ["cover", "mounting", "hoodSounder", "colourLabel"],
+      (s, o) => getValidESOptionsForStep(s as never, o as never)
+    ),
+
+  "call-point-stopper": (stepId, config) =>
+    buildAllowlistSet(
+      stepId, config,
+      ["mounting", "colour", "label"],
+      (s, o) => getValidCPSOptionsForStep(s as never, o as never)
+    ),
+
+  "enviro-armour": (stepId, config) =>
+    buildAllowlistSet(
+      stepId, config,
+      ["material", "size", "doorType"],
+      (s, o) => getValidEAOptionsForStep(s as never, o as never)
+    ),
+
+  "euro-stopper": (stepId, config) =>
+    buildAllowlistSet(
+      stepId, config,
+      ["mounting", "sounder", "colourLabel"],
+      (s, o) => getValidEUSOptionsForStep(s as never, o as never)
+    ),
+};
+
+function getAllowlistValidOptions(
+  modelId: ModelId,
+  stepId: string,
+  config: Configuration
+): Set<string> | null {
+  const fn = ALLOWLIST_REGISTRY[modelId];
+  return fn ? fn(stepId, config) : null;
+}
+
+export function isOptionAvailable(option: Option, config: Configuration): boolean {
+  if (!option.availableFor) return true;
+  if (!config.colour) return false;
+  return option.availableFor.includes(config.colour);
+}
+
+export function filterAvailableOptions(options: Option[], config: Configuration): Option[] {
+  return options.filter((option) => isOptionAvailable(option, config));
+}
+
+export function isSelectionStillValid(
+  optionId: string | null,
+  options: Option[],
+  config: Configuration
+): boolean {
+  if (!optionId) return true;
+  const option = options.find((o) => o.id === optionId);
+  if (!option) return false;
+  return isOptionAvailable(option, config);
+}
+
 export function getOptionsWithAvailability(
   step: Step,
   config: Configuration,
   modelId: ModelId
 ): OptionWithAvailability[] {
   const constraints = getModelConstraints(modelId);
-  
+
   if (!constraints) {
     return step.options.map((option) => ({
       option,
       availability: { available: true },
     }));
   }
-  
+
   const engine = createConstraintEngine(constraints);
   const allOptionIds = step.options.map((o) => o.id);
   const stepAvailability = getStepAvailability(engine, step.id, allOptionIds, config);
-  
-  const g3AllowlistValid = isG3Model(modelId)
-    ? getG3AllowlistValidOptions(step.id, config)
-    : null;
+  const allowlistValid = getAllowlistValidOptions(modelId, step.id, config);
 
-  const ssAllowlistValid = isSSModel(modelId)
-    ? getSSAllowlistValidOptions(step.id, config)
-    : null;
-
-  const gfAllowlistValid = isGFModel(modelId)
-    ? getGFAllowlistValidOptions(step.id, config)
-    : null;
-
-  const glrAllowlistValid = isGLRModel(modelId)
-    ? getGLRAllowlistValidOptions(step.id, config)
-    : null;
-
-  const rpAllowlistValid = isRPModel(modelId)
-    ? getRPAllowlistValidOptions(step.id, config)
-    : null;
-
-  const wrpAllowlistValid = isWRPModel(modelId)
-    ? getWRPAllowlistValidOptions(step.id, config)
-    : null;
-
-  const ipbAllowlistValid = isIPBModel(modelId)
-    ? getIPBAllowlistValidOptions(step.id, config)
-    : null;
-
-  const ksAllowlistValid = isKSModel(modelId)
-    ? getKSAllowlistValidOptions(step.id, config)
-    : null;
-
-  const wpbAllowlistValid = isWPBModel(modelId)
-    ? getWPBAllowlistValidOptions(step.id, config)
-    : null;
-
-  const usAllowlistValid = isUSModel(modelId)
-    ? getUSAllowlistValidOptions(step.id, config)
-    : null;
-
-  // ++ LPUS
-  const lpusAllowlistValid = isLPUSModel(modelId)
-    ? getLPUSAllowlistValidOptions(step.id, config)
-    : null;
-
-  // ++ ES
-  const esAllowlistValid = isESModel(modelId)
-    ? getESAllowlistValidOptions(step.id, config)
-    : null;
-
-  // ++ CPS
-  const cpsAllowlistValid = isCPSModel(modelId)
-    ? getCPSAllowlistValidOptions(step.id, config)
-    : null;
-
-  // ++ EA
-  const eaAllowlistValid = isEAModel(modelId)
-    ? getEAAllowlistValidOptions(step.id, config)
-    : null;
-
-  // ++ EUS
-  const eusAllowlistValid = isEUSModel(modelId)
-    ? getEUSAllowlistValidOptions(step.id, config)
-    : null;
-  
   return step.options.map((option) => {
-    const constraintResult = stepAvailability.options.find(
-      (o) => o.optionId === option.id
-    );
-    
+    const constraintResult = stepAvailability.options.find((o) => o.optionId === option.id);
+
     if (constraintResult && !constraintResult.available) {
-      const reason = constraintResult.reasons.length > 0
-        ? constraintResult.reasons[0].message
-        : "Not available with current configuration";
-      return {
-        option,
-        availability: { available: false, reason },
-      };
+      const reason =
+        constraintResult.reasons.length > 0
+          ? constraintResult.reasons[0].message
+          : "Not available with current configuration";
+      return { option, availability: { available: false, reason } };
     }
-    
-    if (g3AllowlistValid && !g3AllowlistValid.has(option.id)) {
+
+    if (allowlistValid && !allowlistValid.has(option.id)) {
       return {
         option,
         availability: {
@@ -929,222 +288,38 @@ export function getOptionsWithAvailability(
       };
     }
 
-    if (ssAllowlistValid && !ssAllowlistValid.has(option.id)) {
-      return {
-        option,
-        availability: {
-          available: false,
-          reason: "This option does not lead to a valid product model",
-        },
-      };
-    }
-
-    if (gfAllowlistValid && !gfAllowlistValid.has(option.id)) {
-      return {
-        option,
-        availability: {
-          available: false,
-          reason: "This option does not lead to a valid product model",
-        },
-      };
-    }
-
-    if (glrAllowlistValid && !glrAllowlistValid.has(option.id)) {
-      return {
-        option,
-        availability: {
-          available: false,
-          reason: "This option does not lead to a valid product model",
-        },
-      };
-    }
-
-    if (rpAllowlistValid && !rpAllowlistValid.has(option.id)) {
-      return {
-        option,
-        availability: {
-          available: false,
-          reason: "This option does not lead to a valid product model",
-        },
-      };
-    }
-
-    if (wrpAllowlistValid && !wrpAllowlistValid.has(option.id)) {
-      return {
-        option,
-        availability: {
-          available: false,
-          reason: "This option does not lead to a valid product model",
-        },
-      };
-    }
-
-    if (ipbAllowlistValid && !ipbAllowlistValid.has(option.id)) {
-      return {
-        option,
-        availability: {
-          available: false,
-          reason: "This option does not lead to a valid product model",
-        },
-      };
-    }
-
-    if (ksAllowlistValid && !ksAllowlistValid.has(option.id)) {
-      return {
-        option,
-        availability: {
-          available: false,
-          reason: "This option does not lead to a valid product model",
-        },
-      };
-    }
-
-    if (wpbAllowlistValid && !wpbAllowlistValid.has(option.id)) {
-      return {
-        option,
-        availability: {
-          available: false,
-          reason: "This option does not lead to a valid product model",
-        },
-      };
-    }
-
-    if (usAllowlistValid && !usAllowlistValid.has(option.id)) {
-      return {
-        option,
-        availability: {
-          available: false,
-          reason: "This option does not lead to a valid product model",
-        },
-      };
-    }
-
-    // ++ LPUS
-    if (lpusAllowlistValid && !lpusAllowlistValid.has(option.id)) {
-      return {
-        option,
-        availability: {
-          available: false,
-          reason: "This option does not lead to a valid product model",
-        },
-      };
-    }
-
-    // ++ ES
-    if (esAllowlistValid && !esAllowlistValid.has(option.id)) {
-      return {
-        option,
-        availability: {
-          available: false,
-          reason: "This option does not lead to a valid product model",
-        },
-      };
-    }
-
-    // ++ CPS
-    if (cpsAllowlistValid && !cpsAllowlistValid.has(option.id)) {
-      return {
-        option,
-        availability: {
-          available: false,
-          reason: "This option does not lead to a valid product model",
-        },
-      };
-    }
-
-    // ++ EA
-    if (eaAllowlistValid && !eaAllowlistValid.has(option.id)) {
-      return {
-        option,
-        availability: {
-          available: false,
-          reason: "This option does not lead to a valid product model",
-        },
-      };
-    }
-
-    // ++ EUS
-    if (eusAllowlistValid && !eusAllowlistValid.has(option.id)) {
-      return {
-        option,
-        availability: {
-          available: false,
-          reason: "This option does not lead to a valid product model",
-        },
-      };
-    }
-    
-    return {
-      option,
-      availability: { available: true },
-    };
+    return { option, availability: { available: true } };
   });
 }
 
-// ============================================================================
-// Configuration completeness
-// ============================================================================
-
-export function isConfigurationComplete(
-  model: ModelDefinition,
-  config: Configuration
-): boolean {
+export function isConfigurationComplete(model: ModelDefinition, config: Configuration): boolean {
   for (const stepId of model.stepOrder) {
     const step = model.steps.find((s) => s.id === stepId);
-    if (!step) continue;
-    
-    if (!step.required) continue;
-    
-    const selection = config[stepId];
-    if (!selection) {
-      return false;
-    }
+    if (!step?.required) continue;
+    if (!config[stepId]) return false;
   }
   return true;
 }
 
-export function getMissingRequiredSteps(
-  model: ModelDefinition,
-  config: Configuration
-): string[] {
+export function getMissingRequiredSteps(model: ModelDefinition, config: Configuration): string[] {
   const missing: string[] = [];
-  
   for (const stepId of model.stepOrder) {
     const step = model.steps.find((s) => s.id === stepId);
-    if (!step) continue;
-    
-    if (!step.required) continue;
-    
-    const selection = config[stepId];
-    if (!selection) {
-      missing.push(stepId);
-    }
+    if (!step?.required) continue;
+    if (!config[stepId]) missing.push(stepId);
   }
-  
   return missing;
 }
 
-export function getCompletionPercentage(
-  model: ModelDefinition,
-  config: Configuration
-): number {
-  const requiredSteps = model.stepOrder.filter((stepId) => {
-    const step = model.steps.find((s) => s.id === stepId);
-    return step && step.required;
+export function getCompletionPercentage(model: ModelDefinition, config: Configuration): number {
+  const required = model.stepOrder.filter((id) => {
+    const step = model.steps.find((s) => s.id === id);
+    return step?.required;
   });
-  
-  if (requiredSteps.length === 0) return 100;
-  
-  const completedCount = requiredSteps.filter(
-    (stepId) => config[stepId] !== null && config[stepId] !== undefined
-  ).length;
-  
-  return Math.round((completedCount / requiredSteps.length) * 100);
+  if (required.length === 0) return 100;
+  const completed = required.filter((id) => config[id] != null).length;
+  return Math.round((completed / required.length) * 100);
 }
-
-// ============================================================================
-// Selection reset logic
-// ============================================================================
 
 export function getSelectionsToReset(
   model: ModelDefinition,
@@ -1153,256 +328,34 @@ export function getSelectionsToReset(
 ): string[] {
   const toReset: string[] = [];
   const constraints = getModelConstraints(model.id);
-  
-  if (!constraints) {
-    return toReset;
-  }
-  
+
+  if (!constraints) return toReset;
+
   const engine = createConstraintEngine(constraints);
   const changedStepIndex = model.stepOrder.indexOf(changedStepId);
-  
+
   for (let i = changedStepIndex + 1; i < model.stepOrder.length; i++) {
     const stepId = model.stepOrder[i];
-    const currentSelection = newConfig[stepId];
-    
-    if (!currentSelection) continue;
-    
-    const result = engine.checkOptionAvailability(stepId, currentSelection, newConfig);
-    
-    if (!result.available) {
-      toReset.push(stepId);
-    }
-  }
-  
-  if (isG3Model(model.id)) {
-    for (let i = changedStepIndex + 1; i < model.stepOrder.length; i++) {
-      const stepId = model.stepOrder[i];
-      if (toReset.includes(stepId)) continue;
-      
-      const currentSelection = newConfig[stepId];
-      if (!currentSelection) continue;
-      
-      const validOptions = getG3AllowlistValidOptions(stepId, newConfig);
-      if (validOptions && !validOptions.has(currentSelection)) {
-        toReset.push(stepId);
-      }
-    }
+    const current = newConfig[stepId];
+    if (!current) continue;
+
+    const result = engine.checkOptionAvailability(stepId, current, newConfig);
+    if (!result.available) toReset.push(stepId);
   }
 
-  if (isSSModel(model.id)) {
+  const allowlistFn = ALLOWLIST_REGISTRY[model.id];
+  if (allowlistFn) {
     for (let i = changedStepIndex + 1; i < model.stepOrder.length; i++) {
       const stepId = model.stepOrder[i];
       if (toReset.includes(stepId)) continue;
 
-      const currentSelection = newConfig[stepId];
-      if (!currentSelection) continue;
+      const current = newConfig[stepId];
+      if (!current) continue;
 
-      const validOptions = getSSAllowlistValidOptions(stepId, newConfig);
-      if (validOptions && !validOptions.has(currentSelection)) {
-        toReset.push(stepId);
-      }
+      const valid = allowlistFn(stepId, newConfig);
+      if (valid && !valid.has(current)) toReset.push(stepId);
     }
   }
 
-  if (isGFModel(model.id)) {
-    for (let i = changedStepIndex + 1; i < model.stepOrder.length; i++) {
-      const stepId = model.stepOrder[i];
-      if (toReset.includes(stepId)) continue;
-
-      const currentSelection = newConfig[stepId];
-      if (!currentSelection) continue;
-
-      const validOptions = getGFAllowlistValidOptions(stepId, newConfig);
-      if (validOptions && !validOptions.has(currentSelection)) {
-        toReset.push(stepId);
-      }
-    }
-  }
-
-  if (isGLRModel(model.id)) {
-    for (let i = changedStepIndex + 1; i < model.stepOrder.length; i++) {
-      const stepId = model.stepOrder[i];
-      if (toReset.includes(stepId)) continue;
-
-      const currentSelection = newConfig[stepId];
-      if (!currentSelection) continue;
-
-      const validOptions = getGLRAllowlistValidOptions(stepId, newConfig);
-      if (validOptions && !validOptions.has(currentSelection)) {
-        toReset.push(stepId);
-      }
-    }
-  }
-
-  if (isRPModel(model.id)) {
-    for (let i = changedStepIndex + 1; i < model.stepOrder.length; i++) {
-      const stepId = model.stepOrder[i];
-      if (toReset.includes(stepId)) continue;
-
-      const currentSelection = newConfig[stepId];
-      if (!currentSelection) continue;
-
-      const validOptions = getRPAllowlistValidOptions(stepId, newConfig);
-      if (validOptions && !validOptions.has(currentSelection)) {
-        toReset.push(stepId);
-      }
-    }
-  }
-
-  if (isWRPModel(model.id)) {
-    for (let i = changedStepIndex + 1; i < model.stepOrder.length; i++) {
-      const stepId = model.stepOrder[i];
-      if (toReset.includes(stepId)) continue;
-
-      const currentSelection = newConfig[stepId];
-      if (!currentSelection) continue;
-
-      const validOptions = getWRPAllowlistValidOptions(stepId, newConfig);
-      if (validOptions && !validOptions.has(currentSelection)) {
-        toReset.push(stepId);
-      }
-    }
-  }
-
-  if (isIPBModel(model.id)) {
-    for (let i = changedStepIndex + 1; i < model.stepOrder.length; i++) {
-      const stepId = model.stepOrder[i];
-      if (toReset.includes(stepId)) continue;
-
-      const currentSelection = newConfig[stepId];
-      if (!currentSelection) continue;
-
-      const validOptions = getIPBAllowlistValidOptions(stepId, newConfig);
-      if (validOptions && !validOptions.has(currentSelection)) {
-        toReset.push(stepId);
-      }
-    }
-  }
-
-  if (isKSModel(model.id)) {
-    for (let i = changedStepIndex + 1; i < model.stepOrder.length; i++) {
-      const stepId = model.stepOrder[i];
-      if (toReset.includes(stepId)) continue;
-
-      const currentSelection = newConfig[stepId];
-      if (!currentSelection) continue;
-
-      const validOptions = getKSAllowlistValidOptions(stepId, newConfig);
-      if (validOptions && !validOptions.has(currentSelection)) {
-        toReset.push(stepId);
-      }
-    }
-  }
-
-  if (isWPBModel(model.id)) {
-    for (let i = changedStepIndex + 1; i < model.stepOrder.length; i++) {
-      const stepId = model.stepOrder[i];
-      if (toReset.includes(stepId)) continue;
-
-      const currentSelection = newConfig[stepId];
-      if (!currentSelection) continue;
-
-      const validOptions = getWPBAllowlistValidOptions(stepId, newConfig);
-      if (validOptions && !validOptions.has(currentSelection)) {
-        toReset.push(stepId);
-      }
-    }
-  }
-
-  if (isUSModel(model.id)) {
-    for (let i = changedStepIndex + 1; i < model.stepOrder.length; i++) {
-      const stepId = model.stepOrder[i];
-      if (toReset.includes(stepId)) continue;
-
-      const currentSelection = newConfig[stepId];
-      if (!currentSelection) continue;
-
-      const validOptions = getUSAllowlistValidOptions(stepId, newConfig);
-      if (validOptions && !validOptions.has(currentSelection)) {
-        toReset.push(stepId);
-      }
-    }
-  }
-
-  // ++ LPUS
-  if (isLPUSModel(model.id)) {
-    for (let i = changedStepIndex + 1; i < model.stepOrder.length; i++) {
-      const stepId = model.stepOrder[i];
-      if (toReset.includes(stepId)) continue;
-
-      const currentSelection = newConfig[stepId];
-      if (!currentSelection) continue;
-
-      const validOptions = getLPUSAllowlistValidOptions(stepId, newConfig);
-      if (validOptions && !validOptions.has(currentSelection)) {
-        toReset.push(stepId);
-      }
-    }
-  }
-
-  // ++ ES
-  if (isESModel(model.id)) {
-    for (let i = changedStepIndex + 1; i < model.stepOrder.length; i++) {
-      const stepId = model.stepOrder[i];
-      if (toReset.includes(stepId)) continue;
-
-      const currentSelection = newConfig[stepId];
-      if (!currentSelection) continue;
-
-      const validOptions = getESAllowlistValidOptions(stepId, newConfig);
-      if (validOptions && !validOptions.has(currentSelection)) {
-        toReset.push(stepId);
-      }
-    }
-  }
-
-  // ++ CPS
-  if (isCPSModel(model.id)) {
-    for (let i = changedStepIndex + 1; i < model.stepOrder.length; i++) {
-      const stepId = model.stepOrder[i];
-      if (toReset.includes(stepId)) continue;
-
-      const currentSelection = newConfig[stepId];
-      if (!currentSelection) continue;
-
-      const validOptions = getCPSAllowlistValidOptions(stepId, newConfig);
-      if (validOptions && !validOptions.has(currentSelection)) {
-        toReset.push(stepId);
-      }
-    }
-  }
-
-  // ++ EA
-  if (isEAModel(model.id)) {
-    for (let i = changedStepIndex + 1; i < model.stepOrder.length; i++) {
-      const stepId = model.stepOrder[i];
-      if (toReset.includes(stepId)) continue;
-
-      const currentSelection = newConfig[stepId];
-      if (!currentSelection) continue;
-
-      const validOptions = getEAAllowlistValidOptions(stepId, newConfig);
-      if (validOptions && !validOptions.has(currentSelection)) {
-        toReset.push(stepId);
-      }
-    }
-  }
-
-  // ++ EUS
-  if (isEUSModel(model.id)) {
-    for (let i = changedStepIndex + 1; i < model.stepOrder.length; i++) {
-      const stepId = model.stepOrder[i];
-      if (toReset.includes(stepId)) continue;
-
-      const currentSelection = newConfig[stepId];
-      if (!currentSelection) continue;
-
-      const validOptions = getEUSAllowlistValidOptions(stepId, newConfig);
-      if (validOptions && !validOptions.has(currentSelection)) {
-        toReset.push(stepId);
-      }
-    }
-  }
-  
   return toReset;
 }
