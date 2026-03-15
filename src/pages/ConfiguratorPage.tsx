@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useParams, useSearchParams, Navigate } from "react-router-dom";
-import { getConfiguratorBySlug } from "../data/catalog";
-import { getModelBySlug } from "../data/models";
+import { getProductBySlug } from "../data/productRegistry";
 import { isConfigurationComplete } from "../filterOptions";
 import { BuildItCalculator } from "../components/BuildItCalculator";
 import { ConfiguratorHero } from "../components/ConfiguratorHero";
@@ -142,27 +141,21 @@ export function ConfiguratorPage() {
     return <Navigate to="/" replace />;
   }
 
-  const catalogConfig = getConfiguratorBySlug(slug);
+  const product = getProductBySlug(slug);
 
-  if (!catalogConfig) {
+  if (!product) {
     return <Navigate to="/" replace />;
   }
 
-  if (!catalogConfig.isImplemented) {
-    return <InDevelopmentPage />;
-  }
-
-  const model = getModelBySlug(slug);
-
-  if (!model) {
+  if (!product.meta.isImplemented) {
     return <InDevelopmentPage />;
   }
 
   return (
     <ConfiguratorPageInner
       slug={slug}
-      model={model}
-      productName={catalogConfig.name}
+      model={product.model}
+      productName={product.meta.name}
     />
   );
 }

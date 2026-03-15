@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, ChevronDown } from "lucide-react";
-import { allConfigurators } from "../data/catalog";
+import { getAllProducts } from "../data/productRegistry";
 import { ConfiguratorCard } from "../components/ConfiguratorCard";
 import { PrimaryNavigation } from "../components/PrimaryNavigation";
 import { ResultCounter, EmptyState } from "../components/FilterResults";
@@ -24,7 +24,7 @@ export function HomePage() {
     setViewMode,
     loadMore,
     togglePagination,
-  } = useFilterState(allConfigurators);
+  } = useFilterState(getAllProducts().map((p) => p.meta));
 
   const scrollToCatalog = () => {
     heroEndRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });

@@ -1,11 +1,11 @@
 import { Link, useParams } from "react-router-dom";
-import { getConfiguratorBySlug } from "../data/catalog";
+import { getProductBySlug } from "../data/productRegistry";
 import { useTranslation } from "../i18n";
 
 export function InDevelopmentPage() {
   const { t } = useTranslation();
   const { slug } = useParams<{ slug: string }>();
-  const config = slug ? getConfiguratorBySlug(slug) : undefined;
+  const config = slug ? getProductBySlug(slug)?.meta : undefined;
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4 md:px-6 xl:px-8">

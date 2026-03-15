@@ -1,4 +1,11 @@
-export type { ConfiguratorMeta, ColourId, FeatureId, ProductTag, PrimaryTag, FunctionalTag } from "./types";
+export type {
+  ConfiguratorMeta,
+  ColourId,
+  FeatureId,
+  ProductTag,
+  PrimaryTag,
+  FunctionalTag,
+} from "./types";
 
 export { g3MultipurposePushButtonMeta } from "./g3MultipurposePushButton";
 export { stopperStationsMeta } from "./stopperStations";
@@ -53,4 +60,8 @@ export const allConfigurators: ConfiguratorMeta[] = [
 
 export function getConfiguratorBySlug(slug: string): ConfiguratorMeta | undefined {
   return allConfigurators.find((c) => c.slug === slug);
+}
+
+export function getAllConfiguratorIds(): string[] {
+  return allConfigurators.map((c) => c.id);
 }

@@ -48,11 +48,6 @@ async function loadModelDescriptions(
     const descriptions: ModelDescriptions = module.default;
     
     descriptionsCache.set(cacheKey, descriptions);
-    console.log(
-      `[getModelDescription] Loaded descriptions for ${modelId} (${lang}):`,
-      Object.keys(descriptions).length,
-      "entries"
-    );
     
     return descriptions;
   } catch (error) {
