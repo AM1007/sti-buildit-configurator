@@ -1,10 +1,9 @@
 import { useState, useMemo, useCallback } from "react";
-import type { ConfiguratorMeta, PrimaryTag, FunctionalTag } from "../data/catalog";
+import type { ConfiguratorMeta, PrimaryTag } from "../data/catalog";
 import {
   type FilterState,
   createInitialFilterState,
   filterConfigurators,
-  computeChipCounts,
 } from "../utils/filterProducts";
 
 type ViewMode = "grid" | "list";
@@ -27,27 +26,8 @@ export function useFilterState(all: ConfiguratorMeta[]) {
     [all, state]
   );
 
-  const chipCounts = useMemo(
-    () => computeChipCounts(all, state),
-    [all, state]
-  );
-
   const setPrimary = useCallback((tag: PrimaryTag | "all") => {
     setState((prev) => ({ ...prev, primary: tag }));
-    setVisibleCount(PAGE_SIZE);
-    setIsPaginated(true);
-  }, []);
-
-  const toggleFunctional = useCallback((tag: FunctionalTag) => {
-    setState((prev) => {
-      const next = new Set(prev.functional);
-      if (next.has(tag)) {
-        next.delete(tag);
-      } else {
-        next.add(tag);
-      }
-      return { ...prev, functional: next };
-    });
     setVisibleCount(PAGE_SIZE);
     setIsPaginated(true);
   }, []);
@@ -62,10 +42,6 @@ export function useFilterState(all: ConfiguratorMeta[]) {
     setVisibleCount((prev) => prev + PAGE_SIZE);
   }, []);
 
-  const showAll = useCallback(() => {
-    setIsPaginated(false);
-  }, []);
-
   const togglePagination = useCallback(() => {
     setIsPaginated((prev) => {
       if (prev) return false;
@@ -74,7 +50,7 @@ export function useFilterState(all: ConfiguratorMeta[]) {
     });
   }, []);
 
-  const hasActiveFilters = state.primary !== "all" || state.functional.size > 0;
+  const hasActiveFilters = state.primary !== "all";
 
   const displayed = isPaginated ? filtered.slice(0, visibleCount) : filtered;
   const hasMore = isPaginated && visibleCount < filtered.length;
@@ -83,17 +59,14 @@ export function useFilterState(all: ConfiguratorMeta[]) {
     state,
     filtered,
     displayed,
-    chipCounts,
     hasActiveFilters,
     viewMode,
     isPaginated,
     hasMore,
     setPrimary,
-    toggleFunctional,
     clearFilters,
     setViewMode,
     loadMore,
-    showAll,
     togglePagination,
   };
 }

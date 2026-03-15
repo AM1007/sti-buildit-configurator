@@ -4,7 +4,6 @@ import { ArrowRight, ChevronDown } from "lucide-react";
 import { allConfigurators } from "../data/catalog";
 import { ConfiguratorCard } from "../components/ConfiguratorCard";
 import { PrimaryNavigation } from "../components/PrimaryNavigation";
-import { FunctionalFilters } from "../components/FunctionalFilters";
 import { ResultCounter, EmptyState } from "../components/FilterResults";
 import { useFilterState } from "../hooks/useFilterState";
 import { useTranslation } from "../i18n";
@@ -17,12 +16,10 @@ export function HomePage() {
     state,
     displayed,
     filtered,
-    chipCounts,
     viewMode,
     isPaginated,
     hasMore,
     setPrimary,
-    toggleFunctional,
     clearFilters,
     setViewMode,
     loadMore,
@@ -31,12 +28,6 @@ export function HomePage() {
 
   const scrollToCatalog = () => {
     heroEndRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
-
-  const clearFunctionalFilters = () => {
-    for (const tag of state.functional) {
-      toggleFunctional(tag);
-    }
   };
 
   return (
@@ -113,15 +104,7 @@ export function HomePage() {
         <div className="mx-auto w-full max-w-7xl px-4 md:px-6 xl:px-8">
           <div className="sticky top-14 z-40 -mx-4 border-b border-slate-200 bg-slate-50 px-4 py-3 md:hidden">
             <div className="flex flex-col gap-2">
-              <div className="grid grid-cols-2 gap-2">
-                <PrimaryNavigation value={state.primary} onChange={setPrimary} />
-                <FunctionalFilters
-                  selected={state.functional}
-                  counts={chipCounts}
-                  onToggle={toggleFunctional}
-                  onClear={clearFunctionalFilters}
-                />
-              </div>
+              <PrimaryNavigation value={state.primary} onChange={setPrimary} />
               <div className="flex items-center justify-between">
                 <ResultCounter
                   shown={displayed.length}
@@ -137,14 +120,7 @@ export function HomePage() {
 
           <div className="hidden md:flex md:flex-col md:gap-4 md:mb-6">
             <PrimaryNavigation value={state.primary} onChange={setPrimary} />
-
-            <div className="flex items-center justify-between">
-              <FunctionalFilters
-                selected={state.functional}
-                counts={chipCounts}
-                onToggle={toggleFunctional}
-                onClear={clearFunctionalFilters}
-              />
+            <div className="flex items-center justify-end">
               <ResultCounter
                 shown={displayed.length}
                 total={filtered.length}
