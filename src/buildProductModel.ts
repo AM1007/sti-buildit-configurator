@@ -29,7 +29,7 @@ function getSeparator(
   code: string
 ): string {
   const { productModelSchema: schema } = model;
-  
+
   if (!code) {
     return "";
   }
@@ -86,19 +86,6 @@ export function buildProductModel(
   };
 }
 
-export function parseProductModel(
-  modelCode: string,
-  model: ModelDefinition
-): Configuration | null {
-  const { productModelSchema: schema } = model;
-
-  if (!modelCode.startsWith(schema.baseCode)) {
-    return null;
-  }
-
-  return null;
-}
-
 export function identifyModel(modelCode: string): string | null {
   if (modelCode.startsWith("G3")) {
     return "g3-multipurpose-push-button";
@@ -111,6 +98,9 @@ export function identifyModel(modelCode: string): string | null {
   }
   if (modelCode.startsWith("STI-15")) {
     return "euro-stopper";
+  }
+  if (modelCode.startsWith("STI-693")) {
+    return "call-point-stopper";
   }
   if (modelCode.startsWith("STI-")) {
     return "universal-stopper";

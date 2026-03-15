@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Home, Star, FolderOpen, Type, User, Globe, 
   // BookOpen, FileText, 
   LogOut, ChevronDown } from "lucide-react";
-import { useMyListCount } from "../stores/configurationStore";
+import { useMyListCount } from "../hooks/useProjectSelectors";
 import { useAuthStore, useIsAuthenticated, useUser } from "../stores/authStore";
 import { useTranslation, useLanguage } from "../i18n";
 import type { Language } from "../i18n";

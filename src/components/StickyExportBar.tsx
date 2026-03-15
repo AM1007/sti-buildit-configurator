@@ -1,10 +1,7 @@
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { X, ExternalLink, Copy, Check } from "lucide-react";
-import {
-  useMyList,
-  useProjectMeta,
-} from "../stores/configurationStore";
+import { useMyList, useProjectMeta } from "../hooks/useProjectSelectors";
 import { useProjectStore } from "../stores/projectStore";
 import { useIsAuthenticated } from "../stores/authStore";
 import { useTranslation, useLanguage } from "../i18n";

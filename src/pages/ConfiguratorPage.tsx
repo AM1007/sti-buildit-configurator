@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useParams, useSearchParams, Navigate } from "react-router-dom";
 import { getConfiguratorBySlug } from "../data/catalog";
 import { getModelBySlug } from "../data/models";
+import { isConfigurationComplete } from "../filterOptions";
 import { BuildItCalculator } from "../components/BuildItCalculator";
 import { ConfiguratorHero } from "../components/ConfiguratorHero";
 import { getHeroContent } from "../data/heroContent";
@@ -13,9 +14,15 @@ import { InDevelopmentPage } from "./InDevelopmentPage";
 import { parseConfigFromUrl, serializeConfig } from "../utils/configSerializer";
 import { toast } from "../utils/toast";
 import { useTranslation } from "../i18n";
+import type { ModelDefinition } from "../types";
 
-export function ConfiguratorPage() {
-  const { slug } = useParams<{ slug: string }>();
+interface ConfiguratorPageInnerProps {
+  slug: string;
+  model: ModelDefinition;
+  productName: string;
+}
+
+function ConfiguratorPageInner({ model, productName }: ConfiguratorPageInnerProps) {
   const [searchParams] = useSearchParams();
   const hasLoadedFromUrl = useRef(false);
   const { t } = useTranslation();
@@ -32,26 +39,6 @@ export function ConfiguratorPage() {
   const isAuthenticated = useIsAuthenticated();
   const [showProjectPicker, setShowProjectPicker] = useState(false);
   const [projectRefreshToken, setProjectRefreshToken] = useState(0);
-
-  if (!slug) {
-    return <Navigate to="/" replace />;
-  }
-
-  const catalogConfig = getConfiguratorBySlug(slug);
-
-  if (!catalogConfig) {
-    return <Navigate to="/" replace />;
-  }
-
-  if (!catalogConfig.isImplemented) {
-    return <InDevelopmentPage />;
-  }
-
-  const model = getModelBySlug(slug);
-
-  if (!model) {
-    return <InDevelopmentPage />;
-  }
 
   useEffect(() => {
     if (hasLoadedFromUrl.current) return;
@@ -82,8 +69,7 @@ export function ConfiguratorPage() {
     if (!hasLoadedFromUrl.current) return;
     if (currentModelId !== model.id) return;
 
-    const isComplete = Object.values(config).some((v) => v !== null);
-    if (!isComplete) {
+    if (!isConfigurationComplete(model, config)) {
       const url = new URL(window.location.href);
       url.searchParams.delete("state");
       window.history.replaceState(null, "", url.toString());
@@ -116,20 +102,20 @@ export function ConfiguratorPage() {
   };
 
   const handleProjectPickerSaved = () => {
-    setProjectRefreshToken((t) => t + 1);
+    setProjectRefreshToken((prev) => prev + 1);
     toast.success(t("projectPicker.saved"));
   };
 
   return (
     <div className="min-h-screen bg-slate-50">
       {heroContent && (
-        <ConfiguratorHero data={heroContent} productName={catalogConfig.name} />
+        <ConfiguratorHero data={heroContent} productName={productName} />
       )}
 
       <section className="bg-slate-50">
         <BuildItCalculator
           model={model}
-          productName={catalogConfig.name}
+          productName={productName}
           onAddToMyList={handleAddToMyList}
           onRemoveFromMyList={handleRemoveFromMyList}
           projectRefreshToken={projectRefreshToken}
@@ -146,5 +132,37 @@ export function ConfiguratorPage() {
         model={model}
       />
     </div>
+  );
+}
+
+export function ConfiguratorPage() {
+  const { slug } = useParams<{ slug: string }>();
+
+  if (!slug) {
+    return <Navigate to="/" replace />;
+  }
+
+  const catalogConfig = getConfiguratorBySlug(slug);
+
+  if (!catalogConfig) {
+    return <Navigate to="/" replace />;
+  }
+
+  if (!catalogConfig.isImplemented) {
+    return <InDevelopmentPage />;
+  }
+
+  const model = getModelBySlug(slug);
+
+  if (!model) {
+    return <InDevelopmentPage />;
+  }
+
+  return (
+    <ConfiguratorPageInner
+      slug={slug}
+      model={model}
+      productName={catalogConfig.name}
+    />
   );
 }

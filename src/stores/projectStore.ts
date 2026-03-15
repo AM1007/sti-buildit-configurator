@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { supabase } from "../services/supabaseClient";
 import type {
   SavedConfiguration,
   ProjectMeta,
@@ -14,6 +13,9 @@ import { generateSavedConfigurationId, GUEST_PROJECT_ID } from "../types";
 import { isConfigurationComplete } from "../filterOptions";
 import { buildProductModel } from "../buildProductModel";
 import { buildCustomTextFingerprint } from "../utils/customTextHelpers";
+import * as projectsApi from "../services/supabase/projectsApi";
+import * as configurationsApi from "../services/supabase/configurationsApi";
+import { useAuthStore } from "./authStore";
 
 function getTodayISO(): string {
   const now = new Date();
@@ -33,6 +35,14 @@ function createDefaultProjectMeta(): ProjectMeta {
     date: getTodayISO(),
     lastExportedAt: null,
   };
+}
+
+function migrateMyList(myList: SavedConfiguration[]): SavedConfiguration[] {
+  return myList.map((item) => ({
+    ...item,
+    qty: item.qty ?? 1,
+    note: item.note ?? "",
+  }));
 }
 
 interface ProjectState {
@@ -86,7 +96,10 @@ interface ProjectState {
   updateRemoteConfigurationQty: (id: string, projectId: string, qty: number) => Promise<void>;
   updateRemoteConfigurationNote: (id: string, projectId: string, note: string) => Promise<void>;
   clearRemoteConfigurations: (projectId: string) => Promise<void>;
-  updateProjectMeta: (projectId: string, meta: Partial<Pick<Project, "name" | "clientName" | "date" | "lastExportedAt">>) => Promise<void>;
+  updateProjectMeta: (
+    projectId: string,
+    meta: Partial<Pick<Project, "name" | "clientName" | "date" | "lastExportedAt">>
+  ) => Promise<void>;
 
   checkDuplicateInProject: (projectId: string, productCode: string) => Promise<boolean>;
   fetchProjectsWithProduct: (productCode: string) => Promise<Map<string, string>>;
@@ -94,14 +107,6 @@ interface ProjectState {
 
   mergeGuestToRemote: (userId: string) => Promise<string | null>;
   clearGuestData: () => void;
-}
-
-function migrateMyList(myList: SavedConfiguration[]): SavedConfiguration[] {
-  return myList.map((item) => ({
-    ...item,
-    qty: item.qty ?? 1,
-    note: item.note ?? "",
-  }));
 }
 
 export const useProjectStore = create<ProjectState>()(
@@ -151,13 +156,12 @@ export const useProjectStore = create<ProjectState>()(
         const { activeProjectId } = get();
 
         if (activeProjectId !== GUEST_PROJECT_ID) {
-          supabase.auth.getUser().then(({ data }) => {
-            if (data.user) {
-              get().addRemoteConfiguration(
-                data.user.id, activeProjectId, modelId, config, customText, model, name
-              );
-            }
-          });
+          const user = useAuthStore.getState().user;
+          if (user) {
+            get().addRemoteConfiguration(
+              user.id, activeProjectId, modelId, config, customText, model, name
+            );
+          }
           return;
         }
 
@@ -269,76 +273,21 @@ export const useProjectStore = create<ProjectState>()(
 
       fetchProjects: async (userId) => {
         set({ isLoading: true });
-        const { data, error } = await supabase
-          .from("projects")
-          .select("*")
-          .eq("user_id", userId)
-          .order("updated_at", { ascending: false });
-
-        if (error) {
-          console.error("Failed to fetch projects:", error.message);
-          set({ isLoading: false });
-          return;
-        }
-
-        const projects: Project[] = (data ?? []).map((row) => ({
-          id: row.id,
-          userId: row.user_id,
-          name: row.name,
-          clientName: row.client_name,
-          date: row.date,
-          createdAt: row.created_at,
-          updatedAt: row.updated_at,
-          lastExportedAt: row.last_exported_at,
-        }));
-
+        const projects = await projectsApi.fetchProjects(userId);
         set({ projects, isLoading: false });
       },
 
       createProject: async (userId, name, clientName) => {
-        const { data, error } = await supabase
-          .from("projects")
-          .insert({
-            user_id: userId,
-            name,
-            client_name: clientName ?? "",
-            date: getTodayISO(),
-          })
-          .select()
-          .single();
-
-        if (error || !data) {
-          console.error("Failed to create project:", error?.message);
-          return null;
-        }
-
-        const project: Project = {
-          id: data.id,
-          userId: data.user_id,
-          name: data.name,
-          clientName: data.client_name,
-          date: data.date,
-          createdAt: data.created_at,
-          updatedAt: data.updated_at,
-          lastExportedAt: data.last_exported_at,
-        };
-
+        const project = await projectsApi.createProject(userId, name, clientName);
+        if (!project) return null;
         const { projects } = get();
         set({ projects: [project, ...projects] });
         return project;
       },
 
       renameProject: async (projectId, name) => {
-        const { error } = await supabase
-          .from("projects")
-          .update({ name })
-          .eq("id", projectId);
-
-        if (error) {
-          console.error("Failed to rename project:", error.message);
-          return;
-        }
-
+        const ok = await projectsApi.renameProject(projectId, name);
+        if (!ok) return;
         const { projects } = get();
         set({
           projects: projects.map((p) =>
@@ -348,20 +297,11 @@ export const useProjectStore = create<ProjectState>()(
       },
 
       deleteProject: async (projectId) => {
-        const { error } = await supabase
-          .from("projects")
-          .delete()
-          .eq("id", projectId);
-
-        if (error) {
-          console.error("Failed to delete project:", error.message);
-          return;
-        }
-
+        const ok = await projectsApi.deleteProject(projectId);
+        if (!ok) return;
         const { projects, activeProjectId, remoteConfigurations } = get();
         const updated = { ...remoteConfigurations };
         delete updated[projectId];
-
         set({
           projects: projects.filter((p) => p.id !== projectId),
           remoteConfigurations: updated,
@@ -370,81 +310,11 @@ export const useProjectStore = create<ProjectState>()(
       },
 
       fetchConfigurations: async (projectId) => {
-        const { data, error } = await supabase
-          .from("saved_configurations")
-          .select("*")
-          .eq("project_id", projectId)
-          .order("saved_at", { ascending: true });
-
-        if (error) {
-          console.error("Failed to fetch configurations:", error.message);
-          return;
-        }
-
-        const configs: SavedConfiguration[] = (data ?? []).map((row) => ({
-          id: row.id,
-          modelId: row.model_id as ModelId,
-          productCode: row.product_code,
-          configuration: row.configuration as Configuration,
-          customText: row.custom_text as CustomTextData | undefined,
-          savedAt: new Date(row.saved_at).getTime(),
-          name: row.name ?? undefined,
-          qty: row.qty,
-          note: row.note,
-        }));
-
+        const configs = await configurationsApi.fetchConfigurations(projectId);
         const { remoteConfigurations } = get();
         set({
           remoteConfigurations: { ...remoteConfigurations, [projectId]: configs },
         });
-      },
-
-      checkDuplicateInProject: async (projectId, productCode) => {
-        const { data, error } = await supabase
-          .from("saved_configurations")
-          .select("id")
-          .eq("project_id", projectId)
-          .eq("product_code", productCode)
-          .limit(1);
-
-        if (error) {
-          console.error("Failed to check duplicate:", error.message);
-          return false;
-        }
-
-        return (data ?? []).length > 0;
-      },
-
-      fetchProjectsWithProduct: async (productCode) => {
-        const { data, error } = await supabase
-          .from("saved_configurations")
-          .select("id, project_id")
-          .eq("product_code", productCode);
-
-        if (error) {
-          console.error("Failed to fetch projects with product:", error.message);
-          return new Map<string, string>();
-        }
-
-        return new Map<string, string>(
-          (data ?? []).map((row) => [row.project_id as string, row.id as string])
-        );
-      },
-
-      checkProductInAnyProject: async (userId, productCode) => {
-        const { data, error } = await supabase
-          .from("saved_configurations")
-          .select("id")
-          .eq("user_id", userId)
-          .eq("product_code", productCode)
-          .limit(1);
-
-        if (error) {
-          console.error("Failed to check product in any project:", error.message);
-          return false;
-        }
-
-        return (data ?? []).length > 0;
       },
 
       addRemoteConfiguration: async (userId, projectId, modelId, config, customText, model, name) => {
@@ -452,38 +322,17 @@ export const useProjectStore = create<ProjectState>()(
 
         const productModel = buildProductModel(config, model);
 
-        const { data, error } = await supabase
-          .from("saved_configurations")
-          .insert({
-            project_id: projectId,
-            user_id: userId,
-            model_id: modelId,
-            product_code: productModel.fullCode,
-            configuration: config,
-            custom_text: customText ?? null,
-            qty: 1,
-            note: "",
-            name: name ?? null,
-          })
-          .select()
-          .single();
+        const saved = await configurationsApi.addConfiguration({
+          userId,
+          projectId,
+          modelId,
+          productCode: productModel.fullCode,
+          config,
+          customText,
+          name,
+        });
 
-        if (error || !data) {
-          console.error("Failed to add configuration:", error?.message);
-          return null;
-        }
-
-        const saved: SavedConfiguration = {
-          id: data.id,
-          modelId: data.model_id as ModelId,
-          productCode: data.product_code,
-          configuration: data.configuration as Configuration,
-          customText: data.custom_text as CustomTextData | undefined,
-          savedAt: new Date(data.saved_at).getTime(),
-          name: data.name ?? undefined,
-          qty: data.qty,
-          note: data.note,
-        };
+        if (!saved) return null;
 
         const { remoteConfigurations } = get();
         const existing = remoteConfigurations[projectId] ?? [];
@@ -498,16 +347,8 @@ export const useProjectStore = create<ProjectState>()(
       },
 
       removeRemoteConfiguration: async (id, projectId) => {
-        const { error } = await supabase
-          .from("saved_configurations")
-          .delete()
-          .eq("id", id);
-
-        if (error) {
-          console.error("Failed to remove configuration:", error.message);
-          return;
-        }
-
+        const ok = await configurationsApi.removeConfiguration(id);
+        if (!ok) return;
         const { remoteConfigurations } = get();
         const existing = remoteConfigurations[projectId] ?? [];
         set({
@@ -520,16 +361,8 @@ export const useProjectStore = create<ProjectState>()(
 
       updateRemoteConfigurationQty: async (id, projectId, qty) => {
         const clamped = Math.max(1, Math.floor(qty));
-        const { error } = await supabase
-          .from("saved_configurations")
-          .update({ qty: clamped })
-          .eq("id", id);
-
-        if (error) {
-          console.error("Failed to update qty:", error.message);
-          return;
-        }
-
+        const ok = await configurationsApi.updateConfigurationQty(id, clamped);
+        if (!ok) return;
         const { remoteConfigurations } = get();
         const existing = remoteConfigurations[projectId] ?? [];
         set({
@@ -541,16 +374,8 @@ export const useProjectStore = create<ProjectState>()(
       },
 
       updateRemoteConfigurationNote: async (id, projectId, note) => {
-        const { error } = await supabase
-          .from("saved_configurations")
-          .update({ note })
-          .eq("id", id);
-
-        if (error) {
-          console.error("Failed to update note:", error.message);
-          return;
-        }
-
+        const ok = await configurationsApi.updateConfigurationNote(id, note);
+        if (!ok) return;
         const { remoteConfigurations } = get();
         const existing = remoteConfigurations[projectId] ?? [];
         set({
@@ -564,11 +389,9 @@ export const useProjectStore = create<ProjectState>()(
       clearRemoteConfigurations: async (projectId) => {
         const { remoteConfigurations } = get();
         const existing = remoteConfigurations[projectId] ?? [];
-
-        for (const config of existing) {
-          await supabase.from("saved_configurations").delete().eq("id", config.id);
-        }
-
+        const ids = existing.map((c) => c.id);
+        const ok = await configurationsApi.clearConfigurations(ids);
+        if (!ok) return;
         set({
           remoteConfigurations: {
             ...remoteConfigurations,
@@ -578,22 +401,8 @@ export const useProjectStore = create<ProjectState>()(
       },
 
       updateProjectMeta: async (projectId, meta) => {
-        const updatePayload: Record<string, unknown> = {};
-        if (meta.name !== undefined) updatePayload.name = meta.name;
-        if (meta.clientName !== undefined) updatePayload.client_name = meta.clientName;
-        if (meta.date !== undefined) updatePayload.date = meta.date;
-        if (meta.lastExportedAt !== undefined) updatePayload.last_exported_at = meta.lastExportedAt;
-
-        const { error } = await supabase
-          .from("projects")
-          .update(updatePayload)
-          .eq("id", projectId);
-
-        if (error) {
-          console.error("Failed to update project meta:", error.message);
-          return;
-        }
-
+        const ok = await projectsApi.updateProjectMeta(projectId, meta);
+        if (!ok) return;
         const { projects } = get();
         set({
           projects: projects.map((p) =>
@@ -611,6 +420,18 @@ export const useProjectStore = create<ProjectState>()(
         });
       },
 
+      checkDuplicateInProject: async (projectId, productCode) => {
+        return configurationsApi.checkDuplicateInProject(projectId, productCode);
+      },
+
+      fetchProjectsWithProduct: async (productCode) => {
+        return configurationsApi.fetchProjectsWithProduct(productCode);
+      },
+
+      checkProductInAnyProject: async (userId, productCode) => {
+        return configurationsApi.checkProductInAnyProject(userId, productCode);
+      },
+
       mergeGuestToRemote: async (userId) => {
         const { guestConfigurations, guestProjectMeta } = get();
         if (guestConfigurations.length === 0) return null;
@@ -624,16 +445,14 @@ export const useProjectStore = create<ProjectState>()(
         if (!project) return null;
 
         for (const item of guestConfigurations) {
-          await supabase.from("saved_configurations").insert({
-            project_id: project.id,
-            user_id: userId,
-            model_id: item.modelId,
-            product_code: item.productCode,
-            configuration: item.configuration,
-            custom_text: item.customText ?? null,
-            qty: item.qty,
-            note: item.note,
-            name: item.name ?? null,
+          await configurationsApi.addConfiguration({
+            userId,
+            projectId: project.id,
+            modelId: item.modelId,
+            productCode: item.productCode,
+            config: item.configuration,
+            customText: item.customText ?? null,
+            name: item.name,
           });
         }
 

@@ -1,7 +1,6 @@
 import { create } from "zustand";
-import { supabase } from "../services/supabaseClient";
-import type { AuthUser, AuthStatus, AuthProvider } from "../types";
-import type { User as SupabaseUser } from "@supabase/supabase-js";
+import type { AuthUser, AuthStatus } from "../types";
+import * as authApi from "../services/supabase/authApi";
 
 interface AuthState {
   user: AuthUser | null;
@@ -15,98 +14,49 @@ interface AuthState {
   signOut: () => Promise<void>;
 }
 
-function mapSupabaseUser(user: SupabaseUser): AuthUser {
-  const rawProvider = user.app_metadata?.provider ?? "email";
-  const provider: AuthProvider = rawProvider === "google" ? "google" : "email";
-
-  return {
-    id: user.id,
-    email: user.email ?? "",
-    provider,
-  };
-}
-
 export const useAuthStore = create<AuthState>()((set) => ({
   user: null,
   status: "idle",
 
   initialize: () => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) {
-        set({ user: mapSupabaseUser(session.user), status: "authenticated" });
-      } else {
-        set({ user: null, status: "unauthenticated" });
-      }
-    });
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        if (session?.user) {
-          set({ user: mapSupabaseUser(session.user), status: "authenticated" });
-        } else {
-          set({ user: null, status: "unauthenticated" });
-        }
-      }
+    return authApi.subscribeToAuthChanges(
+      (user) => set({ user, status: "authenticated" }),
+      () => set({ user: null, status: "unauthenticated" }),
     );
-
-    return () => {
-      subscription.unsubscribe();
-    };
   },
 
   signInWithEmail: async (email, password) => {
     set({ status: "loading" });
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) {
+    const result = await authApi.signInWithEmail(email, password);
+    if (result.error) {
       set({ status: "unauthenticated" });
-      return { error: error.message };
     }
-    return { error: null };
+    return result;
   },
 
   signUpWithEmail: async (email, password) => {
     set({ status: "loading" });
-    const { error } = await supabase.auth.signUp({ email, password });
-    if (error) {
+    const result = await authApi.signUpWithEmail(email, password);
+    if (result.error) {
       set({ status: "unauthenticated" });
-      return { error: error.message };
     }
-    return { error: null };
+    return result;
   },
 
   signInWithGoogle: async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: `${window.location.origin}/`,
-      },
-    });
-    if (error) {
-      return { error: error.message };
-    }
-    return { error: null };
+    return authApi.signInWithGoogle();
   },
 
   resetPassword: async (email) => {
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/update-password`,
-    });
-    if (error) {
-      return { error: error.message };
-    }
-    return { error: null };
+    return authApi.resetPassword(email);
   },
 
   updatePassword: async (newPassword) => {
-    const { error } = await supabase.auth.updateUser({ password: newPassword });
-    if (error) {
-      return { error: error.message };
-    }
-    return { error: null };
+    return authApi.updatePassword(newPassword);
   },
 
   signOut: async () => {
-    await supabase.auth.signOut();
+    await authApi.signOut();
     set({ user: null, status: "unauthenticated" });
   },
 }));

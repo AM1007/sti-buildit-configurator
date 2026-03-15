@@ -5,7 +5,7 @@ import {
 } from "lucide-react";
 import { useProjectStore } from "../stores/projectStore";
 import { useAuthStore } from "../stores/authStore";
-import { useMyList, useProjectMeta } from "../stores/configurationStore";
+import { useMyList, useProjectMeta } from "../hooks/useProjectSelectors";
 import { SpecificationTable } from "../components/SpecificationTable";
 import { SpecificationMobileList } from "../components/SpecificationMobileItem";
 import { DetailDrawer } from "../components/DetailDrawer";

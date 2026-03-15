@@ -1,10 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { Info, Plus } from "lucide-react";
-import {
-  useMyList,
-  useProjectMeta,
-} from "../stores/configurationStore";
+import { useMyList, useProjectMeta } from "../hooks/useProjectSelectors";
 import { useProjectStore } from "../stores/projectStore";
 import { SpecificationTable } from "../components/SpecificationTable";
 import { SpecificationMobileList } from "../components/SpecificationMobileItem";

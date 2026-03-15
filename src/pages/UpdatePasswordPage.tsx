@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Lock, Eye, EyeOff, AlertCircle, CheckCircle } from "lucide-react";
-import { supabase } from "../services/supabaseClient";
+import { subscribeToAuthEvent } from "../services/supabase/authApi";
 import { useAuthStore } from "../stores/authStore";
 import { useTranslation } from "../i18n";
 import { mapAuthError } from "../utils/mapAuthError";
@@ -24,11 +24,9 @@ export function UpdatePasswordPage() {
   const [isDone, setIsDone] = useState(false);
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-      if (event === "PASSWORD_RECOVERY") {
-        setIsRecoverySession(true);
-        setIsCheckingSession(false);
-      }
+    const unsubscribe = subscribeToAuthEvent("PASSWORD_RECOVERY", () => {
+      setIsRecoverySession(true);
+      setIsCheckingSession(false);
     });
 
     const timer = setTimeout(() => {
@@ -36,7 +34,7 @@ export function UpdatePasswordPage() {
     }, 2000);
 
     return () => {
-      subscription.unsubscribe();
+      unsubscribe();
       clearTimeout(timer);
     };
   }, []);
