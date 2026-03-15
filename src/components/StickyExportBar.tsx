@@ -40,9 +40,13 @@ export function StickyExportBar() {
   const totalUnits = myList.reduce((sum, item) => sum + item.qty, 0);
 
   const handleClearAll = () => {
-    toast.confirm(t("myList.clearListConfirm"), () => {
-      clearConfigurations();
-    });
+    toast.confirm(
+      t("myList.clearListConfirm"),
+      () => {
+        clearConfigurations();
+      },
+      { confirm: t("common.confirm"), cancel: t("common.cancel") }
+    );
   };
 
   const handleCopyUrl = async () => {
@@ -154,7 +158,7 @@ export function StickyExportBar() {
               <div className="flex items-center gap-2">
                 <ExternalLink className="h-4 w-4 text-slate-500" />
                 <h2 className="text-sm font-semibold text-slate-900">
-                  {lang === "uk" ? "Відкрийте в браузері" : "Open in browser"}
+                  {t("stickyBar.openInBrowser")}
                 </h2>
               </div>
               <button
@@ -169,9 +173,7 @@ export function StickyExportBar() {
 
             <div className="px-5 py-5 flex flex-col gap-3">
               <p className="text-xs text-slate-600 leading-relaxed">
-                {lang === "uk"
-                  ? "Завантаження файлів не підтримується у вбудованому браузері. Скопіюйте посилання нижче та відкрийте його в Safari або Chrome — файл завантажиться автоматично."
-                  : "File downloads are not supported in the in-app browser. Copy the link below and open it in Safari or Chrome — the file will download automatically."}
+                {t("stickyBar.webViewDescription")}
               </p>
 
               <button
@@ -191,7 +193,7 @@ export function StickyExportBar() {
 
               {isCopied && (
                 <p className="text-[11px] text-green-600 font-medium">
-                  {lang === "uk" ? "Скопійовано" : "Copied"}
+                  {t("toast.copiedToClipboard")}
                 </p>
               )}
             </div>
@@ -212,12 +214,12 @@ export function StickyExportBar() {
                 {isCopied ? (
                   <>
                     <Check className="h-3 w-3" />
-                    {lang === "uk" ? "Скопійовано" : "Copied"}
+                    {t("toast.copiedToClipboard")}
                   </>
                 ) : (
                   <>
                     <Copy className="h-3 w-3" />
-                    {lang === "uk" ? "Копіювати посилання" : "Copy link"}
+                    {t("stickyBar.copyLink")}
                   </>
                 )}
               </button>

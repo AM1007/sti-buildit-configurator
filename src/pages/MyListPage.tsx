@@ -21,6 +21,7 @@ function useMyListFromUrl() {
   const [searchParams, setSearchParams] = useSearchParams();
   const hasProcessed = useRef(false);
   const { lang } = useLanguage();
+  const { t } = useTranslation();
 
   const setGuestState = useProjectStore((s) => s.setGuestState);
   const setGuestProjectMeta = useProjectStore((s) => s.setGuestProjectMeta);
@@ -64,10 +65,10 @@ function useMyListFromUrl() {
           setGuestProjectMeta({ lastExportedAt: Date.now(), updatedAt: Date.now() });
         }
       } catch {
-        toast.error("Download failed. Try exporting manually.");
+        toast.error(t("toast.downloadError"));
       }
     }, 500);
-  }, [searchParams, setSearchParams, setGuestState, setGuestProjectMeta, lang]);
+  }, [searchParams, setSearchParams, setGuestState, setGuestProjectMeta, lang, t]);
 }
 
 export function MyListPage() {

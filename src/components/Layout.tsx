@@ -345,7 +345,8 @@ function Footer() {
               <path d={LINKEDIN_PATH} />
             </svg>
           </a>
-          <a
+          {/* TODO: Uncomment when the refferences will be ready */}
+          {/* <a
             href="#"
             className="text-slate-400 hover:text-white transition-colors"
             aria-label="Product catalogue"
@@ -358,7 +359,7 @@ function Footer() {
             aria-label="Installation guides"
           >
             <FileText className="h-5 w-5" />
-          </a>
+          </a> */}
         </div>
 
         <div className="mt-6 text-center">

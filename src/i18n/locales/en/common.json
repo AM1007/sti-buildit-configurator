@@ -196,7 +196,10 @@
     "lastExported": "Last export: {date}"
   },
   "stickyBar": {
-    "totalUnits": "Total quantity: {count}"
+    "totalUnits": "Total quantity: {count}",
+    "openInBrowser": "Open in browser",
+    "webViewDescription": "File downloads are not supported in the in-app browser. Copy the link below and open it in Safari or Chrome — the file will download automatically.",
+    "copyLink": "Copy link"
   },
   "share": {
     "menuTitle": "Share",
@@ -227,7 +230,9 @@
     "removedFromMyList": "Removed from list",
     "configurationReset": "Configuration reset",
     "copiedToClipboard": "Copied",
-    "errorOccurred": "Error occurred"
+    "errorOccurred": "Error occurred",
+    "copyManually": "Copy manually:",
+    "downloadError": "Download failed. Try exporting manually."
   },
   "notFound": {
     "title": "Page Not Found",

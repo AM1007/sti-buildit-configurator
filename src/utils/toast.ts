@@ -29,9 +29,9 @@ export const toast = {
     });
   },
 
-  copyFallback(text: string): void {
+  copyFallback(text: string, title?: string): void {
     iziToast.info({
-      title: "Copy manually:",
+      title: title ?? "Copy manually:",
       message: `<input type="text" value="${text}" readonly style="width:100%;padding:4px;margin-top:8px;font-family:monospace;" onclick="this.select()" />`,
       position: DEFAULT_POSITION,
       timeout: false,

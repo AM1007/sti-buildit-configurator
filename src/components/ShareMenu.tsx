@@ -43,7 +43,7 @@ export function ShareMenu({
       await navigator.clipboard.writeText(text);
       toast.success(successMessage);
     } catch {
-      toast.copyFallback(text);
+      toast.copyFallback(text, t("toast.copyManually"));
     }
     onClose();
   };

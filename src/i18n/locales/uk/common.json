@@ -197,7 +197,10 @@
     "lastExported": "Останній експорт: {date}"
   },
   "stickyBar": {
-    "totalUnits": "Загальна кількість: {count}"
+    "totalUnits": "Загальна кількість: {count}",
+    "openInBrowser": "Відкрийте в браузері",
+    "webViewDescription": "Завантаження файлів не підтримується у вбудованому браузері. Скопіюйте посилання нижче та відкрийте його в Safari або Chrome — файл завантажиться автоматично.",
+    "copyLink": "Копіювати посилання"
   },
   "share": {
     "menuTitle": "Передача",
@@ -228,7 +231,9 @@
     "removedFromMyList": "Видалено зі списку",
     "configurationReset": "Конфігурацію скинуто",
     "copiedToClipboard": "Скопійовано",
-    "errorOccurred": "Сталася помилка"
+    "errorOccurred": "Сталася помилка",
+    "copyManually": "Скопіюйте вручну:",
+    "downloadError": "Помилка завантаження. Спробуйте експортувати вручну."
   },
   "notFound": {
     "title": "Сторінку не знайдено",
