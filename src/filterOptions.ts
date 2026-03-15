@@ -1,11 +1,11 @@
 import type { Option, Configuration, Step, ModelId, ModelDefinition } from "./types";
 import type { ModelConstraints } from "./rules/types";
 import { createConstraintEngine, getStepAvailability } from "./rules/constraintEngine";
-import { G3_MULTIPURPOSE_PUSH_BUTTON_CONSTRAINTS } from "./rules/G3multipurposepushbuttonrules";
+import { G3_MULTIPURPOSE_PUSH_BUTTON_CONSTRAINTS } from "./rules/g3multipurposepushbuttonrules";
 import {
   getValidOptionsForStep as getValidG3Options,
   type G3SelectionState,
-} from "./rules/G3multipurposepushbuttonrules";
+} from "./rules/g3multipurposepushbuttonrules";
 import { STOPPER_STATIONS_CONSTRAINTS } from "./rules/stopperStationsRules";
 import {
   getValidSSOptionsForStep as getValidSSOptions,
