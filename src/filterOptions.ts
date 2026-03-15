@@ -18,10 +18,6 @@ import { CALL_POINT_STOPPER_CONSTRAINTS, getValidCPSOptionsForStep } from "./rul
 import { ENVIRO_ARMOUR_CONSTRAINTS, getValidEAOptionsForStep } from "./rules/enviroArmourRules";
 import { EURO_STOPPER_CONSTRAINTS, getValidEUSOptionsForStep } from "./rules/euroStopperRules";
 
-// ============================================================================
-// Types
-// ============================================================================
-
 export interface OptionAvailabilityResult {
   available: boolean;
   reason?: string;
