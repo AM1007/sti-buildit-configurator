@@ -11,7 +11,7 @@ import {
   LogOut,
   ChevronDown,
 } from 'lucide-react'
-import { useMyListCount } from '../../hooks/useProjectSelectors'
+import { useMyListCount } from '@features/projects'
 import { useAuthStore, useIsAuthenticated, useUser } from '@features/auth/store/authStore'
 import { useTranslation, useLanguage } from '@shared/i18n'
 import type { Language } from '@shared/i18n'

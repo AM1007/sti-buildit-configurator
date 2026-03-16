@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { X, ExternalLink, Copy, Check } from 'lucide-react'
-import { useMyList, useProjectMeta } from '../../../hooks/useProjectSelectors'
+import { useMyList, useProjectMeta } from '@features/projects'
 import { useProjectStore } from '@features/projects/store/projectStore'
 import { useIsAuthenticated } from '@features/auth/store/authStore'
 import { useTranslation, useLanguage } from '@shared/i18n'

@@ -13,3 +13,13 @@ export * from './components/ProjectPicker'
 export * from './components/SpecificationMobileItem'
 export * from './components/SpecificationTable'
 export * from './components/StickyExportBar'
+
+export {
+  useMyList,
+  useMyListCount,
+  useProjectMeta,
+  useIsProductInMyList,
+  useIsProductInAnyProject,
+  useMyListItemIdByProductCode,
+  getActiveList,
+} from './hooks/useProjectSelectors'

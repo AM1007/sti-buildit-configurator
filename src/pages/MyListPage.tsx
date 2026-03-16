@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { Info, Plus } from 'lucide-react'
-import { useMyList, useProjectMeta } from '../hooks/useProjectSelectors'
+import { useMyList, useProjectMeta } from '@features/projects'
 import { useProjectStore } from '@features/projects/store/projectStore'
 import { SpecificationTable } from '@features/projects/components/SpecificationTable'
 import { SpecificationMobileList } from '@features/projects/components/SpecificationMobileItem'

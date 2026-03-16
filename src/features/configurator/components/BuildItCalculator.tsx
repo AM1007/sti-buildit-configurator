@@ -10,7 +10,7 @@ import {
   useIsProductInMyList,
   useIsProductInAnyProject,
   useMyListItemIdByProductCode,
-} from '../../../hooks/useProjectSelectors'
+} from '@features/projects'
 
 import { useIsAuthenticated } from '@features/auth/store/authStore'
 import { isConfigurationReadyForActions } from '@shared/utils/customTextHelpers'
