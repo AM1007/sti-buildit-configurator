@@ -114,10 +114,27 @@ export function parseWRPModelCode(code: string): WRPSelectionState | null {
 export function isValidWRPCombination(
   selections: WRPSelectionState,
 ): { valid: true } | { valid: false; reason: string } {
+  const { colour, label } = selections
   const modelCode = buildWRPModelCode(selections)
 
   // Incomplete selection — allow user to continue picking
   if (!modelCode) return { valid: true }
+
+  // Explicit label↔colour check (label has no SKU suffix, allowlist cannot catch this)
+  if (colour && label) {
+    if (label === 'HF' && colour !== 'R') {
+      return { valid: false, reason: `HF label is only available for Red (R) colour.` }
+    }
+    if (label === 'RM' && colour !== 'G') {
+      return { valid: false, reason: `RM label is only available for Green (G) colour.` }
+    }
+    if (label === 'SAK' && (colour === 'R' || colour === 'G')) {
+      return {
+        valid: false,
+        reason: `SAK label is not available for Red or Green colour.`,
+      }
+    }
+  }
 
   if (VALID_MODEL_SET.has(modelCode)) return { valid: true }
 

@@ -110,7 +110,7 @@ export function buildKSModelCode(selections: KSSelectionState): string | null {
 export function parseKSModelCode(code: string): KSSelectionState | null {
   // SS3-{cm:2}{st:1}{ea:1}       → 8 chars
   // SS3-{cm:2}{st:1}{ea:1}-CL    → 11 chars
-  const match = code.match(/^SS3-([0-9A-Z]{2})(\d)(\d)(-CL)?$/)
+  const match = code.match(/^SS3-(10|30|50|70|90|E0)(\d)(\d)(-CL)?$/)
 
   if (!match) {
     return null
@@ -192,20 +192,37 @@ export function getValidKSOptionsForStep(
 // ============================================================================
 
 // --- colourMounting → switchType ---
+// LEGACY
+// const COLOURMOUNTING_TO_SWITCHTYPE: ConstraintMatrix = {
+//   '10': ['2', '3', '4', '5'],
+//   '30': ['2', '3', '4'],
+//   '50': ['2', '3', '4', '5'],
+//   '70': ['2', '3', '4', '5'],
+//   '90': ['2', '3', '4'],
+//   E0: ['2', '3', '5'],
+// }
 const COLOURMOUNTING_TO_SWITCHTYPE: ConstraintMatrix = {
   '10': ['2', '3', '4', '5'],
-  '30': ['2', '3', '4'],
+  '30': ['2', '3'],
   '50': ['2', '3', '4', '5'],
   '70': ['2', '3', '4', '5'],
-  '90': ['2', '3', '4'],
+  '90': ['2', '3'],
   E0: ['2', '3', '5'],
 }
 
 // --- switchType → colourMounting ---
+// LEGACY
+// const SWITCHTYPE_TO_COLOURMOUNTING: ConstraintMatrix = {
+//   '2': ['10', '30', '50', '70', '90', 'E0'],
+//   '3': ['10', '30', '50', '70', '90', 'E0'],
+//   '4': ['10', '30', '50', '70', '90'],
+//   '5': ['10', '50', '70', 'E0'],
+// }
+
 const SWITCHTYPE_TO_COLOURMOUNTING: ConstraintMatrix = {
   '2': ['10', '30', '50', '70', '90', 'E0'],
   '3': ['10', '30', '50', '70', '90', 'E0'],
-  '4': ['10', '30', '50', '70', '90'],
+  '4': ['10', '50', '70'],
   '5': ['10', '50', '70', 'E0'],
 }
 
