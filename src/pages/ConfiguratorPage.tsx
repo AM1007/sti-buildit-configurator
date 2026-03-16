@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
 import { useParams, useSearchParams, Navigate } from 'react-router-dom'
 import { getProductBySlug } from '@entities/product/registry'
-import { isConfigurationComplete } from '@features/configurator/lib/filterOptions'
+import { isConfigurationComplete } from '@entities/product/buildProductModel'
 import { BuildItCalculator } from '@features/configurator/components/BuildItCalculator'
 import { ConfiguratorHero } from '@shared/ui/ConfiguratorHero'
 import { getHeroContent } from '../shared/utils/heroContent'
 import { useConfigurationStore } from '@features/configurator/store/configurationStore'
 import { useProjectStore } from '@features/projects/store/projectStore'
-import { useIsAuthenticated } from '@features/auth/store/authStore'
+import { useIsAuthenticated, useUser } from '@features/auth/store/authStore'
 import { ProjectPicker } from '@features/projects/components/ProjectPicker'
 import { InDevelopmentPage } from './InDevelopmentPage'
 import { parseConfigFromUrl, serializeConfig } from '@shared/utils/configSerializer'
@@ -36,6 +36,7 @@ function ConfiguratorPageInner({ model, productName }: ConfiguratorPageInnerProp
   const removeConfiguration = useProjectStore((s) => s.removeConfiguration)
 
   const isAuthenticated = useIsAuthenticated()
+  const user = useUser()
   const [showProjectPicker, setShowProjectPicker] = useState(false)
   const [projectRefreshToken, setProjectRefreshToken] = useState(0)
 
@@ -88,7 +89,7 @@ function ConfiguratorPageInner({ model, productName }: ConfiguratorPageInnerProp
       setShowProjectPicker(true)
     } else {
       setModel(model.id)
-      addConfiguration(model.id, config, customText, model)
+      addConfiguration(model.id, config, customText, model, user?.id)
     }
   }
 

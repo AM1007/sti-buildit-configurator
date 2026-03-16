@@ -123,3 +123,41 @@ export function identifyModel(modelCode: string): string | null {
 
   return null
 }
+
+export function isConfigurationComplete(
+  model: ModelDefinition,
+  config: Configuration,
+): boolean {
+  for (const stepId of model.stepOrder) {
+    const step = model.steps.find((s) => s.id === stepId)
+    if (!step?.required) continue
+    if (!config[stepId]) return false
+  }
+  return true
+}
+
+export function getMissingRequiredSteps(
+  model: ModelDefinition,
+  config: Configuration,
+): string[] {
+  const missing: string[] = []
+  for (const stepId of model.stepOrder) {
+    const step = model.steps.find((s) => s.id === stepId)
+    if (!step?.required) continue
+    if (!config[stepId]) missing.push(stepId)
+  }
+  return missing
+}
+
+export function getCompletionPercentage(
+  model: ModelDefinition,
+  config: Configuration,
+): number {
+  const required = model.stepOrder.filter((id) => {
+    const step = model.steps.find((s) => s.id === id)
+    return step?.required
+  })
+  if (required.length === 0) return 100
+  const completed = required.filter((id) => config[id] != null).length
+  return Math.round((completed / required.length) * 100)
+}

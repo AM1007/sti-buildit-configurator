@@ -10,12 +10,11 @@ import type {
   ModelDefinition,
 } from '@shared/types'
 import { generateSavedConfigurationId, GUEST_PROJECT_ID } from '@shared/types'
-import { isConfigurationComplete } from '@features/configurator/lib/filterOptions'
+import { isConfigurationComplete } from '@entities/product/buildProductModel'
 import { buildProductModel } from '@entities/product/buildProductModel'
 import { buildCustomTextFingerprint } from '@shared/utils/customTextHelpers'
 import * as projectsApi from '@shared/api/projectsApi'
 import * as configurationsApi from '@shared/api/configurationsApi'
-import { useAuthStore } from '@features/auth/store/authStore'
 
 function getTodayISO(): string {
   const now = new Date()
@@ -62,7 +61,7 @@ interface ProjectState {
     config: Configuration,
     customText: CustomTextData | null,
     model: ModelDefinition,
-    projectId?: string,
+    userId?: string,
     name?: string,
   ) => void
   removeConfiguration: (id: string) => void
@@ -162,16 +161,15 @@ export const useProjectStore = create<ProjectState>()(
         return get().getActiveConfigurations().length
       },
 
-      addConfiguration: (modelId, config, customText, model, _projectId, name) => {
+      addConfiguration: (modelId, config, customText, model, userId, name) => {
         if (!isConfigurationComplete(model, config)) return
 
         const { activeProjectId } = get()
 
         if (activeProjectId !== GUEST_PROJECT_ID) {
-          const user = useAuthStore.getState().user
-          if (user) {
+          if (userId) {
             get().addRemoteConfiguration(
-              user.id,
+              userId,
               activeProjectId,
               modelId,
               config,
