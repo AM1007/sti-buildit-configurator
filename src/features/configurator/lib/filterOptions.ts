@@ -8,7 +8,7 @@ import {
 import {
   G3_MULTIPURPOSE_PUSH_BUTTON_CONSTRAINTS,
   getValidOptionsForStep as getValidG3Options,
-} from '@entities/product/rules/g3multipurposepushbuttonrules'
+} from '@entities/product/rules/g3MultipurposePushButtonRules'
 import {
   STOPPER_STATIONS_CONSTRAINTS,
   getValidSSOptionsForStep,

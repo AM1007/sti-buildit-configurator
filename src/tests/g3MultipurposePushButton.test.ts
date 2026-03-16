@@ -6,7 +6,7 @@ import {
   getValidOptionsForStep,
   VALID_MODEL_CODES,
   G3_MULTIPURPOSE_PUSH_BUTTON_CONSTRAINTS,
-} from '@entities/product/rules/g3multipurposepushbuttonrules'
+} from '@entities/product/rules/g3MultipurposePushButtonRules'
 import { g3MultipurposePushButtonModel } from '@entities/product/models/g3MultipurposePushButton'
 import { buildProductModel } from '@entities/product/buildProductModel'
 import {
