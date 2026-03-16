@@ -1,17 +1,17 @@
-import { useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, ChevronDown } from "lucide-react";
-import { getAllProducts } from "../data/productRegistry";
-import { ConfiguratorCard } from "../components/ConfiguratorCard";
-import { PrimaryNavigation } from "../components/PrimaryNavigation";
-import { ResultCounter, EmptyState } from "../components/FilterResults";
-import { useFilterState } from "../hooks/useFilterState";
-import { useTranslation } from "../i18n";
+import { useRef } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { ArrowRight, ChevronDown } from 'lucide-react'
+import { getAllProducts } from '../entities/product/registry'
+import { ConfiguratorCard } from '../shared/ui/ConfiguratorCard'
+import { PrimaryNavigation } from '../shared/ui/PrimaryNavigation'
+import { ResultCounter, EmptyState } from '@features/projects/components/FilterResults'
+import { useFilterState } from '@features/projects/hooks/useFilterState'
+import { useTranslation } from '@shared/i18n'
 
 export function HomePage() {
-  const { t } = useTranslation();
-  const catalogRef = useRef<HTMLElement>(null);
-  const heroEndRef = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation()
+  const catalogRef = useRef<HTMLElement>(null)
+  const heroEndRef = useRef<HTMLDivElement>(null)
   const {
     state,
     displayed,
@@ -24,11 +24,11 @@ export function HomePage() {
     setViewMode,
     loadMore,
     togglePagination,
-  } = useFilterState(getAllProducts().map((p) => p.meta));
+  } = useFilterState(getAllProducts().map((p) => p.meta))
 
   const scrollToCatalog = () => {
-    heroEndRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
+    heroEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -37,15 +37,15 @@ export function HomePage() {
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
             className="flex flex-col justify-center px-4 py-10 md:px-6 md:py-16 xl:px-8 xl:py-24"
           >
             <h1 className="mb-4 text-3xl font-semibold tracking-tight text-slate-900 md:text-4xl xl:text-5xl">
-              {t("home.heroTitle")}
+              {t('home.heroTitle')}
             </h1>
 
             <p className="mb-8 max-w-md text-[15px] text-slate-600 md:text-lg md:text-slate-500">
-              {t("home.heroDescription")}
+              {t('home.heroDescription')}
             </p>
 
             <div>
@@ -54,7 +54,7 @@ export function HomePage() {
                 onClick={scrollToCatalog}
                 className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-sm bg-brand-600 px-6 text-[15px] font-medium text-white transition-colors hover:bg-brand-700 md:h-10 md:w-auto md:text-sm"
               >
-                {t("hero.startConfig")}
+                {t('hero.startConfig')}
                 <ArrowRight className="h-4 w-4" />
               </button>
             </div>
@@ -63,7 +63,7 @@ export function HomePage() {
           <motion.div
             initial={{ opacity: 0, x: 40 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.15, ease: "easeOut" }}
+            transition={{ duration: 0.6, delay: 0.15, ease: 'easeOut' }}
             className="relative hidden min-h-[300px] items-center justify-center overflow-hidden border-l border-slate-200 bg-white tech-grid md:flex"
           >
             <div className="relative flex h-80 w-72 flex-col border border-slate-300 bg-white/50 p-4 shadow-sm backdrop-blur-sm xl:h-96 xl:w-96">
@@ -134,7 +134,7 @@ export function HomePage() {
 
           {filtered.length > 0 ? (
             <>
-              {viewMode === "grid" ? (
+              {viewMode === 'grid' ? (
                 <div className="grid grid-cols-1 gap-px border border-slate-200 bg-slate-200 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
                   <AnimatePresence mode="popLayout">
                     {displayed.map((config, i) => (
@@ -169,7 +169,7 @@ export function HomePage() {
                     onClick={loadMore}
                     className="flex items-center gap-2 rounded-sm border border-slate-200 bg-white px-6 py-2.5 text-[13px] font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:border-slate-300 cursor-pointer md:py-2 md:text-xs"
                   >
-                    {t("grid.loadMore")}
+                    {t('grid.loadMore')}
                     <ChevronDown className="h-3.5 w-3.5 md:h-3 md:w-3" />
                   </button>
                 </div>
@@ -181,5 +181,5 @@ export function HomePage() {
         </div>
       </section>
     </div>
-  );
+  )
 }

@@ -1,0 +1,40 @@
+{
+  "meta": {
+    "name": "Waterproof ReSet Call Point",
+    "description": "IP67 resettable manual call point",
+    "series": "ReSet Series",
+    "badges": ["IP67 Rated", "Resettable", "EN54-11"],
+    "heroTitle": "IP67 Resettable Manual Call Point, EN54-11",
+    "heroDescription": "IP67-rated resettable manual call point with break-glass simulation element. Visible activation indicator and key-operated reset mechanism for immediate reinstatement.\n\nAvailable in multiple colour options with three electrical configurations, including EN54-11 certified fire model.\n\nIntended for outdoor fire alarm installations requiring sealed enclosure and compliance with EN54-11."
+  },
+  "steps": {
+    "colour": {
+      "title": "COLOUR",
+      "options": {
+        "R": "#R Red",
+        "G": "#G Green",
+        "Y": "#Y Yellow",
+        "W": "#W White",
+        "B": "#B Blue",
+        "O": "#O Orange"
+      }
+    },
+    "label": {
+      "title": "MARKING",
+      "options": {
+        "HOUSE_FLAME": "#HF House Flame symbol",
+        "RUNNING_MAN": "#RM Running Man symbol",
+        "SELF_ASSEMBLE": "#SAK Self-adhesive label kit",
+        "CL": "#CL Custom marking (NON-RETURNABLE)"
+      }
+    },
+    "electricalArrangement": {
+      "title": "ELECTRICAL CONFIGURATION",
+      "options": {
+        "01": "#01 Standard fire model (EN54-11 certified)",
+        "02": "#02 Single-pole switching",
+        "11": "#11 Double-pole switching"
+      }
+    }
+  }
+}

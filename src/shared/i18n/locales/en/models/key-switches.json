@@ -1,0 +1,48 @@
+{
+  "meta": {
+    "name": "Key Switches",
+    "description": "Key-operated switches for access control and system reset",
+    "series": "StopperSwitch Series",
+    "badges": ["Key Operated", "Dual Mount", "Indoor Use Only"],
+    "heroTitle": "Key-Operated Switches for Access Control and Signalling",
+    "heroDescription": "Low and high voltage key-operated switches available in multiple switch types and electrical configurations, including single-pole, double-pole and three-position arrangements. Optional protective cover and pre-alarm indication available.\n\nDual mounting system for flush or surface installation. Supplied with 35 mm back box.\n\nIntended for indoor access control, system reset and controlled switching applications.\n\nNot suitable for outdoor use. Not compatible with Enviro Stopper."
+  },
+  "steps": {
+    "colourMounting": {
+      "title": "COLOUR AND MOUNTING",
+      "options": {
+        "10": "#10 Red (Dual Mount)",
+        "30": "#30 Green (Dual Mount)",
+        "50": "#50 Yellow (Dual Mount)",
+        "70": "#70 White (Dual Mount)",
+        "90": "#90 Blue (Dual Mount)",
+        "E0": "#E0 Orange (Dual Mount)"
+      }
+    },
+    "switchType": {
+      "title": "SWITCH TYPE",
+      "options": {
+        "2": "#2 2 Position Key Switch Single Pole",
+        "3": "#3 2 Position Key Switch - Key Trapped in 'on' position",
+        "4": "#4 2 Position Key Switch Double Pole",
+        "5": "#5 3 Position Key Switch"
+      }
+    },
+    "electricalArrangement": {
+      "title": "ELECTRICAL CONFIGURATION",
+      "options": {
+        "0": "#0 Single-pole",
+        "1": "#1 Double-pole, normally open",
+        "2": "#2 Double-pole, normally closed",
+        "3": "#3 Three-position key switch"
+      }
+    },
+    "label": {
+      "title": "MARKING",
+      "options": {
+        "SAK": "#SAK Self-adhesive label kit",
+        "CL": "#CL Custom marking (NON-RETURNABLE)"
+      }
+    }
+  }
+}

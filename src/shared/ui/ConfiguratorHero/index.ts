@@ -1,0 +1,5 @@
+export { ConfiguratorHero } from './ConfiguratorHero'
+export { VideoModal } from './VideoModal'
+export { HeroGallery } from './HeroGallery'
+export { HeroContent } from './HeroContent'
+export type { ConfiguratorHeroData, HeroMediaItem } from './types'

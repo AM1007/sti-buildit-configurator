@@ -1,34 +1,34 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { Mail, AlertCircle, CheckCircle, ArrowLeft } from "lucide-react";
-import { useAuthStore } from "../stores/authStore";
-import { useTranslation } from "../i18n";
-import { mapAuthError } from "../utils/mapAuthError";
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import { Mail, AlertCircle, CheckCircle, ArrowLeft } from 'lucide-react'
+import { useAuthStore } from '@features/auth/store/authStore'
+import { useTranslation } from '@shared/i18n'
+import { mapAuthError } from '@shared/utils/mapAuthError'
 
 export function ResetPasswordPage() {
-  const { t } = useTranslation();
-  const resetPassword = useAuthStore((s) => s.resetPassword);
+  const { t } = useTranslation()
+  const resetPassword = useAuthStore((s) => s.resetPassword)
 
-  const [email, setEmail] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSent, setIsSent] = useState(false);
+  const [email, setEmail] = useState('')
+  const [error, setError] = useState<string | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSent, setIsSent] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    setIsSubmitting(true);
+    e.preventDefault()
+    setError(null)
+    setIsSubmitting(true)
 
-    const result = await resetPassword(email);
+    const result = await resetPassword(email)
 
     if (result.error) {
-      setError(mapAuthError(result.error, t));
-      setIsSubmitting(false);
+      setError(mapAuthError(result.error, t))
+      setIsSubmitting(false)
     } else {
-      setIsSent(true);
-      setIsSubmitting(false);
+      setIsSent(true)
+      setIsSubmitting(false)
     }
-  };
+  }
 
   return (
     <div className="w-full max-w-sm mx-auto px-4 py-12 md:py-20">
@@ -37,7 +37,7 @@ export function ResetPasswordPage() {
         className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors mb-8"
       >
         <ArrowLeft className="h-4 w-4" />
-        {t("auth.backToSignIn")}
+        {t('auth.backToSignIn')}
       </Link>
 
       {isSent ? (
@@ -47,28 +47,26 @@ export function ResetPasswordPage() {
               <CheckCircle className="h-5 w-5 text-green-600" />
             </div>
             <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
-              {t("auth.checkYourEmail")}
+              {t('auth.checkYourEmail')}
             </h1>
           </div>
           <p className="text-sm text-slate-500 mb-6">
-            {t("auth.resetEmailSent", { email })}
+            {t('auth.resetEmailSent', { email })}
           </p>
           <Link
             to="/login"
             className="inline-flex items-center justify-center w-full h-10 rounded-sm bg-slate-900 text-sm font-medium text-white hover:bg-slate-800 transition-colors"
           >
-            {t("auth.backToSignIn")}
+            {t('auth.backToSignIn')}
           </Link>
         </div>
       ) : (
         <div>
           <div className="mb-8">
             <h1 className="text-2xl font-semibold tracking-tight text-slate-900 mb-1">
-              {t("auth.resetPassword")}
+              {t('auth.resetPassword')}
             </h1>
-            <p className="text-sm text-slate-500">
-              {t("auth.resetPasswordDescription")}
-            </p>
+            <p className="text-sm text-slate-500">{t('auth.resetPasswordDescription')}</p>
           </div>
 
           {error && (
@@ -80,8 +78,11 @@ export function ResetPasswordPage() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="reset-email" className="block text-xs font-medium text-slate-700 mb-1.5">
-                {t("auth.email")}
+              <label
+                htmlFor="reset-email"
+                className="block text-xs font-medium text-slate-700 mb-1.5"
+              >
+                {t('auth.email')}
               </label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
@@ -103,11 +104,11 @@ export function ResetPasswordPage() {
               disabled={isSubmitting}
               className="w-full h-10 rounded-sm bg-slate-900 text-sm font-medium text-white hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isSubmitting ? t("common.loading") : t("auth.sendResetLink")}
+              {isSubmitting ? t('common.loading') : t('auth.sendResetLink')}
             </button>
           </form>
         </div>
       )}
     </div>
-  );
+  )
 }

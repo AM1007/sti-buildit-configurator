@@ -1,11 +1,11 @@
-import { Link, useParams } from "react-router-dom";
-import { getProductBySlug } from "../data/productRegistry";
-import { useTranslation } from "../i18n";
+import { Link, useParams } from 'react-router-dom'
+import { getProductBySlug } from '@entities/product/registry'
+import { useTranslation } from '@shared/i18n'
 
 export function InDevelopmentPage() {
-  const { t } = useTranslation();
-  const { slug } = useParams<{ slug: string }>();
-  const config = slug ? getProductBySlug(slug)?.meta : undefined;
+  const { t } = useTranslation()
+  const { slug } = useParams<{ slug: string }>()
+  const config = slug ? getProductBySlug(slug)?.meta : undefined
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4 md:px-6 xl:px-8">
@@ -29,23 +29,23 @@ export function InDevelopmentPage() {
           </div>
 
           <h1 className="text-xl md:text-2xl font-bold text-gray-800 mb-2">
-            {t("inDevelopment.title")}
+            {t('inDevelopment.title')}
           </h1>
 
           <p className="text-sm md:text-base text-gray-600 mb-8">
             {config
-              ? t("inDevelopment.descriptionWithName", { name: config.name })
-              : t("inDevelopment.description")}
+              ? t('inDevelopment.descriptionWithName', { name: config.name })
+              : t('inDevelopment.description')}
           </p>
 
           <Link
             to="/"
             className="cursor-pointer inline-flex items-center justify-center font-bold text-sm gap-1 px-4.5 py-0.5 min-h-9 border-4 md:gap-1.5 md:px-6 md:py-1 md:min-h-11 xl:text-base bg-brand-600 border-brand-600 text-white hover:bg-brand-700 hover:border-brand-700 transition-all duration-300"
           >
-            {t("notFound.backHome")}
+            {t('notFound.backHome')}
           </Link>
         </div>
       </div>
     </div>
-  );
+  )
 }

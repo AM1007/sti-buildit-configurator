@@ -1,0 +1,74 @@
+{
+  "meta": {
+    "name": "G3 Multipurpose Push Button",
+    "description": "Multipurpose signalling push button with optional IP camera module",
+    "series": "G3 Series",
+    "badges": ["UL Listed", "ADA Compliant"],
+    "heroTitle": "Multipurpose Signalling Push Button with Optional IP Camera",
+    "heroDescription": "UL Listed multipurpose push button with optional integrated IP camera for visual verification upon activation. Supports Key-to-Reset, Momentary and Turn-to-Reset operating modes.\n\nAvailable in multiple colour configurations with standard or custom marking, optional protective cover and camera module.\n\nIntended for security systems, access control, emergency signalling and industrial applications."
+  },
+  "steps": {
+    "model": {
+      "title": "MODEL",
+      "options": {
+        "A": "#A Without camera",
+        "C": "#C With camera (includes back box)"
+      }
+    },
+    "colour": {
+      "title": "COLOUR",
+      "options": {
+        "0": "#0 Red",
+        "1": "#1 Green",
+        "2": "#2 Yellow",
+        "3": "#3 White",
+        "4": "#4 Blue",
+        "5": "#5 Orange"
+      }
+    },
+    "buttonType": {
+      "title": "OPERATING MODE",
+      "options": {
+        "2": "#2 Key-to-Reset",
+        "5": "#5 Momentary",
+        "9": "#9 Turn-to-Reset"
+      }
+    },
+    "cover": {
+      "title": "PROTECTIVE COVER",
+      "options": {
+        "0": "#0 No cover",
+        "2": "#2 Protective shield"
+      }
+    },
+    "text": {
+      "title": "MARKING",
+      "options": {
+        "AB": "#AB ABORT",
+        "EM": "#EM EMERGENCY",
+        "ES": "#ES EMERGENCY STOP",
+        "EV": "#EV EVACUATION",
+        "EX": "#EX EMERGENCY EXIT",
+        "HV": "#HV HVAC SHUT-DOWN",
+        "LD": "#LD LOCKDOWN",
+        "NT": "#NT NO TEXT",
+        "PL": "#PL POLICE",
+        "PO": "#PO EMERGENCY POWER OFF",
+        "PS": "#PS FUEL PUMP SHUT-DOWN",
+        "PX": "#PX PUSH TO EXIT",
+        "RM": "#RM Running Man Symbol",
+        "XT": "#XT EXIT",
+        "ZA": "#ZA Custom text (NON-RETURNABLE)"
+      }
+    },
+    "language": {
+      "title": "LANGUAGE",
+      "options": {
+        "EN": "#EN English",
+        "ES": "#ES Spanish",
+        "FR": "#FR French",
+        "ZL": "#ZL Other language (NON-RETURNABLE)"
+      }
+    }
+  }
+}

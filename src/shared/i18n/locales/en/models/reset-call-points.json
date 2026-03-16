@@ -1,0 +1,49 @@
+{
+  "meta": {
+    "name": "ReSet Call Points",
+    "description": "Resettable manual call points for fire alarm systems",
+    "series": "ReSet Series",
+    "badges": ["Resettable", "Fire Safety", "Key-to-Reset"],
+    "heroTitle": "Resettable Manual Call Point with Break-Glass Simulation",
+    "heroDescription": "Resettable manual call point simulating break-glass activation without glass replacement. Visible activation indicator with key-operated reset for immediate reuse.\n\nAvailable in multiple colours with flush, surface or dual mounting configurations and four electrical arrangements, including standard fire and Sav-wire models.\n\nIntended for fire alarm systems requiring rapid reset and reduced maintenance."
+  },
+  "steps": {
+    "colour": {
+      "title": "COLOUR",
+      "options": {
+        "R": "#R Red",
+        "G": "#G Green",
+        "Y": "#Y Yellow",
+        "W": "#W White",
+        "B": "#B Blue",
+        "O": "#O Orange"
+      }
+    },
+    "mounting": {
+      "title": "MOUNTING TYPE",
+      "options": {
+        "D2": "#D2 Dual mount (plate and back box)",
+        "F2": "#F2 Flush mount (plate)",
+        "S2": "#S2 Surface mount (back box)"
+      }
+    },
+    "electricalArrangement": {
+      "title": "ELECTRICAL CONFIGURATION",
+      "options": {
+        "01": "#01 Standard fire model with 470/680 Ω resistor, Series 01",
+        "02": "#02 Single-pole switching, Series 02",
+        "05": "#05 Sav-wire (2-wire) with 470/680 Ω resistor and diode, Series 05",
+        "11": "#11 Double-pole switching, Series 11"
+      }
+    },
+    "label": {
+      "title": "MARKING",
+      "options": {
+        "HF": "#HF House Flame symbol",
+        "RM": "#RM Running Man symbol",
+        "SAK": "#SAK Self-adhesive label kit",
+        "CL": "#CL Custom marking (NON-RETURNABLE)"
+      }
+    }
+  }
+}

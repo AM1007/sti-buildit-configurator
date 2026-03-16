@@ -1,0 +1,48 @@
+{
+  "meta": {
+    "name": "Universal Stopper®",
+    "description": "Protective enclosure for push buttons and switches",
+    "series": "Universal Stopper Series",
+    "badges": ["IP54 Rated", "Indoor / Outdoor Use", "Optional Sounder"],
+    "heroTitle": "Dome Polycarbonate Protective Enclosure, IP54",
+    "heroDescription": "Dome polycarbonate enclosure for manual call points, emergency push buttons, control panels and electrical devices. IP54-rated configurations provide protection against impact, dust ingress and water splashes.\n\nAvailable with optional marked hood, sounder with relay and multiple colour and marking configurations. Supports flush, surface and coloured spacer mounting.\n\nIntended for indoor and outdoor installations requiring protection against unauthorised access or accidental activation."
+  },
+  "steps": {
+    "mounting": {
+      "title": "MOUNTING TYPE",
+      "options": {
+        "0": "#0 Flush mount, open back",
+        "1": "#1 Surface mount with transparent spacer (Dual Mount)",
+        "2": "#2 Surface mount with coloured spacer"
+      }
+    },
+    "hoodSounder": {
+      "title": "HOOD / SOUNDER OPTION",
+      "options": {
+        "00": "#00 Hood without marking",
+        "10": "#10 Marked hood, no sounder",
+        "20": "#20 Marked hood with sounder",
+        "30": "#30 Marked hood with sounder and relay"
+      }
+    },
+    "colourLabel": {
+      "title": "COLOUR AND MARKING",
+      "options": {
+        "FR": "#FR Red, 'FIRE ALARM'",
+        "NR": "#NR Red, no marking",
+        "CR": "#CR Red, custom marking (NON-RETURNABLE)",
+        "EG": "#EG Green, 'EMERGENCY EXIT'",
+        "NG": "#NG Green, no marking",
+        "CG": "#CG Green, custom marking (NON-RETURNABLE)",
+        "NC": "#NC Clear, no marking",
+        "CK": "#CK Black, custom marking (NON-RETURNABLE)",
+        "NB": "#NB Blue, no marking",
+        "CB": "#CB Blue, custom marking (NON-RETURNABLE)",
+        "NW": "#NW White, no marking",
+        "CW": "#CW White, custom marking (NON-RETURNABLE)",
+        "NY": "#NY Yellow, no marking",
+        "CY": "#CY Yellow, custom marking (NON-RETURNABLE)"
+      }
+    }
+  }
+}

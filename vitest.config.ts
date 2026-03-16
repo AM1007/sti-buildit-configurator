@@ -1,24 +1,24 @@
-import { defineConfig } from "vitest/config";
-import react from "@vitejs/plugin-react";
+import { defineConfig } from 'vitest/config'
+import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
   test: {
-    environment: "jsdom",
+    environment: 'jsdom',
     globals: true,
-    setupFiles: ["./src/tests/setup.ts"],
-    include: ["src/tests/**/*.test.ts", "src/tests/**/*.test.tsx"],
+    setupFiles: ['./src/tests/setup.ts'],
+    include: ['src/tests/**/*.test.ts', 'src/tests/**/*.test.tsx'],
     coverage: {
-      provider: "v8",
-      reporter: ["text", "lcov"],
+      provider: 'v8',
+      reporter: ['text', 'lcov'],
       include: [
-        "src/buildProductModel.ts",
-        "src/filterOptions.ts",
-        "src/data/productRegistry.ts",
-        "src/stores/**/*.ts",
-        "src/utils/**/*.ts",
+        'src/buildProductModel.ts',
+        'src/filterOptions.ts',
+        'src/data/productRegistry.ts',
+        'src/stores/**/*.ts',
+        'src/utils/**/*.ts',
       ],
-      exclude: ["src/tests/**", "src/**/*.d.ts"],
+      exclude: ['src/tests/**', 'src/**/*.d.ts'],
     },
   },
-});
+})

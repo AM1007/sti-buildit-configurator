@@ -1,85 +1,94 @@
-import { useEffect, useState, useCallback } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState, useCallback } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import {
-  Plus, Pencil, Trash2, FolderOpen, ChevronRight,
-  X, Check, Loader2,
-} from "lucide-react";
-import { useProjectStore } from "../stores/projectStore";
-import { useAuthStore } from "../stores/authStore";
-import { useTranslation, useLanguage } from "../i18n";
-import { toast } from "../utils/toast";
-import type { Project } from "../types";
+  Plus,
+  Pencil,
+  Trash2,
+  FolderOpen,
+  ChevronRight,
+  X,
+  Check,
+  Loader2,
+} from 'lucide-react'
+import { useProjectStore } from '@features/projects/store/projectStore'
+import { useAuthStore } from '@features/auth/store/authStore'
+import { useTranslation, useLanguage } from '@shared/i18n'
+import { toast } from '@shared/utils/toast'
+import type { Project } from '@shared/types'
 
 function pluralUk(count: number): string {
-  const mod10 = count % 10;
-  const mod100 = count % 100;
-  if (mod100 >= 11 && mod100 <= 20) return `${count} елементів`;
-  if (mod10 === 1) return `${count} елемент`;
-  if (mod10 >= 2 && mod10 <= 4) return `${count} елементи`;
-  return `${count} елементів`;
+  const mod10 = count % 10
+  const mod100 = count % 100
+  if (mod100 >= 11 && mod100 <= 20) return `${count} елементів`
+  if (mod10 === 1) return `${count} елемент`
+  if (mod10 >= 2 && mod10 <= 4) return `${count} елементи`
+  return `${count} елементів`
 }
 
 export function ProjectsPage() {
-  const { t } = useTranslation();
-  const navigate = useNavigate();
-  const user = useAuthStore((s) => s.user);
-  const projects = useProjectStore((s) => s.projects);
-  const isLoading = useProjectStore((s) => s.isLoading);
-  const fetchProjects = useProjectStore((s) => s.fetchProjects);
-  const createProject = useProjectStore((s) => s.createProject);
-  const renameProject = useProjectStore((s) => s.renameProject);
-  const deleteProject = useProjectStore((s) => s.deleteProject);
-  const fetchConfigurations = useProjectStore((s) => s.fetchConfigurations);
-  const remoteConfigurations = useProjectStore((s) => s.remoteConfigurations);
-  const guestConfigurations = useProjectStore((s) => s.guestConfigurations);
+  const { t } = useTranslation()
+  const navigate = useNavigate()
+  const user = useAuthStore((s) => s.user)
+  const projects = useProjectStore((s) => s.projects)
+  const isLoading = useProjectStore((s) => s.isLoading)
+  const fetchProjects = useProjectStore((s) => s.fetchProjects)
+  const createProject = useProjectStore((s) => s.createProject)
+  const renameProject = useProjectStore((s) => s.renameProject)
+  const deleteProject = useProjectStore((s) => s.deleteProject)
+  const fetchConfigurations = useProjectStore((s) => s.fetchConfigurations)
+  const remoteConfigurations = useProjectStore((s) => s.remoteConfigurations)
+  const guestConfigurations = useProjectStore((s) => s.guestConfigurations)
 
-  const [showCreateForm, setShowCreateForm] = useState(false);
-  const [createName, setCreateName] = useState("");
-  const [isCreating, setIsCreating] = useState(false);
+  const [showCreateForm, setShowCreateForm] = useState(false)
+  const [createName, setCreateName] = useState('')
+  const [isCreating, setIsCreating] = useState(false)
 
   useEffect(() => {
-    if (user) fetchProjects(user.id);
-  }, [user, fetchProjects]);
+    if (user) fetchProjects(user.id)
+  }, [user, fetchProjects])
 
   const handleCreate = useCallback(async () => {
-    if (!user || !createName.trim()) return;
-    setIsCreating(true);
-    const project = await createProject(user.id, createName.trim());
-    setIsCreating(false);
+    if (!user || !createName.trim()) return
+    setIsCreating(true)
+    const project = await createProject(user.id, createName.trim())
+    setIsCreating(false)
     if (project) {
-      setCreateName("");
-      setShowCreateForm(false);
-      navigate(`/projects/${project.id}`);
+      setCreateName('')
+      setShowCreateForm(false)
+      navigate(`/projects/${project.id}`)
     }
-  }, [user, createName, createProject, navigate]);
+  }, [user, createName, createProject, navigate])
 
   const handleCreateKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") handleCreate();
-    if (e.key === "Escape") { setShowCreateForm(false); setCreateName(""); }
-  };
+    if (e.key === 'Enter') handleCreate()
+    if (e.key === 'Escape') {
+      setShowCreateForm(false)
+      setCreateName('')
+    }
+  }
 
   const getConfigCount = (projectId: string): number => {
-    return (remoteConfigurations[projectId] ?? []).length;
-  };
+    return (remoteConfigurations[projectId] ?? []).length
+  }
 
   useEffect(() => {
     for (const project of projects) {
       if (!remoteConfigurations[project.id]) {
-        fetchConfigurations(project.id);
+        fetchConfigurations(project.id)
       }
     }
-  }, [projects, remoteConfigurations, fetchConfigurations]);
+  }, [projects, remoteConfigurations, fetchConfigurations])
 
-  if (!user) return null;
+  if (!user) return null
 
   return (
     <div className="w-full max-w-4xl mx-auto px-4 md:px-6 py-8 md:py-10">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between mb-8">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight text-slate-900 mb-1">
-            {t("projects.title")}
+            {t('projects.title')}
           </h1>
-          <p className="text-sm text-slate-500">{t("projects.subtitle")}</p>
+          <p className="text-sm text-slate-500">{t('projects.subtitle')}</p>
         </div>
         {!showCreateForm && (
           <button
@@ -87,7 +96,7 @@ export function ProjectsPage() {
             className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-900 text-white text-sm font-medium rounded-sm hover:bg-slate-800 transition-colors"
           >
             <Plus className="h-4 w-4" />
-            {t("projects.newProject")}
+            {t('projects.newProject')}
           </button>
         )}
       </div>
@@ -95,7 +104,7 @@ export function ProjectsPage() {
       {showCreateForm && (
         <div className="mb-6 bg-white border border-slate-200 rounded-sm p-4">
           <label className="block text-sm font-medium text-slate-700 mb-2">
-            {t("projects.projectName")}
+            {t('projects.projectName')}
           </label>
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
             <input
@@ -103,7 +112,7 @@ export function ProjectsPage() {
               value={createName}
               onChange={(e) => setCreateName(e.target.value)}
               onKeyDown={handleCreateKeyDown}
-              placeholder={t("projects.projectNamePlaceholder")}
+              placeholder={t('projects.projectNamePlaceholder')}
               autoFocus
               className="w-full sm:flex-1 h-10 px-3 border border-slate-200 rounded-sm text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400"
             />
@@ -113,11 +122,18 @@ export function ProjectsPage() {
                 disabled={!createName.trim() || isCreating}
                 className="flex-1 sm:flex-none h-10 px-4 bg-slate-900 text-white text-sm font-medium rounded-sm hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-1.5"
               >
-                {isCreating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
-                {t("projects.create")}
+                {isCreating ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Check className="h-4 w-4" />
+                )}
+                {t('projects.create')}
               </button>
               <button
-                onClick={() => { setShowCreateForm(false); setCreateName(""); }}
+                onClick={() => {
+                  setShowCreateForm(false)
+                  setCreateName('')
+                }}
                 className="h-10 w-10 flex items-center justify-center text-slate-400 hover:text-slate-600 transition-colors shrink-0"
               >
                 <X className="h-4 w-4" />
@@ -153,56 +169,62 @@ export function ProjectsPage() {
             to="/my-list"
             className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-700 transition-colors"
           >
-            {t("projects.guestListLink")}
+            {t('projects.guestListLink')}
             <ChevronRight className="h-3.5 w-3.5" />
           </Link>
         </div>
       )}
     </div>
-  );
+  )
 }
 
 interface ProjectCardProps {
-  project: Project;
-  configCount: number;
-  onRename: (projectId: string, name: string) => Promise<void>;
-  onDelete: (projectId: string) => Promise<void>;
+  project: Project
+  configCount: number
+  onRename: (projectId: string, name: string) => Promise<void>
+  onDelete: (projectId: string) => Promise<void>
 }
 
 function ProjectCard({ project, configCount, onRename, onDelete }: ProjectCardProps) {
-  const { t } = useTranslation();
-  const { lang } = useLanguage();
-  const [isEditing, setIsEditing] = useState(false);
-  const [editName, setEditName] = useState(project.name);
-  const [isDeleting, setIsDeleting] = useState(false);
+  const { t } = useTranslation()
+  const { lang } = useLanguage()
+  const [isEditing, setIsEditing] = useState(false)
+  const [editName, setEditName] = useState(project.name)
+  const [isDeleting, setIsDeleting] = useState(false)
 
-  const formattedDate = new Date(project.updatedAt).toLocaleDateString("en-GB", {
-    day: "2-digit", month: "short", year: "numeric",
-  });
+  const formattedDate = new Date(project.updatedAt).toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  })
 
-  const countLabel = lang === "uk"
-    ? pluralUk(configCount)
-    : `${configCount} ${configCount === 1 ? t("projects.item") : t("projects.items")}`;
+  const countLabel =
+    lang === 'uk'
+      ? pluralUk(configCount)
+      : `${configCount} ${configCount === 1 ? t('projects.item') : t('projects.items')}`
 
   const handleRename = async () => {
     if (!editName.trim() || editName.trim() === project.name) {
-      setIsEditing(false);
-      setEditName(project.name);
-      return;
+      setIsEditing(false)
+      setEditName(project.name)
+      return
     }
-    await onRename(project.id, editName.trim());
-    setIsEditing(false);
-  };
+    await onRename(project.id, editName.trim())
+    setIsEditing(false)
+  }
 
   const handleRenameKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") handleRename();
-    if (e.key === "Escape") { setIsEditing(false); setEditName(project.name); }
-  };
+    if (e.key === 'Enter') handleRename()
+    if (e.key === 'Escape') {
+      setIsEditing(false)
+      setEditName(project.name)
+    }
+  }
 
   const handleDelete = async () => {
-    setIsDeleting(true);
-    await onDelete(project.id);
-  };
+    setIsDeleting(true)
+    await onDelete(project.id)
+  }
 
   return (
     <div className="bg-white border border-slate-200 rounded-sm hover:border-slate-300 transition-colors">
@@ -214,7 +236,10 @@ function ProjectCard({ project, configCount, onRename, onDelete }: ProjectCardPr
             </div>
             <div className="min-w-0">
               {isEditing ? (
-                <div className="flex items-center gap-1.5" onClick={(e) => e.preventDefault()}>
+                <div
+                  className="flex items-center gap-1.5"
+                  onClick={(e) => e.preventDefault()}
+                >
                   <input
                     type="text"
                     value={editName}
@@ -228,7 +253,7 @@ function ProjectCard({ project, configCount, onRename, onDelete }: ProjectCardPr
                 </div>
               ) : (
                 <h3 className="text-sm font-semibold text-slate-900 truncate">
-                  {project.name || t("projects.untitled")}
+                  {project.name || t('projects.untitled')}
                 </h3>
               )}
               <div className="flex items-center gap-3 mt-1 text-xs text-slate-500">
@@ -250,49 +275,56 @@ function ProjectCard({ project, configCount, onRename, onDelete }: ProjectCardPr
 
       <div className="border-t border-slate-100 px-4 py-2 sm:px-5 flex items-center gap-1">
         <button
-          onClick={(e) => { e.preventDefault(); setIsEditing(true); setEditName(project.name); }}
+          onClick={(e) => {
+            e.preventDefault()
+            setIsEditing(true)
+            setEditName(project.name)
+          }}
           className="inline-flex items-center gap-1 px-2 py-1 text-xs text-slate-500 hover:text-slate-700 hover:bg-slate-50 rounded-sm transition-colors"
         >
           <Pencil className="h-3 w-3" />
-          {t("projects.rename")}
+          {t('projects.rename')}
         </button>
         <button
           onClick={(e) => {
-            e.preventDefault();
-            toast.confirm(
-              t("projects.deleteConfirm"),
-              () => handleDelete(),
-              { confirm: t("common.confirm"), cancel: t("common.cancel") }
-            );
+            e.preventDefault()
+            toast.confirm(t('projects.deleteConfirm'), () => handleDelete(), {
+              confirm: t('common.confirm'),
+              cancel: t('common.cancel'),
+            })
           }}
           disabled={isDeleting}
           className="inline-flex items-center gap-1 px-2 py-1 text-xs text-red-500 hover:text-red-700 hover:bg-red-50 rounded-sm transition-colors disabled:opacity-50"
         >
           <Trash2 className="h-3 w-3" />
-          {t("projects.delete")}
+          {t('projects.delete')}
         </button>
       </div>
     </div>
-  );
+  )
 }
 
 function EmptyState({ onCreateClick }: { onCreateClick: () => void }) {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
   return (
     <div className="flex flex-col items-center justify-center py-20 border border-slate-200 rounded-sm bg-white text-center">
       <div className="h-12 w-12 rounded-sm bg-slate-100 flex items-center justify-center mb-5">
         <FolderOpen className="h-5 w-5 text-slate-400" />
       </div>
-      <h2 className="text-lg font-semibold text-slate-900 mb-2">{t("projects.emptyTitle")}</h2>
-      <p className="text-sm text-slate-500 mb-6 max-w-xs">{t("projects.emptyDescription")}</p>
+      <h2 className="text-lg font-semibold text-slate-900 mb-2">
+        {t('projects.emptyTitle')}
+      </h2>
+      <p className="text-sm text-slate-500 mb-6 max-w-xs">
+        {t('projects.emptyDescription')}
+      </p>
       <button
         onClick={onCreateClick}
         className="inline-flex items-center justify-center gap-1.5 px-5 py-2 bg-slate-900 text-white text-sm font-medium rounded-sm hover:bg-slate-800 transition-colors"
       >
         <Plus className="h-4 w-4" />
-        {t("projects.createFirst")}
+        {t('projects.createFirst')}
       </button>
     </div>
-  );
+  )
 }

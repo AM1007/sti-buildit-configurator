@@ -1,115 +1,113 @@
-import { useEffect, useRef, useState } from "react";
-import { useParams, useSearchParams, Navigate } from "react-router-dom";
-import { getProductBySlug } from "../data/productRegistry";
-import { isConfigurationComplete } from "../filterOptions";
-import { BuildItCalculator } from "../components/BuildItCalculator";
-import { ConfiguratorHero } from "../components/ConfiguratorHero";
-import { getHeroContent } from "../data/heroContent";
-import { useConfigurationStore } from "../stores/configurationStore";
-import { useProjectStore } from "../stores/projectStore";
-import { useIsAuthenticated } from "../stores/authStore";
-import { ProjectPicker } from "../components/ProjectPicker";
-import { InDevelopmentPage } from "./InDevelopmentPage";
-import { parseConfigFromUrl, serializeConfig } from "../utils/configSerializer";
-import { toast } from "../utils/toast";
-import { useTranslation } from "../i18n";
-import type { ModelDefinition } from "../types";
+import { useEffect, useRef, useState } from 'react'
+import { useParams, useSearchParams, Navigate } from 'react-router-dom'
+import { getProductBySlug } from '@entities/product/registry'
+import { isConfigurationComplete } from '@features/configurator/lib/filterOptions'
+import { BuildItCalculator } from '@features/configurator/components/BuildItCalculator'
+import { ConfiguratorHero } from '@shared/ui/ConfiguratorHero'
+import { getHeroContent } from '../shared/utils/heroContent'
+import { useConfigurationStore } from '@features/configurator/store/configurationStore'
+import { useProjectStore } from '@features/projects/store/projectStore'
+import { useIsAuthenticated } from '@features/auth/store/authStore'
+import { ProjectPicker } from '@features/projects/components/ProjectPicker'
+import { InDevelopmentPage } from './InDevelopmentPage'
+import { parseConfigFromUrl, serializeConfig } from '@shared/utils/configSerializer'
+import { toast } from '@shared/utils/toast'
+import { useTranslation } from '@shared/i18n'
+import type { ModelDefinition } from '@shared/types'
 
 interface ConfiguratorPageInnerProps {
-  slug: string;
-  model: ModelDefinition;
-  productName: string;
+  slug: string
+  model: ModelDefinition
+  productName: string
 }
 
 function ConfiguratorPageInner({ model, productName }: ConfiguratorPageInnerProps) {
-  const [searchParams] = useSearchParams();
-  const hasLoadedFromUrl = useRef(false);
-  const { t } = useTranslation();
+  const [searchParams] = useSearchParams()
+  const hasLoadedFromUrl = useRef(false)
+  const { t } = useTranslation()
 
-  const setModel = useConfigurationStore((state) => state.setModel);
-  const currentModelId = useConfigurationStore((state) => state.currentModelId);
-  const config = useConfigurationStore((state) => state.config);
-  const customText = useConfigurationStore((state) => state.customText);
-  const setConfigFromUrl = useConfigurationStore((state) => state.loadConfigFromUrl);
+  const setModel = useConfigurationStore((state) => state.setModel)
+  const currentModelId = useConfigurationStore((state) => state.currentModelId)
+  const config = useConfigurationStore((state) => state.config)
+  const customText = useConfigurationStore((state) => state.customText)
+  const setConfigFromUrl = useConfigurationStore((state) => state.loadConfigFromUrl)
 
-  const addConfiguration = useProjectStore((s) => s.addConfiguration);
-  const removeConfiguration = useProjectStore((s) => s.removeConfiguration);
+  const addConfiguration = useProjectStore((s) => s.addConfiguration)
+  const removeConfiguration = useProjectStore((s) => s.removeConfiguration)
 
-  const isAuthenticated = useIsAuthenticated();
-  const [showProjectPicker, setShowProjectPicker] = useState(false);
-  const [projectRefreshToken, setProjectRefreshToken] = useState(0);
+  const isAuthenticated = useIsAuthenticated()
+  const [showProjectPicker, setShowProjectPicker] = useState(false)
+  const [projectRefreshToken, setProjectRefreshToken] = useState(0)
 
   useEffect(() => {
-    if (hasLoadedFromUrl.current) return;
-    hasLoadedFromUrl.current = true;
+    if (hasLoadedFromUrl.current) return
+    hasLoadedFromUrl.current = true
 
-    const stateParam = searchParams.get("state");
+    const stateParam = searchParams.get('state')
 
     if (stateParam) {
-      const { state } = parseConfigFromUrl(searchParams);
+      const { state } = parseConfigFromUrl(searchParams)
 
       if (state) {
-        setModel(model.id);
-        setConfigFromUrl(model.id, state.config, state.customText ?? null);
+        setModel(model.id)
+        setConfigFromUrl(model.id, state.config, state.customText ?? null)
       } else {
         if (currentModelId !== model.id) {
-          setModel(model.id);
+          setModel(model.id)
         }
-        toast.error(t("configurator.invalidDeepLink"));
+        toast.error(t('configurator.invalidDeepLink'))
       }
     } else {
       if (currentModelId !== model.id) {
-        setModel(model.id);
+        setModel(model.id)
       }
     }
-  }, []);
+  }, [])
 
   useEffect(() => {
-    if (!hasLoadedFromUrl.current) return;
-    if (currentModelId !== model.id) return;
+    if (!hasLoadedFromUrl.current) return
+    if (currentModelId !== model.id) return
 
     if (!isConfigurationComplete(model, config)) {
-      const url = new URL(window.location.href);
-      url.searchParams.delete("state");
-      window.history.replaceState(null, "", url.toString());
-      return;
+      const url = new URL(window.location.href)
+      url.searchParams.delete('state')
+      window.history.replaceState(null, '', url.toString())
+      return
     }
 
-    const serialized = serializeConfig(config, customText);
-    const url = new URL(window.location.href);
-    url.searchParams.set("state", serialized);
-    window.history.replaceState(null, "", url.toString());
-  }, [config, customText, currentModelId, model.id]);
+    const serialized = serializeConfig(config, customText)
+    const url = new URL(window.location.href)
+    url.searchParams.set('state', serialized)
+    window.history.replaceState(null, '', url.toString())
+  }, [config, customText, currentModelId, model.id])
 
-  const heroContent = getHeroContent(model.id);
+  const heroContent = getHeroContent(model.id)
 
   const handleAddToMyList = () => {
     if (isAuthenticated) {
-      setShowProjectPicker(true);
+      setShowProjectPicker(true)
     } else {
-      setModel(model.id);
-      addConfiguration(model.id, config, customText, model);
+      setModel(model.id)
+      addConfiguration(model.id, config, customText, model)
     }
-  };
+  }
 
   const handleRemoveFromMyList = (itemId: string) => {
     if (isAuthenticated) {
-      setShowProjectPicker(true);
+      setShowProjectPicker(true)
     } else {
-      removeConfiguration(itemId);
+      removeConfiguration(itemId)
     }
-  };
+  }
 
   const handleProjectPickerSaved = () => {
-    setProjectRefreshToken((prev) => prev + 1);
-    toast.success(t("projectPicker.saved"));
-  };
+    setProjectRefreshToken((prev) => prev + 1)
+    toast.success(t('projectPicker.saved'))
+  }
 
   return (
     <div className="min-h-screen bg-slate-50">
-      {heroContent && (
-        <ConfiguratorHero data={heroContent} productName={productName} />
-      )}
+      {heroContent && <ConfiguratorHero data={heroContent} productName={productName} />}
 
       <section className="bg-slate-50">
         <BuildItCalculator
@@ -131,24 +129,24 @@ function ConfiguratorPageInner({ model, productName }: ConfiguratorPageInnerProp
         model={model}
       />
     </div>
-  );
+  )
 }
 
 export function ConfiguratorPage() {
-  const { slug } = useParams<{ slug: string }>();
+  const { slug } = useParams<{ slug: string }>()
 
   if (!slug) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/" replace />
   }
 
-  const product = getProductBySlug(slug);
+  const product = getProductBySlug(slug)
 
   if (!product) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/" replace />
   }
 
   if (!product.meta.isImplemented) {
-    return <InDevelopmentPage />;
+    return <InDevelopmentPage />
   }
 
   return (
@@ -157,5 +155,5 @@ export function ConfiguratorPage() {
       model={product.model}
       productName={product.meta.name}
     />
-  );
+  )
 }

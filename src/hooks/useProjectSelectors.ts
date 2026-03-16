@@ -1,34 +1,32 @@
-import { useState, useEffect } from "react";
-import { useShallow } from "zustand/react/shallow";
-import type { CustomTextData, SavedConfiguration } from "../types";
-import { GUEST_PROJECT_ID } from "../types";
-import { buildCustomTextFingerprint } from "../utils/customTextHelpers";
-import { useProjectStore } from "../stores/projectStore";
-import { useUser } from "../stores/authStore";
+import { useState, useEffect } from 'react'
+import { useShallow } from 'zustand/react/shallow'
+import type { CustomTextData, SavedConfiguration } from '@shared/types'
+import { GUEST_PROJECT_ID } from '@shared/types'
+import { buildCustomTextFingerprint } from '@shared/utils'
+import { useProjectStore } from '@features/projects'
+import { useUser } from '@features/auth/store/authStore'
 
-const EMPTY_LIST: SavedConfiguration[] = [];
+const EMPTY_LIST: SavedConfiguration[] = []
 
 export function getActiveList(s: ReturnType<typeof useProjectStore.getState>) {
   if (s.activeProjectId === GUEST_PROJECT_ID) {
-    return s.guestConfigurations;
+    return s.guestConfigurations
   }
-  return s.remoteConfigurations[s.activeProjectId] ?? EMPTY_LIST;
+  return s.remoteConfigurations[s.activeProjectId] ?? EMPTY_LIST
 }
 
-export const useMyList = () =>
-  useProjectStore(useShallow((s) => getActiveList(s)));
+export const useMyList = () => useProjectStore(useShallow((s) => getActiveList(s)))
 
-export const useMyListCount = () =>
-  useProjectStore((s) => getActiveList(s).length);
+export const useMyListCount = () => useProjectStore((s) => getActiveList(s).length)
 
 export const useProjectMeta = () =>
   useProjectStore(
     useShallow((s) => {
       if (s.activeProjectId === GUEST_PROJECT_ID) {
-        return s.guestProjectMeta;
+        return s.guestProjectMeta
       }
-      const project = s.projects.find((p) => p.id === s.activeProjectId);
-      if (!project) return s.guestProjectMeta;
+      const project = s.projects.find((p) => p.id === s.activeProjectId)
+      if (!project) return s.guestProjectMeta
       return {
         projectName: project.name,
         clientName: project.clientName,
@@ -38,56 +36,56 @@ export const useProjectMeta = () =>
         lastExportedAt: project.lastExportedAt
           ? new Date(project.lastExportedAt).getTime()
           : null,
-      };
-    })
-  );
+      }
+    }),
+  )
 
 export const useIsProductInMyList = (
   productCode: string | null,
   customText?: CustomTextData | null,
 ) =>
   useProjectStore((s) => {
-    if (!productCode) return false;
-    const list = getActiveList(s);
-    const fingerprint = buildCustomTextFingerprint(customText);
+    if (!productCode) return false
+    const list = getActiveList(s)
+    const fingerprint = buildCustomTextFingerprint(customText)
     return list.some(
       (item) =>
         item.productCode === productCode &&
         buildCustomTextFingerprint(item.customText) === fingerprint,
-    );
-  });
+    )
+  })
 
 export const useIsProductInAnyProject = (
   productCode: string | null,
   refreshToken: number,
 ) => {
-  const user = useUser();
-  const checkProductInAnyProject = useProjectStore((s) => s.checkProductInAnyProject);
-  const [isInAnyProject, setIsInAnyProject] = useState(false);
+  const user = useUser()
+  const checkProductInAnyProject = useProjectStore((s) => s.checkProductInAnyProject)
+  const [isInAnyProject, setIsInAnyProject] = useState(false)
 
   useEffect(() => {
     if (!productCode || !user) {
-      setIsInAnyProject(false);
-      return;
+      setIsInAnyProject(false)
+      return
     }
-    checkProductInAnyProject(user.id, productCode).then(setIsInAnyProject);
-  }, [productCode, user?.id, refreshToken, checkProductInAnyProject]);
+    checkProductInAnyProject(user.id, productCode).then(setIsInAnyProject)
+  }, [productCode, user?.id, refreshToken, checkProductInAnyProject])
 
-  return isInAnyProject;
-};
+  return isInAnyProject
+}
 
 export const useMyListItemIdByProductCode = (
   productCode: string | null,
   customText?: CustomTextData | null,
 ) =>
   useProjectStore((s) => {
-    if (!productCode) return null;
-    const list = getActiveList(s);
-    const fingerprint = buildCustomTextFingerprint(customText);
+    if (!productCode) return null
+    const list = getActiveList(s)
+    const fingerprint = buildCustomTextFingerprint(customText)
     const item = list.find(
       (c) =>
         c.productCode === productCode &&
         buildCustomTextFingerprint(c.customText) === fingerprint,
-    );
-    return item?.id ?? null;
-  });
+    )
+    return item?.id ?? null
+  })

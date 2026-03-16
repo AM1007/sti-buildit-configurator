@@ -4,13 +4,13 @@ Internal product configurator for Safety Technology International (STI). Enables
 
 ## Product Lines
 
-| Category | Products |
-|----------|----------|
-| Push Buttons | G3 Multipurpose, GF Fire Alarm, Indoor, Waterproof |
-| Call Points | Global ReSet, ReSet Call Points, Waterproof ReSet |
+| Category          | Products                                                                                           |
+| ----------------- | -------------------------------------------------------------------------------------------------- |
+| Push Buttons      | G3 Multipurpose, GF Fire Alarm, Indoor, Waterproof                                                 |
+| Call Points       | Global ReSet, ReSet Call Points, Waterproof ReSet                                                  |
 | Protective Covers | Universal Stopper, Low Profile Universal Stopper, Enviro Stopper, Euro Stopper, Call Point Stopper |
-| Enclosures | EnviroArmour |
-| Other | Key Switches, Alert Point, Stopper Stations |
+| Enclosures        | EnviroArmour                                                                                       |
+| Other             | Key Switches, Alert Point, Stopper Stations                                                        |
 
 **Total: 16 configurable product families**
 
@@ -55,11 +55,11 @@ npm run dev
 
 ## Routes
 
-| Path | Description |
-|------|-------------|
-| `/` | Product catalog grid |
+| Path                     | Description          |
+| ------------------------ | -------------------- |
+| `/`                      | Product catalog grid |
 | `/configurator/:modelId` | Configuration wizard |
-| `/my-list` | Saved configurations |
+| `/my-list`               | Saved configurations |
 
 ## Constraint System
 
@@ -77,6 +77,7 @@ Each product has a dedicated rules file (`src/rules/<product>Rules.ts`) defining
 ```
 
 The `ConstraintEngine` evaluates selections and returns:
+
 - `available: boolean`
 - `reasons: BlockReason[]` (explains why option is disabled)
 

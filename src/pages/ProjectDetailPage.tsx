@@ -1,86 +1,84 @@
-import { useEffect, useMemo, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import {
-  ArrowLeft, Pencil, Plus, Loader2,
-} from "lucide-react";
-import { useProjectStore } from "../stores/projectStore";
-import { useAuthStore } from "../stores/authStore";
-import { useMyList, useProjectMeta } from "../hooks/useProjectSelectors";
-import { SpecificationTable } from "../components/SpecificationTable";
-import { SpecificationMobileList } from "../components/SpecificationMobileItem";
-import { DetailDrawer } from "../components/DetailDrawer";
-import { DetailBottomSheet } from "../components/DetailBottomSheet";
-import { useIsMobile } from "../hooks/useMediaQuery";
-import { useTranslation } from "../i18n";
-import { GUEST_PROJECT_ID } from "../types";
+import { useEffect, useMemo, useState } from 'react'
+import { Link, useParams } from 'react-router-dom'
+import { ArrowLeft, Pencil, Plus, Loader2 } from 'lucide-react'
+import { useProjectStore } from '@features/projects/store/projectStore'
+import { useAuthStore } from '@features/auth/store/authStore'
+import { useMyList, useProjectMeta } from '../hooks/useProjectSelectors'
+import { SpecificationTable } from '@features/projects/components/SpecificationTable'
+import { SpecificationMobileList } from '@features/projects/components/SpecificationMobileItem'
+import { DetailDrawer } from '@features/projects/components/DetailDrawer'
+import { DetailBottomSheet } from '@features/projects/components/DetailBottomSheet'
+import { useIsMobile } from '@shared/hooks/useMediaQuery'
+import { useTranslation } from '@shared/i18n'
+import { GUEST_PROJECT_ID } from '@shared/types'
 
 export function ProjectDetailPage() {
-  const { t } = useTranslation();
-  const { id: projectId } = useParams<{ id: string }>();
-  const user = useAuthStore((s) => s.user);
-  const projects = useProjectStore((s) => s.projects);
-  const fetchProjects = useProjectStore((s) => s.fetchProjects);
-  const fetchConfigurations = useProjectStore((s) => s.fetchConfigurations);
-  const setActiveProjectId = useProjectStore((s) => s.setActiveProjectId);
-  const removeConfiguration = useProjectStore((s) => s.removeConfiguration);
-  const updateConfigurationQty = useProjectStore((s) => s.updateConfigurationQty);
-  const updateConfigurationNote = useProjectStore((s) => s.updateConfigurationNote);
-  const renameProject = useProjectStore((s) => s.renameProject);
-  const isMobile = useIsMobile();
+  const { t } = useTranslation()
+  const { id: projectId } = useParams<{ id: string }>()
+  const user = useAuthStore((s) => s.user)
+  const projects = useProjectStore((s) => s.projects)
+  const fetchProjects = useProjectStore((s) => s.fetchProjects)
+  const fetchConfigurations = useProjectStore((s) => s.fetchConfigurations)
+  const setActiveProjectId = useProjectStore((s) => s.setActiveProjectId)
+  const removeConfiguration = useProjectStore((s) => s.removeConfiguration)
+  const updateConfigurationQty = useProjectStore((s) => s.updateConfigurationQty)
+  const updateConfigurationNote = useProjectStore((s) => s.updateConfigurationNote)
+  const renameProject = useProjectStore((s) => s.renameProject)
+  const isMobile = useIsMobile()
 
-  const myList = useMyList();
-  const projectMeta = useProjectMeta();
+  const myList = useMyList()
+  const projectMeta = useProjectMeta()
 
-  const [drawerItemId, setDrawerItemId] = useState<string | null>(null);
-  const [isEditing, setIsEditing] = useState(false);
-  const [editName, setEditName] = useState("");
+  const [drawerItemId, setDrawerItemId] = useState<string | null>(null)
+  const [isEditing, setIsEditing] = useState(false)
+  const [editName, setEditName] = useState('')
 
   const project = useMemo(
     () => projects.find((p) => p.id === projectId) ?? null,
-    [projects, projectId]
-  );
+    [projects, projectId],
+  )
 
   useEffect(() => {
-    if (!projectId || !user) return;
+    if (!projectId || !user) return
 
-    setActiveProjectId(projectId);
-    fetchConfigurations(projectId);
+    setActiveProjectId(projectId)
+    fetchConfigurations(projectId)
 
     if (projects.length === 0) {
-      fetchProjects(user.id);
+      fetchProjects(user.id)
     }
 
     return () => {
-      setActiveProjectId(GUEST_PROJECT_ID);
-    };
-  }, [projectId, user?.id]);
+      setActiveProjectId(GUEST_PROJECT_ID)
+    }
+  }, [projectId, user?.id])
 
   const drawerItem = useMemo(
     () => myList.find((item) => item.id === drawerItemId) ?? null,
-    [myList, drawerItemId]
-  );
+    [myList, drawerItemId],
+  )
 
   const summary = useMemo(() => {
-    const uniqueModels = myList.length;
-    const totalUnits = myList.reduce((sum, item) => sum + item.qty, 0);
-    return { uniqueModels, totalUnits };
-  }, [myList]);
+    const uniqueModels = myList.length
+    const totalUnits = myList.reduce((sum, item) => sum + item.qty, 0)
+    return { uniqueModels, totalUnits }
+  }, [myList])
 
   const handleRename = async () => {
     if (!projectId || !editName.trim() || editName.trim() === project?.name) {
-      setIsEditing(false);
-      return;
+      setIsEditing(false)
+      return
     }
-    await renameProject(projectId, editName.trim());
-    setIsEditing(false);
-  };
+    await renameProject(projectId, editName.trim())
+    setIsEditing(false)
+  }
 
   const handleRenameKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") handleRename();
-    if (e.key === "Escape") setIsEditing(false);
-  };
+    if (e.key === 'Enter') handleRename()
+    if (e.key === 'Escape') setIsEditing(false)
+  }
 
-  if (!user || !projectId) return null;
+  if (!user || !projectId) return null
 
   if (!project) {
     return (
@@ -89,7 +87,7 @@ export function ProjectDetailPage() {
           <Loader2 className="h-6 w-6 animate-spin text-slate-400" />
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -101,7 +99,7 @@ export function ProjectDetailPage() {
             className="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-slate-700 transition-colors mb-2"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
-            {t("projects.backToProjects")}
+            {t('projects.backToProjects')}
           </Link>
           <div className="flex items-center gap-2">
             {isEditing ? (
@@ -117,10 +115,13 @@ export function ProjectDetailPage() {
             ) : (
               <>
                 <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
-                  {project.name || t("projects.untitled")}
+                  {project.name || t('projects.untitled')}
                 </h1>
                 <button
-                  onClick={() => { setIsEditing(true); setEditName(project.name); }}
+                  onClick={() => {
+                    setIsEditing(true)
+                    setEditName(project.name)
+                  }}
                   className="p-1 text-slate-400 hover:text-slate-600 transition-colors"
                 >
                   <Pencil className="h-4 w-4" />
@@ -137,26 +138,28 @@ export function ProjectDetailPage() {
           className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors group"
         >
           <Plus className="h-4 w-4 text-slate-400 group-hover:text-slate-600 transition-colors" />
-          {t("myList.continueConfiguring")}
+          {t('myList.continueConfiguring')}
         </Link>
       </div>
       {myList.length > 0 && (
         <div className="bg-slate-50 border border-slate-200 rounded-sm px-4 py-3 mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-8">
           <div className="flex items-center gap-6">
             <SummaryMetric
-              label={t("projectSummary.uniqueModels")}
-              value={String(summary.uniqueModels).padStart(2, "0")}
+              label={t('projectSummary.uniqueModels')}
+              value={String(summary.uniqueModels).padStart(2, '0')}
             />
             <div className="w-px h-8 bg-slate-200 hidden sm:block" />
             <SummaryMetric
-              label={t("projectSummary.totalUnits")}
-              value={String(summary.totalUnits).padStart(2, "0")}
+              label={t('projectSummary.totalUnits')}
+              value={String(summary.totalUnits).padStart(2, '0')}
             />
             <div className="w-px h-8 bg-slate-200 hidden sm:block" />
             <SummaryMetric
-              label={t("projectSummary.lastUpdated")}
-              value={new Date(projectMeta.updatedAt).toLocaleDateString("en-GB", {
-                day: "2-digit", month: "short", year: "numeric",
+              label={t('projectSummary.lastUpdated')}
+              value={new Date(projectMeta.updatedAt).toLocaleDateString('en-GB', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric',
               })}
             />
           </div>
@@ -169,16 +172,16 @@ export function ProjectDetailPage() {
             <span className="text-slate-400 text-2xl">☆</span>
           </div>
           <h2 className="text-lg font-semibold text-slate-900 mb-2">
-            {t("projects.emptyProjectTitle")}
+            {t('projects.emptyProjectTitle')}
           </h2>
           <p className="text-sm text-slate-500 mb-6 max-w-xs">
-            {t("projects.emptyProjectDescription")}
+            {t('projects.emptyProjectDescription')}
           </p>
           <Link
             to="/"
             className="inline-flex items-center justify-center px-5 py-2 bg-slate-900 text-white text-sm font-medium rounded-sm hover:bg-slate-800 transition-colors"
           >
-            {t("myList.startConfiguring")}
+            {t('myList.startConfiguring')}
           </Link>
         </div>
       ) : (
@@ -221,7 +224,7 @@ export function ProjectDetailPage() {
         </>
       )}
     </div>
-  );
+  )
 }
 
 function SummaryMetric({ label, value }: { label: string; value: string }) {
@@ -232,5 +235,5 @@ function SummaryMetric({ label, value }: { label: string; value: string }) {
       </span>
       <span className="text-sm font-mono text-slate-900">{value}</span>
     </div>
-  );
+  )
 }

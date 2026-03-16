@@ -1,10 +1,10 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { migrateLocalStorage } from './utils/migrateLocalStorage'
+import { migrateLocalStorage } from '@shared/utils/migrateLocalStorage'
 import './index.css'
-import App from './App.tsx'
+import App from './app/App.tsx'
 
-migrateLocalStorage();
+migrateLocalStorage()
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
