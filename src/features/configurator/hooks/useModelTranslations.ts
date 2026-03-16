@@ -55,7 +55,7 @@ export function useModelTranslations(configuratorId: string): UseModelTranslatio
 
       try {
         const module = await import(
-          `../i18n/locales/${lang}/models/${configuratorId}.json`
+          `../../../shared/i18n/locales/${lang}/models/${configuratorId}.json`
         )
         const data: ModelTranslation = module.default || module
 
@@ -68,7 +68,7 @@ export function useModelTranslations(configuratorId: string): UseModelTranslatio
         if (lang !== 'en') {
           try {
             const fallbackModule = await import(
-              `../i18n/locales/en/models/${configuratorId}.json`
+              `../../../shared/i18n/locales/en/models/${configuratorId}.json`
             )
             const fallbackData: ModelTranslation =
               fallbackModule.default || fallbackModule
@@ -145,7 +145,9 @@ export async function preloadModelTranslation(
   }
 
   try {
-    const module = await import(`../i18n/locales/${lang}/models/${configuratorId}.json`)
+    const module = await import(
+      `../../../shared/i18n/locales/${lang}/models/${configuratorId}.json`
+    )
     const data: ModelTranslation = module.default || module
     translationCache.set(cacheKey, data)
   } catch {
