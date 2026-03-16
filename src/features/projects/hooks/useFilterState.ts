@@ -4,7 +4,7 @@ import {
   type FilterState,
   createInitialFilterState,
   filterConfigurators,
-} from '@shared/utils/filterProducts'
+} from '../lib/filterProducts'
 
 type ViewMode = 'grid' | 'list'
 
