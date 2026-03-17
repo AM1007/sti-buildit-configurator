@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Mail, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react'
 import { useAuthStore } from '@features/auth/store/authStore'
 import { useTranslation } from '@shared/i18n'
-import { mapAuthError } from '@shared/utils/mapAuthError'
+import { mapAuthError } from '@features/auth/lib/mapAuthError'
 
 export function LoginPage() {
   const { t } = useTranslation()

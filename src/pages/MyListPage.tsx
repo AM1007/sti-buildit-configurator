@@ -11,7 +11,7 @@ import { AuthPromptBanner } from '@features/auth/components/AuthPromptBanner'
 import { useIsMobile } from '@shared/hooks/useMediaQuery'
 import { useTranslation, useLanguage } from '@shared/i18n'
 import { deserializeMyList } from '@shared/utils/configSerializer'
-import { downloadMyListXlsx } from '@shared/utils/generateMyListXlsx'
+import { downloadMyListXlsx } from '@features/projects/lib/generateMyListXlsx'
 import { toast } from '@shared/utils/toast'
 
 function useMyListFromUrl() {
