@@ -41,9 +41,14 @@ const ICON_MAP: Record<
 interface PrimaryNavigationProps {
   value: PrimaryTag | 'all'
   onChange: (tag: PrimaryTag | 'all') => void
+  rightSlot?: React.ReactNode
 }
 
-export function PrimaryNavigation({ value, onChange }: PrimaryNavigationProps) {
+export function PrimaryNavigation({
+  value,
+  onChange,
+  rightSlot,
+}: PrimaryNavigationProps) {
   const { t } = useTranslation()
   const [sheetOpen, setSheetOpen] = useState(false)
   const isFiltered = value !== 'all'
@@ -115,32 +120,35 @@ export function PrimaryNavigation({ value, onChange }: PrimaryNavigationProps) {
         aria-label={t('filter.productType')}
         className="sticky top-16 z-40 hidden border-b border-slate-200 bg-white md:block"
       >
-        <div className="flex items-center gap-6 overflow-x-auto no-scrollbar xl:gap-8">
-          {SEGMENTS.map((segment) => {
-            const Icon = ICON_MAP[segment]
-            const isActive = value === segment
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-6 overflow-x-auto no-scrollbar xl:gap-8 pl-2">
+            {SEGMENTS.map((segment) => {
+              const Icon = ICON_MAP[segment]
+              const isActive = value === segment
 
-            return (
-              <button
-                key={segment}
-                role="tab"
-                type="button"
-                aria-selected={isActive}
-                onClick={() => onChange(segment)}
-                className={`group relative flex min-w-max items-center gap-2 py-4 text-sm font-medium transition-colors cursor-pointer ${
-                  isActive ? 'text-brand-600' : 'text-slate-500 hover:text-slate-900'
-                }`}
-              >
-                <Icon className="h-[18px] w-[18px]" />
-                {t(LABEL_KEYS[segment])}
-                <span
-                  className={`absolute bottom-0 left-0 h-0.5 bg-brand-600 transition-all duration-300 ${
-                    isActive ? 'w-full' : 'w-0 group-hover:w-full'
+              return (
+                <button
+                  key={segment}
+                  role="tab"
+                  type="button"
+                  aria-selected={isActive}
+                  onClick={() => onChange(segment)}
+                  className={`group relative flex min-w-max items-center gap-2 py-4 text-sm font-medium transition-colors cursor-pointer ${
+                    isActive ? 'text-brand-600' : 'text-slate-500 hover:text-slate-900'
                   }`}
-                />
-              </button>
-            )
-          })}
+                >
+                  <Icon className="h-[18px] w-[18px]" />
+                  {t(LABEL_KEYS[segment])}
+                  <span
+                    className={`absolute bottom-0 left-0 h-0.5 bg-brand-600 transition-all duration-300 ${
+                      isActive ? 'w-full' : 'w-0 group-hover:w-full'
+                    }`}
+                  />
+                </button>
+              )
+            })}
+          </div>
+          {rightSlot && <div className="hidden xl:flex shrink-0 pr-2">{rightSlot}</div>}
         </div>
       </nav>
     </>

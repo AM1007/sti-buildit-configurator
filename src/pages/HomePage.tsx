@@ -118,9 +118,22 @@ export function HomePage() {
             </div>
           </div>
 
-          <div className="hidden md:flex md:flex-col md:gap-4 md:mb-6">
-            <PrimaryNavigation value={state.primary} onChange={setPrimary} />
-            <div className="flex items-center justify-end">
+          <div className="hidden md:block md:mb-6">
+            <PrimaryNavigation
+              value={state.primary}
+              onChange={setPrimary}
+              rightSlot={
+                <ResultCounter
+                  shown={displayed.length}
+                  total={filtered.length}
+                  viewMode={viewMode}
+                  onViewModeChange={setViewMode}
+                  isPaginated={isPaginated}
+                  onTogglePagination={togglePagination}
+                />
+              }
+            />
+            <div className="flex items-center justify-end mt-4 xl:hidden">
               <ResultCounter
                 shown={displayed.length}
                 total={filtered.length}
