@@ -12,27 +12,29 @@
       "title": "MODEL",
       "options": {
         "A": "#A Without camera",
-        "C": "#C With camera (includes back box)"
+        "C": "#C With camera"
       }
     },
     "cover": {
       "title": "PROTECTIVE COVER",
       "options": {
         "0": "#0 No cover",
-        "2": "#2 Protective shield"
+        "2": "#2 Protective cover"
       }
     },
     "text": {
       "title": "MARKING",
       "options": {
         "FR": "#FR FIRE",
-        "HF": "#HF Fire flame symbol"
+        "HF": "#HF Fire flame symbol",
+        "PA": "#PA ПОЖЕЖА"
       }
     },
     "language": {
       "title": "LANGUAGE",
       "options": {
-        "EN": "#EN English"
+        "EN": "#EN English",
+        "UA": "#UA Ukrainian"
       }
     }
   }

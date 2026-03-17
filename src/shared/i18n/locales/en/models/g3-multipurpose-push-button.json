@@ -12,7 +12,7 @@
       "title": "MODEL",
       "options": {
         "A": "#A Without camera",
-        "C": "#C With camera (includes back box)"
+        "C": "#C With camera"
       }
     },
     "colour": {
@@ -38,24 +38,13 @@
       "title": "PROTECTIVE COVER",
       "options": {
         "0": "#0 No cover",
-        "2": "#2 Protective shield"
+        "2": "#2 Protective cover"
       }
     },
     "text": {
       "title": "MARKING",
       "options": {
-        "AB": "#AB ABORT",
-        "EM": "#EM EMERGENCY",
-        "ES": "#ES EMERGENCY STOP",
-        "EV": "#EV EVACUATION",
         "EX": "#EX EMERGENCY EXIT",
-        "HV": "#HV HVAC SHUT-DOWN",
-        "LD": "#LD LOCKDOWN",
-        "NT": "#NT NO TEXT",
-        "PL": "#PL POLICE",
-        "PO": "#PO EMERGENCY POWER OFF",
-        "PS": "#PS FUEL PUMP SHUT-DOWN",
-        "PX": "#PX PUSH TO EXIT",
         "RM": "#RM Running Man Symbol",
         "XT": "#XT EXIT",
         "ZA": "#ZA Custom text (NON-RETURNABLE)"
@@ -65,9 +54,7 @@
       "title": "LANGUAGE",
       "options": {
         "EN": "#EN English",
-        "ES": "#ES Spanish",
-        "FR": "#FR French",
-        "ZL": "#ZL Other language (NON-RETURNABLE)"
+        "UA": "#UA Ukrainian"
       }
     }
   }

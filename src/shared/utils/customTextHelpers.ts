@@ -61,8 +61,8 @@ const MODEL_CUSTOM_TEXT_CONFIG: Partial<Record<ModelId, CustomTextConfig>> = {
   'g3-multipurpose-push-button': {
     stepId: 'text',
     optionId: 'ZA',
-    variant: 'multiline-selectable',
-    maxLength: { oneLine: 13, twoLines: 20 },
+    variant: 'multiline-three-line',
+    maxLength: 13,
     line2Required: false,
   },
   'universal-stopper': {
@@ -242,6 +242,8 @@ export function getEffectiveLineCount(
       return 1
     case 'multiline-fixed':
       return 2
+    case 'multiline-three-line':
+      return 3
     case 'multiline-selectable':
       return selectedLineCount as 1 | 2
     case 'dual-block-three-line':
@@ -298,6 +300,25 @@ export function validateCustomText(
       data.coverLine3.length > maxLength
     ) {
       errors.push(`Cover Line 3 exceeds ${maxLength} characters`)
+    }
+
+    return { valid: errors.length === 0, errors }
+  }
+
+  if (config.variant === 'multiline-three-line') {
+    const maxLength = typeof config.maxLength === 'number' ? config.maxLength : 13
+
+    if (!data.line1.trim()) {
+      errors.push('Line 1 is required')
+    }
+    if (data.line1.length > maxLength) {
+      errors.push(`Line 1 exceeds ${maxLength} characters`)
+    }
+    if (data.line2 && data.line2.length > maxLength) {
+      errors.push(`Line 2 exceeds ${maxLength} characters`)
+    }
+    if (data.line3 && data.line3.length > maxLength) {
+      errors.push(`Line 3 exceeds ${maxLength} characters`)
     }
 
     return { valid: errors.length === 0, errors }

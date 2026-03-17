@@ -16,7 +16,7 @@ const steps: Step[] = [
       },
       {
         id: 'C',
-        label: '#C With camera (includes back box)',
+        label: '#C With camera',
         code: 'C',
         image: `${IMG}/MODEL/C With camera (includes back box).webp`,
       },
@@ -29,8 +29,12 @@ const steps: Step[] = [
     required: true,
     options: [
       { id: '0', label: '#0 No Cover', code: '0', image: `${IMG}/COVER/0 No Cover.webp` },
-      { id: '2', label: '#2 Shield', code: '2', image: `${IMG}/COVER/2 Shield.webp` },
-      // { id: "contact-sales", label: "#0 Contact Sales for More Options", code: "0", image: `${IMG}/COVER/0 Contact Sales for More Options.png`, notes: "Contact sales for custom options" },
+      {
+        id: '2',
+        label: '#2 Protective cover',
+        code: '2',
+        image: `${IMG}/COVER/2 Shield.webp`,
+      },
     ],
   },
 
@@ -46,6 +50,12 @@ const steps: Step[] = [
         code: 'HF',
         image: `${IMG}/TEXT/HF FireHouseFlame Symbol.webp`,
       },
+      {
+        id: 'PA',
+        label: '#PA ПОЖЕЖА',
+        code: 'PA',
+        image: `${IMG}/TEXT/FR FIRE.webp`,
+      },
     ],
   },
 
@@ -60,8 +70,12 @@ const steps: Step[] = [
         code: 'EN',
         image: `${IMG}/LANGUAGE/EN English.webp`,
       },
-      // { id: "ES", label: "#ES Spanish", code: "ES", image: `${IMG}/LANGUAGE/ES Spanish.webp` },
-      // { id: "FR", label: "#FR French", code: "FR", image: `${IMG}/LANGUAGE/FR French.webp` },
+      {
+        id: 'UA',
+        label: '#UA Українська',
+        code: 'UA',
+        image: `${IMG}/LANGUAGE/EN English.webp`,
+      },
     ],
   },
 ]

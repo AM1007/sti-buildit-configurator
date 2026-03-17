@@ -23,6 +23,7 @@ export type CustomTextVariant =
   | 'singleline'
   | 'multiline-fixed'
   | 'dual-block-three-line'
+  | 'multiline-three-line'
 
 export const MODEL_NAMES: Record<ModelId, string> = {
   'stopper-stations': 'Stopper® Stations',

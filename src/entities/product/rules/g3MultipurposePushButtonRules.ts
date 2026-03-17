@@ -2,35 +2,39 @@ import type { ModelConstraints, ConstraintMatrix } from './types'
 
 export const VALID_MODEL_CODES: readonly string[] = [
   'G3A209ZA-EN',
-  'G3A229HV-EN',
-  'G3A229LD-EN',
-  'G3A229PO-EN',
-  'G3A229PS-EN',
-  'G3A309EM-EN',
-  'G3A309PO-EN',
-  'G3A329EM-EN',
-  'G3A409EM-EN',
-  'G3A409LD-EN',
-  'G3A429EM-EN',
-  'G3A429LD-EN',
+  'G3A209ZA-UA',
+  'G3A229ZA-EN',
+  'G3A229ZA-UA',
+  'G3A309ZA-EN',
+  'G3A309ZA-UA',
+  'G3A329ZA-EN',
+  'G3A329ZA-UA',
+  'G3A409ZA-EN',
+  'G3A409ZA-UA',
+  'G3A429ZA-EN',
+  'G3A429ZA-UA',
 
-  'G3C002AB-EN',
-  'G3C002PS-EN',
-  'G3C102EX-EN',
+  'G3C002ZA-EN',
+  'G3C002ZA-UA',
+  'G3C022ZA-EN',
+  'G3C022ZA-UA',
+  'G3C102ZA-EN',
+  'G3C102ZA-UA',
   'G3C105RM-EN',
   'G3C105XT-EN',
   'G3C109XT-EN',
-  'G3C122EX-EN',
-  'G3C209PO-EN',
+  'G3C122ZA-EN',
+  'G3C122ZA-UA',
   'G3C209ZA-EN',
+  'G3C209ZA-UA',
   'G3C325ZA-EN',
-  'G3C405EX-EN',
-  'G3C409EM-EN',
-  'G3C409LD-EN',
-  'G3C429EM-EN',
-  'G3C429EV-EN',
-  'G3C429LD-EN',
+  'G3C325ZA-UA',
+  'G3C405ZA-EN',
+  'G3C405ZA-UA',
+  'G3C409ZA-EN',
+  'G3C409ZA-UA',
   'G3C429ZA-EN',
+  'G3C429ZA-UA',
 ] as const
 
 const VALID_MODEL_SET = new Set(VALID_MODEL_CODES)
@@ -135,8 +139,13 @@ const MODEL_TO_BUTTONTYPE: ConstraintMatrix = {
 }
 
 const MODEL_TO_TEXT: ConstraintMatrix = {
-  A: ['ZA', 'HV', 'LD', 'PO', 'PS', 'EM'],
-  C: ['AB', 'PS', 'EX', 'RM', 'XT', 'PO', 'ZA', 'EM', 'LD', 'EV'],
+  A: ['ZA'],
+  C: ['ZA', 'RM', 'XT'],
+}
+
+const MODEL_TO_LANGUAGE: ConstraintMatrix = {
+  A: ['EN', 'UA'],
+  C: ['EN', 'UA'],
 }
 
 const COLOUR_TO_MODEL: ConstraintMatrix = {
@@ -164,11 +173,11 @@ const COLOUR_TO_BUTTONTYPE: ConstraintMatrix = {
 }
 
 const COLOUR_TO_TEXT: ConstraintMatrix = {
-  '0': ['AB', 'PS'],
-  '1': ['EX', 'RM', 'XT'],
-  '2': ['ZA', 'HV', 'LD', 'PO', 'PS'],
-  '3': ['EM', 'PO', 'ZA'],
-  '4': ['EM', 'LD', 'EX', 'EV', 'ZA'],
+  '0': ['ZA'],
+  '1': ['RM', 'XT', 'ZA'],
+  '2': ['ZA'],
+  '3': ['ZA'],
+  '4': ['ZA'],
 }
 
 const COVER_TO_MODEL: ConstraintMatrix = {
@@ -187,8 +196,8 @@ const COVER_TO_BUTTONTYPE: ConstraintMatrix = {
 }
 
 const COVER_TO_TEXT: ConstraintMatrix = {
-  '0': ['AB', 'PS', 'EX', 'RM', 'XT', 'ZA', 'PO', 'EM', 'LD'],
-  '2': ['HV', 'LD', 'PO', 'PS', 'EM', 'EX', 'ZA', 'EV'],
+  '0': ['ZA', 'RM', 'XT'],
+  '2': ['ZA', 'XT'],
 }
 
 const BUTTONTYPE_TO_MODEL: ConstraintMatrix = {
@@ -210,65 +219,69 @@ const BUTTONTYPE_TO_COVER: ConstraintMatrix = {
 }
 
 const BUTTONTYPE_TO_TEXT: ConstraintMatrix = {
-  '2': ['AB', 'PS', 'EX'],
-  '5': ['RM', 'XT', 'ZA', 'EX'],
-  '9': ['ZA', 'HV', 'LD', 'PO', 'PS', 'EM', 'XT', 'EV'],
+  '2': ['ZA'],
+  '5': ['RM', 'XT', 'ZA'],
+  '9': ['ZA', 'XT'],
 }
 
 const TEXT_TO_MODEL: ConstraintMatrix = {
-  AB: ['C'],
-  PS: ['A', 'C'],
-  EX: ['C'],
+  ZA: ['A', 'C'],
   RM: ['C'],
   XT: ['C'],
-  ZA: ['A', 'C'],
-  HV: ['A'],
-  LD: ['A', 'C'],
-  PO: ['A', 'C'],
-  EM: ['A', 'C'],
-  EV: ['C'],
+  EX: ['C'],
 }
 
 const TEXT_TO_COLOUR: ConstraintMatrix = {
-  AB: ['0'],
-  PS: ['0', '2'],
-  EX: ['1', '4'],
+  ZA: ['0', '1', '2', '3', '4'],
   RM: ['1'],
   XT: ['1'],
-  ZA: ['2', '3', '4'],
-  HV: ['2'],
-  LD: ['2', '4'],
-  PO: ['2', '3'],
-  EM: ['3', '4'],
-  EV: ['4'],
+  EX: ['1'],
 }
 
 const TEXT_TO_COVER: ConstraintMatrix = {
-  AB: ['0'],
-  PS: ['0', '2'],
-  EX: ['0', '2'],
-  RM: ['0'],
-  XT: ['0'],
   ZA: ['0', '2'],
-  HV: ['2'],
-  LD: ['0', '2'],
-  PO: ['0', '2'],
-  EM: ['0', '2'],
-  EV: ['2'],
+  RM: ['0'],
+  XT: ['0', '2'],
+  EX: ['0', '2'],
 }
 
 const TEXT_TO_BUTTONTYPE: ConstraintMatrix = {
-  AB: ['2'],
-  PS: ['2', '9'],
-  EX: ['2', '5'],
+  ZA: ['2', '5', '9'],
   RM: ['5'],
   XT: ['5', '9'],
-  ZA: ['5', '9'],
-  HV: ['9'],
-  LD: ['9'],
-  PO: ['9'],
-  EM: ['9'],
-  EV: ['9'],
+  EX: ['2', '5'],
+}
+
+const TEXT_TO_LANGUAGE: ConstraintMatrix = {
+  ZA: ['EN', 'UA'],
+  RM: ['EN'],
+  XT: ['EN'],
+  EX: ['EN'],
+}
+
+const LANGUAGE_TO_MODEL: ConstraintMatrix = {
+  EN: ['A', 'C'],
+  UA: ['A', 'C'],
+}
+
+const LANGUAGE_TO_COLOUR: ConstraintMatrix = {
+  EN: ['0', '1', '2', '3', '4'],
+  UA: ['0', '1', '2', '3', '4'],
+}
+
+const LANGUAGE_TO_COVER: ConstraintMatrix = {
+  EN: ['0', '2'],
+  UA: ['0', '2'],
+}
+
+const LANGUAGE_TO_BUTTONTYPE: ConstraintMatrix = {
+  EN: ['2', '5', '9'],
+  UA: ['2', '5', '9'],
+}
+
+const LANGUAGE_TO_TEXT: ConstraintMatrix = {
+  EN: ['ZA', 'RM', 'XT'],
+  UA: ['ZA'],
 }
 
 export const G3_MULTIPURPOSE_PUSH_BUTTON_CONSTRAINTS: ModelConstraints = {
@@ -278,6 +291,7 @@ export const G3_MULTIPURPOSE_PUSH_BUTTON_CONSTRAINTS: ModelConstraints = {
     { sourceStep: 'model', targetStep: 'cover', matrix: MODEL_TO_COVER },
     { sourceStep: 'model', targetStep: 'buttonType', matrix: MODEL_TO_BUTTONTYPE },
     { sourceStep: 'model', targetStep: 'text', matrix: MODEL_TO_TEXT },
+    { sourceStep: 'model', targetStep: 'language', matrix: MODEL_TO_LANGUAGE },
 
     { sourceStep: 'colour', targetStep: 'model', matrix: COLOUR_TO_MODEL },
     { sourceStep: 'colour', targetStep: 'cover', matrix: COLOUR_TO_COVER },
@@ -298,6 +312,13 @@ export const G3_MULTIPURPOSE_PUSH_BUTTON_CONSTRAINTS: ModelConstraints = {
     { sourceStep: 'text', targetStep: 'colour', matrix: TEXT_TO_COLOUR },
     { sourceStep: 'text', targetStep: 'cover', matrix: TEXT_TO_COVER },
     { sourceStep: 'text', targetStep: 'buttonType', matrix: TEXT_TO_BUTTONTYPE },
+    { sourceStep: 'text', targetStep: 'language', matrix: TEXT_TO_LANGUAGE },
+
+    { sourceStep: 'language', targetStep: 'model', matrix: LANGUAGE_TO_MODEL },
+    { sourceStep: 'language', targetStep: 'colour', matrix: LANGUAGE_TO_COLOUR },
+    { sourceStep: 'language', targetStep: 'cover', matrix: LANGUAGE_TO_COVER },
+    { sourceStep: 'language', targetStep: 'buttonType', matrix: LANGUAGE_TO_BUTTONTYPE },
+    { sourceStep: 'language', targetStep: 'text', matrix: LANGUAGE_TO_TEXT },
   ],
 }
 
@@ -306,6 +327,7 @@ export const DEBUG_MATRICES = {
   MODEL_TO_COVER,
   MODEL_TO_BUTTONTYPE,
   MODEL_TO_TEXT,
+  MODEL_TO_LANGUAGE,
   COLOUR_TO_MODEL,
   COLOUR_TO_COVER,
   COLOUR_TO_BUTTONTYPE,
@@ -322,5 +344,11 @@ export const DEBUG_MATRICES = {
   TEXT_TO_COLOUR,
   TEXT_TO_COVER,
   TEXT_TO_BUTTONTYPE,
+  TEXT_TO_LANGUAGE,
+  LANGUAGE_TO_MODEL,
+  LANGUAGE_TO_COLOUR,
+  LANGUAGE_TO_COVER,
+  LANGUAGE_TO_BUTTONTYPE,
+  LANGUAGE_TO_TEXT,
   VALID_MODEL_CODES,
 }

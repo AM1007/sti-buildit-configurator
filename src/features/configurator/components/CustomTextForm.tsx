@@ -22,6 +22,7 @@ export function CustomTextForm({
   const getInitialLineCount = (): 1 | 2 | 3 => {
     if (variant === 'singleline') return 1
     if (variant === 'multiline-fixed') return 2
+    if (variant === 'multiline-three-line') return 3
     if (variant === 'dual-block-three-line') return initialData?.lineCount ?? 3
     return initialData?.lineCount ?? 2
   }

@@ -17,10 +17,6 @@ import {
 import { createConstraintEngine } from '@entities/product/rules/constraintEngine'
 import type { Configuration } from '@shared/types'
 
-// ─────────────────────────────────────────────────────────────
-// buildG3ModelCode
-// ─────────────────────────────────────────────────────────────
-
 describe('buildG3ModelCode', () => {
   it('builds G3A209ZA-EN correctly', () => {
     expect(
@@ -35,30 +31,56 @@ describe('buildG3ModelCode', () => {
     ).toBe('G3A209ZA-EN')
   })
 
-  it('builds G3C429LD-EN correctly', () => {
+  it('builds G3A209ZA-UA correctly', () => {
+    expect(
+      buildG3ModelCode({
+        model: 'A',
+        colour: '2',
+        cover: '0',
+        buttonType: '9',
+        text: 'ZA',
+        language: 'UA',
+      }),
+    ).toBe('G3A209ZA-UA')
+  })
+
+  it('builds G3C325ZA-EN correctly', () => {
+    expect(
+      buildG3ModelCode({
+        model: 'C',
+        colour: '3',
+        cover: '2',
+        buttonType: '5',
+        text: 'ZA',
+        language: 'EN',
+      }),
+    ).toBe('G3C325ZA-EN')
+  })
+
+  it('builds G3C105RM-EN correctly', () => {
+    expect(
+      buildG3ModelCode({
+        model: 'C',
+        colour: '1',
+        cover: '0',
+        buttonType: '5',
+        text: 'RM',
+        language: 'EN',
+      }),
+    ).toBe('G3C105RM-EN')
+  })
+
+  it('builds G3C429ZA-UA correctly', () => {
     expect(
       buildG3ModelCode({
         model: 'C',
         colour: '4',
         cover: '2',
         buttonType: '9',
-        text: 'LD',
-        language: 'EN',
+        text: 'ZA',
+        language: 'UA',
       }),
-    ).toBe('G3C429LD-EN')
-  })
-
-  it('builds G3C002AB-EN correctly', () => {
-    expect(
-      buildG3ModelCode({
-        model: 'C',
-        colour: '0',
-        cover: '0',
-        buttonType: '2',
-        text: 'AB',
-        language: 'EN',
-      }),
-    ).toBe('G3C002AB-EN')
+    ).toBe('G3C429ZA-UA')
   })
 
   it('language separator is dash — only separator in the SKU', () => {
@@ -97,10 +119,6 @@ describe('buildG3ModelCode', () => {
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// parseG3ModelCode
-// ─────────────────────────────────────────────────────────────
-
 describe('parseG3ModelCode', () => {
   it('parses G3A209ZA-EN correctly', () => {
     expect(parseG3ModelCode('G3A209ZA-EN')).toEqual({
@@ -113,14 +131,14 @@ describe('parseG3ModelCode', () => {
     })
   })
 
-  it('parses G3C002AB-EN correctly', () => {
-    expect(parseG3ModelCode('G3C002AB-EN')).toEqual({
-      model: 'C',
-      colour: '0',
+  it('parses G3A209ZA-UA correctly', () => {
+    expect(parseG3ModelCode('G3A209ZA-UA')).toEqual({
+      model: 'A',
+      colour: '2',
       cover: '0',
-      buttonType: '2',
-      text: 'AB',
-      language: 'EN',
+      buttonType: '9',
+      text: 'ZA',
+      language: 'UA',
     })
   })
 
@@ -131,6 +149,17 @@ describe('parseG3ModelCode', () => {
       cover: '2',
       buttonType: '5',
       text: 'ZA',
+      language: 'EN',
+    })
+  })
+
+  it('parses G3C105RM-EN correctly', () => {
+    expect(parseG3ModelCode('G3C105RM-EN')).toEqual({
+      model: 'C',
+      colour: '1',
+      cover: '0',
+      buttonType: '5',
+      text: 'RM',
       language: 'EN',
     })
   })
@@ -152,29 +181,47 @@ describe('parseG3ModelCode', () => {
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// VALID_MODEL_CODES integrity
-// ─────────────────────────────────────────────────────────────
-
 describe('VALID_MODEL_CODES', () => {
-  it('contains exactly 29 entries', () => {
-    expect(VALID_MODEL_CODES.length).toBe(29)
+  it('contains exactly 33 entries', () => {
+    expect(VALID_MODEL_CODES.length).toBe(33)
   })
 
   it('has no duplicates', () => {
-    expect(new Set(VALID_MODEL_CODES).size).toBe(29)
+    expect(new Set(VALID_MODEL_CODES).size).toBe(33)
   })
 
-  it('12 model A codes, 17 model C codes', () => {
+  it('12 model A codes, 21 model C codes', () => {
     const modelA = VALID_MODEL_CODES.filter((c) => parseG3ModelCode(c)?.model === 'A')
     const modelC = VALID_MODEL_CODES.filter((c) => parseG3ModelCode(c)?.model === 'C')
     expect(modelA.length).toBe(12)
-    expect(modelC.length).toBe(17)
+    expect(modelC.length).toBe(21)
   })
 
-  it('all codes end with -EN — only language available', () => {
-    for (const code of VALID_MODEL_CODES) {
-      expect(code.endsWith('-EN')).toBe(true)
+  it('EN and UA codes both present', () => {
+    const en = VALID_MODEL_CODES.filter((c) => c.endsWith('-EN'))
+    const ua = VALID_MODEL_CODES.filter((c) => c.endsWith('-UA'))
+    expect(en.length).toBeGreaterThan(0)
+    expect(ua.length).toBeGreaterThan(0)
+  })
+
+  it('UA language only appears with ZA text', () => {
+    const uaCodes = VALID_MODEL_CODES.filter((c) => c.endsWith('-UA'))
+    for (const code of uaCodes) {
+      expect(parseG3ModelCode(code)?.text).toBe('ZA')
+    }
+  })
+
+  it('RM text only appears with model C, colour 1, cover 0, buttonType 5', () => {
+    const rmCodes = VALID_MODEL_CODES.filter((c) => parseG3ModelCode(c)?.text === 'RM')
+    expect(rmCodes.length).toBe(1)
+    expect(rmCodes[0]).toBe('G3C105RM-EN')
+  })
+
+  it('XT text only appears with green (colour 1)', () => {
+    const xtCodes = VALID_MODEL_CODES.filter((c) => parseG3ModelCode(c)?.text === 'XT')
+    expect(xtCodes.length).toBeGreaterThan(0)
+    for (const code of xtCodes) {
+      expect(parseG3ModelCode(code)?.colour).toBe('1')
     }
   })
 
@@ -200,28 +247,12 @@ describe('VALID_MODEL_CODES', () => {
     }
   })
 
-  it('AB text only appears with model C, colour 0, cover 0, buttonType 2', () => {
-    const abCodes = VALID_MODEL_CODES.filter((c) => parseG3ModelCode(c)?.text === 'AB')
-    expect(abCodes.length).toBeGreaterThan(0)
-    for (const code of abCodes) {
-      const parsed = parseG3ModelCode(code)!
-      expect(parsed.model).toBe('C')
-      expect(parsed.colour).toBe('0')
-      expect(parsed.cover).toBe('0')
-      expect(parsed.buttonType).toBe('2')
+  it('AB, HV, EM, LD, PO, PS, EV text codes no longer exist', () => {
+    const removedTexts = ['AB', 'HV', 'EM', 'LD', 'PO', 'PS', 'EV']
+    for (const text of removedTexts) {
+      const found = VALID_MODEL_CODES.filter((c) => parseG3ModelCode(c)?.text === text)
+      expect(found.length).toBe(0)
     }
-  })
-
-  it('HV text only appears with model A, colour 2, cover 2, buttonType 9', () => {
-    const hvCodes = VALID_MODEL_CODES.filter((c) => parseG3ModelCode(c)?.text === 'HV')
-    expect(hvCodes.length).toBe(1)
-    expect(hvCodes[0]).toBe('G3A229HV-EN')
-  })
-
-  it('EV text only appears with model C, colour 4, cover 2, buttonType 9', () => {
-    const evCodes = VALID_MODEL_CODES.filter((c) => parseG3ModelCode(c)?.text === 'EV')
-    expect(evCodes.length).toBe(1)
-    expect(evCodes[0]).toBe('G3C429EV-EN')
   })
 
   it('all codes parse successfully', () => {
@@ -231,12 +262,8 @@ describe('VALID_MODEL_CODES', () => {
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// isValidG3Combination
-// ─────────────────────────────────────────────────────────────
-
 describe('isValidG3Combination', () => {
-  it('all 29 VALID_MODEL_CODES pass validation', () => {
+  it('all 33 VALID_MODEL_CODES pass validation', () => {
     for (const code of VALID_MODEL_CODES) {
       const parsed = parseG3ModelCode(code)!
       expect(isValidG3Combination(parsed)).toEqual({ valid: true })
@@ -267,212 +294,129 @@ describe('isValidG3Combination', () => {
       language: 'EN',
     })
     expect(result.valid).toBe(false)
-    if (!result.valid) expect(result.reason).toContain('G3A009ZA-EN')
   })
 
-  it('rejects model A with buttonType 2 — not in allowlist', () => {
+  it('rejects UA language with RM text', () => {
+    const result = isValidG3Combination({
+      model: 'C',
+      colour: '1',
+      cover: '0',
+      buttonType: '5',
+      text: 'RM',
+      language: 'UA',
+    })
+    expect(result.valid).toBe(false)
+  })
+
+  it('rejects UA language with XT text', () => {
+    const result = isValidG3Combination({
+      model: 'C',
+      colour: '1',
+      cover: '0',
+      buttonType: '5',
+      text: 'XT',
+      language: 'UA',
+    })
+    expect(result.valid).toBe(false)
+  })
+
+  it('rejects previously valid EM text — removed from allowlist', () => {
     const result = isValidG3Combination({
       model: 'A',
-      colour: '2',
-      cover: '0',
-      buttonType: '2',
-      text: 'PS',
-      language: 'EN',
-    })
-    expect(result.valid).toBe(false)
-  })
-
-  it('rejects HV text with model C — not in allowlist', () => {
-    const result = isValidG3Combination({
-      model: 'C',
-      colour: '2',
-      cover: '2',
-      buttonType: '9',
-      text: 'HV',
-      language: 'EN',
-    })
-    expect(result.valid).toBe(false)
-  })
-
-  it('rejects EV text with cover 0 — not in allowlist', () => {
-    const result = isValidG3Combination({
-      model: 'C',
-      colour: '4',
+      colour: '3',
       cover: '0',
       buttonType: '9',
-      text: 'EV',
+      text: 'EM',
       language: 'EN',
     })
     expect(result.valid).toBe(false)
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// getValidOptionsForStep
-// ─────────────────────────────────────────────────────────────
-
-describe('getValidOptionsForStep', () => {
+describe('getValidOptionsForStep — g3MultipurposePushButton', () => {
   it('returns both models when nothing selected', () => {
     const valid = getValidOptionsForStep('model', {})
     expect(valid).toContain('A')
     expect(valid).toContain('C')
   })
 
-  it('language always returns only EN', () => {
+  it('language returns EN and UA when nothing selected', () => {
     const valid = getValidOptionsForStep('language', {})
+    expect(valid).toContain('EN')
+    expect(valid).toContain('UA')
+  })
+
+  it('language returns only UA when text is ZA — via allowlist', () => {
+    const valid = getValidOptionsForStep('language', { text: 'ZA' })
+    expect(valid).toContain('EN')
+    expect(valid).toContain('UA')
+  })
+
+  it('language returns only EN when text is RM', () => {
+    const valid = getValidOptionsForStep('language', { text: 'RM' })
     expect(valid).toEqual(['EN'])
   })
 
-  it('language is EN regardless of other selections', () => {
-    const valid = getValidOptionsForStep('language', {
-      model: 'C',
-      colour: '4',
-      cover: '2',
-      buttonType: '9',
-      text: 'EV',
-    })
+  it('language returns only EN when text is XT', () => {
+    const valid = getValidOptionsForStep('language', { text: 'XT' })
     expect(valid).toEqual(['EN'])
   })
 
-  it('model A does not allow colour 0 or 1', () => {
+  it('text options for colour 0 contain only ZA', () => {
+    const valid = getValidOptionsForStep('text', { colour: '0' })
+    expect(valid).toContain('ZA')
+    expect(valid).not.toContain('AB')
+    expect(valid).not.toContain('PS')
+  })
+
+  it('text options for colour 1 contain RM, XT and ZA', () => {
+    const valid = getValidOptionsForStep('text', { colour: '1' })
+    expect(valid).toContain('RM')
+    expect(valid).toContain('XT')
+    expect(valid).toContain('ZA')
+  })
+
+  it('model A only returns colour 2, 3, 4', () => {
     const valid = getValidOptionsForStep('colour', { model: 'A' })
-    expect(valid).not.toContain('0')
-    expect(valid).not.toContain('1')
     expect(valid).toContain('2')
     expect(valid).toContain('3')
     expect(valid).toContain('4')
-  })
-
-  it('model A does not allow buttonType 2 or 5', () => {
-    const valid = getValidOptionsForStep('buttonType', { model: 'A' })
-    expect(valid).not.toContain('2')
-    expect(valid).not.toContain('5')
-    expect(valid).toContain('9')
-  })
-
-  it('HV text only valid with model A', () => {
-    const valid = getValidOptionsForStep('model', { text: 'HV' })
-    expect(valid).toEqual(['A'])
-  })
-
-  it('AB text only valid with model C', () => {
-    const valid = getValidOptionsForStep('model', { text: 'AB' })
-    expect(valid).toEqual(['C'])
-  })
-
-  it('HV text only valid with cover 2', () => {
-    const valid = getValidOptionsForStep('cover', { text: 'HV' })
-    expect(valid).toEqual(['2'])
-  })
-
-  it('EV text only valid with cover 2 and colour 4', () => {
-    const coverValid = getValidOptionsForStep('cover', { text: 'EV' })
-    const colourValid = getValidOptionsForStep('colour', { text: 'EV' })
-    expect(coverValid).toEqual(['2'])
-    expect(colourValid).toEqual(['4'])
-  })
-
-  it('buttonType 2 only valid with colour 0 or 1', () => {
-    const valid = getValidOptionsForStep('colour', { buttonType: '2' })
-    expect(valid).toContain('0')
-    expect(valid).toContain('1')
-    expect(valid).not.toContain('2')
-    expect(valid).not.toContain('3')
-    expect(valid).not.toContain('4')
-  })
-
-  it('colour 0 restricts to very few combinations', () => {
-    const buttonTypes = getValidOptionsForStep('buttonType', { colour: '0' })
-    expect(buttonTypes).toEqual(['2'])
-    const texts = getValidOptionsForStep('text', { colour: '0' })
-    expect(texts).toContain('AB')
-    expect(texts).toContain('PS')
+    expect(valid).not.toContain('0')
+    expect(valid).not.toContain('1')
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// Constraint engine integration
-// ─────────────────────────────────────────────────────────────
-
-describe('G3_MULTIPURPOSE_PUSH_BUTTON_CONSTRAINTS + constraintEngine', () => {
+describe('constraint engine — g3MultipurposePushButton', () => {
   const engine = createConstraintEngine(G3_MULTIPURPOSE_PUSH_BUTTON_CONSTRAINTS)
 
-  it('blocks colour 0 when model is A', () => {
+  it('blocks colour 0 for model A', () => {
     expect(engine.checkOptionAvailability('colour', '0', { model: 'A' }).available).toBe(
       false,
     )
   })
 
-  it('blocks colour 1 when model is A', () => {
-    expect(engine.checkOptionAvailability('colour', '1', { model: 'A' }).available).toBe(
-      false,
+  it('allows colour 0 for model C', () => {
+    expect(engine.checkOptionAvailability('colour', '0', { model: 'C' }).available).toBe(
+      true,
     )
   })
 
-  it('allows colour 2 3 4 when model is A', () => {
-    for (const colour of ['2', '3', '4']) {
-      expect(
-        engine.checkOptionAvailability('colour', colour, { model: 'A' }).available,
-      ).toBe(true)
-    }
-  })
-
-  it('blocks buttonType 2 and 5 when model is A', () => {
+  it('blocks UA language when text is RM', () => {
     expect(
-      engine.checkOptionAvailability('buttonType', '2', { model: 'A' }).available,
-    ).toBe(false)
-    expect(
-      engine.checkOptionAvailability('buttonType', '5', { model: 'A' }).available,
+      engine.checkOptionAvailability('language', 'UA', { text: 'RM' }).available,
     ).toBe(false)
   })
 
-  it('blocks HV text when model is C', () => {
-    expect(engine.checkOptionAvailability('text', 'HV', { model: 'C' }).available).toBe(
-      false,
-    )
+  it('blocks UA language when text is XT', () => {
+    expect(
+      engine.checkOptionAvailability('language', 'UA', { text: 'XT' }).available,
+    ).toBe(false)
   })
 
-  it('allows HV text when model is A', () => {
-    expect(engine.checkOptionAvailability('text', 'HV', { model: 'A' }).available).toBe(
-      true,
-    )
-  })
-
-  it('blocks AB text when model is A', () => {
-    expect(engine.checkOptionAvailability('text', 'AB', { model: 'A' }).available).toBe(
-      false,
-    )
-  })
-
-  it('blocks EV text when colour is not 4', () => {
-    for (const colour of ['0', '1', '2', '3']) {
-      expect(engine.checkOptionAvailability('text', 'EV', { colour }).available).toBe(
-        false,
-      )
-    }
-  })
-
-  it('blocks EV text when cover is 0', () => {
-    expect(engine.checkOptionAvailability('text', 'EV', { cover: '0' }).available).toBe(
-      false,
-    )
-  })
-
-  it('allows EV text when colour is 4 and cover is 2', () => {
-    expect(engine.checkOptionAvailability('text', 'EV', { colour: '4' }).available).toBe(
-      true,
-    )
-    expect(engine.checkOptionAvailability('text', 'EV', { cover: '2' }).available).toBe(
-      true,
-    )
-  })
-
-  it('blocks buttonType 2 when colour is 2, 3, or 4', () => {
-    for (const colour of ['2', '3', '4']) {
-      expect(
-        engine.checkOptionAvailability('buttonType', '2', { colour }).available,
-      ).toBe(false)
-    }
+  it('allows UA language when text is ZA', () => {
+    expect(
+      engine.checkOptionAvailability('language', 'UA', { text: 'ZA' }).available,
+    ).toBe(true)
   })
 
   it('constraint engine modelId matches', () => {
@@ -481,10 +425,6 @@ describe('G3_MULTIPURPOSE_PUSH_BUTTON_CONSTRAINTS + constraintEngine', () => {
     )
   })
 })
-
-// ─────────────────────────────────────────────────────────────
-// buildProductModel integration
-// ─────────────────────────────────────────────────────────────
 
 describe('buildProductModel — g3MultipurposePushButton', () => {
   it('builds G3A209ZA-EN correctly', () => {
@@ -501,31 +441,59 @@ describe('buildProductModel — g3MultipurposePushButton', () => {
     expect(result.isComplete).toBe(true)
   })
 
-  it('builds G3C002AB-EN correctly', () => {
+  it('builds G3A209ZA-UA correctly', () => {
     const config: Configuration = {
-      model: 'C',
-      colour: '0',
+      model: 'A',
+      colour: '2',
       cover: '0',
-      buttonType: '2',
-      text: 'AB',
-      language: 'EN',
+      buttonType: '9',
+      text: 'ZA',
+      language: 'UA',
     }
     const result = buildProductModel(config, g3MultipurposePushButtonModel)
-    expect(result.fullCode).toBe('G3C002AB-EN')
+    expect(result.fullCode).toBe('G3A209ZA-UA')
     expect(result.isComplete).toBe(true)
   })
 
-  it('builds G3C429EV-EN correctly', () => {
+  it('builds G3C105RM-EN correctly', () => {
+    const config: Configuration = {
+      model: 'C',
+      colour: '1',
+      cover: '0',
+      buttonType: '5',
+      text: 'RM',
+      language: 'EN',
+    }
+    const result = buildProductModel(config, g3MultipurposePushButtonModel)
+    expect(result.fullCode).toBe('G3C105RM-EN')
+    expect(result.isComplete).toBe(true)
+  })
+
+  it('builds G3C325ZA-UA correctly', () => {
+    const config: Configuration = {
+      model: 'C',
+      colour: '3',
+      cover: '2',
+      buttonType: '5',
+      text: 'ZA',
+      language: 'UA',
+    }
+    const result = buildProductModel(config, g3MultipurposePushButtonModel)
+    expect(result.fullCode).toBe('G3C325ZA-UA')
+    expect(result.isComplete).toBe(true)
+  })
+
+  it('builds G3C429ZA-UA correctly', () => {
     const config: Configuration = {
       model: 'C',
       colour: '4',
       cover: '2',
       buttonType: '9',
-      text: 'EV',
-      language: 'EN',
+      text: 'ZA',
+      language: 'UA',
     }
     const result = buildProductModel(config, g3MultipurposePushButtonModel)
-    expect(result.fullCode).toBe('G3C429EV-EN')
+    expect(result.fullCode).toBe('G3C429ZA-UA')
     expect(result.isComplete).toBe(true)
   })
 
@@ -572,10 +540,9 @@ describe('buildProductModel — g3MultipurposePushButton', () => {
     expect(result.missingSteps).toContain('language')
   })
 
-  it('all 29 valid codes generated from parsed configurations', () => {
+  it('all 33 valid codes generated from parsed configurations', () => {
     const validSet = new Set(VALID_MODEL_CODES)
     let matchCount = 0
-
     for (const code of VALID_MODEL_CODES) {
       const parsed = parseG3ModelCode(code)!
       const config: Configuration = {
@@ -589,14 +556,9 @@ describe('buildProductModel — g3MultipurposePushButton', () => {
       const result = buildProductModel(config, g3MultipurposePushButtonModel)
       if (validSet.has(result.fullCode)) matchCount++
     }
-
     expect(matchCount).toBe(VALID_MODEL_CODES.length)
   })
 })
-
-// ─────────────────────────────────────────────────────────────
-// filterOptions completeness — g3MultipurposePushButton
-// ─────────────────────────────────────────────────────────────
 
 describe('isConfigurationComplete — g3MultipurposePushButton', () => {
   it('returns true when all 6 steps selected', () => {
@@ -653,7 +615,6 @@ describe('isConfigurationComplete — g3MultipurposePushButton', () => {
         language: null,
       }),
     ).toBe(0)
-
     expect(
       getCompletionPercentage(g3MultipurposePushButtonModel, {
         model: 'A',
@@ -664,7 +625,6 @@ describe('isConfigurationComplete — g3MultipurposePushButton', () => {
         language: null,
       }),
     ).toBe(17)
-
     expect(
       getCompletionPercentage(g3MultipurposePushButtonModel, {
         model: 'A',
@@ -675,7 +635,6 @@ describe('isConfigurationComplete — g3MultipurposePushButton', () => {
         language: null,
       }),
     ).toBe(67)
-
     expect(
       getCompletionPercentage(g3MultipurposePushButtonModel, {
         model: 'A',
@@ -688,10 +647,6 @@ describe('isConfigurationComplete — g3MultipurposePushButton', () => {
     ).toBe(100)
   })
 })
-
-// ─────────────────────────────────────────────────────────────
-// Model definition integrity
-// ─────────────────────────────────────────────────────────────
 
 describe('g3MultipurposePushButtonModel definition', () => {
   it('has correct model id and slug', () => {
@@ -717,24 +672,30 @@ describe('g3MultipurposePushButtonModel definition', () => {
     }
   })
 
-  it('language step has only one option — EN', () => {
+  it('language step has 2 options — EN and UA', () => {
     const langStep = g3MultipurposePushButtonModel.steps.find((s) => s.id === 'language')!
-    expect(langStep.options).toHaveLength(1)
-    expect(langStep.options[0].id).toBe('EN')
+    expect(langStep.options).toHaveLength(2)
+    const ids = langStep.options.map((o) => o.id)
+    expect(ids).toContain('EN')
+    expect(ids).toContain('UA')
+  })
+
+  it('text step contains EX, XT, ZA, RM and does not contain removed options', () => {
+    const textStep = g3MultipurposePushButtonModel.steps.find((s) => s.id === 'text')!
+    const ids = textStep.options.map((o) => o.id)
+    expect(ids).toContain('EX')
+    expect(ids).toContain('XT')
+    expect(ids).toContain('ZA')
+    expect(ids).toContain('RM')
+    for (const removed of ['AB', 'EM', 'EV', 'HV', 'LD', 'PO', 'PS']) {
+      expect(ids).not.toContain(removed)
+    }
   })
 
   it('colour step does not include disabled option 5 (Orange)', () => {
     const colourStep = g3MultipurposePushButtonModel.steps.find((s) => s.id === 'colour')!
     const ids = colourStep.options.map((o) => o.id)
     expect(ids).not.toContain('5')
-  })
-
-  it('text step does not include disabled options ES, PL, PX, NT', () => {
-    const textStep = g3MultipurposePushButtonModel.steps.find((s) => s.id === 'text')!
-    const ids = textStep.options.map((o) => o.id)
-    for (const disabled of ['ES', 'PL', 'PX', 'NT']) {
-      expect(ids).not.toContain(disabled)
-    }
   })
 
   it('baseCode is G3', () => {

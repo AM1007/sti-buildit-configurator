@@ -17,12 +17,8 @@ import {
 import { createConstraintEngine } from '@entities/product/rules/constraintEngine'
 import type { Configuration } from '@shared/types'
 
-// ─────────────────────────────────────────────────────────────
-// buildGFModelCode
-// ─────────────────────────────────────────────────────────────
-
 describe('buildGFModelCode', () => {
-  it('builds all 6 valid SKUs correctly', () => {
+  it('builds all 10 valid SKUs correctly', () => {
     expect(buildGFModelCode({ model: 'A', cover: '0', text: 'FR', language: 'EN' })).toBe(
       'GFA0FR-EN',
     )
@@ -31,6 +27,12 @@ describe('buildGFModelCode', () => {
     )
     expect(buildGFModelCode({ model: 'A', cover: '2', text: 'FR', language: 'EN' })).toBe(
       'GFA2FR-EN',
+    )
+    expect(buildGFModelCode({ model: 'A', cover: '0', text: 'PA', language: 'UA' })).toBe(
+      'GFA0PA-UA',
+    )
+    expect(buildGFModelCode({ model: 'A', cover: '2', text: 'PA', language: 'UA' })).toBe(
+      'GFA2PA-UA',
     )
     expect(buildGFModelCode({ model: 'C', cover: '0', text: 'FR', language: 'EN' })).toBe(
       'GFC0FR-EN',
@@ -41,12 +43,24 @@ describe('buildGFModelCode', () => {
     expect(buildGFModelCode({ model: 'C', cover: '2', text: 'FR', language: 'EN' })).toBe(
       'GFC2FR-EN',
     )
+    expect(buildGFModelCode({ model: 'C', cover: '0', text: 'PA', language: 'UA' })).toBe(
+      'GFC0PA-UA',
+    )
+    expect(buildGFModelCode({ model: 'C', cover: '2', text: 'PA', language: 'UA' })).toBe(
+      'GFC2PA-UA',
+    )
   })
 
   it('language separator is only dash in SKU', () => {
     const code = buildGFModelCode({ model: 'A', cover: '0', text: 'FR', language: 'EN' })
     expect(code?.split('-')).toHaveLength(2)
     expect(code).toContain('-EN')
+  })
+
+  it('UA language produces correct suffix', () => {
+    const code = buildGFModelCode({ model: 'A', cover: '0', text: 'PA', language: 'UA' })
+    expect(code?.split('-')).toHaveLength(2)
+    expect(code).toContain('-UA')
   })
 
   it('returns null when any field is missing', () => {
@@ -57,10 +71,6 @@ describe('buildGFModelCode', () => {
     expect(buildGFModelCode({})).toBeNull()
   })
 })
-
-// ─────────────────────────────────────────────────────────────
-// parseGFModelCode
-// ─────────────────────────────────────────────────────────────
 
 describe('parseGFModelCode', () => {
   it('parses GFA0FR-EN correctly', () => {
@@ -90,6 +100,24 @@ describe('parseGFModelCode', () => {
     })
   })
 
+  it('parses GFA0PA-UA correctly', () => {
+    expect(parseGFModelCode('GFA0PA-UA')).toEqual({
+      model: 'A',
+      cover: '0',
+      text: 'PA',
+      language: 'UA',
+    })
+  })
+
+  it('parses GFC2PA-UA correctly', () => {
+    expect(parseGFModelCode('GFC2PA-UA')).toEqual({
+      model: 'C',
+      cover: '2',
+      text: 'PA',
+      language: 'UA',
+    })
+  })
+
   it('returns null for invalid format', () => {
     expect(parseGFModelCode('INVALID')).toBeNull()
     expect(parseGFModelCode('GFX0FR-EN')).toBeNull()
@@ -108,29 +136,44 @@ describe('parseGFModelCode', () => {
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// VALID_MODEL_CODES integrity
-// ─────────────────────────────────────────────────────────────
-
 describe('VALID_MODEL_CODES', () => {
-  it('contains exactly 6 entries', () => {
-    expect(VALID_MODEL_CODES.length).toBe(6)
+  it('contains exactly 10 entries', () => {
+    expect(VALID_MODEL_CODES.length).toBe(10)
   })
 
   it('has no duplicates', () => {
-    expect(new Set(VALID_MODEL_CODES).size).toBe(6)
+    expect(new Set(VALID_MODEL_CODES).size).toBe(10)
   })
 
-  it('3 model A and 3 model C codes', () => {
+  it('5 model A and 5 model C codes', () => {
     const modelA = VALID_MODEL_CODES.filter((c) => parseGFModelCode(c)?.model === 'A')
     const modelC = VALID_MODEL_CODES.filter((c) => parseGFModelCode(c)?.model === 'C')
-    expect(modelA.length).toBe(3)
-    expect(modelC.length).toBe(3)
+    expect(modelA.length).toBe(5)
+    expect(modelC.length).toBe(5)
   })
 
-  it('all codes end with -EN', () => {
-    for (const code of VALID_MODEL_CODES) {
-      expect(code.endsWith('-EN')).toBe(true)
+  it('6 codes end with -EN, 4 codes end with -UA', () => {
+    const en = VALID_MODEL_CODES.filter((c) => c.endsWith('-EN'))
+    const ua = VALID_MODEL_CODES.filter((c) => c.endsWith('-UA'))
+    expect(en.length).toBe(6)
+    expect(ua.length).toBe(4)
+  })
+
+  it('PA text only appears with UA language', () => {
+    const paCodes = VALID_MODEL_CODES.filter((c) => parseGFModelCode(c)?.text === 'PA')
+    expect(paCodes.length).toBe(4)
+    for (const code of paCodes) {
+      expect(parseGFModelCode(code)?.language).toBe('UA')
+    }
+  })
+
+  it('FR and HF text only appear with EN language', () => {
+    const frHfCodes = VALID_MODEL_CODES.filter((c) => {
+      const t = parseGFModelCode(c)?.text
+      return t === 'FR' || t === 'HF'
+    })
+    for (const code of frHfCodes) {
+      expect(parseGFModelCode(code)?.language).toBe('EN')
     }
   })
 
@@ -142,33 +185,14 @@ describe('VALID_MODEL_CODES', () => {
     }
   })
 
-  it('cover 2 only appears with FR text', () => {
+  it('cover 2 only appears with FR or PA text', () => {
     const cover2Codes = VALID_MODEL_CODES.filter(
       (c) => parseGFModelCode(c)?.cover === '2',
     )
-    expect(cover2Codes.length).toBe(2)
+    expect(cover2Codes.length).toBe(4)
     for (const code of cover2Codes) {
-      expect(parseGFModelCode(code)?.text).toBe('FR')
-    }
-  })
-
-  it('model is independent of cover and text — symmetric distribution', () => {
-    for (const model of ['A', 'C']) {
-      const fr0 = VALID_MODEL_CODES.some((c) => {
-        const p = parseGFModelCode(c)
-        return p?.model === model && p.cover === '0' && p.text === 'FR'
-      })
-      const hf0 = VALID_MODEL_CODES.some((c) => {
-        const p = parseGFModelCode(c)
-        return p?.model === model && p.cover === '0' && p.text === 'HF'
-      })
-      const fr2 = VALID_MODEL_CODES.some((c) => {
-        const p = parseGFModelCode(c)
-        return p?.model === model && p.cover === '2' && p.text === 'FR'
-      })
-      expect(fr0).toBe(true)
-      expect(hf0).toBe(true)
-      expect(fr2).toBe(true)
+      const text = parseGFModelCode(code)?.text
+      expect(['FR', 'PA']).toContain(text)
     }
   })
 
@@ -179,12 +203,8 @@ describe('VALID_MODEL_CODES', () => {
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// isValidGFCombination
-// ─────────────────────────────────────────────────────────────
-
 describe('isValidGFCombination', () => {
-  it('all 6 VALID_MODEL_CODES pass validation', () => {
+  it('all 10 VALID_MODEL_CODES pass validation', () => {
     for (const code of VALID_MODEL_CODES) {
       const parsed = parseGFModelCode(code)!
       expect(isValidGFCombination(parsed)).toEqual({ valid: true })
@@ -219,11 +239,27 @@ describe('isValidGFCombination', () => {
     })
     expect(result.valid).toBe(false)
   })
-})
 
-// ─────────────────────────────────────────────────────────────
-// getValidGFOptionsForStep
-// ─────────────────────────────────────────────────────────────
+  it('rejects PA text with EN language', () => {
+    const result = isValidGFCombination({
+      model: 'A',
+      cover: '0',
+      text: 'PA',
+      language: 'EN',
+    })
+    expect(result.valid).toBe(false)
+  })
+
+  it('rejects FR text with UA language', () => {
+    const result = isValidGFCombination({
+      model: 'A',
+      cover: '0',
+      text: 'FR',
+      language: 'UA',
+    })
+    expect(result.valid).toBe(false)
+  })
+})
 
 describe('getValidGFOptionsForStep', () => {
   it('returns both models when nothing selected', () => {
@@ -232,62 +268,43 @@ describe('getValidGFOptionsForStep', () => {
     expect(valid).toContain('C')
   })
 
-  it('language always returns only EN', () => {
-    expect(getValidGFOptionsForStep('language', {})).toEqual(['EN'])
+  it('language returns EN and UA when nothing selected', () => {
+    const valid = getValidGFOptionsForStep('language', {})
+    expect(valid).toContain('EN')
+    expect(valid).toContain('UA')
   })
 
-  it('cover 2 restricts text to FR only', () => {
-    const valid = getValidGFOptionsForStep('text', { cover: '2' })
-    expect(valid).toEqual(['FR'])
+  it('language returns only UA when text is PA', () => {
+    const valid = getValidGFOptionsForStep('language', { text: 'PA' })
+    expect(valid).toEqual(['UA'])
   })
 
-  it('cover 0 allows both FR and HF texts', () => {
-    const valid = getValidGFOptionsForStep('text', { cover: '0' })
+  it('language returns only EN when text is FR', () => {
+    const valid = getValidGFOptionsForStep('language', { text: 'FR' })
+    expect(valid).toEqual(['EN'])
+  })
+
+  it('text returns only PA when language is UA', () => {
+    const valid = getValidGFOptionsForStep('text', { language: 'UA' })
+    expect(valid).toEqual(['PA'])
+  })
+
+  it('text returns FR and HF when language is EN', () => {
+    const valid = getValidGFOptionsForStep('text', { language: 'EN' })
     expect(valid).toContain('FR')
     expect(valid).toContain('HF')
+    expect(valid).not.toContain('PA')
   })
 
-  it('HF text restricts cover to 0 only', () => {
+  it('cover excludes 2 when text is HF', () => {
     const valid = getValidGFOptionsForStep('cover', { text: 'HF' })
-    expect(valid).toEqual(['0'])
-  })
-
-  it('FR text allows both covers', () => {
-    const valid = getValidGFOptionsForStep('cover', { text: 'FR' })
+    expect(valid).not.toContain('2')
     expect(valid).toContain('0')
-    expect(valid).toContain('2')
-  })
-
-  it('model does not restrict cover or text — model A and C symmetric', () => {
-    for (const model of ['A', 'C']) {
-      const coverValid = getValidGFOptionsForStep('cover', { model })
-      const textValid = getValidGFOptionsForStep('text', { model })
-      expect(coverValid).toContain('0')
-      expect(coverValid).toContain('2')
-      expect(textValid).toContain('FR')
-      expect(textValid).toContain('HF')
-    }
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// Constraint engine integration
-// ─────────────────────────────────────────────────────────────
-
-describe('GF_FIRE_ALARM_PUSH_BUTTON_CONSTRAINTS + constraintEngine', () => {
+describe('constraint engine — gfFireAlarmPushButton', () => {
   const engine = createConstraintEngine(GF_FIRE_ALARM_PUSH_BUTTON_CONSTRAINTS)
-
-  it('blocks HF text when cover is 2', () => {
-    expect(engine.checkOptionAvailability('text', 'HF', { cover: '2' }).available).toBe(
-      false,
-    )
-  })
-
-  it('allows FR text when cover is 2', () => {
-    expect(engine.checkOptionAvailability('text', 'FR', { cover: '2' }).available).toBe(
-      true,
-    )
-  })
 
   it('blocks cover 2 when text is HF', () => {
     expect(engine.checkOptionAvailability('cover', '2', { text: 'HF' }).available).toBe(
@@ -301,30 +318,29 @@ describe('GF_FIRE_ALARM_PUSH_BUTTON_CONSTRAINTS + constraintEngine', () => {
     )
   })
 
+  it('blocks UA language when text is FR', () => {
+    expect(
+      engine.checkOptionAvailability('language', 'UA', { text: 'FR' }).available,
+    ).toBe(false)
+  })
+
+  it('blocks EN language when text is PA', () => {
+    expect(
+      engine.checkOptionAvailability('language', 'EN', { text: 'PA' }).available,
+    ).toBe(false)
+  })
+
+  it('allows UA language when text is PA', () => {
+    expect(
+      engine.checkOptionAvailability('language', 'UA', { text: 'PA' }).available,
+    ).toBe(true)
+  })
+
   it('model does not restrict cover', () => {
     for (const model of ['A', 'C']) {
       expect(engine.checkOptionAvailability('cover', '0', { model }).available).toBe(true)
       expect(engine.checkOptionAvailability('cover', '2', { model }).available).toBe(true)
     }
-  })
-
-  it('model does not restrict text', () => {
-    for (const model of ['A', 'C']) {
-      expect(engine.checkOptionAvailability('text', 'FR', { model }).available).toBe(true)
-      expect(engine.checkOptionAvailability('text', 'HF', { model }).available).toBe(true)
-    }
-  })
-
-  it('language always EN — no restriction from any step', () => {
-    expect(
-      engine.checkOptionAvailability('language', 'EN', { model: 'A' }).available,
-    ).toBe(true)
-    expect(
-      engine.checkOptionAvailability('language', 'EN', { cover: '2' }).available,
-    ).toBe(true)
-    expect(
-      engine.checkOptionAvailability('language', 'EN', { text: 'HF' }).available,
-    ).toBe(true)
   })
 
   it('constraint engine modelId matches', () => {
@@ -333,10 +349,6 @@ describe('GF_FIRE_ALARM_PUSH_BUTTON_CONSTRAINTS + constraintEngine', () => {
     )
   })
 })
-
-// ─────────────────────────────────────────────────────────────
-// buildProductModel integration
-// ─────────────────────────────────────────────────────────────
 
 describe('buildProductModel — gfFireAlarmPushButton', () => {
   it('builds GFA0FR-EN correctly', () => {
@@ -357,6 +369,20 @@ describe('buildProductModel — gfFireAlarmPushButton', () => {
     const config: Configuration = { model: 'C', cover: '0', text: 'HF', language: 'EN' }
     const result = buildProductModel(config, gfFireAlarmPushButtonModel)
     expect(result.fullCode).toBe('GFC0HF-EN')
+    expect(result.isComplete).toBe(true)
+  })
+
+  it('builds GFA0PA-UA correctly', () => {
+    const config: Configuration = { model: 'A', cover: '0', text: 'PA', language: 'UA' }
+    const result = buildProductModel(config, gfFireAlarmPushButtonModel)
+    expect(result.fullCode).toBe('GFA0PA-UA')
+    expect(result.isComplete).toBe(true)
+  })
+
+  it('builds GFC2PA-UA correctly', () => {
+    const config: Configuration = { model: 'C', cover: '2', text: 'PA', language: 'UA' }
+    const result = buildProductModel(config, gfFireAlarmPushButtonModel)
+    expect(result.fullCode).toBe('GFC2PA-UA')
     expect(result.isComplete).toBe(true)
   })
 
@@ -381,7 +407,7 @@ describe('buildProductModel — gfFireAlarmPushButton', () => {
     expect(result.missingSteps).toContain('language')
   })
 
-  it('all 6 valid codes generated from parsed configurations', () => {
+  it('all 10 valid codes generated from parsed configurations', () => {
     const validSet = new Set(VALID_MODEL_CODES)
     let matchCount = 0
     for (const code of VALID_MODEL_CODES) {
@@ -398,10 +424,6 @@ describe('buildProductModel — gfFireAlarmPushButton', () => {
     expect(matchCount).toBe(VALID_MODEL_CODES.length)
   })
 })
-
-// ─────────────────────────────────────────────────────────────
-// filterOptions completeness — gfFireAlarmPushButton
-// ─────────────────────────────────────────────────────────────
 
 describe('isConfigurationComplete — gfFireAlarmPushButton', () => {
   it('returns true when all 4 steps selected', () => {
@@ -438,7 +460,6 @@ describe('isConfigurationComplete — gfFireAlarmPushButton', () => {
         language: null,
       }),
     ).toBe(0)
-
     expect(
       getCompletionPercentage(gfFireAlarmPushButtonModel, {
         model: 'A',
@@ -447,7 +468,6 @@ describe('isConfigurationComplete — gfFireAlarmPushButton', () => {
         language: null,
       }),
     ).toBe(25)
-
     expect(
       getCompletionPercentage(gfFireAlarmPushButtonModel, {
         model: 'A',
@@ -456,7 +476,6 @@ describe('isConfigurationComplete — gfFireAlarmPushButton', () => {
         language: null,
       }),
     ).toBe(50)
-
     expect(
       getCompletionPercentage(gfFireAlarmPushButtonModel, {
         model: 'A',
@@ -465,7 +484,6 @@ describe('isConfigurationComplete — gfFireAlarmPushButton', () => {
         language: null,
       }),
     ).toBe(75)
-
     expect(
       getCompletionPercentage(gfFireAlarmPushButtonModel, {
         model: 'A',
@@ -476,10 +494,6 @@ describe('isConfigurationComplete — gfFireAlarmPushButton', () => {
     ).toBe(100)
   })
 })
-
-// ─────────────────────────────────────────────────────────────
-// Model definition integrity
-// ─────────────────────────────────────────────────────────────
 
 describe('gfFireAlarmPushButtonModel definition', () => {
   it('has correct model id and slug', () => {
@@ -502,16 +516,18 @@ describe('gfFireAlarmPushButtonModel definition', () => {
     }
   })
 
-  it('language step has only one option — EN', () => {
+  it('language step has 2 options — EN and UA', () => {
     const langStep = gfFireAlarmPushButtonModel.steps.find((s) => s.id === 'language')!
-    expect(langStep.options).toHaveLength(1)
-    expect(langStep.options[0].id).toBe('EN')
+    expect(langStep.options).toHaveLength(2)
+    const ids = langStep.options.map((o) => o.id)
+    expect(ids).toContain('EN')
+    expect(ids).toContain('UA')
   })
 
-  it('text step has exactly 2 options — FR and HF', () => {
+  it('text step has exactly 3 options — FR, HF and PA', () => {
     const textStep = gfFireAlarmPushButtonModel.steps.find((s) => s.id === 'text')!
     const ids = textStep.options.map((o) => o.id)
-    expect(ids).toEqual(['FR', 'HF'])
+    expect(ids).toEqual(['FR', 'HF', 'PA'])
   })
 
   it('baseCode is GF', () => {
