@@ -7,7 +7,7 @@ import { buildProductModel } from '@entities/product/buildProductModel'
 import { ProductPreview } from './ProductPreview'
 import { ProductModelDisplay } from './ProductModelDisplay'
 import { ShareMenu } from '@shared/ui/ShareMenu'
-import { PdfMenu } from '@shared/ui/PdfMenu'
+import { PdfMenu } from './PdfMenu'
 import { CustomTextForm } from './CustomTextForm'
 import { CustomTextDisplay } from './CustomTextDisplay'
 import {
@@ -17,7 +17,7 @@ import {
   getMaxLength,
   getEffectiveLineCount,
 } from '@shared/utils/customTextHelpers'
-import { getModelSummary } from '@shared/utils/getModelSummary'
+import { getModelSummary } from '@features/configurator/lib/getModelSummary'
 import { useTranslation, useLanguage } from '@shared/i18n'
 
 interface MobileTabletLayoutProps {

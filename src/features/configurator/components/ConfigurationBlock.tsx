@@ -9,7 +9,7 @@ import type {
 } from '@shared/types'
 import { ProductModelDisplay } from './ProductModelDisplay'
 import { ShareMenu } from '@shared/ui/ShareMenu'
-import { PdfMenu } from '@shared/ui/PdfMenu'
+import { PdfMenu } from './PdfMenu'
 import { useTranslation } from '@shared/i18n'
 
 export interface ConfigurationBlockProps {

@@ -1,8 +1,8 @@
 import * as XLSX from 'xlsx-js-style'
-import type { SavedConfiguration, ProjectMeta } from '../types'
-import { MODEL_NAMES } from '../types'
-import { getModelDescription } from './getModelDescription'
-import { formatCustomTextBlock } from './customTextHelpers'
+import type { SavedConfiguration, ProjectMeta } from '@shared/types'
+import { MODEL_NAMES } from '@shared/types'
+import { getModelDescription } from '@features/configurator/lib/getModelDescription'
+import { formatCustomTextBlock } from '@shared/utils/customTextHelpers'
 
 type Language = 'en' | 'uk'
 

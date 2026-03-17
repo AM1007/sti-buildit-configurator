@@ -13,7 +13,7 @@ import { ConfigurationBlock } from './ConfigurationBlock'
 import { ProductPreviewContent } from './ProductPreviewContent'
 import { EmptyStateContent } from './EmptyStateContent'
 import { getCompletedDeviceImage } from '@shared/utils/getCompletedDeviceImage'
-import { getModelSummary } from '@shared/utils/getModelSummary'
+import { getModelSummary } from '../lib/getModelSummary'
 import {
   shouldShowCustomTextForm,
   hasSubmittedCustomText,
