@@ -206,7 +206,9 @@ export function MainPanel({
                 productModel.isComplete ? 'bg-green-400' : 'bg-slate-300'
               }`}
             />
-            {productModel.isComplete ? 'CONFIGURED' : 'WAITING FOR INPUT'}
+            {productModel.isComplete
+              ? t('configurator.configured')
+              : t('configurator.waitingForInput')}
           </div>
         </div>
       </div>

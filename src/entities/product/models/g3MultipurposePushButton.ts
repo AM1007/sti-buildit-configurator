@@ -119,7 +119,7 @@ const steps: Step[] = [
         id: 'UA',
         label: '#UA Українська',
         code: 'UA',
-        image: `${IMG}/LANGUAGE/EN English.webp`,
+        image: `${IMG}/LANGUAGE/UA Ukrainian.webp`,
       },
     ],
   },

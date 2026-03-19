@@ -94,6 +94,7 @@
     "removeFromMyList": "Remove from List",
     "inMyList": "In List",
     "configured": "CONFIGURED",
+    "waitingForInput": "WAITING FOR INPUT",
     "copyProductModel": "Copy Model",
     "copyUrl": "Copy Link",
     "downloadPdf": "Download PDF",
