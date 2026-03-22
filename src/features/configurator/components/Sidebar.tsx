@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import type {
   Configuration,
   StepId,
@@ -9,6 +10,9 @@ import { StepSelector } from './StepSelector'
 import { CustomTextDisplay } from './CustomTextDisplay'
 import { hasSubmittedCustomText } from '@shared/utils/customTextHelpers'
 import { useModelTranslations } from '../hooks/useModelTranslations'
+import { getOptionsWithAvailability } from '@features/configurator/lib/filterOptions'
+
+const AUTOSELECT_MODELS = new Set(['global-reset'])
 
 interface SidebarProps {
   model: ModelDefinition
@@ -41,14 +45,31 @@ export function Sidebar({
     .map((stepId) => model.steps.find((s) => s.id === stepId))
     .filter((step): step is NonNullable<typeof step> => step !== undefined)
 
+  const visibleSteps = orderedSteps.filter((step) => {
+    const options = getOptionsWithAvailability(step, config, model.id)
+    return options.some(({ availability }) => availability.available)
+  })
+
+  useEffect(() => {
+    if (!AUTOSELECT_MODELS.has(model.id)) return
+    for (const step of visibleSteps) {
+      if (config[step.id]) continue
+      const options = getOptionsWithAvailability(step, config, model.id)
+      const available = options.filter(({ availability }) => availability.available)
+      if (available.length === 1) {
+        onSelectOption(step.id, available[0].option.id)
+      }
+    }
+  }, [model.id, config.series])
+
   const showCustomTextDisplay = hasSubmittedCustomText(model.id, config, customText)
 
-  const totalSteps = model.stepOrder.length
+  const totalSteps = visibleSteps.length
 
   return (
     <aside className={`flex flex-col gap-4 ${className}`}>
       <div className="overflow-hidden rounded-sm border border-slate-200 bg-white shadow-sm">
-        {orderedSteps.map((step, index) => (
+        {visibleSteps.map((step, index) => (
           <StepSelector
             key={step.id}
             step={step}

@@ -8,49 +8,51 @@
     "heroDescription": "UL Listed resettable manual call point simulating break-glass activation without glass replacement. Key-operated reset mechanism. DPDT contacts (2 Form C) with visible activation indicator.\n\nUniversal mounting plate compatible with US, European (GLR models), single and double gang back boxes.\n\nIntended for fire alarm systems requiring rapid reset and compatibility with regional installation standards.\n\nMounting note: GLR models are supplied for flush installation only. Surface back boxes are available separately."
   },
   "steps": {
-    "colour": {
-      "title": "COLOUR",
+    "series": {
+      "title": "Series",
       "options": {
-        "0": "#0 Red",
-        "1": "#1 Green",
-        "2": "#2 Yellow",
-        "3": "#3 White",
-        "4": "#4 Blue"
+        "GLR": "GLR General Purpose",
+        "GR": "GR Fire Alarm"
       }
     },
-    "cover": {
-      "title": "PROTECTIVE COVER",
+    "colour": {
+      "title": "Colour",
       "options": {
-        "01": "#01 No cover",
-        "21": "#21 Protective shield"
+        "001": "#0 Red",
+        "101": "#1 Green",
+        "201": "#2 Yellow",
+        "301": "#3 White",
+        "401": "#4 Blue"
       }
     },
     "text": {
-      "title": "MARKING",
+      "title": "Text",
       "options": {
-        "AB": "#AB ABORT",
         "EM": "#EM EMERGENCY",
-        "ES": "#ES EMERGENCY STOP",
-        "EV": "#EV EVACUATION",
         "EX": "#EX EMERGENCY EXIT",
-        "HV": "#HV HVAC SHUT-DOWN",
-        "LD": "#LD LOCKDOWN",
-        "NT": "#NT NO TEXT",
-        "PO": "#PO EMERGENCY POWER OFF",
-        "PS": "#PS FUEL PUMP SHUT-DOWN",
-        "PX": "#PX PUSH TO EXIT",
-        "RM": "#RM Running Man Symbol",
-        "XT": "#XT EXIT",
-        "ZA": "#ZA Custom text (NON-RETURNABLE)"
+        "ZA": "#ZA NON-RETURNABLE custom text",
+        "RM": "#RM Running Man symbol"
       }
     },
     "language": {
-      "title": "LANGUAGE",
+      "title": "Language",
       "options": {
         "EN": "#EN English",
-        "ES": "#ES Spanish",
-        "FR": "#FR French",
-        "ZL": "#ZL Other language (NON-RETURNABLE)"
+        "UA": "#UA Ukrainian"
+      }
+    },
+    "mounting": {
+      "title": "Mounting",
+      "options": {
+        "F": "#RF Flush mount",
+        "S": "#RS Surface mount"
+      }
+    },
+    "grText": {
+      "title": "Text",
+      "options": {
+        "22-0": "#22-0 Running Man symbol",
+        "22-0-EN": "#22-0-EN FIRE"
       }
     }
   }

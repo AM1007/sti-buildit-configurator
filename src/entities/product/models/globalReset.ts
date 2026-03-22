@@ -4,39 +4,48 @@ const IMG = '/Global ReSet'
 
 const steps: Step[] = [
   {
-    id: 'colour',
-    title: 'COLOUR',
+    id: 'series',
+    title: 'SERIES',
     required: true,
     options: [
-      { id: '0', label: '#0 red', code: '0', image: `${IMG}/COLOUR/0 red.webp` },
-      { id: '1', label: '#1 green', code: '1', image: `${IMG}/COLOUR/1 green.webp` },
-      { id: '2', label: '#2 yellow', code: '2', image: `${IMG}/COLOUR/2 yellow.webp` },
-      { id: '3', label: '#3 white', code: '3', image: `${IMG}/COLOUR/3 white.webp` },
-      { id: '4', label: '#4 blue', code: '4', image: `${IMG}/COLOUR/4 blue.webp` },
+      {
+        id: 'GLR',
+        label: 'GLR General Purpose',
+        code: 'GLR',
+        image: `${IMG}/HERO/02.webp`,
+      },
+      {
+        id: 'GR',
+        label: 'GR Fire Alarm',
+        code: 'GR',
+        image: `${IMG}/HERO/01.webp`,
+      },
     ],
   },
 
   {
-    id: 'cover',
-    title: 'COVER',
-    required: true,
+    id: 'colour',
+    title: 'COLOUR',
+    required: false,
     options: [
+      { id: '001', label: '#0 red', code: '001', image: `${IMG}/COLOUR/0 red.webp` },
+      { id: '101', label: '#1 green', code: '101', image: `${IMG}/COLOUR/1 green.webp` },
       {
-        id: '01',
-        label: '#01 no cover',
-        code: '01',
-        image: `${IMG}/COVER/01 no cover.webp`,
+        id: '201',
+        label: '#2 yellow',
+        code: '201',
+        image: `${IMG}/COLOUR/2 yellow.webp`,
       },
-      // { id: "21", label: "#21 shield", code: "21", image: `${IMG}/COVER/21 shield.webp` },  // No valid models with shield
+      { id: '301', label: '#3 white', code: '301', image: `${IMG}/COLOUR/3 white.webp` },
+      { id: '401', label: '#4 blue', code: '401', image: `${IMG}/COLOUR/4 blue.webp` },
     ],
   },
 
   {
     id: 'text',
     title: 'TEXT',
-    required: true,
+    required: false,
     options: [
-      // { id: "AB", label: "#AB ABORT", code: "AB", image: `${IMG}/TEXT/AB ABORT.webp` },  // No valid models
       {
         id: 'EM',
         label: '#EM EMERGENCY',
@@ -48,35 +57,6 @@ const steps: Step[] = [
         label: '#EX EMERGENCY EXIT',
         code: 'EX',
         image: `${IMG}/TEXT/EX EMERGENCY EXIT.webp`,
-      },
-      // { id: "PO", label: "#PO EMERGENCY POWER OFF", code: "PO", image: `${IMG}/TEXT/PO EMERGENCY POWER OFF.webp` },  // No valid models
-      // { id: "ES", label: "#ES EMERGENCY STOP", code: "ES", image: `${IMG}/TEXT/ES EMERGENCY STOP.webp` },  // No valid models
-      {
-        id: 'EV',
-        label: '#EV EVACUATION',
-        code: 'EV',
-        image: `${IMG}/TEXT/EV EVACUATION.webp`,
-      },
-      // { id: "XT", label: "#XT EXIT", code: "XT", image: `${IMG}/TEXT/XT EXIT.webp` },  // No valid models
-      {
-        id: 'PS',
-        label: '#PS FUEL PUMP SHUT-DOWN',
-        code: 'PS',
-        image: `${IMG}/TEXT/PS FUEL PUMP SHUT-DOWN.webp`,
-      },
-      // { id: "HV", label: "#HV HVAC SHUT-DOWN", code: "HV", image: `${IMG}/TEXT/HV HVAC SHUT-DOWN.webp` },  // No valid models
-      {
-        id: 'LD',
-        label: '#LD LOCKDOWN',
-        code: 'LD',
-        image: `${IMG}/TEXT/LD LOCKDOWN.webp`,
-      },
-      // { id: "PX", label: "#PX PUSH TO EXIT", code: "PX", image: `${IMG}/TEXT/PX PUSH TO EXIT.webp` },  // No valid models
-      {
-        id: 'NT',
-        label: '#NT NO TEXT',
-        code: 'NT',
-        image: `${IMG}/TEXT/NT NO TEXT.webp`,
       },
       {
         id: 'ZA',
@@ -96,7 +76,7 @@ const steps: Step[] = [
   {
     id: 'language',
     title: 'LANGUAGE',
-    required: true,
+    required: false,
     options: [
       {
         id: 'EN',
@@ -104,9 +84,52 @@ const steps: Step[] = [
         code: 'EN',
         image: `${IMG}/LANGUAGE/EN English.webp`,
       },
-      // { id: "ES", label: "#ES Spanish", code: "ES", image: `${IMG}/LANGUAGE/ES Spanish.webp` },  // No valid models
-      // { id: "FR", label: "#FR French", code: "FR", image: `${IMG}/LANGUAGE/FR French.webp` },  // No valid models
-      // { id: "ZL", label: "#ZL NON-RETURNABLE other language", code: "ZL", image: `${IMG}/LANGUAGE/ZL NON-RETURNABLE other language.webp` },  // No valid models
+      {
+        id: 'UA',
+        label: '#UA Ukrainian',
+        code: 'UA',
+        image: `${IMG}/LANGUAGE/EN English.webp`,
+      },
+    ],
+  },
+
+  {
+    id: 'mounting',
+    title: 'MOUNTING',
+    required: false,
+    options: [
+      {
+        id: 'F',
+        label: '#F Flush mount',
+        code: 'RF',
+        image: `${IMG}/COVER/01 no cover.webp`,
+      },
+      {
+        id: 'S',
+        label: '#S Surface mount',
+        code: 'RS',
+        image: `${IMG}/COMPLETED DEVICE/GR/KIT-GLR-BB-0.webp`,
+      },
+    ],
+  },
+
+  {
+    id: 'grText',
+    title: 'TEXT',
+    required: false,
+    options: [
+      {
+        id: '22-0',
+        label: '#22-0 Running Man symbol',
+        code: '22-0',
+        image: `${IMG}/TEXT/RM Running Man Logo.webp`,
+      },
+      {
+        id: '22-0-EN',
+        label: '#22-0-EN FIRE',
+        code: '22-0-EN',
+        image: `${IMG}/TEXT/EM EMERGENCY.webp`,
+      },
     ],
   },
 ]
@@ -118,17 +141,19 @@ export const globalResetModel: ModelDefinition = {
 
   steps,
 
-  stepOrder: ['colour', 'cover', 'text', 'language'],
+  stepOrder: ['series', 'colour', 'text', 'language', 'mounting', 'grText'],
 
   productModelSchema: {
-    baseCode: 'GLR',
-    partsOrder: ['colour', 'cover', 'text', 'language'],
+    baseCode: '',
+    partsOrder: ['series', 'colour', 'text', 'language', 'mounting', 'grText'],
     separator: 'none',
     separatorMap: {
+      series: '',
       colour: '',
-      cover: '',
       text: '',
       language: '-',
+      mounting: '-',
+      grText: '-',
     },
   },
 }

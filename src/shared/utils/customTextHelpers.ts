@@ -75,7 +75,7 @@ const MODEL_CUSTOM_TEXT_CONFIG: Partial<Record<ModelId, CustomTextConfig>> = {
   'global-reset': {
     stepId: 'text',
     optionId: 'ZA',
-    variant: 'dual-block-three-line',
+    variant: 'singleline',
     maxLength: 20,
     line2Required: false,
   },
@@ -172,6 +172,7 @@ export function shouldShowCustomTextForm(
   model: ModelDefinition,
   configuration: Configuration,
   customText: CustomTextData | null,
+  isComplete?: boolean,
 ): boolean {
   if (!supportsCustomText(model.id)) {
     return false
@@ -181,7 +182,10 @@ export function shouldShowCustomTextForm(
     return false
   }
 
-  if (!isAllStepsCompleted(model, configuration)) {
+  const allComplete =
+    isComplete !== undefined ? isComplete : isAllStepsCompleted(model, configuration)
+
+  if (!allComplete) {
     return false
   }
 

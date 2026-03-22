@@ -1,103 +1,104 @@
 import type { ModelConstraints, ConstraintMatrix } from './types'
 
-// ─────────────────────────────────────────────────────────────
-// ALLOWLIST: Valid Global ReSet model codes
-// Source: 05_Global_ReSet.md (13 codes)
-// Format: GLR{colour:1}{cover:2}{text:2}-{language:2}
-// Cover is always "01", Language is always "EN"
-// ─────────────────────────────────────────────────────────────
-
-export const VALID_MODEL_CODES: readonly string[] = [
-  // ── Red (colour=0): 1 model ──
+export const VALID_GLR_CODES: readonly string[] = [
   'GLR001ZA-EN',
-
-  // ── Green (colour=1): 3 models ──
+  'GLR001ZA-UA',
   'GLR101EM-EN',
   'GLR101EX-EN',
   'GLR101RM-EN',
-
-  // ── Yellow (colour=2): 4 models ──
-  'GLR201EX-EN',
-  'GLR201NT-EN',
-  'GLR201PS-EN',
+  'GLR101ZA-EN',
+  'GLR101ZA-UA',
   'GLR201ZA-EN',
-
-  // ── White (colour=3): 1 model ──
+  'GLR201ZA-UA',
   'GLR301ZA-EN',
-
-  // ── Blue (colour=4): 4 models ──
-  'GLR401EM-EN',
-  'GLR401EV-EN',
-  'GLR401LD-EN',
+  'GLR301ZA-UA',
   'GLR401ZA-EN',
+  'GLR401ZA-UA',
 ] as const
 
-const VALID_MODEL_SET = new Set(VALID_MODEL_CODES)
+export const VALID_GR_CODES: readonly string[] = [
+  'GR-RF-22-0',
+  'GR-RF-22-0-EN',
+  'GR-RS-22-0',
+  'GR-RS-22-0-EN',
+] as const
 
-// ─────────────────────────────────────────────────────────────
-// Selection state interface
-// ─────────────────────────────────────────────────────────────
+export const VALID_MODEL_CODES: readonly string[] = [
+  ...VALID_GLR_CODES,
+  ...VALID_GR_CODES,
+] as const
+
+const VALID_GLR_SET = new Set(VALID_GLR_CODES)
+const VALID_GR_SET = new Set(VALID_GR_CODES)
 
 export interface GLRSelectionState {
   colour?: string
-  cover?: string
   text?: string
   language?: string
 }
 
-// ─────────────────────────────────────────────────────────────
-// Build model code from selections
-// ─────────────────────────────────────────────────────────────
-
-export function buildGLRModelCode(selections: GLRSelectionState): string | null {
-  const { colour, cover, text, language } = selections
-
-  if (!colour || !cover || !text || !language) {
-    return null
-  }
-
-  return `GLR${colour}${cover}${text}-${language}`
+export interface GRSelectionState {
+  mounting?: string
+  grText?: string
 }
 
-// ─────────────────────────────────────────────────────────────
-// Validate full combination against allowlist
-// ─────────────────────────────────────────────────────────────
+export function buildGLRModelCode(selections: GLRSelectionState): string | null {
+  const { colour, text, language } = selections
+  if (!colour || !text || !language) return null
+  return `GLR${colour}${text}-${language}`
+}
+
+export function buildGRModelCode(selections: GRSelectionState): string | null {
+  const { mounting, grText } = selections
+  if (!mounting || !grText) return null
+  return `GR-R${mounting}-${grText}`
+}
 
 export function isValidGLRCombination(
   selections: GLRSelectionState,
 ): { valid: true } | { valid: false; reason: string } {
   const modelCode = buildGLRModelCode(selections)
+  if (!modelCode) return { valid: true }
+  if (VALID_GLR_SET.has(modelCode)) return { valid: true }
+  return { valid: false, reason: `Model ${modelCode} is not available.` }
+}
 
-  // Incomplete selection — allow user to continue picking
-  if (!modelCode) {
-    return { valid: true }
-  }
+export function isValidGRCombination(
+  selections: GRSelectionState,
+): { valid: true } | { valid: false; reason: string } {
+  const modelCode = buildGRModelCode(selections)
+  if (!modelCode) return { valid: true }
+  if (VALID_GR_SET.has(modelCode)) return { valid: true }
+  return { valid: false, reason: `Model ${modelCode} is not available.` }
+}
 
-  if (VALID_MODEL_SET.has(modelCode)) {
-    return { valid: true }
-  }
-
+export function parseGLRModelCode(code: string): GLRSelectionState | null {
+  const match = code.match(/^GLR(\d{3})([A-Z]{2})-([A-Z]{2})$/)
+  if (!match) return null
   return {
-    valid: false,
-    reason: `Model ${modelCode} is not available. This combination is not in the approved product list.`,
+    colour: match[1],
+    text: match[2],
+    language: match[3],
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-// Get valid options for a specific step given other selections
-// Used by filterOptions to disable unavailable options
-// ─────────────────────────────────────────────────────────────
+export function parseGRModelCode(code: string): GRSelectionState | null {
+  const match = code.match(/^GR-R([FS])-(.+)$/)
+  if (!match) return null
+  return {
+    mounting: match[1],
+    grText: match[2],
+  }
+}
 
 export function getValidGLROptionsForStep(
   stepId: keyof GLRSelectionState,
   currentSelections: Omit<GLRSelectionState, typeof stepId>,
 ): string[] {
   const validOptions = new Set<string>()
-
-  for (const code of VALID_MODEL_CODES) {
+  for (const code of VALID_GLR_CODES) {
     const parsed = parseGLRModelCode(code)
     if (!parsed) continue
-
     let matches = true
     for (const [key, value] of Object.entries(currentSelections)) {
       if (value && parsed[key as keyof GLRSelectionState] !== value) {
@@ -105,132 +106,94 @@ export function getValidGLROptionsForStep(
         break
       }
     }
-
     if (matches) {
       const optionValue = parsed[stepId]
-      if (optionValue) {
-        validOptions.add(optionValue)
-      }
+      if (optionValue) validOptions.add(optionValue)
     }
   }
-
   return Array.from(validOptions)
 }
 
-// ─────────────────────────────────────────────────────────────
-// Parse model code back to selection state
-// ─────────────────────────────────────────────────────────────
-
-export function parseGLRModelCode(code: string): GLRSelectionState | null {
-  // GLR{colour:1}{cover:2}{text:2}-{language:2}
-  // Example: GLR001ZA-EN
-  const match = code.match(/^GLR(\d)(\d{2})([A-Z]{2})-([A-Z]{2})$/)
-
-  if (!match) {
-    return null
+export function getValidGROptionsForStep(
+  stepId: keyof GRSelectionState,
+  currentSelections: Omit<GRSelectionState, typeof stepId>,
+): string[] {
+  const validOptions = new Set<string>()
+  for (const code of VALID_GR_CODES) {
+    const parsed = parseGRModelCode(code)
+    if (!parsed) continue
+    let matches = true
+    for (const [key, value] of Object.entries(currentSelections)) {
+      if (value && parsed[key as keyof GRSelectionState] !== value) {
+        matches = false
+        break
+      }
+    }
+    if (matches) {
+      const optionValue = parsed[stepId]
+      if (optionValue) validOptions.add(optionValue)
+    }
   }
-
-  return {
-    colour: match[1],
-    cover: match[2],
-    text: match[3],
-    language: match[4],
-  }
+  return Array.from(validOptions)
 }
 
-// ─────────────────────────────────────────────────────────────
-// CONSTRAINT MATRICES
-// Derived from VALID_MODEL_CODES
-// Cover and Language are fixed ("01" and "EN") — no matrices needed
-// ─────────────────────────────────────────────────────────────
-
-const COLOUR_TO_TEXT: ConstraintMatrix = {
-  '0': ['ZA'],
-  '1': ['EM', 'EX', 'RM'],
-  '2': ['EX', 'NT', 'PS', 'ZA'],
-  '3': ['ZA'],
-  '4': ['EM', 'EV', 'LD', 'ZA'],
+const GLR_COLOUR_TO_TEXT: ConstraintMatrix = {
+  '001': ['ZA'],
+  '101': ['EM', 'EX', 'RM', 'ZA'],
+  '201': ['ZA'],
+  '301': ['ZA'],
+  '401': ['ZA'],
 }
 
-const TEXT_TO_COLOUR: ConstraintMatrix = {
-  EM: ['1', '4'],
-  EV: ['4'],
-  EX: ['1', '2'],
-  LD: ['4'],
-  NT: ['2'],
-  PS: ['2'],
-  RM: ['1'],
-  ZA: ['0', '2', '3', '4'],
+const GLR_TEXT_TO_COLOUR: ConstraintMatrix = {
+  EM: ['101'],
+  EX: ['101'],
+  RM: ['101'],
+  ZA: ['001', '101', '201', '301', '401'],
 }
 
-// ─────────────────────────────────────────────────────────────
-// Commented out: unused matrices for fixed steps
-// ─────────────────────────────────────────────────────────────
+const GLR_TEXT_TO_LANGUAGE: ConstraintMatrix = {
+  EM: ['EN'],
+  EX: ['EN'],
+  RM: ['EN'],
+  ZA: ['EN', 'UA'],
+}
 
-// const COLOUR_TO_COVER: ConstraintMatrix = {
-//   "0": ["01"],
-//   "1": ["01"],
-//   "2": ["01"],
-//   "3": ["01"],
-//   "4": ["01"],
-// };
+const GLR_LANGUAGE_TO_TEXT: ConstraintMatrix = {
+  EN: ['EM', 'EX', 'RM', 'ZA'],
+  UA: ['ZA'],
+}
 
-// const COVER_TO_COLOUR: ConstraintMatrix = {
-//   "01": ["0", "1", "2", "3", "4"],
-//   // "21": [],  // shield — no valid models
-// };
+const GLR_COLOUR_TO_LANGUAGE: ConstraintMatrix = {
+  '001': ['EN', 'UA'],
+  '101': ['EN', 'UA'],
+  '201': ['EN', 'UA'],
+  '301': ['EN', 'UA'],
+  '401': ['EN', 'UA'],
+}
 
-// const COLOUR_TO_LANGUAGE: ConstraintMatrix = {
-//   "0": ["EN"],
-//   "1": ["EN"],
-//   "2": ["EN"],
-//   "3": ["EN"],
-//   "4": ["EN"],
-// };
-
-// const LANGUAGE_TO_COLOUR: ConstraintMatrix = {
-//   "EN": ["0", "1", "2", "3", "4"],
-// };
-
-// const TEXT_TO_LANGUAGE: ConstraintMatrix = {
-//   "EM": ["EN"],
-//   "EV": ["EN"],
-//   "EX": ["EN"],
-//   "LD": ["EN"],
-//   "NT": ["EN"],
-//   "PS": ["EN"],
-//   "RM": ["EN"],
-//   "ZA": ["EN"],
-// };
-
-// const LANGUAGE_TO_TEXT: ConstraintMatrix = {
-//   "EN": ["EM", "EV", "EX", "LD", "NT", "PS", "RM", "ZA"],
-// };
-
-// ─────────────────────────────────────────────────────────────
-// CONSTRAINTS EXPORT
-// Only colour <-> text constraints are needed
-// Cover and Language have single options (auto-selected)
-// ─────────────────────────────────────────────────────────────
+const GLR_LANGUAGE_TO_COLOUR: ConstraintMatrix = {
+  EN: ['001', '101', '201', '301', '401'],
+  UA: ['001', '101', '201', '301', '401'],
+}
 
 export const GLOBAL_RESET_CONSTRAINTS: ModelConstraints = {
   modelId: 'global-reset',
   constraints: [
-    {
-      sourceStep: 'colour',
-      targetStep: 'text',
-      matrix: COLOUR_TO_TEXT,
-    },
-    {
-      sourceStep: 'text',
-      targetStep: 'colour',
-      matrix: TEXT_TO_COLOUR,
-    },
+    { sourceStep: 'colour', targetStep: 'text', matrix: GLR_COLOUR_TO_TEXT },
+    { sourceStep: 'text', targetStep: 'colour', matrix: GLR_TEXT_TO_COLOUR },
+    { sourceStep: 'text', targetStep: 'language', matrix: GLR_TEXT_TO_LANGUAGE },
+    { sourceStep: 'language', targetStep: 'text', matrix: GLR_LANGUAGE_TO_TEXT },
+    { sourceStep: 'colour', targetStep: 'language', matrix: GLR_COLOUR_TO_LANGUAGE },
+    { sourceStep: 'language', targetStep: 'colour', matrix: GLR_LANGUAGE_TO_COLOUR },
   ],
 }
 
 export const DEBUG_MATRICES = {
-  COLOUR_TO_TEXT,
-  TEXT_TO_COLOUR,
-  VALID_MODEL_CODES,
+  GLR_COLOUR_TO_TEXT,
+  GLR_TEXT_TO_COLOUR,
+  GLR_TEXT_TO_LANGUAGE,
+  GLR_LANGUAGE_TO_TEXT,
+  VALID_GLR_CODES,
+  VALID_GR_CODES,
 }

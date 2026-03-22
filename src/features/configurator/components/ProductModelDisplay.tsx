@@ -14,12 +14,12 @@ export function ProductModelDisplay({
   config,
   onEditStep,
 }: ProductModelDisplayProps) {
-  const { parts, baseCode } = productModel
-  const { partsOrder, separatorMap } = model.productModelSchema
+  const { parts } = productModel
+  const { partsOrder, separatorMap, baseCode } = model.productModelSchema
 
   return (
     <div className="flex flex-wrap items-center gap-1 font-mono text-[15px] md:text-sm">
-      <span className="font-medium text-slate-900">{baseCode}</span>
+      {baseCode && <span className="font-medium text-slate-900">{baseCode}</span>}
 
       {partsOrder.map((stepId, index) => {
         const value = parts[stepId] ?? ''
@@ -46,13 +46,6 @@ export function ProductModelDisplay({
           return null
         }
 
-        const isGlobalResetShield =
-          model.id === 'global-reset' && stepId === 'colour' && config.cover === '21'
-
-        if (isGlobalResetShield) {
-          return null
-        }
-
         const isCallPointStopperHidden =
           model.id === 'call-point-stopper' &&
           ((stepId === 'colour' && config.colour === 'R') ||
@@ -65,7 +58,14 @@ export function ProductModelDisplay({
           return null
         }
 
-        const showSeparator = separator === '-' && index > 0
+        const isGlobalResetInactiveSeries =
+          model.id === 'global-reset' && isEmpty && !value
+
+        if (isGlobalResetInactiveSeries) {
+          return null
+        }
+
+        const showSeparator = separator === '-' && (baseCode ? true : index > 0)
 
         return (
           <div key={stepId} className="contents">

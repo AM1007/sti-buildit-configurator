@@ -163,11 +163,11 @@ const MODEL_CONFIG: Record<
   'global-reset': {
     basePath: '/Global ReSet/COMPLETED DEVICE',
     colourMap: {
-      '0': 'RED',
-      '1': 'GREEN',
-      '2': 'YELLOW',
-      '3': 'WHITE',
-      '4': 'BLUE',
+      '001': 'RED',
+      '101': 'GREEN',
+      '201': 'YELLOW',
+      '301': 'WHITE',
+      '401': 'BLUE',
     },
     colourStep: 'colour',
   },
@@ -250,6 +250,12 @@ export function getCompletedDeviceImage({
     return {
       imagePath: null,
       reason: 'Configuration is not complete',
+    }
+  }
+
+  if (modelId === 'global-reset' && config['series'] === 'GR') {
+    return {
+      imagePath: `/Global ReSet/COMPLETED DEVICE/GR/${fullCode}.webp`,
     }
   }
 

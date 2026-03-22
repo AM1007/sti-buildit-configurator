@@ -68,7 +68,12 @@ export function MobileTabletLayout({
   const [previewImageLoading, setPreviewImageLoading] = useState(true)
   const [previewImageError, setPreviewImageError] = useState(false)
 
-  const showCustomTextForm = shouldShowCustomTextForm(model, config, customText)
+  const showCustomTextForm = shouldShowCustomTextForm(
+    model,
+    config,
+    customText,
+    productModel.isComplete,
+  )
   const showCustomTextDisplay = hasSubmittedCustomText(model.id, config, customText)
   const customTextConfig = getCustomTextConfig(model.id)
 

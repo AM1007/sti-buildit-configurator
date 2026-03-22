@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import type {
   Configuration,
   ProductModel,
@@ -68,25 +68,30 @@ export function MainPanel({
   const { lang } = useLanguage()
   const [activeTab, setActiveTab] = useState<TabId>('edit')
   const [modelDescription, setModelDescription] = useState<string | null>(null)
+  const prevIsComplete = useRef(false)
 
-  const showCustomTextForm = shouldShowCustomTextForm(model, config, customText)
+  const showCustomTextForm = shouldShowCustomTextForm(
+    model,
+    config,
+    customText,
+    productModel.isComplete,
+  )
   const customTextConfig = getCustomTextConfig(model.id)
 
   useEffect(() => {
-    if (customText?.submitted) {
+    prevIsComplete.current = false
+    setActiveTab('edit')
+  }, [model.id])
+
+  useEffect(() => {
+    if (actionsReady && !prevIsComplete.current) {
       setActiveTab('preview')
-      return
     }
-    if (showCustomTextForm) {
-      setActiveTab('edit')
-      return
-    }
-    if (productModel.isComplete) {
-      setActiveTab('preview')
-    } else {
+    if (!actionsReady && prevIsComplete.current) {
       setActiveTab('edit')
     }
-  }, [productModel.isComplete, showCustomTextForm, customText?.submitted])
+    prevIsComplete.current = actionsReady
+  }, [actionsReady])
 
   useEffect(() => {
     let cancelled = false

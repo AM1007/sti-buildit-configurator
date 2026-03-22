@@ -15,6 +15,10 @@ import { useIsAuthenticated } from '@features/auth/store/authStore'
 import { isConfigurationReadyForActions } from '@shared/utils/customTextHelpers'
 import { getCompletedDeviceImage } from '@shared/utils/getCompletedDeviceImage'
 import { getHeroContent } from '../lib/heroContent'
+import {
+  isConfigurationComplete,
+  getVisibleSteps,
+} from '@features/configurator/lib/filterOptions'
 
 interface BuildItCalculatorProps {
   model: ModelDefinition
@@ -38,15 +42,16 @@ export function BuildItCalculator({
     clearSelection,
     resetConfiguration,
     setCurrentStep,
-    completionPercent,
   } = useConfiguration(model)
 
   const customText = useCustomText()
   const setCustomText = useConfigurationStore((state) => state.setCustomText)
 
   const productModel = buildProductModel(config, model)
+  const isComplete = isConfigurationComplete(model, config)
+
   const isAuthenticated = useIsAuthenticated()
-  const productCode = productModel.isComplete ? productModel.fullCode : null
+  const productCode = isComplete ? productModel.fullCode : null
   const isInMyListGuest = useIsProductInMyList(productCode, customText)
   const isInMyListAuth = useIsProductInAnyProject(
     productCode,
@@ -56,20 +61,27 @@ export function BuildItCalculator({
   const isInMyList = isAuthenticated ? isInMyListAuth : isInMyListGuest
   const myListItemId = useMyListItemIdByProductCode(productCode, customText)
 
-  const totalSteps = model.stepOrder.length
-  const completedSteps = model.stepOrder.filter((stepId) => !!config[stepId]).length
+  const visibleSteps = getVisibleSteps(model, config)
+  const totalSteps = visibleSteps.length
+  const completedSteps = visibleSteps.filter((step) => !!config[step.id]).length
+  const completionPercent =
+    totalSteps === 0 ? 0 : Math.round((completedSteps / totalSteps) * 100)
 
   const actionsReady =
-    productModel.isComplete &&
-    isConfigurationReadyForActions(model.id, config, customText)
+    isComplete && isConfigurationReadyForActions(model.id, config, customText)
 
   const heroContent = getHeroContent(model.id)
+
+  const enrichedProductModel = {
+    ...productModel,
+    isComplete,
+  }
 
   const { imagePath } = getCompletedDeviceImage({
     fullCode: productModel.fullCode,
     modelId: model.id,
     config,
-    isComplete: productModel.isComplete,
+    isComplete,
   })
 
   const [activeSheetStep, setActiveSheetStep] = useState<StepId | null>(null)
@@ -102,14 +114,14 @@ export function BuildItCalculator({
   }
 
   const handleAddToMyList = () => {
-    if (productModel.isComplete && onAddToMyList) {
+    if (isComplete && onAddToMyList) {
       onAddToMyList(productModel.fullCode)
     }
   }
 
   const handleRemoveFromMyList = () => {
     if (isAuthenticated) {
-      if (productModel.isComplete && onAddToMyList) {
+      if (isComplete && onAddToMyList) {
         onAddToMyList(productModel.fullCode)
       }
     } else {
@@ -131,7 +143,7 @@ export function BuildItCalculator({
     model,
     config,
     customText,
-    productModel,
+    productModel: enrichedProductModel,
     completionPercent,
     completedSteps,
     totalSteps,

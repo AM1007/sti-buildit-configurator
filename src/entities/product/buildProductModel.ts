@@ -89,7 +89,7 @@ export function identifyModel(modelCode: string): string | null {
   if (modelCode.startsWith('GF')) {
     return 'gf-fire-alarm-push-button'
   }
-  if (modelCode.startsWith('GLR')) {
+  if (modelCode.startsWith('GLR') || modelCode.startsWith('GR-')) {
     return 'global-reset'
   }
   if (modelCode.startsWith('STI-15')) {

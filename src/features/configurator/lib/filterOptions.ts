@@ -20,6 +20,7 @@ import {
 import {
   GLOBAL_RESET_CONSTRAINTS,
   getValidGLROptionsForStep,
+  getValidGROptionsForStep,
 } from '@entities/product/rules/globalResetRules'
 import {
   RESET_CALL_POINTS_CONSTRAINTS,
@@ -163,6 +164,44 @@ function getSSAllowlist(stepId: string, config: Configuration): Set<string> | nu
   return new Set(validCodes)
 }
 
+const GLR_STEPS = ['colour', 'cover', 'text', 'language']
+const GR_STEPS = ['mounting', 'grText']
+
+function getGlobalResetAllowlist(
+  stepId: string,
+  config: Configuration,
+): Set<string> | null {
+  const series = config['series'] ?? null
+
+  if (stepId === 'series') return null
+
+  if (series === 'GR') {
+    if (GLR_STEPS.includes(stepId)) return new Set()
+    if (GR_STEPS.includes(stepId)) {
+      return buildAllowlistSet(stepId, config, GR_STEPS, (s, o) =>
+        getValidGROptionsForStep(s as never, o as never),
+      )
+    }
+    return null
+  }
+
+  if (series === 'GLR') {
+    if (GR_STEPS.includes(stepId)) return new Set()
+    if (GLR_STEPS.includes(stepId)) {
+      return buildAllowlistSet(stepId, config, GLR_STEPS, (s, o) =>
+        getValidGLROptionsForStep(s as never, o as never),
+      )
+    }
+    return null
+  }
+
+  if (GLR_STEPS.includes(stepId) || GR_STEPS.includes(stepId)) {
+    return new Set()
+  }
+
+  return null
+}
+
 const ALLOWLIST_REGISTRY: Record<string, AllowlistFn> = {
   'g3-multipurpose-push-button': (stepId, config) =>
     buildAllowlistSet(
@@ -179,10 +218,7 @@ const ALLOWLIST_REGISTRY: Record<string, AllowlistFn> = {
       getValidGFOptionsForStep(s as never, o as never),
     ),
 
-  'global-reset': (stepId, config) =>
-    buildAllowlistSet(stepId, config, ['colour', 'cover', 'text', 'language'], (s, o) =>
-      getValidGLROptionsForStep(s as never, o as never),
-    ),
+  'global-reset': getGlobalResetAllowlist,
 
   'reset-call-points': (stepId, config) =>
     buildAllowlistSet(
@@ -343,14 +379,23 @@ export function getOptionsWithAvailability(
   })
 }
 
+export function getVisibleSteps(model: ModelDefinition, config: Configuration): Step[] {
+  return model.stepOrder
+    .map((stepId) => model.steps.find((s) => s.id === stepId))
+    .filter((step): step is Step => step !== undefined)
+    .filter((step) => {
+      const options = getOptionsWithAvailability(step, config, model.id)
+      return options.some(({ availability }) => availability.available)
+    })
+}
+
 export function isConfigurationComplete(
   model: ModelDefinition,
   config: Configuration,
 ): boolean {
-  for (const stepId of model.stepOrder) {
-    const step = model.steps.find((s) => s.id === stepId)
-    if (!step?.required) continue
-    if (!config[stepId]) return false
+  const visibleSteps = getVisibleSteps(model, config)
+  for (const step of visibleSteps) {
+    if (!config[step.id]) return false
   }
   return true
 }
@@ -360,10 +405,9 @@ export function getMissingRequiredSteps(
   config: Configuration,
 ): string[] {
   const missing: string[] = []
-  for (const stepId of model.stepOrder) {
-    const step = model.steps.find((s) => s.id === stepId)
-    if (!step?.required) continue
-    if (!config[stepId]) missing.push(stepId)
+  const visibleSteps = getVisibleSteps(model, config)
+  for (const step of visibleSteps) {
+    if (!config[step.id]) missing.push(step.id)
   }
   return missing
 }
@@ -372,13 +416,10 @@ export function getCompletionPercentage(
   model: ModelDefinition,
   config: Configuration,
 ): number {
-  const required = model.stepOrder.filter((id) => {
-    const step = model.steps.find((s) => s.id === id)
-    return step?.required
-  })
-  if (required.length === 0) return 100
-  const completed = required.filter((id) => config[id] != null).length
-  return Math.round((completed / required.length) * 100)
+  const visibleSteps = getVisibleSteps(model, config)
+  if (visibleSteps.length === 0) return 0
+  const completed = visibleSteps.filter((step) => config[step.id] != null).length
+  return Math.round((completed / visibleSteps.length) * 100)
 }
 
 export function getSelectionsToReset(
