@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useParams, useSearchParams, Navigate } from 'react-router-dom'
-import { getProductBySlug } from '@entities/product/registry'
-import { isConfigurationComplete } from '@entities/product/buildProductModel'
+import { getProductBySlug, isConfigurationComplete } from '@entities/product'
 import { BuildItCalculator } from '@features/configurator/components/BuildItCalculator'
 import { ConfiguratorHero } from '@shared/ui/ConfiguratorHero'
 import { getHeroContent } from '@features/configurator/lib/heroContent'

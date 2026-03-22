@@ -8,7 +8,6 @@ import type {
 } from '@shared/types'
 import { ProductPreview } from './ProductPreview'
 import { CustomTextForm } from './CustomTextForm'
-import { CustomTextDisplay } from './CustomTextDisplay'
 import { ConfigurationBlock } from './ConfigurationBlock'
 import { ProductPreviewContent } from './ProductPreviewContent'
 import { EmptyStateContent } from './EmptyStateContent'
@@ -16,7 +15,6 @@ import { getCompletedDeviceImage } from '@shared/utils/getCompletedDeviceImage'
 import { getModelSummary } from '../lib/getModelSummary'
 import {
   shouldShowCustomTextForm,
-  hasSubmittedCustomText,
   getCustomTextConfig,
   getMaxLength,
   getEffectiveLineCount,
@@ -72,7 +70,6 @@ export function MainPanel({
   const [modelDescription, setModelDescription] = useState<string | null>(null)
 
   const showCustomTextForm = shouldShowCustomTextForm(model, config, customText)
-  const showCustomTextDisplay = hasSubmittedCustomText(model.id, config, customText)
   const customTextConfig = getCustomTextConfig(model.id)
 
   useEffect(() => {
@@ -212,12 +209,6 @@ export function MainPanel({
           </div>
         </div>
       </div>
-
-      {showCustomTextDisplay && customText && (
-        <div className="mt-4 rounded-sm border border-slate-200 bg-white p-4 shadow-sm md:p-5">
-          <CustomTextDisplay customText={customText} />
-        </div>
-      )}
 
       <ConfigurationBlock
         model={model}

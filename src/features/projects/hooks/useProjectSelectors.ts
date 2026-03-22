@@ -57,6 +57,7 @@ export const useIsProductInMyList = (
 
 export const useIsProductInAnyProject = (
   productCode: string | null,
+  customText: CustomTextData | null,
   refreshToken: number,
 ) => {
   const user = useUser()
@@ -68,8 +69,14 @@ export const useIsProductInAnyProject = (
       setIsInAnyProject(false)
       return
     }
-    checkProductInAnyProject(user.id, productCode).then(setIsInAnyProject)
-  }, [productCode, user?.id, refreshToken, checkProductInAnyProject])
+    checkProductInAnyProject(user.id, productCode, customText).then(setIsInAnyProject)
+  }, [
+    productCode,
+    user?.id,
+    buildCustomTextFingerprint(customText),
+    refreshToken,
+    checkProductInAnyProject,
+  ])
 
   return isInAnyProject
 }

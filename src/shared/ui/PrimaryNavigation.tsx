@@ -7,7 +7,7 @@ import {
   Box,
   ChevronDown,
 } from 'lucide-react'
-import type { PrimaryTag } from '@entities/product/catalog/types'
+import type { PrimaryTag } from '@entities/product'
 import { useTranslation } from '@shared/i18n'
 import { FilterBottomSheet } from '@features/projects/components/FilterBottomSheet'
 

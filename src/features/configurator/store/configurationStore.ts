@@ -4,26 +4,15 @@ import type {
   Configuration,
   StepId,
   OptionId,
-  ModelDefinition,
   CustomTextData,
 } from '@shared/types'
 import { createEmptyConfiguration } from '@shared/types'
-import { getModelById } from '@entities/product/models'
-import {
-  getSelectionsToReset,
-  isConfigurationComplete,
-  getMissingRequiredSteps,
-} from '@features/configurator/lib/filterOptions'
-import { buildProductModel } from '@entities/product/buildProductModel'
+import { getModelById } from '@entities/product'
+import { getSelectionsToReset } from '@features/configurator/lib/filterOptions'
 import {
   shouldClearCustomText,
   getCustomTextTrigger,
 } from '@shared/utils/customTextHelpers'
-
-export function buildProductModelUrl(modelId: ModelId, productCode: string): string {
-  const encodedProductModel = encodeURIComponent(productCode).replace(/%2D/g, '-')
-  return `?model=${modelId}&productModel=${encodedProductModel}#build-it`
-}
 
 interface ConfigurationState {
   currentModelId: ModelId | null
@@ -43,10 +32,6 @@ interface ConfigurationState {
     config: Configuration,
     customText: CustomTextData | null,
   ) => void
-  getModel: () => ModelDefinition | null
-  isComplete: () => boolean
-  getMissingSteps: () => StepId[]
-  getProductCode: () => string | null
 }
 
 export const useConfigurationStore = create<ConfigurationState>()((set, get) => ({
@@ -192,40 +177,9 @@ export const useConfigurationStore = create<ConfigurationState>()((set, get) => 
       currentStep: model.stepOrder[model.stepOrder.length - 1],
     })
   },
-
-  getModel: () => {
-    const { currentModelId } = get()
-    return currentModelId ? (getModelById(currentModelId) ?? null) : null
-  },
-
-  isComplete: () => {
-    const { currentModelId, config } = get()
-    const model = currentModelId ? getModelById(currentModelId) : null
-    return model ? isConfigurationComplete(model, config) : false
-  },
-
-  getMissingSteps: () => {
-    const { currentModelId, config } = get()
-    const model = currentModelId ? getModelById(currentModelId) : null
-    return model ? getMissingRequiredSteps(model, config) : []
-  },
-
-  getProductCode: () => {
-    const { currentModelId, config } = get()
-    const model = currentModelId ? getModelById(currentModelId) : null
-
-    if (!model || !isConfigurationComplete(model, config)) {
-      return null
-    }
-
-    return buildProductModel(config, model).fullCode
-  },
 }))
 
 export const useCurrentModelId = () => useConfigurationStore((s) => s.currentModelId)
-
 export const useConfig = () => useConfigurationStore((s) => s.config)
-
 export const useCustomText = () => useConfigurationStore((s) => s.customText)
-
 export const useCurrentStep = () => useConfigurationStore((s) => s.currentStep)

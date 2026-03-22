@@ -10,8 +10,8 @@ import type {
   ModelDefinition,
 } from '@shared/types'
 import { generateSavedConfigurationId, GUEST_PROJECT_ID } from '@shared/types'
-import { isConfigurationComplete } from '@entities/product/buildProductModel'
-import { buildProductModel } from '@entities/product/buildProductModel'
+import { isConfigurationComplete } from '@entities/product'
+import { buildProductModel } from '@entities/product'
 import { buildCustomTextFingerprint } from '@shared/utils/customTextHelpers'
 import * as projectsApi from '@shared/api/projectsApi'
 import * as configurationsApi from '@shared/api/configurationsApi'
@@ -112,9 +112,20 @@ interface ProjectState {
     meta: Partial<Pick<Project, 'name' | 'clientName' | 'date' | 'lastExportedAt'>>,
   ) => Promise<void>
 
-  checkDuplicateInProject: (projectId: string, productCode: string) => Promise<boolean>
-  fetchProjectsWithProduct: (productCode: string) => Promise<Map<string, string>>
-  checkProductInAnyProject: (userId: string, productCode: string) => Promise<boolean>
+  checkDuplicateInProject: (
+    projectId: string,
+    productCode: string,
+    customText: CustomTextData | null,
+  ) => Promise<boolean>
+  fetchProjectsWithProduct: (
+    productCode: string,
+    customText: CustomTextData | null,
+  ) => Promise<Map<string, string>>
+  checkProductInAnyProject: (
+    userId: string,
+    productCode: string,
+    customText: CustomTextData | null,
+  ) => Promise<boolean>
 
   mergeGuestToRemote: (userId: string) => Promise<string | null>
   clearGuestData: () => void
@@ -267,12 +278,12 @@ export const useProjectStore = create<ProjectState>()(
 
       loadConfigurationIntoWizard: (id) => {
         const configs = get().getActiveConfigurations()
-        return configs.find((item) => item.id === id) ?? null
+        return configs.find((c) => c.id === id) ?? null
       },
 
       setGuestProjectMeta: (meta) => {
         const { guestProjectMeta } = get()
-        set({ guestProjectMeta: { ...guestProjectMeta, ...meta } })
+        set({ guestProjectMeta: { ...guestProjectMeta, ...meta, updatedAt: Date.now() } })
       },
 
       setGuestConfigurations: (items) => {
@@ -288,34 +299,31 @@ export const useProjectStore = create<ProjectState>()(
       },
 
       fetchProjects: async (userId) => {
-        set({ isLoading: true })
         const projects = await projectsApi.fetchProjects(userId)
-        set({ projects, isLoading: false })
+        set({ projects })
       },
 
       createProject: async (userId, name, clientName) => {
         const project = await projectsApi.createProject(userId, name, clientName)
         if (!project) return null
         const { projects } = get()
-        set({ projects: [project, ...projects] })
+        set({ projects: [...projects, project] })
         return project
       },
 
       renameProject: async (projectId, name) => {
-        const ok = await projectsApi.renameProject(projectId, name)
+        const ok = await projectsApi.updateProjectMeta(projectId, { name })
         if (!ok) return
         const { projects } = get()
         set({
-          projects: projects.map((p) =>
-            p.id === projectId ? { ...p, name, updatedAt: new Date().toISOString() } : p,
-          ),
+          projects: projects.map((p) => (p.id === projectId ? { ...p, name } : p)),
         })
       },
 
       deleteProject: async (projectId) => {
         const ok = await projectsApi.deleteProject(projectId)
         if (!ok) return
-        const { projects, activeProjectId, remoteConfigurations } = get()
+        const { projects, remoteConfigurations, activeProjectId } = get()
         const updated = { ...remoteConfigurations }
         delete updated[projectId]
         set({
@@ -447,16 +455,20 @@ export const useProjectStore = create<ProjectState>()(
         })
       },
 
-      checkDuplicateInProject: async (projectId, productCode) => {
-        return configurationsApi.checkDuplicateInProject(projectId, productCode)
+      checkDuplicateInProject: async (projectId, productCode, customText) => {
+        return configurationsApi.checkDuplicateInProject(
+          projectId,
+          productCode,
+          customText,
+        )
       },
 
-      fetchProjectsWithProduct: async (productCode) => {
-        return configurationsApi.fetchProjectsWithProduct(productCode)
+      fetchProjectsWithProduct: async (productCode, customText) => {
+        return configurationsApi.fetchProjectsWithProduct(productCode, customText)
       },
 
-      checkProductInAnyProject: async (userId, productCode) => {
-        return configurationsApi.checkProductInAnyProject(userId, productCode)
+      checkProductInAnyProject: async (userId, productCode, customText) => {
+        return configurationsApi.checkProductInAnyProject(userId, productCode, customText)
       },
 
       mergeGuestToRemote: async (userId) => {

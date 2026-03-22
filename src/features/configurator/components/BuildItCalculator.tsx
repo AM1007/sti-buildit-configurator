@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import type { ModelDefinition, CustomTextData, StepId } from '@shared/types'
 import { useConfiguration } from '../hooks/useConfiguration'
-import { buildProductModel } from '@entities/product/buildProductModel'
+import { buildProductModel } from '@entities/product'
 import { DesktopLayout } from './DesktopLayout'
 import { MobileTabletLayout } from './MobileTabletLayout'
 import { OptionBottomSheet } from './OptionBottomSheet'
@@ -11,7 +11,6 @@ import {
   useIsProductInAnyProject,
   useMyListItemIdByProductCode,
 } from '@features/projects'
-
 import { useIsAuthenticated } from '@features/auth/store/authStore'
 import { isConfigurationReadyForActions } from '@shared/utils/customTextHelpers'
 import { getCompletedDeviceImage } from '@shared/utils/getCompletedDeviceImage'
@@ -23,7 +22,6 @@ interface BuildItCalculatorProps {
   onAddToMyList?: (productCode: string) => void
   onRemoveFromMyList?: (itemId: string) => void
   projectRefreshToken?: number
-  onBack?: () => void
 }
 
 export function BuildItCalculator({
@@ -50,7 +48,11 @@ export function BuildItCalculator({
   const isAuthenticated = useIsAuthenticated()
   const productCode = productModel.isComplete ? productModel.fullCode : null
   const isInMyListGuest = useIsProductInMyList(productCode, customText)
-  const isInMyListAuth = useIsProductInAnyProject(productCode, projectRefreshToken)
+  const isInMyListAuth = useIsProductInAnyProject(
+    productCode,
+    customText ?? null,
+    projectRefreshToken,
+  )
   const isInMyList = isAuthenticated ? isInMyListAuth : isInMyListGuest
   const myListItemId = useMyListItemIdByProductCode(productCode, customText)
 

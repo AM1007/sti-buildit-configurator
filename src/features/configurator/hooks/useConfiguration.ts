@@ -99,9 +99,3 @@ export function useConfiguration(
     model,
   }
 }
-
-export function useConfigurationLegacy() {
-  throw new Error(
-    'useConfigurationLegacy is deprecated. Use useConfiguration(model) instead.',
-  )
-}

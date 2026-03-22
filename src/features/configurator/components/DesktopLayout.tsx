@@ -1,5 +1,5 @@
 import type { ModelDefinition, CustomTextData, Configuration } from '@shared/types'
-import { buildProductModel } from '@entities/product/buildProductModel'
+import { buildProductModel } from '@entities/product'
 import { Sidebar } from './Sidebar'
 import { MainPanel } from './MainPanel'
 

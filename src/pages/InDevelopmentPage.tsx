@@ -1,5 +1,5 @@
 import { Link, useParams } from 'react-router-dom'
-import { getProductBySlug } from '@entities/product/registry'
+import { getProductBySlug } from '@entities/product'
 import { useTranslation } from '@shared/i18n'
 
 export function InDevelopmentPage() {

@@ -6,7 +6,7 @@ import { MODEL_NAMES } from '@shared/types'
 import { useTranslation } from '@shared/i18n'
 import { getCompletedDeviceImage } from '@shared/utils/getCompletedDeviceImage'
 import { buildShareableUrl } from '@shared/utils/configSerializer'
-import { getModelById } from '@entities/product/models'
+import { getModelById } from '@entities/product'
 import { useModelTranslations } from '@features/configurator/hooks/useModelTranslations'
 import { CustomTextDisplay } from '@features/configurator/components/CustomTextDisplay'
 

@@ -1,4 +1,4 @@
-import type { ConfiguratorMeta, PrimaryTag } from '@entities/product/catalog'
+import type { ConfiguratorMeta, PrimaryTag } from '@entities/product'
 
 export const PRIMARY_TAGS = [
   'push-button',

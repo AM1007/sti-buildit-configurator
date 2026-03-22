@@ -3,7 +3,7 @@ import { X, FolderOpen, Plus, Check, Loader2 } from 'lucide-react'
 import { useProjectStore } from '@features/projects/store/projectStore'
 import { useAuthStore } from '@features/auth/store/authStore'
 import { useTranslation } from '@shared/i18n'
-import { buildProductModel } from '@entities/product/buildProductModel'
+import { buildProductModel } from '@entities/product'
 import type {
   Project,
   ModelId,
@@ -51,7 +51,7 @@ export function ProjectPicker({
     if (!isOpen || !user) return
     fetchProjects(user.id)
     const productCode = buildProductModel(config, model).fullCode
-    fetchProjectsWithProduct(productCode).then(setSavedProjectMap)
+    fetchProjectsWithProduct(productCode, customText).then(setSavedProjectMap)
   }, [isOpen, user])
 
   const handleSelectProject = useCallback(

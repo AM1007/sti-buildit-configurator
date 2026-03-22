@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import type { SavedConfiguration } from '@shared/types'
 import { MODEL_NAMES } from '@shared/types'
-import { getModelById } from '@entities/product/models'
+import { getModelById } from '@entities/product'
 import { getCompletedDeviceImage } from '../utils/getCompletedDeviceImage'
 import { buildShareableUrl } from '../utils/configSerializer'
 import { useTranslation } from '../i18n'
