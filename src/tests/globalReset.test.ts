@@ -1,9 +1,15 @@
 import { describe, it, expect } from 'vitest'
 import {
   buildGLRModelCode,
+  buildGRModelCode,
   parseGLRModelCode,
+  parseGRModelCode,
   isValidGLRCombination,
+  isValidGRCombination,
   getValidGLROptionsForStep,
+  getValidGROptionsForStep,
+  VALID_GLR_CODES,
+  VALID_GR_CODES,
   VALID_MODEL_CODES,
   GLOBAL_RESET_CONSTRAINTS,
 } from '@entities/product/rules/globalResetRules'
@@ -12,101 +18,87 @@ import { buildProductModel } from '@entities/product/buildProductModel'
 import {
   isConfigurationComplete,
   getMissingRequiredSteps,
-  getCompletionPercentage,
 } from '@features/configurator/lib/filterOptions'
 import { createConstraintEngine } from '@entities/product/rules'
 import type { Configuration } from '@shared/types'
 
-// ─────────────────────────────────────────────────────────────
-// buildGLRModelCode
-// ─────────────────────────────────────────────────────────────
-
 describe('buildGLRModelCode', () => {
   it('builds GLR001ZA-EN correctly', () => {
-    expect(
-      buildGLRModelCode({ colour: '0', cover: '01', text: 'ZA', language: 'EN' }),
-    ).toBe('GLR001ZA-EN')
+    expect(buildGLRModelCode({ colour: '001', text: 'ZA', language: 'EN' })).toBe(
+      'GLR001ZA-EN',
+    )
   })
 
   it('builds GLR101RM-EN correctly', () => {
-    expect(
-      buildGLRModelCode({ colour: '1', cover: '01', text: 'RM', language: 'EN' }),
-    ).toBe('GLR101RM-EN')
+    expect(buildGLRModelCode({ colour: '101', text: 'RM', language: 'EN' })).toBe(
+      'GLR101RM-EN',
+    )
   })
 
-  it('builds GLR401EV-EN correctly', () => {
-    expect(
-      buildGLRModelCode({ colour: '4', cover: '01', text: 'EV', language: 'EN' }),
-    ).toBe('GLR401EV-EN')
-  })
-
-  it('cover 01 is two characters — GLR{1}{2}{2}-{2}', () => {
-    const code = buildGLRModelCode({
-      colour: '2',
-      cover: '01',
-      text: 'ZA',
-      language: 'EN',
-    })
-    expect(code).toBe('GLR201ZA-EN')
-    expect(code?.startsWith('GLR2')).toBe(true)
+  it('builds GLR201ZA-UA correctly', () => {
+    expect(buildGLRModelCode({ colour: '201', text: 'ZA', language: 'UA' })).toBe(
+      'GLR201ZA-UA',
+    )
   })
 
   it('returns null when any field is missing', () => {
-    expect(buildGLRModelCode({ colour: '0', cover: '01', text: 'ZA' })).toBeNull()
-    expect(buildGLRModelCode({ colour: '0', cover: '01', language: 'EN' })).toBeNull()
-    expect(buildGLRModelCode({ colour: '0', text: 'ZA', language: 'EN' })).toBeNull()
-    expect(buildGLRModelCode({ cover: '01', text: 'ZA', language: 'EN' })).toBeNull()
+    expect(buildGLRModelCode({ colour: '001', text: 'ZA' })).toBeNull()
+    expect(buildGLRModelCode({ colour: '001', language: 'EN' })).toBeNull()
+    expect(buildGLRModelCode({ text: 'ZA', language: 'EN' })).toBeNull()
     expect(buildGLRModelCode({})).toBeNull()
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// parseGLRModelCode
-// ─────────────────────────────────────────────────────────────
+describe('buildGRModelCode', () => {
+  it('builds GR-RF-22-0 correctly', () => {
+    expect(buildGRModelCode({ mounting: 'F', grText: '22-0' })).toBe('GR-RF-22-0')
+  })
+
+  it('builds GR-RS-22-0-EN correctly', () => {
+    expect(buildGRModelCode({ mounting: 'S', grText: '22-0-EN' })).toBe('GR-RS-22-0-EN')
+  })
+
+  it('returns null when any field is missing', () => {
+    expect(buildGRModelCode({ mounting: 'F' })).toBeNull()
+    expect(buildGRModelCode({ grText: '22-0' })).toBeNull()
+    expect(buildGRModelCode({})).toBeNull()
+  })
+})
 
 describe('parseGLRModelCode', () => {
   it('parses GLR001ZA-EN correctly', () => {
     expect(parseGLRModelCode('GLR001ZA-EN')).toEqual({
-      colour: '0',
-      cover: '01',
+      colour: '001',
       text: 'ZA',
       language: 'EN',
     })
   })
 
-  it('parses GLR401LD-EN correctly', () => {
-    expect(parseGLRModelCode('GLR401LD-EN')).toEqual({
-      colour: '4',
-      cover: '01',
-      text: 'LD',
+  it('parses GLR101RM-EN correctly', () => {
+    expect(parseGLRModelCode('GLR101RM-EN')).toEqual({
+      colour: '101',
+      text: 'RM',
       language: 'EN',
     })
   })
 
-  it('cover always parses as 01', () => {
-    for (const code of VALID_MODEL_CODES) {
-      const parsed = parseGLRModelCode(code)
-      expect(parsed?.cover).toBe('01')
-    }
-  })
-
-  it('language always parses as EN', () => {
-    for (const code of VALID_MODEL_CODES) {
-      const parsed = parseGLRModelCode(code)
-      expect(parsed?.language).toBe('EN')
-    }
+  it('parses GLR401ZA-UA correctly', () => {
+    expect(parseGLRModelCode('GLR401ZA-UA')).toEqual({
+      colour: '401',
+      text: 'ZA',
+      language: 'UA',
+    })
   })
 
   it('returns null for invalid format', () => {
     expect(parseGLRModelCode('INVALID')).toBeNull()
     expect(parseGLRModelCode('GLR01ZA-EN')).toBeNull()
     expect(parseGLRModelCode('GLR001ZA')).toBeNull()
-    expect(parseGLRModelCode('GLR001Z-EN')).toBeNull()
     expect(parseGLRModelCode('')).toBeNull()
   })
 
-  it('round-trips for all VALID_MODEL_CODES', () => {
-    for (const code of VALID_MODEL_CODES) {
+  it('round-trips for all VALID_GLR_CODES', () => {
+    for (const code of VALID_GLR_CODES) {
       const parsed = parseGLRModelCode(code)
       expect(parsed).not.toBeNull()
       const rebuilt = buildGLRModelCode(parsed!)
@@ -115,96 +107,130 @@ describe('parseGLRModelCode', () => {
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// VALID_MODEL_CODES integrity
-// ─────────────────────────────────────────────────────────────
-
-describe('VALID_MODEL_CODES', () => {
-  it('contains exactly 13 entries', () => {
-    expect(VALID_MODEL_CODES.length).toBe(13)
+describe('parseGRModelCode', () => {
+  it('parses GR-RF-22-0 correctly', () => {
+    expect(parseGRModelCode('GR-RF-22-0')).toEqual({ mounting: 'F', grText: '22-0' })
   })
 
-  it('has no duplicates', () => {
-    expect(new Set(VALID_MODEL_CODES).size).toBe(13)
+  it('parses GR-RS-22-0-EN correctly', () => {
+    expect(parseGRModelCode('GR-RS-22-0-EN')).toEqual({
+      mounting: 'S',
+      grText: '22-0-EN',
+    })
   })
 
-  it('colour distribution: 0→1, 1→3, 2→4, 3→1, 4→4', () => {
-    for (const [colour, count] of [
-      ['0', 1],
-      ['1', 3],
-      ['2', 4],
-      ['3', 1],
-      ['4', 4],
-    ] as const) {
-      const filtered = VALID_MODEL_CODES.filter(
-        (c) => parseGLRModelCode(c)?.colour === colour,
-      )
-      expect(filtered.length).toBe(count)
-    }
+  it('returns null for invalid format', () => {
+    expect(parseGRModelCode('INVALID')).toBeNull()
+    expect(parseGRModelCode('GLR001ZA-EN')).toBeNull()
+    expect(parseGRModelCode('')).toBeNull()
   })
 
-  it('ZA text valid for colours 0, 2, 3, 4 — not for 1', () => {
-    const zaCodes = VALID_MODEL_CODES.filter((c) => parseGLRModelCode(c)?.text === 'ZA')
-    const colours = zaCodes.map((c) => parseGLRModelCode(c)?.colour)
-    expect(colours).toContain('0')
-    expect(colours).toContain('2')
-    expect(colours).toContain('3')
-    expect(colours).toContain('4')
-    expect(colours).not.toContain('1')
-  })
-
-  it('RM text only valid with colour 1', () => {
-    const rmCodes = VALID_MODEL_CODES.filter((c) => parseGLRModelCode(c)?.text === 'RM')
-    expect(rmCodes).toHaveLength(1)
-    expect(parseGLRModelCode(rmCodes[0])?.colour).toBe('1')
-  })
-
-  it('EV text only valid with colour 4', () => {
-    const evCodes = VALID_MODEL_CODES.filter((c) => parseGLRModelCode(c)?.text === 'EV')
-    expect(evCodes).toHaveLength(1)
-    expect(parseGLRModelCode(evCodes[0])?.colour).toBe('4')
-  })
-
-  it('LD text only valid with colour 4', () => {
-    const ldCodes = VALID_MODEL_CODES.filter((c) => parseGLRModelCode(c)?.text === 'LD')
-    expect(ldCodes).toHaveLength(1)
-    expect(parseGLRModelCode(ldCodes[0])?.colour).toBe('4')
-  })
-
-  it('NT and PS texts only valid with colour 2', () => {
-    for (const text of ['NT', 'PS']) {
-      const textCodes = VALID_MODEL_CODES.filter(
-        (c) => parseGLRModelCode(c)?.text === text,
-      )
-      expect(textCodes).toHaveLength(1)
-      expect(parseGLRModelCode(textCodes[0])?.colour).toBe('2')
-    }
-  })
-
-  it('colour 0 and 3 only support ZA text', () => {
-    for (const colour of ['0', '3']) {
-      const colourCodes = VALID_MODEL_CODES.filter(
-        (c) => parseGLRModelCode(c)?.colour === colour,
-      )
-      expect(colourCodes).toHaveLength(1)
-      expect(parseGLRModelCode(colourCodes[0])?.text).toBe('ZA')
-    }
-  })
-
-  it('all codes parse successfully', () => {
-    for (const code of VALID_MODEL_CODES) {
-      expect(parseGLRModelCode(code)).not.toBeNull()
+  it('round-trips for all VALID_GR_CODES', () => {
+    for (const code of VALID_GR_CODES) {
+      const parsed = parseGRModelCode(code)
+      expect(parsed).not.toBeNull()
+      const rebuilt = buildGRModelCode(parsed!)
+      expect(rebuilt).toBe(code)
     }
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// isValidGLRCombination
-// ─────────────────────────────────────────────────────────────
+describe('VALID_GLR_CODES', () => {
+  it('contains exactly 13 entries', () => {
+    expect(VALID_GLR_CODES.length).toBe(13)
+  })
+
+  it('has no duplicates', () => {
+    expect(new Set(VALID_GLR_CODES).size).toBe(13)
+  })
+
+  it('all codes parse successfully', () => {
+    for (const code of VALID_GLR_CODES) {
+      expect(parseGLRModelCode(code)).not.toBeNull()
+    }
+  })
+
+  it('colour 001 only supports ZA text', () => {
+    const codes = VALID_GLR_CODES.filter((c) => parseGLRModelCode(c)?.colour === '001')
+    expect(codes).toHaveLength(2)
+    for (const c of codes) {
+      expect(parseGLRModelCode(c)?.text).toBe('ZA')
+    }
+  })
+
+  it('colour 101 supports EM, EX, RM, ZA', () => {
+    const codes = VALID_GLR_CODES.filter((c) => parseGLRModelCode(c)?.colour === '101')
+    const texts = codes.map((c) => parseGLRModelCode(c)?.text)
+    expect(texts).toContain('EM')
+    expect(texts).toContain('EX')
+    expect(texts).toContain('RM')
+    expect(texts).toContain('ZA')
+  })
+
+  it('colour 201, 301, 401 only support ZA text', () => {
+    for (const colour of ['201', '301', '401']) {
+      const codes = VALID_GLR_CODES.filter((c) => parseGLRModelCode(c)?.colour === colour)
+      expect(codes).toHaveLength(2)
+      for (const c of codes) {
+        expect(parseGLRModelCode(c)?.text).toBe('ZA')
+      }
+    }
+  })
+
+  it('ZA text available in both EN and UA languages', () => {
+    const zaCodes = VALID_GLR_CODES.filter((c) => parseGLRModelCode(c)?.text === 'ZA')
+    const languages = zaCodes.map((c) => parseGLRModelCode(c)?.language)
+    expect(languages).toContain('EN')
+    expect(languages).toContain('UA')
+  })
+
+  it('EM, EX, RM texts only available in EN', () => {
+    for (const text of ['EM', 'EX', 'RM']) {
+      const codes = VALID_GLR_CODES.filter((c) => parseGLRModelCode(c)?.text === text)
+      for (const c of codes) {
+        expect(parseGLRModelCode(c)?.language).toBe('EN')
+      }
+    }
+  })
+})
+
+describe('VALID_GR_CODES', () => {
+  it('contains exactly 4 entries', () => {
+    expect(VALID_GR_CODES.length).toBe(4)
+  })
+
+  it('has no duplicates', () => {
+    expect(new Set(VALID_GR_CODES).size).toBe(4)
+  })
+
+  it('all codes parse successfully', () => {
+    for (const code of VALID_GR_CODES) {
+      expect(parseGRModelCode(code)).not.toBeNull()
+    }
+  })
+
+  it('contains both F and S mounting options', () => {
+    const mountings = VALID_GR_CODES.map((c) => parseGRModelCode(c)?.mounting)
+    expect(mountings).toContain('F')
+    expect(mountings).toContain('S')
+  })
+
+  it('contains both 22-0 and 22-0-EN text options', () => {
+    const texts = VALID_GR_CODES.map((c) => parseGRModelCode(c)?.grText)
+    expect(texts).toContain('22-0')
+    expect(texts).toContain('22-0-EN')
+  })
+})
+
+describe('VALID_MODEL_CODES', () => {
+  it('contains 17 entries total (13 GLR + 4 GR)', () => {
+    expect(VALID_MODEL_CODES.length).toBe(17)
+  })
+})
 
 describe('isValidGLRCombination', () => {
-  it('all 13 VALID_MODEL_CODES pass validation', () => {
-    for (const code of VALID_MODEL_CODES) {
+  it('all 13 VALID_GLR_CODES pass validation', () => {
+    for (const code of VALID_GLR_CODES) {
       const parsed = parseGLRModelCode(code)!
       expect(isValidGLRCombination(parsed)).toEqual({ valid: true })
     }
@@ -212,201 +238,153 @@ describe('isValidGLRCombination', () => {
 
   it('returns valid for incomplete selection', () => {
     expect(isValidGLRCombination({})).toEqual({ valid: true })
-    expect(isValidGLRCombination({ colour: '0' })).toEqual({ valid: true })
-    expect(isValidGLRCombination({ colour: '0', cover: '01', text: 'ZA' })).toEqual({
-      valid: true,
-    })
+    expect(isValidGLRCombination({ colour: '001' })).toEqual({ valid: true })
   })
 
-  it('rejects ZA text with colour 1 — not in allowlist', () => {
-    const result = isValidGLRCombination({
-      colour: '1',
-      cover: '01',
-      text: 'ZA',
-      language: 'EN',
-    })
-    expect(result.valid).toBe(false)
-    if (!result.valid) expect(result.reason).toContain('GLR101ZA-EN')
-  })
-
-  it('rejects RM text with colour 0', () => {
-    const result = isValidGLRCombination({
-      colour: '0',
-      cover: '01',
-      text: 'RM',
-      language: 'EN',
-    })
+  it('rejects EM text with colour 001', () => {
+    const result = isValidGLRCombination({ colour: '001', text: 'EM', language: 'EN' })
     expect(result.valid).toBe(false)
   })
 
-  it('rejects EV text with any colour except 4', () => {
-    for (const colour of ['0', '1', '2', '3']) {
-      const result = isValidGLRCombination({
-        colour,
-        cover: '01',
-        text: 'EV',
-        language: 'EN',
-      })
-      expect(result.valid).toBe(false)
-    }
+  it('rejects RM text with colour 001', () => {
+    const result = isValidGLRCombination({ colour: '001', text: 'RM', language: 'EN' })
+    expect(result.valid).toBe(false)
   })
 
-  it('rejects NT text with any colour except 2', () => {
-    for (const colour of ['0', '1', '3', '4']) {
-      const result = isValidGLRCombination({
-        colour,
-        cover: '01',
-        text: 'NT',
-        language: 'EN',
-      })
-      expect(result.valid).toBe(false)
-    }
+  it('rejects UA language with EM text', () => {
+    const result = isValidGLRCombination({ colour: '101', text: 'EM', language: 'UA' })
+    expect(result.valid).toBe(false)
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// getValidGLROptionsForStep
-// ─────────────────────────────────────────────────────────────
+describe('isValidGRCombination', () => {
+  it('all 4 VALID_GR_CODES pass validation', () => {
+    for (const code of VALID_GR_CODES) {
+      const parsed = parseGRModelCode(code)!
+      expect(isValidGRCombination(parsed)).toEqual({ valid: true })
+    }
+  })
+
+  it('returns valid for incomplete selection', () => {
+    expect(isValidGRCombination({})).toEqual({ valid: true })
+    expect(isValidGRCombination({ mounting: 'F' })).toEqual({ valid: true })
+  })
+})
 
 describe('getValidGLROptionsForStep', () => {
-  it('cover always returns only 01', () => {
-    expect(getValidGLROptionsForStep('cover', {})).toEqual(['01'])
-    expect(getValidGLROptionsForStep('cover', { colour: '4' })).toEqual(['01'])
-  })
-
-  it('language always returns only EN', () => {
-    expect(getValidGLROptionsForStep('language', {})).toEqual(['EN'])
-    expect(getValidGLROptionsForStep('language', { colour: '2', text: 'ZA' })).toEqual([
-      'EN',
-    ])
-  })
-
-  it('colour 0 only allows ZA text', () => {
-    const valid = getValidGLROptionsForStep('text', { colour: '0' })
+  it('colour 001 only allows ZA text', () => {
+    const valid = getValidGLROptionsForStep('text', { colour: '001' })
     expect(valid).toEqual(['ZA'])
   })
 
-  it('colour 1 allows EM, EX, RM but not ZA', () => {
-    const valid = getValidGLROptionsForStep('text', { colour: '1' })
+  it('colour 101 allows EM, EX, RM, ZA', () => {
+    const valid = getValidGLROptionsForStep('text', { colour: '101' })
     expect(valid).toContain('EM')
     expect(valid).toContain('EX')
     expect(valid).toContain('RM')
-    expect(valid).not.toContain('ZA')
-  })
-
-  it('colour 2 allows EX, NT, PS, ZA', () => {
-    const valid = getValidGLROptionsForStep('text', { colour: '2' })
-    expect(valid).toContain('EX')
-    expect(valid).toContain('NT')
-    expect(valid).toContain('PS')
     expect(valid).toContain('ZA')
   })
 
-  it('colour 3 only allows ZA text', () => {
-    const valid = getValidGLROptionsForStep('text', { colour: '3' })
-    expect(valid).toEqual(['ZA'])
+  it('colour 201, 301, 401 only allow ZA text', () => {
+    for (const colour of ['201', '301', '401']) {
+      const valid = getValidGLROptionsForStep('text', { colour })
+      expect(valid).toEqual(['ZA'])
+    }
   })
 
-  it('colour 4 allows EM, EV, LD, ZA', () => {
-    const valid = getValidGLROptionsForStep('text', { colour: '4' })
-    expect(valid).toContain('EM')
-    expect(valid).toContain('EV')
-    expect(valid).toContain('LD')
-    expect(valid).toContain('ZA')
-  })
-
-  it('EV text only valid with colour 4', () => {
-    const valid = getValidGLROptionsForStep('colour', { text: 'EV' })
-    expect(valid).toEqual(['4'])
-  })
-
-  it('LD text only valid with colour 4', () => {
-    const valid = getValidGLROptionsForStep('colour', { text: 'LD' })
-    expect(valid).toEqual(['4'])
-  })
-
-  it('RM text only valid with colour 1', () => {
-    const valid = getValidGLROptionsForStep('colour', { text: 'RM' })
-    expect(valid).toEqual(['1'])
-  })
-
-  it('ZA text valid with colours 0, 2, 3, 4 — not 1', () => {
+  it('ZA text valid with all colours', () => {
     const valid = getValidGLROptionsForStep('colour', { text: 'ZA' })
-    expect(valid).toContain('0')
-    expect(valid).toContain('2')
-    expect(valid).toContain('3')
-    expect(valid).toContain('4')
-    expect(valid).not.toContain('1')
+    expect(valid).toContain('001')
+    expect(valid).toContain('101')
+    expect(valid).toContain('201')
+    expect(valid).toContain('301')
+    expect(valid).toContain('401')
+  })
+
+  it('RM text only valid with colour 101', () => {
+    const valid = getValidGLROptionsForStep('colour', { text: 'RM' })
+    expect(valid).toEqual(['101'])
+  })
+
+  it('language EN valid with all colours', () => {
+    const valid = getValidGLROptionsForStep('language', {})
+    expect(valid).toContain('EN')
+    expect(valid).toContain('UA')
+  })
+
+  it('UA language only valid with ZA text', () => {
+    const valid = getValidGLROptionsForStep('language', { text: 'ZA' })
+    expect(valid).toContain('UA')
+  })
+
+  it('UA language not valid with EM text', () => {
+    const valid = getValidGLROptionsForStep('language', { text: 'EM' })
+    expect(valid).not.toContain('UA')
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// Constraint engine integration
-// ─────────────────────────────────────────────────────────────
+describe('getValidGROptionsForStep', () => {
+  it('both mounting options valid without constraints', () => {
+    const valid = getValidGROptionsForStep('mounting', {})
+    expect(valid).toContain('F')
+    expect(valid).toContain('S')
+  })
+
+  it('both grText options valid without constraints', () => {
+    const valid = getValidGROptionsForStep('grText', {})
+    expect(valid).toContain('22-0')
+    expect(valid).toContain('22-0-EN')
+  })
+
+  it('F mounting valid with both grText options', () => {
+    expect(getValidGROptionsForStep('grText', { mounting: 'F' })).toContain('22-0')
+    expect(getValidGROptionsForStep('grText', { mounting: 'F' })).toContain('22-0-EN')
+  })
+})
 
 describe('GLOBAL_RESET_CONSTRAINTS + constraintEngine', () => {
   const engine = createConstraintEngine(GLOBAL_RESET_CONSTRAINTS)
 
-  it('only colour↔text constraints — cover and language unconstrained', () => {
-    expect(GLOBAL_RESET_CONSTRAINTS.constraints).toHaveLength(2)
-    const steps = GLOBAL_RESET_CONSTRAINTS.constraints.map((c) => [
-      c.sourceStep,
-      c.targetStep,
-    ])
-    expect(steps).toContainEqual(['colour', 'text'])
-    expect(steps).toContainEqual(['text', 'colour'])
+  it('has 6 constraints', () => {
+    expect(GLOBAL_RESET_CONSTRAINTS.constraints).toHaveLength(6)
   })
 
-  it('blocks ZA text when colour is 1', () => {
-    expect(engine.checkOptionAvailability('text', 'ZA', { colour: '1' }).available).toBe(
-      false,
-    )
+  it('blocks EM text when colour is 001', () => {
+    expect(
+      engine.checkOptionAvailability('text', 'EM', { colour: '001' }).available,
+    ).toBe(false)
   })
 
-  it('allows ZA text when colour is 0, 2, 3, 4', () => {
-    for (const colour of ['0', '2', '3', '4']) {
-      expect(engine.checkOptionAvailability('text', 'ZA', { colour }).available).toBe(
-        true,
-      )
-    }
+  it('allows EM text when colour is 101', () => {
+    expect(
+      engine.checkOptionAvailability('text', 'EM', { colour: '101' }).available,
+    ).toBe(true)
   })
 
-  it('blocks RM text when colour is not 1', () => {
-    for (const colour of ['0', '2', '3', '4']) {
+  it('blocks RM text when colour is not 101', () => {
+    for (const colour of ['001', '201', '301', '401']) {
       expect(engine.checkOptionAvailability('text', 'RM', { colour }).available).toBe(
         false,
       )
     }
   })
 
-  it('allows RM text when colour is 1', () => {
-    expect(engine.checkOptionAvailability('text', 'RM', { colour: '1' }).available).toBe(
-      true,
-    )
+  it('allows RM text when colour is 101', () => {
+    expect(
+      engine.checkOptionAvailability('text', 'RM', { colour: '101' }).available,
+    ).toBe(true)
   })
 
-  it('blocks EV text when colour is not 4', () => {
-    for (const colour of ['0', '1', '2', '3']) {
-      expect(engine.checkOptionAvailability('text', 'EV', { colour }).available).toBe(
-        false,
-      )
-    }
+  it('blocks UA language when text is EM', () => {
+    expect(
+      engine.checkOptionAvailability('language', 'UA', { text: 'EM' }).available,
+    ).toBe(false)
   })
 
-  it('blocks colour 1 when text is EV, LD, NT, or PS', () => {
-    for (const text of ['EV', 'LD', 'NT', 'PS']) {
-      expect(engine.checkOptionAvailability('colour', '1', { text }).available).toBe(
-        false,
-      )
-    }
-  })
-
-  it('blocks colour 0 when text is EM, EX, RM, NT, PS, EV, or LD', () => {
-    for (const text of ['EM', 'EX', 'RM', 'NT', 'PS', 'EV', 'LD']) {
-      expect(engine.checkOptionAvailability('colour', '0', { text }).available).toBe(
-        false,
-      )
-    }
+  it('allows UA language when text is ZA', () => {
+    expect(
+      engine.checkOptionAvailability('language', 'UA', { text: 'ZA' }).available,
+    ).toBe(true)
   })
 
   it('constraint engine modelId matches', () => {
@@ -414,158 +392,169 @@ describe('GLOBAL_RESET_CONSTRAINTS + constraintEngine', () => {
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// buildProductModel integration
-// ─────────────────────────────────────────────────────────────
-
-describe('buildProductModel — globalReset', () => {
+describe('buildProductModel — globalReset GLR series', () => {
   it('builds GLR001ZA-EN correctly', () => {
-    const config: Configuration = { colour: '0', cover: '01', text: 'ZA', language: 'EN' }
+    const config: Configuration = {
+      series: 'GLR',
+      colour: '001',
+      text: 'ZA',
+      language: 'EN',
+      mounting: null,
+      grText: null,
+    }
     const result = buildProductModel(config, globalResetModel)
     expect(result.fullCode).toBe('GLR001ZA-EN')
-    expect(result.isComplete).toBe(true)
   })
 
-  it('builds GLR401EV-EN correctly', () => {
-    const config: Configuration = { colour: '4', cover: '01', text: 'EV', language: 'EN' }
-    const result = buildProductModel(config, globalResetModel)
-    expect(result.fullCode).toBe('GLR401EV-EN')
-    expect(result.isComplete).toBe(true)
-  })
-
-  it('builds GLR201NT-EN correctly', () => {
-    const config: Configuration = { colour: '2', cover: '01', text: 'NT', language: 'EN' }
-    const result = buildProductModel(config, globalResetModel)
-    expect(result.fullCode).toBe('GLR201NT-EN')
-    expect(result.isComplete).toBe(true)
-  })
-
-  it('baseCode is GLR', () => {
+  it('builds GLR101EM-EN correctly', () => {
     const config: Configuration = {
-      colour: null,
-      cover: null,
-      text: null,
-      language: null,
+      series: 'GLR',
+      colour: '101',
+      text: 'EM',
+      language: 'EN',
+      mounting: null,
+      grText: null,
     }
-    const result = buildProductModel(config, globalResetModel)
-    expect(result.baseCode).toBe('GLR')
-  })
-
-  it('only language uses dash separator', () => {
-    const config: Configuration = { colour: '1', cover: '01', text: 'EM', language: 'EN' }
     const result = buildProductModel(config, globalResetModel)
     expect(result.fullCode).toBe('GLR101EM-EN')
-    expect(result.fullCode.split('-')).toHaveLength(2)
   })
 
-  it('marks incomplete when steps missing', () => {
-    const config: Configuration = { colour: '2', cover: null, text: null, language: null }
-    const result = buildProductModel(config, globalResetModel)
-    expect(result.isComplete).toBe(false)
-    expect(result.missingSteps).toContain('cover')
-    expect(result.missingSteps).toContain('text')
-    expect(result.missingSteps).toContain('language')
-  })
-
-  it('all 13 valid codes generated from parsed configurations', () => {
-    const validSet = new Set(VALID_MODEL_CODES)
-    let matchCount = 0
-    for (const code of VALID_MODEL_CODES) {
-      const parsed = parseGLRModelCode(code)!
-      const config: Configuration = {
-        colour: parsed.colour ?? null,
-        cover: parsed.cover ?? null,
-        text: parsed.text ?? null,
-        language: parsed.language ?? null,
-      }
-      const result = buildProductModel(config, globalResetModel)
-      if (validSet.has(result.fullCode)) matchCount++
+  it('builds GLR401ZA-UA correctly', () => {
+    const config: Configuration = {
+      series: 'GLR',
+      colour: '401',
+      text: 'ZA',
+      language: 'UA',
+      mounting: null,
+      grText: null,
     }
-    expect(matchCount).toBe(VALID_MODEL_CODES.length)
+    const result = buildProductModel(config, globalResetModel)
+    expect(result.fullCode).toBe('GLR401ZA-UA')
+  })
+
+  it('builds GLR101RM-EN correctly', () => {
+    const config: Configuration = {
+      series: 'GLR',
+      colour: '101',
+      text: 'RM',
+      language: 'EN',
+      mounting: null,
+      grText: null,
+    }
+    const result = buildProductModel(config, globalResetModel)
+    expect(result.fullCode).toBe('GLR101RM-EN')
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// filterOptions completeness — globalReset
-// ─────────────────────────────────────────────────────────────
+describe('buildProductModel — globalReset GR series', () => {
+  it('builds GR-RF-22-0 correctly', () => {
+    const config: Configuration = {
+      series: 'GR',
+      colour: null,
+      text: null,
+      language: null,
+      mounting: 'F',
+      grText: '22-0',
+    }
+    const result = buildProductModel(config, globalResetModel)
+    expect(result.fullCode).toBe('GR-RF-22-0')
+  })
+
+  it('builds GR-RS-22-0-EN correctly', () => {
+    const config: Configuration = {
+      series: 'GR',
+      colour: null,
+      text: null,
+      language: null,
+      mounting: 'S',
+      grText: '22-0-EN',
+    }
+    const result = buildProductModel(config, globalResetModel)
+    expect(result.fullCode).toBe('GR-RS-22-0-EN')
+  })
+})
 
 describe('isConfigurationComplete — globalReset', () => {
-  it('returns true when all 4 steps selected', () => {
-    const config: Configuration = { colour: '0', cover: '01', text: 'ZA', language: 'EN' }
+  it('returns true for complete GLR configuration', () => {
+    const config: Configuration = {
+      series: 'GLR',
+      colour: '001',
+      text: 'ZA',
+      language: 'EN',
+      mounting: null,
+      grText: null,
+    }
     expect(isConfigurationComplete(globalResetModel, config)).toBe(true)
   })
 
-  it('returns false when any step missing', () => {
-    expect(
-      isConfigurationComplete(globalResetModel, {
-        colour: '0',
-        cover: '01',
-        text: 'ZA',
-        language: null,
-      }),
-    ).toBe(false)
+  it('returns true for complete GR configuration', () => {
+    const config: Configuration = {
+      series: 'GR',
+      colour: null,
+      text: null,
+      language: null,
+      mounting: 'F',
+      grText: '22-0',
+    }
+    expect(isConfigurationComplete(globalResetModel, config)).toBe(true)
   })
 
-  it('getMissingRequiredSteps returns correct missing steps', () => {
-    const config: Configuration = { colour: '1', cover: '01', text: null, language: null }
+  it('returns false when series not selected', () => {
+    const config: Configuration = {
+      series: null,
+      colour: null,
+      text: null,
+      language: null,
+      mounting: null,
+      grText: null,
+    }
+    expect(isConfigurationComplete(globalResetModel, config)).toBe(false)
+  })
+
+  it('returns false for incomplete GLR configuration', () => {
+    const config: Configuration = {
+      series: 'GLR',
+      colour: '001',
+      text: null,
+      language: null,
+      mounting: null,
+      grText: null,
+    }
+    expect(isConfigurationComplete(globalResetModel, config)).toBe(false)
+  })
+
+  it('getMissingRequiredSteps returns missing GLR steps', () => {
+    const config: Configuration = {
+      series: 'GLR',
+      colour: '101',
+      text: null,
+      language: null,
+      mounting: null,
+      grText: null,
+    }
     const missing = getMissingRequiredSteps(globalResetModel, config)
     expect(missing).toContain('text')
     expect(missing).toContain('language')
     expect(missing).not.toContain('colour')
-    expect(missing).not.toContain('cover')
+    expect(missing).not.toContain('mounting')
+    expect(missing).not.toContain('grText')
   })
 
-  it('getCompletionPercentage for 4-step model', () => {
-    expect(
-      getCompletionPercentage(globalResetModel, {
-        colour: null,
-        cover: null,
-        text: null,
-        language: null,
-      }),
-    ).toBe(0)
-
-    expect(
-      getCompletionPercentage(globalResetModel, {
-        colour: '0',
-        cover: null,
-        text: null,
-        language: null,
-      }),
-    ).toBe(25)
-
-    expect(
-      getCompletionPercentage(globalResetModel, {
-        colour: '0',
-        cover: '01',
-        text: null,
-        language: null,
-      }),
-    ).toBe(50)
-
-    expect(
-      getCompletionPercentage(globalResetModel, {
-        colour: '0',
-        cover: '01',
-        text: 'ZA',
-        language: null,
-      }),
-    ).toBe(75)
-
-    expect(
-      getCompletionPercentage(globalResetModel, {
-        colour: '0',
-        cover: '01',
-        text: 'ZA',
-        language: 'EN',
-      }),
-    ).toBe(100)
+  it('getMissingRequiredSteps returns missing GR steps', () => {
+    const config: Configuration = {
+      series: 'GR',
+      colour: null,
+      text: null,
+      language: null,
+      mounting: 'F',
+      grText: null,
+    }
+    const missing = getMissingRequiredSteps(globalResetModel, config)
+    expect(missing).toContain('grText')
+    expect(missing).not.toContain('mounting')
+    expect(missing).not.toContain('colour')
   })
 })
-
-// ─────────────────────────────────────────────────────────────
-// Model definition integrity
-// ─────────────────────────────────────────────────────────────
 
 describe('globalResetModel definition', () => {
   it('has correct model id and slug', () => {
@@ -573,52 +562,75 @@ describe('globalResetModel definition', () => {
     expect(globalResetModel.slug).toBe('global-reset')
   })
 
-  it('cover step has only one option — 01', () => {
-    const coverStep = globalResetModel.steps.find((s) => s.id === 'cover')!
-    expect(coverStep.options).toHaveLength(1)
-    expect(coverStep.options[0].id).toBe('01')
+  it('stepOrder contains all 6 steps', () => {
+    expect(globalResetModel.stepOrder).toEqual([
+      'series',
+      'colour',
+      'text',
+      'language',
+      'mounting',
+      'grText',
+    ])
   })
 
-  it('language step has only one option — EN', () => {
-    const langStep = globalResetModel.steps.find((s) => s.id === 'language')!
-    expect(langStep.options).toHaveLength(1)
-    expect(langStep.options[0].id).toBe('EN')
+  it('series step has GLR and GR options', () => {
+    const seriesStep = globalResetModel.steps.find((s) => s.id === 'series')!
+    const ids = seriesStep.options.map((o) => o.id)
+    expect(ids).toContain('GLR')
+    expect(ids).toContain('GR')
   })
 
-  it('text step has 8 enabled options', () => {
-    const textStep = globalResetModel.steps.find((s) => s.id === 'text')!
-    expect(textStep.options).toHaveLength(8)
-  })
-
-  it('text step does not include disabled options AB, PO, ES, XT, HV, PX', () => {
-    const textStep = globalResetModel.steps.find((s) => s.id === 'text')!
-    const ids = textStep.options.map((o) => o.id)
-    for (const disabled of ['AB', 'PO', 'ES', 'XT', 'HV', 'PX']) {
-      expect(ids).not.toContain(disabled)
-    }
-  })
-
-  it('colour step has 5 options — 0 through 4', () => {
+  it('colour step has 5 options with three-digit codes', () => {
     const colourStep = globalResetModel.steps.find((s) => s.id === 'colour')!
     const ids = colourStep.options.map((o) => o.id)
-    expect(ids).toEqual(['0', '1', '2', '3', '4'])
+    expect(ids).toEqual(['001', '101', '201', '301', '401'])
   })
 
-  it('baseCode is GLR', () => {
-    expect(globalResetModel.productModelSchema.baseCode).toBe('GLR')
+  it('text step has 4 options', () => {
+    const textStep = globalResetModel.steps.find((s) => s.id === 'text')!
+    expect(textStep.options).toHaveLength(4)
   })
 
-  it('all steps are required', () => {
-    for (const step of globalResetModel.steps) {
-      expect(step.required).toBe(true)
+  it('language step has EN and UA options', () => {
+    const langStep = globalResetModel.steps.find((s) => s.id === 'language')!
+    const ids = langStep.options.map((o) => o.id)
+    expect(ids).toContain('EN')
+    expect(ids).toContain('UA')
+  })
+
+  it('mounting step has F and S options', () => {
+    const mountingStep = globalResetModel.steps.find((s) => s.id === 'mounting')!
+    const ids = mountingStep.options.map((o) => o.id)
+    expect(ids).toContain('F')
+    expect(ids).toContain('S')
+  })
+
+  it('grText step has 22-0 and 22-0-EN options', () => {
+    const grTextStep = globalResetModel.steps.find((s) => s.id === 'grText')!
+    const ids = grTextStep.options.map((o) => o.id)
+    expect(ids).toContain('22-0')
+    expect(ids).toContain('22-0-EN')
+  })
+
+  it('series step is required, others are not', () => {
+    const seriesStep = globalResetModel.steps.find((s) => s.id === 'series')!
+    expect(seriesStep.required).toBe(true)
+    for (const step of globalResetModel.steps.filter((s) => s.id !== 'series')) {
+      expect(step.required).toBe(false)
     }
   })
 
-  it('only language uses dash separator', () => {
+  it('baseCode is empty string', () => {
+    expect(globalResetModel.productModelSchema.baseCode).toBe('')
+  })
+
+  it('separatorMap has correct values', () => {
     const { separatorMap } = globalResetModel.productModelSchema
-    expect(separatorMap?.language).toBe('-')
+    expect(separatorMap?.series).toBe('')
     expect(separatorMap?.colour).toBe('')
-    expect(separatorMap?.cover).toBe('')
     expect(separatorMap?.text).toBe('')
+    expect(separatorMap?.language).toBe('-')
+    expect(separatorMap?.mounting).toBe('-')
+    expect(separatorMap?.grText).toBe('-')
   })
 })

@@ -161,8 +161,8 @@ For the domed version of the Universal Stopper <a href="/configurator/universal-
 
 <strong>MOUNTING</strong> - Global Resets (GLR models only) are supplied as flush mount only. Back boxes are available for surface mount applications.`,
     media: [
-      { type: 'image', src: '/Global ReSet/HERO/01.webp', alt: 'Global ReSet' },
       { type: 'image', src: '/Global ReSet/HERO/02.webp', alt: 'Global ReSet' },
+      { type: 'image', src: '/Global ReSet/HERO/01.webp', alt: 'Global ReSet' },
       { type: 'image', src: '/Global ReSet/HERO/03.webp', alt: 'Global ReSet' },
     ],
   },
