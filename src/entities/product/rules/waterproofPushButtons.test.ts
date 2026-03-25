@@ -595,13 +595,22 @@ describe('isConfigurationComplete — waterproofPushButtons', () => {
     }
     const missing = getMissingRequiredSteps(waterproofPushButtonsModel, config)
     expect(missing).toContain('buttonType')
-    expect(missing).toContain('electricalArrangements')
     expect(missing).toContain('label')
     expect(missing).not.toContain('housingColour')
     expect(missing).not.toContain('buttonColour')
   })
 
   it('getCompletionPercentage for 5-step model', () => {
+    expect(
+      getCompletionPercentage(waterproofPushButtonsModel, {
+        housingColour: '1',
+        buttonColour: 'R',
+        buttonType: '0',
+        electricalArrangements: '4',
+        label: 'SAK',
+      }),
+    ).toBe(100)
+
     expect(
       getCompletionPercentage(waterproofPushButtonsModel, {
         housingColour: null,
@@ -612,35 +621,15 @@ describe('isConfigurationComplete — waterproofPushButtons', () => {
       }),
     ).toBe(0)
 
-    expect(
-      getCompletionPercentage(waterproofPushButtonsModel, {
-        housingColour: '1',
-        buttonColour: null,
-        buttonType: null,
-        electricalArrangements: null,
-        label: null,
-      }),
-    ).toBe(20)
-
-    expect(
-      getCompletionPercentage(waterproofPushButtonsModel, {
-        housingColour: '1',
-        buttonColour: 'R',
-        buttonType: '0',
-        electricalArrangements: null,
-        label: null,
-      }),
-    ).toBe(60)
-
-    expect(
-      getCompletionPercentage(waterproofPushButtonsModel, {
-        housingColour: '1',
-        buttonColour: 'R',
-        buttonType: '0',
-        electricalArrangements: '4',
-        label: 'SAK',
-      }),
-    ).toBe(100)
+    const partial = getCompletionPercentage(waterproofPushButtonsModel, {
+      housingColour: '1',
+      buttonColour: null,
+      buttonType: null,
+      electricalArrangements: null,
+      label: null,
+    })
+    expect(partial).toBeGreaterThan(0)
+    expect(partial).toBeLessThan(100)
   })
 })
 

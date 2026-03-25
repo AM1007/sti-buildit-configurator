@@ -1,13 +1,8 @@
 import type { ModelConstraints, ConstraintMatrix } from './types'
-
-// ─────────────────────────────────────────────────────────────
-// ALLOWLIST: Valid Euro Stopper model codes
-// Source: 15_Euro_Stopper.md (57 codes)
-// Format: STI-15{mounting:1}{sounder:2}{colourLabel:2}
-// ─────────────────────────────────────────────────────────────
+import { registerProductConstraints, buildAllowlistSet } from '../constraintRegistry'
+import type { Configuration } from '@shared/types'
 
 export const VALID_MODEL_CODES: readonly string[] = [
-  // ── Flush Mount (mounting=0): 16 models ──
   'STI-15010CB',
   'STI-15010CE',
   'STI-15010CG',
@@ -25,7 +20,6 @@ export const VALID_MODEL_CODES: readonly string[] = [
   'STI-15030NG',
   'STI-15030NR',
 
-  // ── Surface Mount 32mm (mounting=C): 21 models ──
   'STI-15C10CB',
   'STI-15C10CE',
   'STI-15C10ML',
@@ -48,7 +42,6 @@ export const VALID_MODEL_CODES: readonly string[] = [
   'STI-15C30NG',
   'STI-15C30NY',
 
-  // ── Surface Mount 50mm (mounting=D): 20 models ──
   'STI-15D10CB',
   'STI-15D10CE',
   'STI-15D10CG',
@@ -73,19 +66,11 @@ export const VALID_MODEL_CODES: readonly string[] = [
 
 const VALID_MODEL_SET = new Set(VALID_MODEL_CODES)
 
-// ─────────────────────────────────────────────────────────────
-// Selection state
-// ─────────────────────────────────────────────────────────────
-
 export interface EUSSelectionState {
   mounting?: string
   sounder?: string
   colourLabel?: string
 }
-
-// ─────────────────────────────────────────────────────────────
-// Build SKU from selections
-// ─────────────────────────────────────────────────────────────
 
 export function buildEUSModelCode(selections: EUSSelectionState): string | null {
   const { mounting, sounder, colourLabel } = selections
@@ -97,12 +82,7 @@ export function buildEUSModelCode(selections: EUSSelectionState): string | null 
   return `STI-15${mounting}${sounder}${colourLabel}`
 }
 
-// ─────────────────────────────────────────────────────────────
-// Parse SKU back to selections
-// ─────────────────────────────────────────────────────────────
-
 export function parseEUSModelCode(code: string): EUSSelectionState | null {
-  // STI-15{mounting:1}{sounder:2}{colourLabel:2}
   const match = code.match(/^STI-15([0CD])(\d{2})([A-Z]{2})$/)
 
   if (!match) {
@@ -116,17 +96,12 @@ export function parseEUSModelCode(code: string): EUSSelectionState | null {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-// Validate full combination against allowlist
-// ─────────────────────────────────────────────────────────────
-
 export function isValidEUSCombination(
   selections: EUSSelectionState,
 ): { valid: true } | { valid: false; reason: string } {
   const modelCode = buildEUSModelCode(selections)
 
   if (!modelCode) {
-    // Incomplete selection — not invalid yet
     return { valid: true }
   }
 
@@ -139,10 +114,6 @@ export function isValidEUSCombination(
     reason: `Model ${modelCode} is not available. This combination is not in the approved product list.`,
   }
 }
-
-// ─────────────────────────────────────────────────────────────
-// Get valid options for a step given other selections
-// ─────────────────────────────────────────────────────────────
 
 export function getValidEUSOptionsForStep(
   stepId: keyof EUSSelectionState,
@@ -173,15 +144,6 @@ export function getValidEUSOptionsForStep(
   return Array.from(validOptions)
 }
 
-// ─────────────────────────────────────────────────────────────
-// Constraint matrices
-//
-// mounting ↔ sounder: FULLY INDEPENDENT (all×all), no matrix needed
-// mounting ↔ colourLabel: partial dependency
-// sounder ↔ colourLabel: strong dependency
-// ─────────────────────────────────────────────────────────────
-
-// ── mounting → colourLabel ──
 const MOUNTING_TO_COLOUR_LABEL: ConstraintMatrix = {
   '0': [
     'CB',
@@ -203,7 +165,6 @@ const MOUNTING_TO_COLOUR_LABEL: ConstraintMatrix = {
   D: ['CB', 'CE', 'CG', 'CR', 'CW', 'CY', 'EG', 'FR', 'ML', 'NB', 'NG', 'NR', 'NW', 'NY'],
 }
 
-// ── colourLabel → mounting ──
 const COLOUR_LABEL_TO_MOUNTING: ConstraintMatrix = {
   CB: ['0', 'C', 'D'],
   CE: ['0', 'C', 'D'],
@@ -223,7 +184,6 @@ const COLOUR_LABEL_TO_MOUNTING: ConstraintMatrix = {
   NY: ['0', 'C', 'D'],
 }
 
-// ── sounder → colourLabel ──
 const SOUNDER_TO_COLOUR_LABEL: ConstraintMatrix = {
   '10': [
     'CB',
@@ -245,7 +205,6 @@ const SOUNDER_TO_COLOUR_LABEL: ConstraintMatrix = {
   '30': ['CG', 'EG', 'FR', 'NB', 'NG', 'NR', 'NY'],
 }
 
-// ── colourLabel → sounder ──
 const COLOUR_LABEL_TO_SOUNDER: ConstraintMatrix = {
   CB: ['10', '20'],
   CE: ['10', '20'],
@@ -265,13 +224,6 @@ const COLOUR_LABEL_TO_SOUNDER: ConstraintMatrix = {
   NY: ['10', '20', '30'],
 }
 
-// ─────────────────────────────────────────────────────────────
-// ModelConstraints export
-//
-// mounting ↔ sounder omitted: fully independent (all×all).
-// Including them would add no filtering value and waste cycles.
-// ─────────────────────────────────────────────────────────────
-
 export const EURO_STOPPER_CONSTRAINTS: ModelConstraints = {
   modelId: 'euro-stopper',
   constraints: [
@@ -290,10 +242,6 @@ export const EURO_STOPPER_CONSTRAINTS: ModelConstraints = {
   ],
 }
 
-// ─────────────────────────────────────────────────────────────
-// Debug export
-// ─────────────────────────────────────────────────────────────
-
 export const DEBUG_MATRICES = {
   MOUNTING_TO_COLOUR_LABEL,
   COLOUR_LABEL_TO_MOUNTING,
@@ -301,3 +249,13 @@ export const DEBUG_MATRICES = {
   COLOUR_LABEL_TO_SOUNDER,
   VALID_MODEL_CODES,
 }
+
+const EUS_STEPS = ['mounting', 'sounder', 'colourLabel']
+
+function eusAllowlistFn(stepId: string, config: Configuration): Set<string> | null {
+  return buildAllowlistSet(stepId, config, EUS_STEPS, (s, o) =>
+    getValidEUSOptionsForStep(s as never, o as never),
+  )
+}
+
+registerProductConstraints('euro-stopper', EURO_STOPPER_CONSTRAINTS, eusAllowlistFn)

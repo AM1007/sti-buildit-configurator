@@ -9,7 +9,7 @@ import {
 } from 'lucide-react'
 import type { PrimaryTag } from '@entities/product'
 import { useTranslation } from '@shared/i18n'
-import { FilterBottomSheet } from '@features/projects/components/FilterBottomSheet'
+import { FilterBottomSheet } from '@features/projects'
 
 const SEGMENTS: readonly (PrimaryTag | 'all')[] = [
   'all',

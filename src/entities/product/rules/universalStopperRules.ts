@@ -1,23 +1,8 @@
 import type { ModelConstraints, ConstraintMatrix } from './types'
-
-// ─────────────────────────────────────────────────────────────
-// ALLOWLIST: Valid Universal Stopper model codes
-// Source: 03_Universal_Stopper.md (65 unique codes + 2 restored)
-// Format: STI-13[mounting][hoodSounder][colourLabel]
-//   mounting:    0=flush, 1=surface, 2=surface+frame
-//   hoodSounder: 00=none, 10=label hood, 20=sounder, 30=sounder+relay
-//   colourLabel: 2-char code (FR, EG, NR, NG, NC, CK, etc.)
-//
-// Cover is always "13" (Dome) — hardcoded in baseCode.
-// Language is not encoded in SKU.
-// STI-13110FR and STI-13110EG restored from MD duplicates:
-// both appeared in MD with mounting=0 code but surface mount
-// description and dimensions (105mm depth), confirming they
-// are valid mounting=1 variants with a typo in the source.
-// ─────────────────────────────────────────────────────────────
+import { registerProductConstraints, buildAllowlistSet } from '../constraintRegistry'
+import type { Configuration } from '@shared/types'
 
 export const VALID_MODEL_CODES: readonly string[] = [
-  // ── Mounting 0 (Flush): 25 models ──
   'STI-13000NC',
   'STI-13010CB',
   'STI-13010CG',
@@ -44,7 +29,6 @@ export const VALID_MODEL_CODES: readonly string[] = [
   'STI-13030NG',
   'STI-13030NR',
 
-  // ── Mounting 1 (Surface): 30 models ──
   'STI-13100NC',
   'STI-13110CB',
   'STI-13110CG',
@@ -76,7 +60,6 @@ export const VALID_MODEL_CODES: readonly string[] = [
   'STI-13130FR',
   'STI-13130NR',
 
-  // ── Mounting 2 (Surface + Frame): 12 models ──
   'STI-13210CB',
   'STI-13210CK',
   'STI-13210CR',
@@ -93,19 +76,11 @@ export const VALID_MODEL_CODES: readonly string[] = [
 
 const VALID_MODEL_SET = new Set(VALID_MODEL_CODES)
 
-// ─────────────────────────────────────────────────────────────
-// Allowlist selection state
-// ─────────────────────────────────────────────────────────────
-
 export interface USSelectionState {
   mounting?: string
   hoodSounder?: string
   colourLabel?: string
 }
-
-// ─────────────────────────────────────────────────────────────
-// Build model code from selections
-// ─────────────────────────────────────────────────────────────
 
 export function buildUSModelCode(selections: USSelectionState): string | null {
   const { mounting, hoodSounder, colourLabel } = selections
@@ -113,10 +88,6 @@ export function buildUSModelCode(selections: USSelectionState): string | null {
 
   return `STI-13${mounting}${hoodSounder}${colourLabel}`
 }
-
-// ─────────────────────────────────────────────────────────────
-// Parse model code back to selection state
-// ─────────────────────────────────────────────────────────────
 
 export function parseUSModelCode(code: string): USSelectionState | null {
   const match = code.match(/^STI-13(\d)(\d{2})([A-Z]{2})$/)
@@ -129,16 +100,11 @@ export function parseUSModelCode(code: string): USSelectionState | null {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-// Validate full combination against allowlist
-// ─────────────────────────────────────────────────────────────
-
 export function isValidUSCombination(
   selections: USSelectionState,
 ): { valid: true } | { valid: false; reason: string } {
   const modelCode = buildUSModelCode(selections)
 
-  // Incomplete selection — allow user to continue picking
   if (!modelCode) return { valid: true }
 
   if (VALID_MODEL_SET.has(modelCode)) return { valid: true }
@@ -148,11 +114,6 @@ export function isValidUSCombination(
     reason: `Model ${modelCode} is not available. This combination is not in the approved product list.`,
   }
 }
-
-// ─────────────────────────────────────────────────────────────
-// Get valid options for a specific step given other selections
-// Used by filterOptions to disable unavailable options
-// ─────────────────────────────────────────────────────────────
 
 export function getValidUSOptionsForStep(
   stepId: keyof USSelectionState,
@@ -180,12 +141,6 @@ export function getValidUSOptionsForStep(
 
   return Array.from(validOptions)
 }
-
-// ─────────────────────────────────────────────────────────────
-// CONSTRAINT MATRICES
-// Source: computed from 03_Universal_Stopper.md (67 valid SKUs)
-// False positives closed by allowlist validation above
-// ─────────────────────────────────────────────────────────────
 
 const MOUNTING_TO_HOODSOUDER: ConstraintMatrix = {
   '0': ['00', '10', '20', '30'],
@@ -247,10 +202,6 @@ const COLOURLABEL_TO_HOODSOUDER: ConstraintMatrix = {
   NY: ['10', '20'],
 }
 
-// ─────────────────────────────────────────────────────────────
-// Exported constraints for constraint engine
-// ─────────────────────────────────────────────────────────────
-
 export const UNIVERSAL_STOPPER_CONSTRAINTS: ModelConstraints = {
   modelId: 'universal-stopper',
   constraints: [
@@ -281,10 +232,6 @@ export const UNIVERSAL_STOPPER_CONSTRAINTS: ModelConstraints = {
   ],
 }
 
-// ─────────────────────────────────────────────────────────────
-// Debug export for verification
-// ─────────────────────────────────────────────────────────────
-
 export const DEBUG_MATRICES = {
   MOUNTING_TO_HOODSOUDER,
   HOODSOUDER_TO_MOUNTING,
@@ -294,3 +241,17 @@ export const DEBUG_MATRICES = {
   COLOURLABEL_TO_HOODSOUDER,
   VALID_MODEL_CODES,
 }
+
+const US_STEPS = ['mounting', 'hoodSounder', 'colourLabel']
+
+function usAllowlistFn(stepId: string, config: Configuration): Set<string> | null {
+  return buildAllowlistSet(stepId, config, US_STEPS, (s, o) =>
+    getValidUSOptionsForStep(s as never, o as never),
+  )
+}
+
+registerProductConstraints(
+  'universal-stopper',
+  UNIVERSAL_STOPPER_CONSTRAINTS,
+  usAllowlistFn,
+)

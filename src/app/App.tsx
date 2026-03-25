@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { I18nProvider, Layout, ScrollToTop } from '@shared'
+import { I18nProvider, ScrollToTop } from '@shared'
+import { Layout } from '@app/layout'
 import { GuestOnly, ProtectedRoute } from '@features/auth'
 import { AuthInitializer } from '@features'
 import {

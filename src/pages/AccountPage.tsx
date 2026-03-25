@@ -10,9 +10,8 @@ import {
   AlertCircle,
   CheckCircle,
 } from 'lucide-react'
-import { useAuthStore, useUser } from '@features/auth/store/authStore'
 import { useTranslation } from '@shared/i18n'
-import { mapAuthError } from '@features/auth/lib/mapAuthError'
+import { useAuthStore, useUser, mapAuthError } from '@features/auth'
 
 const GOOGLE_ICON_PATHS = [
   {

@@ -8,7 +8,7 @@ import type {
 } from '@shared/types'
 import { StepSelector } from './StepSelector'
 import { CustomTextDisplay } from './CustomTextDisplay'
-import { hasSubmittedCustomText } from '@shared/utils/customTextHelpers'
+import { hasSubmittedCustomText } from '@entities/product/customTextConfig'
 import { useModelTranslations } from '../hooks/useModelTranslations'
 import { getOptionsWithAvailability } from '@features/configurator/lib/filterOptions'
 

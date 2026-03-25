@@ -17,17 +17,18 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: ['./src/tests/setup.ts'],
-    include: ['src/tests/**/*.test.ts', 'src/tests/**/*.test.tsx'],
+    include: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'lcov'],
       include: [
         'src/entities/product/buildProductModel.ts',
-        'src/features/configurator/lib/filterOptions.ts',
+        'src/entities/product/customTextConfig.ts',
         'src/entities/product/registry.ts',
+        'src/features/configurator/lib/filterOptions.ts',
         'src/features/*/store/*.ts',
       ],
-      exclude: ['src/tests/**', 'src/**/*.d.ts'],
+      exclude: ['src/**/*.test.ts', 'src/**/*.test.tsx', 'src/**/*.d.ts'],
     },
   },
 })

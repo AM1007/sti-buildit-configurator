@@ -1,4 +1,6 @@
 import type { ModelConstraints, ConstraintMatrix } from './types'
+import { registerProductConstraints, buildAllowlistSet } from '../constraintRegistry'
+import type { Configuration } from '@shared/types'
 
 export const VALID_MODEL_CODES: readonly string[] = [
   'ES-121005-O',
@@ -150,3 +152,13 @@ export const DEBUG_MATRICES = {
   DOORTYPE_TO_SIZE,
   VALID_MODEL_CODES,
 }
+
+const EA_STEPS = ['material', 'size', 'doorType']
+
+function eaAllowlistFn(stepId: string, config: Configuration): Set<string> | null {
+  return buildAllowlistSet(stepId, config, EA_STEPS, (s, o) =>
+    getValidEAOptionsForStep(s as never, o as never),
+  )
+}
+
+registerProductConstraints('enviro-armour', ENVIRO_ARMOUR_CONSTRAINTS, eaAllowlistFn)

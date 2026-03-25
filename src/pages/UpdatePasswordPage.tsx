@@ -2,9 +2,8 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Lock, Eye, EyeOff, AlertCircle, CheckCircle } from 'lucide-react'
 import { subscribeToAuthEvent } from '@shared/api/authApi'
-import { useAuthStore } from '@features/auth/store/authStore'
 import { useTranslation } from '@shared/i18n'
-import { mapAuthError } from '@features/auth/lib/mapAuthError'
+import { useAuthStore, mapAuthError } from '@features/auth'
 
 export function UpdatePasswordPage() {
   const { t } = useTranslation()

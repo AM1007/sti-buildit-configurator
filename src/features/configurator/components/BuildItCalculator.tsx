@@ -12,7 +12,7 @@ import {
   useMyListItemIdByProductCode,
 } from '@features/projects'
 import { useIsAuthenticated } from '@features/auth/store/authStore'
-import { isConfigurationReadyForActions } from '@shared/utils/customTextHelpers'
+import { isConfigurationReadyForActions } from '@entities/product/customTextConfig'
 import { getCompletedDeviceImage } from '@shared/utils/getCompletedDeviceImage'
 import { getHeroContent } from '../lib/heroContent'
 import {

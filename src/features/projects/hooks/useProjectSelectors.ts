@@ -4,7 +4,8 @@ import type { CustomTextData, SavedConfiguration } from '@shared/types'
 import { GUEST_PROJECT_ID } from '@shared/types'
 import { buildCustomTextFingerprint } from '@shared/utils'
 import { useProjectStore } from '@features/projects'
-import { useUser } from '@features/auth/store/authStore'
+import { useUser } from '@features/auth'
+import * as configurationsApi from '@shared/api/configurationsApi'
 
 const EMPTY_LIST: SavedConfiguration[] = []
 
@@ -61,7 +62,6 @@ export const useIsProductInAnyProject = (
   refreshToken: number,
 ) => {
   const user = useUser()
-  const checkProductInAnyProject = useProjectStore((s) => s.checkProductInAnyProject)
   const [isInAnyProject, setIsInAnyProject] = useState(false)
 
   useEffect(() => {
@@ -69,14 +69,10 @@ export const useIsProductInAnyProject = (
       setIsInAnyProject(false)
       return
     }
-    checkProductInAnyProject(user.id, productCode, customText).then(setIsInAnyProject)
-  }, [
-    productCode,
-    user?.id,
-    buildCustomTextFingerprint(customText),
-    refreshToken,
-    checkProductInAnyProject,
-  ])
+    configurationsApi
+      .checkProductInAnyProject(user.id, productCode, customText)
+      .then(setIsInAnyProject)
+  }, [productCode, user?.id, buildCustomTextFingerprint(customText), refreshToken])
 
   return isInAnyProject
 }

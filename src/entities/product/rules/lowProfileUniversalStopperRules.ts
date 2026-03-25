@@ -1,26 +1,14 @@
 import type { ModelConstraints, ConstraintMatrix } from './types'
-
-// ─────────────────────────────────────────────────────────────
-// ALLOWLIST: Valid Low Profile Universal Stopper model codes
-// Source: 06_Low_Profile_Universal_Stopper.md (14 codes)
-// Format: STI-14[mounting][hoodSounder][colourLabel]
-//   mounting:    0=flush, 1=surface (dual mount), 2=surface+frame
-//   hoodSounder: 00=none, 10=label hood, 20=sounder
-//   colourLabel: 2-char code (FR, EG, NC, NW, CY, NY)
-//
-// Cover is always "14" (Low Profile) — hardcoded in baseCode.
-// Language is not encoded in SKU (always English).
-// ─────────────────────────────────────────────────────────────
+import { registerProductConstraints, buildAllowlistSet } from '../constraintRegistry'
+import type { Configuration } from '@shared/types'
 
 export const VALID_MODEL_CODES: readonly string[] = [
-  // ── Mounting 0 (Flush): 5 models ──
   'STI-14000NC',
   'STI-14010EG',
   'STI-14010NY',
   'STI-14020FR',
   'STI-14020EG',
 
-  // ── Mounting 1 (Surface, Dual Mount): 7 models ──
   'STI-14100NC',
   'STI-14110FR',
   'STI-14110EG',
@@ -29,16 +17,11 @@ export const VALID_MODEL_CODES: readonly string[] = [
   'STI-14120FR',
   'STI-14120EG',
 
-  // ── Mounting 2 (Surface + Frame): 2 models ──
   'STI-14200NW',
   'STI-14220CY',
 ] as const
 
 const VALID_MODEL_SET = new Set(VALID_MODEL_CODES)
-
-// ─────────────────────────────────────────────────────────────
-// Allowlist selection state
-// ─────────────────────────────────────────────────────────────
 
 export interface LPUSSelectionState {
   mounting?: string
@@ -46,20 +29,12 @@ export interface LPUSSelectionState {
   colourLabel?: string
 }
 
-// ─────────────────────────────────────────────────────────────
-// Build model code from selections
-// ─────────────────────────────────────────────────────────────
-
 export function buildLPUSModelCode(selections: LPUSSelectionState): string | null {
   const { mounting, hoodSounder, colourLabel } = selections
   if (!mounting || !hoodSounder || !colourLabel) return null
 
   return `STI-14${mounting}${hoodSounder}${colourLabel}`
 }
-
-// ─────────────────────────────────────────────────────────────
-// Parse model code back to selection state
-// ─────────────────────────────────────────────────────────────
 
 export function parseLPUSModelCode(code: string): LPUSSelectionState | null {
   const match = code.match(/^STI-14(\d)(\d{2})([A-Z]{2})$/)
@@ -71,10 +46,6 @@ export function parseLPUSModelCode(code: string): LPUSSelectionState | null {
     colourLabel: match[3],
   }
 }
-
-// ─────────────────────────────────────────────────────────────
-// Validate full combination against allowlist
-// ─────────────────────────────────────────────────────────────
 
 export function isValidLPUSCombination(
   selections: LPUSSelectionState,
@@ -90,10 +61,6 @@ export function isValidLPUSCombination(
     reason: `Model ${modelCode} is not available. This combination is not in the approved product list.`,
   }
 }
-
-// ─────────────────────────────────────────────────────────────
-// Get valid options for a specific step given other selections
-// ─────────────────────────────────────────────────────────────
 
 export function getValidLPUSOptionsForStep(
   stepId: keyof LPUSSelectionState,
@@ -121,13 +88,6 @@ export function getValidLPUSOptionsForStep(
 
   return Array.from(validOptions)
 }
-
-// ─────────────────────────────────────────────────────────────
-// CONSTRAINT MATRICES
-// Source: computed from 06_Low_Profile_Universal_Stopper.md (14 SKUs)
-// False positives (2): STI-14010FR, STI-14120CY
-// Closed by allowlist validation above.
-// ─────────────────────────────────────────────────────────────
 
 const MOUNTING_TO_HOODSOUDER: ConstraintMatrix = {
   '0': ['00', '10', '20'],
@@ -171,10 +131,6 @@ const COLOURLABEL_TO_HOODSOUDER: ConstraintMatrix = {
   CY: ['10', '20'],
 }
 
-// ─────────────────────────────────────────────────────────────
-// Exported constraints for constraint engine
-// ─────────────────────────────────────────────────────────────
-
 export const LOW_PROFILE_UNIVERSAL_STOPPER_CONSTRAINTS: ModelConstraints = {
   modelId: 'low-profile-universal-stopper',
   constraints: [
@@ -205,10 +161,6 @@ export const LOW_PROFILE_UNIVERSAL_STOPPER_CONSTRAINTS: ModelConstraints = {
   ],
 }
 
-// ─────────────────────────────────────────────────────────────
-// Debug export for verification
-// ─────────────────────────────────────────────────────────────
-
 export const DEBUG_MATRICES = {
   MOUNTING_TO_HOODSOUDER,
   HOODSOUDER_TO_MOUNTING,
@@ -218,3 +170,17 @@ export const DEBUG_MATRICES = {
   COLOURLABEL_TO_HOODSOUDER,
   VALID_MODEL_CODES,
 }
+
+const LPUS_STEPS = ['mounting', 'hoodSounder', 'colourLabel']
+
+function lpusAllowlistFn(stepId: string, config: Configuration): Set<string> | null {
+  return buildAllowlistSet(stepId, config, LPUS_STEPS, (s, o) =>
+    getValidLPUSOptionsForStep(s as never, o as never),
+  )
+}
+
+registerProductConstraints(
+  'low-profile-universal-stopper',
+  LOW_PROFILE_UNIVERSAL_STOPPER_CONSTRAINTS,
+  lpusAllowlistFn,
+)

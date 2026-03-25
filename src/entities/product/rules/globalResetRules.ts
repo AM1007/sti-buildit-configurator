@@ -1,4 +1,6 @@
 import type { ModelConstraints, ConstraintMatrix } from './types'
+import { registerProductConstraints, buildAllowlistSet } from '../constraintRegistry'
+import type { Configuration } from '@shared/types'
 
 export const VALID_GLR_CODES: readonly string[] = [
   'GLR001ZA-EN',
@@ -197,3 +199,47 @@ export const DEBUG_MATRICES = {
   VALID_GLR_CODES,
   VALID_GR_CODES,
 }
+
+const GLR_ALLOWLIST_STEPS = ['colour', 'cover', 'text', 'language']
+const GR_ALLOWLIST_STEPS = ['mounting', 'grText']
+
+function globalResetAllowlistFn(
+  stepId: string,
+  config: Configuration,
+): Set<string> | null {
+  const series = config['series'] ?? null
+
+  if (stepId === 'series') return null
+
+  if (series === 'GR') {
+    if (GLR_ALLOWLIST_STEPS.includes(stepId)) return new Set()
+    if (GR_ALLOWLIST_STEPS.includes(stepId)) {
+      return buildAllowlistSet(stepId, config, GR_ALLOWLIST_STEPS, (s, o) =>
+        getValidGROptionsForStep(s as never, o as never),
+      )
+    }
+    return null
+  }
+
+  if (series === 'GLR') {
+    if (GR_ALLOWLIST_STEPS.includes(stepId)) return new Set()
+    if (GLR_ALLOWLIST_STEPS.includes(stepId)) {
+      return buildAllowlistSet(stepId, config, GLR_ALLOWLIST_STEPS, (s, o) =>
+        getValidGLROptionsForStep(s as never, o as never),
+      )
+    }
+    return null
+  }
+
+  if (GLR_ALLOWLIST_STEPS.includes(stepId) || GR_ALLOWLIST_STEPS.includes(stepId)) {
+    return new Set()
+  }
+
+  return null
+}
+
+registerProductConstraints(
+  'global-reset',
+  GLOBAL_RESET_CONSTRAINTS,
+  globalResetAllowlistFn,
+)

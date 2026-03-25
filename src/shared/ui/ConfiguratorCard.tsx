@@ -3,8 +3,8 @@ import { motion } from 'framer-motion'
 import { CloudRain, Volume2, Flame, RotateCcw, KeyRound } from 'lucide-react'
 import type { ConfiguratorMeta, ColourId, FunctionalTag } from '@entities/product'
 import { useTranslation } from '@shared/i18n'
-import { useModelTranslations } from '@features/configurator/hooks/useModelTranslations'
 import { getSkuPrefix } from '@shared/utils/getSkuPrefix'
+import { useModelTranslations } from '@features/configurator'
 
 type ViewMode = 'grid' | 'list'
 

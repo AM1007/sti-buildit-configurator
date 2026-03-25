@@ -1,14 +1,8 @@
 import type { ModelConstraints, ConstraintMatrix } from './types'
-
-// ─────────────────────────────────────────────────────────────
-// ALLOWLIST: Valid Stopper Stations model codes
-// Source: 01–06_Stopper_Stations_[colour].md (209 codes)
-// Format: SS2[colour][cover][activation][text]-[language]
-// Cover is always "0" in current catalog
-// ─────────────────────────────────────────────────────────────
+import { registerProductConstraints } from '../constraintRegistry'
+import type { Configuration } from '@shared/types'
 
 export const VALID_MODEL_CODES: readonly string[] = [
-  // ── Red (colour=0): 44 models ──
   'SS2000ES-EN',
   'SS2000NT-EN',
   'SS2000PO-EN',
@@ -54,7 +48,6 @@ export const VALID_MODEL_CODES: readonly string[] = [
   'SS2009PX-EN',
   'SS2009ZA-EN',
 
-  // ── Green (colour=1): 44 models ──
   'SS2100EM-EN',
   'SS2100EX-EN',
   'SS2100NT-EN',
@@ -100,7 +93,6 @@ export const VALID_MODEL_CODES: readonly string[] = [
   'SS2109PX-EN',
   'SS2109ZA-EN',
 
-  // ── Yellow (colour=2): 55 models ──
   'SS2200EM-EN',
   'SS2200LD-EN',
   'SS2200PO-EN',
@@ -157,7 +149,6 @@ export const VALID_MODEL_CODES: readonly string[] = [
   'SS2209PS-EN',
   'SS2209ZA-EN',
 
-  // ── White (colour=3): 25 models ──
   'SS2300EM-EN',
   'SS2301AB-EN',
   'SS2301EM-EN',
@@ -184,7 +175,6 @@ export const VALID_MODEL_CODES: readonly string[] = [
   'SS2309PO-EN',
   'SS2309ZA-EN',
 
-  // ── Blue (colour=4): 36 models ──
   'SS2400EM-EN',
   'SS2400EX-EN',
   'SS2400LD-EN',
@@ -222,7 +212,6 @@ export const VALID_MODEL_CODES: readonly string[] = [
   'SS2409NT-EN',
   'SS2409ZA-EN',
 
-  // ── Orange (colour=5): 5 models ──
   'SS2501LD-EN',
   'SS2502EM-EN',
   'SS2503ZA-EN',
@@ -232,46 +221,26 @@ export const VALID_MODEL_CODES: readonly string[] = [
 
 const VALID_MODEL_SET = new Set(VALID_MODEL_CODES)
 
-// ─────────────────────────────────────────────────────────────
-// Allowlist selection state
-// ─────────────────────────────────────────────────────────────
-
 export interface SSSelectionState {
   colour?: string
   cover?: string
   activation?: string
   text?: string
   language?: string
-  // installationOptions is NOT part of the base model code
 }
-
-// ─────────────────────────────────────────────────────────────
-// Build base model code from selections
-// installationOptions excluded — they are appended separately
-// by buildProductModel and do not affect allowlist validation
-// ─────────────────────────────────────────────────────────────
 
 export function buildSSModelCode(selections: SSSelectionState): string | null {
   const { colour, cover, activation, text, language } = selections
   if (!colour || !cover || !activation || !text || !language) return null
 
-  // ASSUMPTION: activation sub-variants (6-red, 6-green, etc.)
-  // map to single digit in model code. The code property in steps.ts
-  // already provides this mapping (code: "6" for all 6-xxx variants).
-  // We receive the raw code value here, not the option id.
   return `SS2${colour}${cover}${activation}${text}-${language}`
 }
-
-// ─────────────────────────────────────────────────────────────
-// Validate full combination against allowlist
-// ─────────────────────────────────────────────────────────────
 
 export function isValidSSCombination(
   selections: SSSelectionState,
 ): { valid: true } | { valid: false; reason: string } {
   const modelCode = buildSSModelCode(selections)
 
-  // Incomplete selection — allow user to continue picking
   if (!modelCode) return { valid: true }
 
   if (VALID_MODEL_SET.has(modelCode)) return { valid: true }
@@ -281,11 +250,6 @@ export function isValidSSCombination(
     reason: `Model ${modelCode} is not available. This combination is not in the approved product list.`,
   }
 }
-
-// ─────────────────────────────────────────────────────────────
-// Get valid options for a specific step given other selections
-// Used by filterOptions to disable unavailable options
-// ─────────────────────────────────────────────────────────────
 
 export function getValidSSOptionsForStep(
   stepId: keyof SSSelectionState,
@@ -314,18 +278,7 @@ export function getValidSSOptionsForStep(
   return Array.from(validOptions)
 }
 
-// ─────────────────────────────────────────────────────────────
-// Parse model code back to selection state
-//
-// ASSUMPTION: activation sub-variants (6-red vs 6-green vs 6-blue,
-// 7-red vs 7-green vs 7-blue) cannot be distinguished from the
-// model code alone — they all share the same digit.
-// This limits reverse parsing but does NOT affect forward
-// validation (user selection → code → allowlist check).
-// ─────────────────────────────────────────────────────────────
-
 export function parseSSModelCode(code: string): SSSelectionState | null {
-  // SS2[colour:1][cover:1][activation:1][text:2]-[language:2]
   const match = code.match(/^SS2(\d)(\d)(\d)([A-Z]{2})-([A-Z]{2})$/)
   if (!match) return null
 
@@ -337,10 +290,6 @@ export function parseSSModelCode(code: string): SSSelectionState | null {
     language: match[5],
   }
 }
-
-// ─────────────────────────────────────────────────────────────
-// CONSTRAINT MATRICES (existing, unchanged)
-// ─────────────────────────────────────────────────────────────
 
 const COLOUR_TO_ACTIVATION: ConstraintMatrix = {
   '0': ['0', '1', '2', '3', '4', '5', '6-red', '7-red', '8', '9'],
@@ -731,3 +680,46 @@ export const DEBUG_MATRICES = {
   INSTALLATION_TO_COLOUR,
   VALID_MODEL_CODES,
 }
+
+function normalizeActivationToCode(id: string): string {
+  if (id.startsWith('6-')) return '6'
+  if (id.startsWith('7-')) return '7'
+  return id
+}
+
+function expandActivationCodeToIds(code: string): string[] {
+  if (code === '6') return ['6-red', '6-green', '6-blue']
+  if (code === '7') return ['7-red', '7-green', '7-blue']
+  return [code]
+}
+
+const SS_ALLOWLIST_STEPS = ['colour', 'cover', 'activation', 'text', 'language']
+
+function ssAllowlistFn(stepId: string, config: Configuration): Set<string> | null {
+  if (!SS_ALLOWLIST_STEPS.includes(stepId)) return null
+
+  const others: Record<string, string | undefined> = {}
+  for (const k of SS_ALLOWLIST_STEPS) {
+    if (k === stepId) continue
+    const v = config[k as keyof Configuration] ?? undefined
+    others[k] = k === 'activation' && v ? normalizeActivationToCode(v) : v
+  }
+
+  const validCodes = getValidSSOptionsForStep(stepId as never, others as never)
+
+  if (stepId === 'activation') {
+    const expanded = new Set<string>()
+    for (const code of validCodes) {
+      for (const id of expandActivationCodeToIds(code)) expanded.add(id)
+    }
+    return expanded
+  }
+
+  return new Set(validCodes)
+}
+
+registerProductConstraints(
+  'stopper-stations',
+  STOPPER_STATIONS_CONSTRAINTS,
+  ssAllowlistFn,
+)

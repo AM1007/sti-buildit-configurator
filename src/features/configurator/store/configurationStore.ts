@@ -12,7 +12,7 @@ import { getSelectionsToReset } from '@features/configurator/lib/filterOptions'
 import {
   shouldClearCustomText,
   getCustomTextTrigger,
-} from '@shared/utils/customTextHelpers'
+} from '@entities/product/customTextConfig'
 
 interface ConfigurationState {
   currentModelId: ModelId | null

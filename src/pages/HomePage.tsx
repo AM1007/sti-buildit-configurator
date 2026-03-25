@@ -4,9 +4,8 @@ import { ArrowRight, ChevronDown } from 'lucide-react'
 import { getAllProducts } from '../entities/product/registry'
 import { ConfiguratorCard } from '../shared/ui/ConfiguratorCard'
 import { PrimaryNavigation } from '../shared/ui/PrimaryNavigation'
-import { ResultCounter, EmptyState } from '@features/projects/components/FilterResults'
-import { useFilterState } from '@features/projects/hooks/useFilterState'
 import { useTranslation } from '@shared/i18n'
+import { ResultCounter, EmptyState, useFilterState } from '@features/projects'
 
 export function HomePage() {
   const { t } = useTranslation()

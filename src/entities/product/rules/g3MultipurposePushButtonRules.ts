@@ -1,4 +1,6 @@
 import type { ModelConstraints, ConstraintMatrix } from './types'
+import { registerProductConstraints, buildAllowlistSet } from '../constraintRegistry'
+import type { Configuration } from '@shared/types'
 
 export const VALID_MODEL_CODES: readonly string[] = [
   'G3A209ZA-EN',
@@ -352,3 +354,17 @@ export const DEBUG_MATRICES = {
   LANGUAGE_TO_TEXT,
   VALID_MODEL_CODES,
 }
+
+const G3_STEPS = ['model', 'colour', 'cover', 'buttonType', 'text', 'language']
+
+function g3AllowlistFn(stepId: string, config: Configuration): Set<string> | null {
+  return buildAllowlistSet(stepId, config, G3_STEPS, (s, o) =>
+    getValidOptionsForStep(s as never, o as never),
+  )
+}
+
+registerProductConstraints(
+  'g3-multipurpose-push-button',
+  G3_MULTIPURPOSE_PUSH_BUTTON_CONSTRAINTS,
+  g3AllowlistFn,
+)

@@ -9,9 +9,7 @@ export {
 
 export {
   buildProductModel,
-  isConfigurationComplete,
-  getMissingRequiredSteps,
-  getCompletionPercentage,
+  isAllRequiredStepsSelected,
   identifyModel,
 } from './buildProductModel'
 

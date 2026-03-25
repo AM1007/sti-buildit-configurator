@@ -1,21 +1,45 @@
-export * from './store/configurationStore'
-export * from './hooks/useConfiguration'
-export * from './hooks/useModelTranslations'
-export * from './lib/filterOptions'
-export * from './components/BuildItCalculator'
-export * from './components/ConfigurationBlock'
-export * from './components/CustomTextDisplay'
-export * from './components/CustomTextForm'
-export * from './components/DesktopLayout'
-export * from './components/EmptyStateContent'
-export * from './components/MainPanel'
-export * from './components/MobileTabletLayout'
-export * from './components/OptionBottomSheet'
-export * from './components/OptionCard'
-export * from './components/ProductModelDisplay'
-export * from './components/ProductPreview'
-export * from './components/ProductPreviewContent'
-export * from './components/Sidebar'
-export * from './components/StepSelector'
+export {
+  useConfigurationStore,
+  useCurrentModelId,
+  useConfig,
+  useCustomText,
+  useCurrentStep,
+} from './store/configurationStore'
 
-export * from './store/configurationStore'
+export { useConfiguration } from './hooks/useConfiguration'
+export { useModelTranslations } from './hooks/useModelTranslations'
+
+export {
+  isConfigurationComplete,
+  getMissingRequiredSteps,
+  getCompletionPercentage,
+  getOptionsWithAvailability,
+  getVisibleSteps,
+  getSelectionsToReset,
+  filterAvailableOptions,
+  isOptionAvailable,
+  isSelectionStillValid,
+} from './lib/filterOptions'
+
+export { getHeroContent } from './lib/heroContent'
+export { getModelDescription } from './lib/getModelDescription'
+export { getModelSummary } from './lib/getModelSummary'
+export { getHeroDescription } from './lib/getHeroDescription'
+export { downloadProductPdf, printProductPdf } from './lib/generateProductPdf'
+
+export { BuildItCalculator } from './components/BuildItCalculator'
+export { ConfigurationBlock } from './components/ConfigurationBlock'
+export { CustomTextDisplay } from './components/CustomTextDisplay'
+export { CustomTextForm } from './components/CustomTextForm'
+export { DesktopLayout } from './components/DesktopLayout'
+export { EmptyStateContent } from './components/EmptyStateContent'
+export { MainPanel } from './components/MainPanel'
+export { MobileTabletLayout } from './components/MobileTabletLayout'
+export { OptionBottomSheet } from './components/OptionBottomSheet'
+export { OptionCard } from './components/OptionCard'
+export { PdfMenu } from './components/PdfMenu'
+export { ProductModelDisplay } from './components/ProductModelDisplay'
+export { ProductPreview } from './components/ProductPreview'
+export { ProductPreviewContent } from './components/ProductPreviewContent'
+export { Sidebar } from './components/Sidebar'
+export { StepSelector } from './components/StepSelector'

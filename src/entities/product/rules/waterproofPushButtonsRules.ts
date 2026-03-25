@@ -1,21 +1,12 @@
 import type { ModelConstraints, ConstraintMatrix } from './types'
-
-// ─────────────────────────────────────────────────────────────
-// ALLOWLIST: Valid Waterproof Push Buttons model codes
-// Source: 11_Waterproof_Push_Buttons.md (36 codes)
-// Format: WSS3-{housingColour}{buttonColour}{buttonType}4[-CL]
-//
-// electricalArrangements is always "4" (single option) —
-// excluded from SelectionState and constraint matrices.
-// ─────────────────────────────────────────────────────────────
+import { registerProductConstraints, buildAllowlistSet } from '../constraintRegistry'
+import type { Configuration } from '@shared/types'
 
 export const VALID_MODEL_CODES: readonly string[] = [
-  // ── Red housing (1): 3 models ──
   'WSS3-1R04',
   'WSS3-1R04-CL',
   'WSS3-1R14',
 
-  // ── Green housing (3): 6 models ──
   'WSS3-3G04',
   'WSS3-3G14',
   'WSS3-3R04',
@@ -23,7 +14,6 @@ export const VALID_MODEL_CODES: readonly string[] = [
   'WSS3-3W04',
   'WSS3-3W14',
 
-  // ── Yellow housing (5): 7 models ──
   'WSS3-5R04',
   'WSS3-5R04-CL',
   'WSS3-5R14',
@@ -32,7 +22,6 @@ export const VALID_MODEL_CODES: readonly string[] = [
   'WSS3-5Y04-CL',
   'WSS3-5Y14',
 
-  // ── White housing (7): 10 models ──
   'WSS3-7B04',
   'WSS3-7B04-CL',
   'WSS3-7B14',
@@ -45,7 +34,6 @@ export const VALID_MODEL_CODES: readonly string[] = [
   'WSS3-7W04',
   'WSS3-7W04-CL',
 
-  // ── Blue housing (9): 8 models ──
   'WSS3-9B04',
   'WSS3-9B04-CL',
   'WSS3-9B14',
@@ -55,35 +43,17 @@ export const VALID_MODEL_CODES: readonly string[] = [
   'WSS3-9W14',
   'WSS3-9W14-CL',
 
-  // ── Orange housing (E): 1 model ──
   'WSS3-EE04',
 ] as const
 
 const VALID_MODEL_SET = new Set(VALID_MODEL_CODES)
 
-// ─────────────────────────────────────────────────────────────
-// Selection state
-//
-// electricalArrangements excluded — single option "4",
-// no impact on validation or SKU variability.
-// ─────────────────────────────────────────────────────────────
-
 export interface WPBSelectionState {
-  housingColour?: string // 1, 3, 5, 7, 9, E
-  buttonColour?: string // R, G, Y, W, B, E
-  buttonType?: string // 0, 1
-  label?: string // SAK, CL
+  housingColour?: string
+  buttonColour?: string
+  buttonType?: string
+  label?: string
 }
-
-// ─────────────────────────────────────────────────────────────
-// Build model code from selections
-//
-// Label mapping:
-//   SAK → no suffix (code = "")
-//   CL  → suffix "-CL" (code = "CL", separator "-")
-//
-// electricalArrangements is hardcoded as "4" in the SKU.
-// ─────────────────────────────────────────────────────────────
 
 export function buildWPBModelCode(selections: WPBSelectionState): string | null {
   const { housingColour, buttonColour, buttonType, label } = selections
@@ -92,10 +62,6 @@ export function buildWPBModelCode(selections: WPBSelectionState): string | null 
   const suffix = label === 'CL' ? '-CL' : ''
   return `WSS3-${housingColour}${buttonColour}${buttonType}4${suffix}`
 }
-
-// ─────────────────────────────────────────────────────────────
-// Parse model code back to selection state
-// ─────────────────────────────────────────────────────────────
 
 export function parseWPBModelCode(code: string): WPBSelectionState | null {
   const match = code.match(/^WSS3-([1357E9])([RGYWBE])([01])4(-CL)?$/)
@@ -109,16 +75,11 @@ export function parseWPBModelCode(code: string): WPBSelectionState | null {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-// Validate full combination against allowlist
-// ─────────────────────────────────────────────────────────────
-
 export function isValidWPBCombination(
   selections: WPBSelectionState,
 ): { valid: true } | { valid: false; reason: string } {
   const modelCode = buildWPBModelCode(selections)
 
-  // Incomplete selection — allow user to continue picking
   if (!modelCode) return { valid: true }
 
   if (VALID_MODEL_SET.has(modelCode)) return { valid: true }
@@ -128,10 +89,6 @@ export function isValidWPBCombination(
     reason: `Model ${modelCode} is not available. This combination is not in the approved product list.`,
   }
 }
-
-// ─────────────────────────────────────────────────────────────
-// Get valid options for a specific step given other selections
-// ─────────────────────────────────────────────────────────────
 
 export function getValidWPBOptionsForStep(
   stepId: keyof WPBSelectionState,
@@ -159,16 +116,6 @@ export function getValidWPBOptionsForStep(
 
   return Array.from(validOptions)
 }
-
-// ─────────────────────────────────────────────────────────────
-// CONSTRAINT MATRICES
-//
-// 6 bidirectional pairs = 12 matrices.
-// electricalArrangements excluded (single option, no dependencies).
-//
-// False positives (pass matrices, absent from allowlist): 13.
-// Closed by allowlist level in filterOptions.ts.
-// ─────────────────────────────────────────────────────────────
 
 const HOUSING_TO_BUTTONCOLOUR: ConstraintMatrix = {
   '1': ['R'],
@@ -254,10 +201,6 @@ const LABEL_TO_BUTTONTYPE: ConstraintMatrix = {
   SAK: ['0', '1'],
 }
 
-// ─────────────────────────────────────────────────────────────
-// ModelConstraints export for constraintEngine.ts
-// ─────────────────────────────────────────────────────────────
-
 export const WATERPROOF_PUSH_BUTTONS_CONSTRAINTS: ModelConstraints = {
   modelId: 'waterproof-push-buttons',
   constraints: [
@@ -305,10 +248,6 @@ export const WATERPROOF_PUSH_BUTTONS_CONSTRAINTS: ModelConstraints = {
   ],
 }
 
-// ─────────────────────────────────────────────────────────────
-// Debug export
-// ─────────────────────────────────────────────────────────────
-
 export const DEBUG_MATRICES = {
   HOUSING_TO_BUTTONCOLOUR,
   BUTTONCOLOUR_TO_HOUSING,
@@ -324,3 +263,17 @@ export const DEBUG_MATRICES = {
   LABEL_TO_BUTTONTYPE,
   VALID_MODEL_CODES,
 }
+
+const WPB_STEPS = ['housingColour', 'buttonColour', 'buttonType', 'label']
+
+function wpbAllowlistFn(stepId: string, config: Configuration): Set<string> | null {
+  return buildAllowlistSet(stepId, config, WPB_STEPS, (s, o) =>
+    getValidWPBOptionsForStep(s as never, o as never),
+  )
+}
+
+registerProductConstraints(
+  'waterproof-push-buttons',
+  WATERPROOF_PUSH_BUTTONS_CONSTRAINTS,
+  wpbAllowlistFn,
+)

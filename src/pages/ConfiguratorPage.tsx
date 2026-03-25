@@ -1,17 +1,19 @@
 import { useEffect, useRef, useState } from 'react'
 import { useParams, useSearchParams, Navigate } from 'react-router-dom'
-import { getProductBySlug, isConfigurationComplete } from '@entities/product'
-import { BuildItCalculator } from '@features/configurator/components/BuildItCalculator'
-import { ConfiguratorHero } from '@shared/ui/ConfiguratorHero'
-import { getHeroContent } from '@features/configurator/lib/heroContent'
-import { useConfigurationStore } from '@features/configurator/store/configurationStore'
-import { useProjectStore } from '@features/projects/store/projectStore'
-import { useIsAuthenticated, useUser } from '@features/auth/store/authStore'
-import { ProjectPicker } from '@features/projects/components/ProjectPicker'
+import { getProductBySlug } from '@entities/product'
+import {
+  isConfigurationComplete,
+  BuildItCalculator,
+  getHeroContent,
+  useConfigurationStore,
+} from '@features/configurator'
+import { useProjectStore, ProjectPicker } from '@features/projects'
+import { useIsAuthenticated, useUser } from '@features/auth'
 import { InDevelopmentPage } from './InDevelopmentPage'
 import { parseConfigFromUrl, serializeConfig } from '@shared/utils/configSerializer'
 import { toast } from '@shared/utils/toast'
 import { useTranslation } from '@shared/i18n'
+import { ConfiguratorHero } from '@shared/ui/ConfiguratorHero'
 import type { ModelDefinition } from '@shared/types'
 
 interface ConfiguratorPageInnerProps {

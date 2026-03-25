@@ -1,16 +1,19 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { ArrowLeft, Pencil, Plus, Loader2 } from 'lucide-react'
-import { useProjectStore } from '@features/projects/store/projectStore'
-import { useAuthStore } from '@features/auth/store/authStore'
-import { useMyList, useProjectMeta } from '@features/projects'
-import { SpecificationTable } from '@features/projects/components/SpecificationTable'
-import { SpecificationMobileList } from '@features/projects/components/SpecificationMobileItem'
-import { DetailDrawer } from '@features/projects/components/DetailDrawer'
-import { DetailBottomSheet } from '@features/projects/components/DetailBottomSheet'
 import { useIsMobile } from '@shared/hooks/useMediaQuery'
 import { useTranslation } from '@shared/i18n'
 import { GUEST_PROJECT_ID } from '@shared/types'
+import {
+  useProjectStore,
+  useMyList,
+  useProjectMeta,
+  SpecificationTable,
+  SpecificationMobileList,
+  DetailDrawer,
+  DetailBottomSheet,
+} from '@features/projects'
+import { useAuthStore } from '@features/auth'
 
 export function ProjectDetailPage() {
   const { t } = useTranslation()

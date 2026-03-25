@@ -1,9 +1,8 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Mail, AlertCircle, CheckCircle, ArrowLeft } from 'lucide-react'
-import { useAuthStore } from '@features/auth/store/authStore'
 import { useTranslation } from '@shared/i18n'
-import { mapAuthError } from '@features/auth/lib/mapAuthError'
+import { useAuthStore, mapAuthError } from '@features/auth'
 
 export function ResetPasswordPage() {
   const { t } = useTranslation()

@@ -1,7 +1,7 @@
 import type { ConfiguratorHeroData } from '@shared/ui/ConfiguratorHero/types'
 import { HeroGallery } from '@shared/ui/ConfiguratorHero/HeroGallery'
 import { HeroContent } from '@shared/ui/ConfiguratorHero/HeroContent'
-import { useModelTranslations } from '@features/configurator/hooks/useModelTranslations'
+import { useModelTranslations } from '@features/configurator'
 
 interface ConfiguratorHeroProps {
   data: ConfiguratorHeroData

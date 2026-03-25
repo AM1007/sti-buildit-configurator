@@ -10,9 +10,8 @@ import type {
   ModelDefinition,
 } from '@shared/types'
 import { generateSavedConfigurationId, GUEST_PROJECT_ID } from '@shared/types'
-import { isConfigurationComplete } from '@entities/product'
+import { isAllRequiredStepsSelected } from '@entities/product'
 import { buildProductModel } from '@entities/product'
-import { buildCustomTextFingerprint } from '@shared/utils/customTextHelpers'
 import * as projectsApi from '@shared/api/projectsApi'
 import * as configurationsApi from '@shared/api/configurationsApi'
 
@@ -112,21 +111,6 @@ interface ProjectState {
     meta: Partial<Pick<Project, 'name' | 'clientName' | 'date' | 'lastExportedAt'>>,
   ) => Promise<void>
 
-  checkDuplicateInProject: (
-    projectId: string,
-    productCode: string,
-    customText: CustomTextData | null,
-  ) => Promise<boolean>
-  fetchProjectsWithProduct: (
-    productCode: string,
-    customText: CustomTextData | null,
-  ) => Promise<Map<string, string>>
-  checkProductInAnyProject: (
-    userId: string,
-    productCode: string,
-    customText: CustomTextData | null,
-  ) => Promise<boolean>
-
   mergeGuestToRemote: (userId: string) => Promise<string | null>
   clearGuestData: () => void
 }
@@ -173,7 +157,7 @@ export const useProjectStore = create<ProjectState>()(
       },
 
       addConfiguration: (modelId, config, customText, model, userId, name) => {
-        if (!isConfigurationComplete(model, config)) return
+        if (!isAllRequiredStepsSelected(model, config)) return
 
         const { activeProjectId } = get()
 
@@ -351,7 +335,7 @@ export const useProjectStore = create<ProjectState>()(
         model,
         name,
       ) => {
-        if (!isConfigurationComplete(model, config)) return null
+        if (!isAllRequiredStepsSelected(model, config)) return null
 
         const productModel = buildProductModel(config, model)
 
@@ -455,22 +439,6 @@ export const useProjectStore = create<ProjectState>()(
         })
       },
 
-      checkDuplicateInProject: async (projectId, productCode, customText) => {
-        return configurationsApi.checkDuplicateInProject(
-          projectId,
-          productCode,
-          customText,
-        )
-      },
-
-      fetchProjectsWithProduct: async (productCode, customText) => {
-        return configurationsApi.fetchProjectsWithProduct(productCode, customText)
-      },
-
-      checkProductInAnyProject: async (userId, productCode, customText) => {
-        return configurationsApi.checkProductInAnyProject(userId, productCode, customText)
-      },
-
       mergeGuestToRemote: async (userId) => {
         const { guestConfigurations, guestProjectMeta } = get()
         if (guestConfigurations.length === 0) return null
@@ -533,43 +501,3 @@ export const useProjectStore = create<ProjectState>()(
     },
   ),
 )
-
-export const useGuestConfigurations = () => useProjectStore((s) => s.guestConfigurations)
-
-export const useGuestProjectMeta = () => useProjectStore((s) => s.guestProjectMeta)
-
-export const useGuestConfigurationCount = () =>
-  useProjectStore((s) => s.guestConfigurations.length)
-
-export const useProjects = () => useProjectStore((s) => s.projects)
-
-export const useActiveProjectId = () => useProjectStore((s) => s.activeProjectId)
-
-export const useIsGuestProject = (
-  productCode: string | null,
-  customText?: CustomTextData | null,
-) =>
-  useProjectStore((s) => {
-    if (!productCode) return false
-    const fingerprint = buildCustomTextFingerprint(customText)
-    return s.guestConfigurations.some(
-      (item) =>
-        item.productCode === productCode &&
-        buildCustomTextFingerprint(item.customText) === fingerprint,
-    )
-  })
-
-export const useGuestItemIdByProductCode = (
-  productCode: string | null,
-  customText?: CustomTextData | null,
-) =>
-  useProjectStore((s) => {
-    if (!productCode) return null
-    const fingerprint = buildCustomTextFingerprint(customText)
-    const item = s.guestConfigurations.find(
-      (c) =>
-        c.productCode === productCode &&
-        buildCustomTextFingerprint(c.customText) === fingerprint,
-    )
-    return item?.id ?? null
-  })

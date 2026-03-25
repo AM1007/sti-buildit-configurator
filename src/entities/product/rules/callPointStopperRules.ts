@@ -1,4 +1,6 @@
 import type { ModelConstraints, ConstraintMatrix } from './types'
+import { registerProductConstraints, buildAllowlistSet } from '../constraintRegistry'
+import type { Configuration } from '@shared/types'
 
 export const VALID_MODEL_CODES: readonly string[] = [
   'STI-6930',
@@ -190,3 +192,17 @@ export const DEBUG_MATRICES = {
   LABEL_TO_COLOUR,
   VALID_MODEL_CODES,
 }
+
+const CPS_STEPS = ['mounting', 'colour', 'label']
+
+function cpsAllowlistFn(stepId: string, config: Configuration): Set<string> | null {
+  return buildAllowlistSet(stepId, config, CPS_STEPS, (s, o) =>
+    getValidCPSOptionsForStep(s as never, o as never),
+  )
+}
+
+registerProductConstraints(
+  'call-point-stopper',
+  CALL_POINT_STOPPER_CONSTRAINTS,
+  cpsAllowlistFn,
+)

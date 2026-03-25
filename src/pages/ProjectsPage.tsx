@@ -10,8 +10,8 @@ import {
   Check,
   Loader2,
 } from 'lucide-react'
-import { useProjectStore } from '@features/projects/store/projectStore'
-import { useAuthStore } from '@features/auth/store/authStore'
+import { useProjectStore } from '@features/projects'
+import { useAuthStore } from '@features/auth'
 import { useTranslation, useLanguage } from '@shared/i18n'
 import { toast } from '@shared/utils/toast'
 import type { Project } from '@shared/types'

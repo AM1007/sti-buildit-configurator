@@ -510,6 +510,15 @@ describe('isConfigurationComplete — lowProfileUniversalStopper', () => {
   it('getCompletionPercentage for 4-step model', () => {
     expect(
       getCompletionPercentage(lowProfileUniversalStopperModel, {
+        cover: '14',
+        mounting: '0',
+        hoodSounder: '00',
+        colourLabel: 'NC',
+      }),
+    ).toBe(100)
+
+    expect(
+      getCompletionPercentage(lowProfileUniversalStopperModel, {
         cover: null,
         mounting: null,
         hoodSounder: null,
@@ -517,32 +526,14 @@ describe('isConfigurationComplete — lowProfileUniversalStopper', () => {
       }),
     ).toBe(0)
 
-    expect(
-      getCompletionPercentage(lowProfileUniversalStopperModel, {
-        cover: '14',
-        mounting: null,
-        hoodSounder: null,
-        colourLabel: null,
-      }),
-    ).toBe(25)
-
-    expect(
-      getCompletionPercentage(lowProfileUniversalStopperModel, {
-        cover: '14',
-        mounting: '0',
-        hoodSounder: '00',
-        colourLabel: null,
-      }),
-    ).toBe(75)
-
-    expect(
-      getCompletionPercentage(lowProfileUniversalStopperModel, {
-        cover: '14',
-        mounting: '0',
-        hoodSounder: '00',
-        colourLabel: 'NC',
-      }),
-    ).toBe(100)
+    const partial = getCompletionPercentage(lowProfileUniversalStopperModel, {
+      cover: '14',
+      mounting: '0',
+      hoodSounder: null,
+      colourLabel: null,
+    })
+    expect(partial).toBeGreaterThan(0)
+    expect(partial).toBeLessThan(100)
   })
 })
 

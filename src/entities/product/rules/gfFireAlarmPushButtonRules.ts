@@ -1,4 +1,6 @@
 import type { ModelConstraints, ConstraintMatrix } from './types'
+import { registerProductConstraints, buildAllowlistSet } from '../constraintRegistry'
+import type { Configuration } from '@shared/types'
 
 export const VALID_MODEL_CODES: readonly string[] = [
   'GFA0FR-EN',
@@ -195,3 +197,17 @@ export const DEBUG_MATRICES = {
   LANGUAGE_TO_TEXT,
   VALID_MODEL_CODES,
 }
+
+const GF_STEPS = ['model', 'cover', 'text', 'language']
+
+function gfAllowlistFn(stepId: string, config: Configuration): Set<string> | null {
+  return buildAllowlistSet(stepId, config, GF_STEPS, (s, o) =>
+    getValidGFOptionsForStep(s as never, o as never),
+  )
+}
+
+registerProductConstraints(
+  'gf-fire-alarm-push-button',
+  GF_FIRE_ALARM_PUSH_BUTTON_CONSTRAINTS,
+  gfAllowlistFn,
+)

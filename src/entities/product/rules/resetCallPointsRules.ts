@@ -1,25 +1,12 @@
 import type { ModelConstraints, ConstraintMatrix } from './types'
-
-// ─────────────────────────────────────────────────────────────
-// ALLOWLIST: Valid ReSet Call Points model codes
-// Source: 07_ReSet_Call_Points.md (50 codes)
-// Format: RP-[colour][mounting]-[electrical] or
-//         RP-[colour][mounting]-[electrical]-CL
-//
-// Label encoding:
-//   HF  = House Flame logo      → RED only, no suffix
-//   RM  = Running Man logo       → GREEN only, no suffix
-//   SAK = Self-Assemble Kit      → Y/W/B/O, no suffix
-//   CL  = Custom Label           → appends "-CL" suffix
-// ─────────────────────────────────────────────────────────────
+import { registerProductConstraints, buildAllowlistSet } from '../constraintRegistry'
+import type { Configuration } from '@shared/types'
 
 export const VALID_MODEL_CODES: readonly string[] = [
-  // ── Red (R): 3 models ──
   'RP-RD2-02',
   'RP-RD2-11',
   'RP-RS2-02',
 
-  // ── Green (G): 9 models ──
   'RP-GD2-02',
   'RP-GD2-02-CL',
   'RP-GD2-11',
@@ -30,7 +17,6 @@ export const VALID_MODEL_CODES: readonly string[] = [
   'RP-GS2-02',
   'RP-GS2-11',
 
-  // ── Yellow (Y): 12 models ──
   'RP-YD2-02',
   'RP-YD2-02-CL',
   'RP-YD2-11',
@@ -44,7 +30,6 @@ export const VALID_MODEL_CODES: readonly string[] = [
   'RP-YS2-11',
   'RP-YS2-11-CL',
 
-  // ── White (W): 8 models ──
   'RP-WD2-02',
   'RP-WD2-11',
   'RP-WD2-11-CL',
@@ -54,7 +39,6 @@ export const VALID_MODEL_CODES: readonly string[] = [
   'RP-WS2-11',
   'RP-WS2-11-CL',
 
-  // ── Blue (B): 9 models ──
   'RP-BD2-02',
   'RP-BD2-02-CL',
   'RP-BD2-11',
@@ -65,7 +49,6 @@ export const VALID_MODEL_CODES: readonly string[] = [
   'RP-BS2-11',
   'RP-BS2-11-CL',
 
-  // ── Orange (O): 9 models ──
   'RP-OD2-02',
   'RP-OD2-02-CL',
   'RP-OD2-11',
@@ -79,23 +62,12 @@ export const VALID_MODEL_CODES: readonly string[] = [
 
 const VALID_MODEL_SET = new Set(VALID_MODEL_CODES)
 
-// ─────────────────────────────────────────────────────────────
-// Selection state
-// ─────────────────────────────────────────────────────────────
-
 export interface RPSelectionState {
-  colour?: string // R | G | Y | W | B | O
-  mounting?: string // D2 | S2 | F2
-  electricalArrangement?: string // 02 | 11 (01 and 05 are globally blocked)
-  label?: string // HF | RM | SAK | CL
+  colour?: string
+  mounting?: string
+  electricalArrangement?: string
+  label?: string
 }
-
-// ─────────────────────────────────────────────────────────────
-// Build model code from selections
-//
-// Labels HF, RM, SAK do NOT contribute a suffix.
-// Label CL appends "-CL" to the code.
-// ─────────────────────────────────────────────────────────────
 
 export function buildRPModelCode(selections: RPSelectionState): string | null {
   const { colour, mounting, electricalArrangement, label } = selections
@@ -107,14 +79,6 @@ export function buildRPModelCode(selections: RPSelectionState): string | null {
   const base = `RP-${colour}${mounting}-${electricalArrangement}`
   return label === 'CL' ? `${base}-CL` : base
 }
-
-// ─────────────────────────────────────────────────────────────
-// Parse model code back to selection state
-//
-// ASSUMPTION: For codes without "-CL" suffix, the label cannot
-// be determined from the code alone — it depends on colour:
-//   R → HF, G → RM, Y/W/B/O → SAK
-// ─────────────────────────────────────────────────────────────
 
 export function parseRPModelCode(code: string): RPSelectionState | null {
   const match = code.match(/^RP-([RGYWBO])([DSF]2)-(\d{2})(?:-(CL))?$/)
@@ -132,7 +96,6 @@ export function parseRPModelCode(code: string): RPSelectionState | null {
   if (clSuffix === 'CL') {
     label = 'CL'
   } else {
-    // Derive label from colour
     switch (colour) {
       case 'R':
         label = 'HF'
@@ -149,20 +112,14 @@ export function parseRPModelCode(code: string): RPSelectionState | null {
   return { colour, mounting, electricalArrangement, label }
 }
 
-// ─────────────────────────────────────────────────────────────
-// Validate full combination against allowlist
-// ─────────────────────────────────────────────────────────────
-
 export function isValidRPCombination(
   selections: RPSelectionState,
 ): { valid: true } | { valid: false; reason: string } {
   const { colour, label } = selections
   const modelCode = buildRPModelCode(selections)
 
-  // Incomplete selection — allow user to continue picking
   if (!modelCode) return { valid: true }
 
-  // Explicit label↔colour check (label has no SKU suffix, allowlist cannot catch this)
   if (colour && label) {
     if (label === 'HF' && colour !== 'R') {
       return { valid: false, reason: `HF label is only available for Red (R) colour.` }
@@ -185,11 +142,6 @@ export function isValidRPCombination(
     reason: `Model ${modelCode} is not available. This combination is not in the approved product list.`,
   }
 }
-
-// ─────────────────────────────────────────────────────────────
-// Get valid options for a specific step given other selections
-// Used by filterOptions to disable unavailable options
-// ─────────────────────────────────────────────────────────────
 
 export function getValidRPOptionsForStep(
   stepId: keyof RPSelectionState,
@@ -218,21 +170,6 @@ export function getValidRPOptionsForStep(
   return Array.from(validOptions)
 }
 
-// ─────────────────────────────────────────────────────────────
-// CONSTRAINT MATRICES
-//
-// Derived from 50 valid model codes.
-//
-// NOTE: 14 false positives exist when using only pairwise
-// matrices (combinations that pass all pairwise checks but
-// are NOT in the whitelist). The allowlist functions above
-// (isValidRPCombination, getValidRPOptionsForStep) provide
-// the definitive validation. Matrices provide fast UI-level
-// filtering; the allowlist is the final gate.
-// ─────────────────────────────────────────────────────────────
-
-// ── colour ↔ mounting ──
-
 const COLOUR_TO_MOUNTING: ConstraintMatrix = {
   R: ['D2', 'S2'],
   G: ['D2', 'F2', 'S2'],
@@ -248,8 +185,6 @@ const MOUNTING_TO_COLOUR: ConstraintMatrix = {
   S2: ['R', 'G', 'Y', 'W', 'B', 'O'],
 }
 
-// ── colour ↔ electricalArrangement ──
-
 const COLOUR_TO_ELECTRICAL: ConstraintMatrix = {
   R: ['02', '11'],
   G: ['02', '11'],
@@ -263,8 +198,6 @@ const ELECTRICAL_TO_COLOUR: ConstraintMatrix = {
   '02': ['R', 'G', 'Y', 'W', 'B', 'O'],
   '11': ['R', 'G', 'Y', 'W', 'B', 'O'],
 }
-
-// ── colour ↔ label ──
 
 const COLOUR_TO_LABEL: ConstraintMatrix = {
   R: ['HF'],
@@ -282,8 +215,6 @@ const LABEL_TO_COLOUR: ConstraintMatrix = {
   CL: ['G', 'Y', 'W', 'B', 'O'],
 }
 
-// ── mounting ↔ electricalArrangement ──
-
 const MOUNTING_TO_ELECTRICAL: ConstraintMatrix = {
   D2: ['02', '11'],
   F2: ['02', '11'],
@@ -294,8 +225,6 @@ const ELECTRICAL_TO_MOUNTING: ConstraintMatrix = {
   '02': ['D2', 'F2', 'S2'],
   '11': ['D2', 'F2', 'S2'],
 }
-
-// ── mounting ↔ label ──
 
 const MOUNTING_TO_LABEL: ConstraintMatrix = {
   D2: ['HF', 'RM', 'SAK', 'CL'],
@@ -310,8 +239,6 @@ const LABEL_TO_MOUNTING: ConstraintMatrix = {
   CL: ['D2', 'F2', 'S2'],
 }
 
-// ── electricalArrangement ↔ label ──
-
 const ELECTRICAL_TO_LABEL: ConstraintMatrix = {
   '02': ['HF', 'RM', 'SAK', 'CL'],
   '11': ['HF', 'RM', 'SAK', 'CL'],
@@ -323,10 +250,6 @@ const LABEL_TO_ELECTRICAL: ConstraintMatrix = {
   SAK: ['02', '11'],
   CL: ['02', '11'],
 }
-
-// ─────────────────────────────────────────────────────────────
-// Exported constraints for constraintEngine
-// ─────────────────────────────────────────────────────────────
 
 export const RESET_CALL_POINTS_CONSTRAINTS: ModelConstraints = {
   modelId: 'reset-call-points',
@@ -375,10 +298,6 @@ export const RESET_CALL_POINTS_CONSTRAINTS: ModelConstraints = {
   ],
 }
 
-// ─────────────────────────────────────────────────────────────
-// Debug export (matches G3 / StopperStations pattern)
-// ─────────────────────────────────────────────────────────────
-
 export const DEBUG_MATRICES = {
   COLOUR_TO_MOUNTING,
   MOUNTING_TO_COLOUR,
@@ -394,3 +313,17 @@ export const DEBUG_MATRICES = {
   LABEL_TO_ELECTRICAL,
   VALID_MODEL_CODES,
 }
+
+const RP_STEPS = ['colour', 'mounting', 'electricalArrangement', 'label']
+
+function rpAllowlistFn(stepId: string, config: Configuration): Set<string> | null {
+  return buildAllowlistSet(stepId, config, RP_STEPS, (s, o) =>
+    getValidRPOptionsForStep(s as never, o as never),
+  )
+}
+
+registerProductConstraints(
+  'reset-call-points',
+  RESET_CALL_POINTS_CONSTRAINTS,
+  rpAllowlistFn,
+)

@@ -15,8 +15,8 @@ import {
   hasSubmittedCustomText,
   getCustomTextConfig,
   getMaxLength,
-  getEffectiveLineCount,
-} from '@shared/utils/customTextHelpers'
+} from '@entities/product/customTextConfig'
+import { getEffectiveLineCount } from '@shared/utils/customTextHelpers'
 import { getModelSummary } from '@features/configurator/lib/getModelSummary'
 import { useTranslation, useLanguage } from '@shared/i18n'
 

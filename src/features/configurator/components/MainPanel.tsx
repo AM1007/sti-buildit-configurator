@@ -17,8 +17,8 @@ import {
   shouldShowCustomTextForm,
   getCustomTextConfig,
   getMaxLength,
-  getEffectiveLineCount,
-} from '@shared/utils/customTextHelpers'
+} from '@entities/product/customTextConfig'
+import { getEffectiveLineCount } from '@shared/utils/customTextHelpers'
 import { useTranslation, useLanguage } from '@shared/i18n'
 
 type TabId = 'edit' | 'preview'
