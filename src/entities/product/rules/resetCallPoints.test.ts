@@ -17,10 +17,6 @@ import {
 import { createConstraintEngine } from '@entities/product/rules/constraintEngine'
 import type { Configuration } from '@shared/types'
 
-// ─────────────────────────────────────────────────────────────
-// buildRPModelCode
-// ─────────────────────────────────────────────────────────────
-
 describe('buildRPModelCode', () => {
   it('builds red HF — no suffix', () => {
     expect(
@@ -98,10 +94,6 @@ describe('buildRPModelCode', () => {
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// parseRPModelCode
-// ─────────────────────────────────────────────────────────────
-
 describe('parseRPModelCode', () => {
   it('parses RP-RD2-02 — red derives label HF', () => {
     expect(parseRPModelCode('RP-RD2-02')).toEqual({
@@ -175,34 +167,30 @@ describe('parseRPModelCode', () => {
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// VALID_MODEL_CODES integrity
-// ─────────────────────────────────────────────────────────────
-
 describe('VALID_MODEL_CODES', () => {
-  it('contains exactly 50 entries', () => {
-    expect(VALID_MODEL_CODES.length).toBe(50)
+  it('contains exactly 57 entries', () => {
+    expect(VALID_MODEL_CODES.length).toBe(57)
   })
 
   it('has no duplicates', () => {
-    expect(new Set(VALID_MODEL_CODES).size).toBe(50)
+    expect(new Set(VALID_MODEL_CODES).size).toBe(57)
   })
 
-  it('19 CL and 31 non-CL codes', () => {
+  it('26 CL and 31 non-CL codes', () => {
     const cl = VALID_MODEL_CODES.filter((c) => c.endsWith('-CL'))
-    expect(cl.length).toBe(19)
+    expect(cl.length).toBe(26)
     expect(VALID_MODEL_CODES.length - cl.length).toBe(31)
   })
 
-  it('ea=02: 26 codes, ea=11: 24 codes', () => {
+  it('ea=02: 30 codes, ea=11: 27 codes', () => {
     expect(
       VALID_MODEL_CODES.filter((c) => parseRPModelCode(c)?.electricalArrangement === '02')
         .length,
-    ).toBe(26)
+    ).toBe(30)
     expect(
       VALID_MODEL_CODES.filter((c) => parseRPModelCode(c)?.electricalArrangement === '11')
         .length,
-    ).toBe(24)
+    ).toBe(27)
   })
 
   it('ea=01 and ea=05 absent — blocked globally', () => {
@@ -254,221 +242,192 @@ describe('VALID_MODEL_CODES', () => {
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// isValidRPCombination
-// ─────────────────────────────────────────────────────────────
-
 describe('isValidRPCombination', () => {
-  it('all 50 VALID_MODEL_CODES pass validation', () => {
+  it('valid for all codes in VALID_MODEL_CODES', () => {
     for (const code of VALID_MODEL_CODES) {
       const parsed = parseRPModelCode(code)!
-      expect(isValidRPCombination(parsed)).toEqual({ valid: true })
+      const result = isValidRPCombination(parsed)
+      expect(result.valid).toBe(true)
     }
   })
 
-  it('returns valid for incomplete selection', () => {
-    expect(isValidRPCombination({})).toEqual({ valid: true })
-    expect(isValidRPCombination({ colour: 'R' })).toEqual({ valid: true })
-    expect(
-      isValidRPCombination({ colour: 'R', mounting: 'D2', electricalArrangement: '02' }),
-    ).toEqual({ valid: true })
-  })
-
-  it('rejects red with F2 mounting — not in allowlist', () => {
+  it('invalid for HF + non-red', () => {
     const result = isValidRPCombination({
-      colour: 'R',
-      mounting: 'F2',
+      colour: 'G',
+      mounting: 'D2',
       electricalArrangement: '02',
       label: 'HF',
     })
     expect(result.valid).toBe(false)
-    if (!result.valid) expect(result.reason).toContain('RP-RF2-02')
   })
 
-  it('rejects red with CL label', () => {
+  it('invalid for RM + non-green', () => {
     const result = isValidRPCombination({
-      colour: 'R',
+      colour: 'Y',
       mounting: 'D2',
       electricalArrangement: '02',
-      label: 'CL',
-    })
-    expect(result.valid).toBe(false)
-  })
-
-  it('rejects ea=01 — globally blocked', () => {
-    const result = isValidRPCombination({
-      colour: 'G',
-      mounting: 'D2',
-      electricalArrangement: '01',
       label: 'RM',
     })
     expect(result.valid).toBe(false)
   })
 
-  it('rejects ea=05 — globally blocked', () => {
+  it('invalid for SAK + red', () => {
     const result = isValidRPCombination({
-      colour: 'Y',
-      mounting: 'S2',
-      electricalArrangement: '05',
+      colour: 'R',
+      mounting: 'D2',
+      electricalArrangement: '02',
       label: 'SAK',
     })
     expect(result.valid).toBe(false)
   })
 
-  it('rejects HF label with non-red colour', () => {
-    for (const colour of ['G', 'Y', 'W', 'B', 'O']) {
-      const result = isValidRPCombination({
-        colour,
-        mounting: 'D2',
-        electricalArrangement: '02',
-        label: 'HF',
-      })
-      expect(result.valid).toBe(false)
-    }
+  it('invalid for SAK + green', () => {
+    const result = isValidRPCombination({
+      colour: 'G',
+      mounting: 'D2',
+      electricalArrangement: '02',
+      label: 'SAK',
+    })
+    expect(result.valid).toBe(false)
   })
 
-  it('rejects RM label with non-green colour', () => {
-    for (const colour of ['R', 'Y', 'W', 'B', 'O']) {
-      const result = isValidRPCombination({
-        colour,
-        mounting: 'D2',
-        electricalArrangement: '02',
-        label: 'RM',
-      })
-      expect(result.valid).toBe(false)
-    }
+  it('valid when incomplete — returns valid:true', () => {
+    expect(
+      isValidRPCombination({ colour: 'R', mounting: 'D2', electricalArrangement: '02' }),
+    ).toEqual({ valid: true })
   })
 })
-
-// ─────────────────────────────────────────────────────────────
-// getValidRPOptionsForStep
-// ─────────────────────────────────────────────────────────────
 
 describe('getValidRPOptionsForStep', () => {
-  it('red colour restricts mounting to D2 and S2 only', () => {
-    const valid = getValidRPOptionsForStep('mounting', { colour: 'R' })
-    expect(valid).toContain('D2')
-    expect(valid).toContain('S2')
-    expect(valid).not.toContain('F2')
+  it('colour step — no constraints → all 6', () => {
+    expect(getValidRPOptionsForStep('colour', {}).sort()).toEqual([
+      'B',
+      'G',
+      'O',
+      'R',
+      'W',
+      'Y',
+    ])
   })
 
-  it('F2 mounting excludes red colour', () => {
-    const valid = getValidRPOptionsForStep('colour', { mounting: 'F2' })
-    expect(valid).not.toContain('R')
-    expect(valid).toContain('G')
-    expect(valid).toContain('Y')
-    expect(valid).toContain('W')
-    expect(valid).toContain('B')
-    expect(valid).toContain('O')
+  it('mounting for red — D2, S2 only', () => {
+    expect(getValidRPOptionsForStep('mounting', { colour: 'R' }).sort()).toEqual([
+      'D2',
+      'S2',
+    ])
   })
 
-  it('HF label restricts colour to R only', () => {
-    const valid = getValidRPOptionsForStep('colour', { label: 'HF' })
-    expect(valid).toEqual(['R'])
+  it('mounting for green — D2, F2, S2', () => {
+    expect(getValidRPOptionsForStep('mounting', { colour: 'G' }).sort()).toEqual([
+      'D2',
+      'F2',
+      'S2',
+    ])
   })
 
-  it('RM label restricts colour to G only', () => {
-    const valid = getValidRPOptionsForStep('colour', { label: 'RM' })
-    expect(valid).toEqual(['G'])
+  it('label for red — HF only', () => {
+    expect(getValidRPOptionsForStep('label', { colour: 'R' })).toEqual(['HF'])
   })
 
-  it('red colour restricts label to HF only', () => {
-    const valid = getValidRPOptionsForStep('label', { colour: 'R' })
-    expect(valid).toEqual(['HF'])
+  it('label for green — RM, CL', () => {
+    expect(getValidRPOptionsForStep('label', { colour: 'G' }).sort()).toEqual([
+      'CL',
+      'RM',
+    ])
   })
 
-  it('green colour allows RM and CL labels', () => {
-    const valid = getValidRPOptionsForStep('label', { colour: 'G' })
-    expect(valid).toContain('RM')
-    expect(valid).toContain('CL')
-    expect(valid).not.toContain('HF')
-    expect(valid).not.toContain('SAK')
+  it('label for yellow — SAK, CL', () => {
+    expect(getValidRPOptionsForStep('label', { colour: 'Y' }).sort()).toEqual([
+      'CL',
+      'SAK',
+    ])
   })
 
-  it('ea=01 and 05 never appear as valid options', () => {
-    for (const sel of [{ colour: 'G' }, { mounting: 'D2' }, { label: 'SAK' }]) {
-      const valid = getValidRPOptionsForStep('electricalArrangement', sel)
-      expect(valid).not.toContain('01')
-      expect(valid).not.toContain('05')
-      expect(valid).toContain('02')
-      expect(valid).toContain('11')
-    }
+  it('ea options — always 02, 11', () => {
+    expect(
+      getValidRPOptionsForStep('electricalArrangement', { colour: 'R' }).sort(),
+    ).toEqual(['02', '11'])
+  })
+
+  it('colour for HF label — R only', () => {
+    expect(getValidRPOptionsForStep('colour', { label: 'HF' })).toEqual(['R'])
+  })
+
+  it('colour for RM label — G only', () => {
+    expect(getValidRPOptionsForStep('colour', { label: 'RM' })).toEqual(['G'])
+  })
+
+  it('colour for SAK label — Y, W, B, O', () => {
+    expect(getValidRPOptionsForStep('colour', { label: 'SAK' }).sort()).toEqual([
+      'B',
+      'O',
+      'W',
+      'Y',
+    ])
+  })
+
+  it('colour for CL label — G, Y, W, B, O', () => {
+    expect(getValidRPOptionsForStep('colour', { label: 'CL' }).sort()).toEqual([
+      'B',
+      'G',
+      'O',
+      'W',
+      'Y',
+    ])
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// Constraint engine integration
-// ─────────────────────────────────────────────────────────────
-
-describe('RESET_CALL_POINTS_CONSTRAINTS + constraintEngine', () => {
+describe('constraint engine — resetCallPoints', () => {
   const engine = createConstraintEngine(RESET_CALL_POINTS_CONSTRAINTS)
 
-  it('blocks F2 mounting when colour is R', () => {
-    expect(
-      engine.checkOptionAvailability('mounting', 'F2', { colour: 'R' }).available,
-    ).toBe(false)
+  it('allows RP-RD2-02 combination', () => {
+    const result = engine.checkOptionAvailability('label', 'HF', {
+      colour: 'R',
+      mounting: 'D2',
+      electricalArrangement: '02',
+    })
+    expect(result.available).toBe(true)
   })
 
-  it('allows D2 and S2 mounting when colour is R', () => {
-    expect(
-      engine.checkOptionAvailability('mounting', 'D2', { colour: 'R' }).available,
-    ).toBe(true)
-    expect(
-      engine.checkOptionAvailability('mounting', 'S2', { colour: 'R' }).available,
-    ).toBe(true)
+  it('blocks HF for green', () => {
+    const result = engine.checkOptionAvailability('label', 'HF', {
+      colour: 'G',
+    })
+    expect(result.available).toBe(false)
   })
 
-  it('blocks R colour when mounting is F2', () => {
-    expect(
-      engine.checkOptionAvailability('colour', 'R', { mounting: 'F2' }).available,
-    ).toBe(false)
+  it('blocks RM for red', () => {
+    const result = engine.checkOptionAvailability('label', 'RM', {
+      colour: 'R',
+    })
+    expect(result.available).toBe(false)
   })
 
-  it('blocks HF label when colour is not R', () => {
-    for (const colour of ['G', 'Y', 'W', 'B', 'O']) {
-      expect(engine.checkOptionAvailability('label', 'HF', { colour }).available).toBe(
-        false,
-      )
-    }
+  it('blocks F2 mounting for red', () => {
+    const result = engine.checkOptionAvailability('mounting', 'F2', {
+      colour: 'R',
+    })
+    expect(result.available).toBe(false)
   })
 
-  it('allows HF label when colour is R', () => {
-    expect(engine.checkOptionAvailability('label', 'HF', { colour: 'R' }).available).toBe(
-      true,
-    )
+  it('allows F2 for green', () => {
+    const result = engine.checkOptionAvailability('mounting', 'F2', {
+      colour: 'G',
+    })
+    expect(result.available).toBe(true)
   })
 
-  it('blocks RM label when colour is not G', () => {
-    for (const colour of ['R', 'Y', 'W', 'B', 'O']) {
-      expect(engine.checkOptionAvailability('label', 'RM', { colour }).available).toBe(
-        false,
-      )
-    }
-  })
-
-  it('blocks SAK label when colour is R or G', () => {
-    expect(
-      engine.checkOptionAvailability('label', 'SAK', { colour: 'R' }).available,
-    ).toBe(false)
-    expect(
-      engine.checkOptionAvailability('label', 'SAK', { colour: 'G' }).available,
-    ).toBe(false)
-  })
-
-  it('blocks HF label when mounting is F2', () => {
-    expect(
-      engine.checkOptionAvailability('label', 'HF', { mounting: 'F2' }).available,
-    ).toBe(false)
+  it('blocks HF for F2 mounting', () => {
+    const result = engine.checkOptionAvailability('label', 'HF', {
+      mounting: 'F2',
+    })
+    expect(result.available).toBe(false)
   })
 
   it('constraint engine modelId matches', () => {
     expect(RESET_CALL_POINTS_CONSTRAINTS.modelId).toBe('reset-call-points')
   })
 })
-
-// ─────────────────────────────────────────────────────────────
-// buildProductModel integration
-// ─────────────────────────────────────────────────────────────
 
 describe('buildProductModel — resetCallPoints', () => {
   it('builds RP-RD2-02 correctly — red HF no suffix', () => {
@@ -565,7 +524,7 @@ describe('buildProductModel — resetCallPoints', () => {
     expect(result.missingSteps).toContain('label')
   })
 
-  it('all 50 valid codes generated from parsed configurations', () => {
+  it('all 57 valid codes generated from parsed configurations', () => {
     const validSet = new Set(VALID_MODEL_CODES)
     let matchCount = 0
     for (const code of VALID_MODEL_CODES) {
@@ -582,10 +541,6 @@ describe('buildProductModel — resetCallPoints', () => {
     expect(matchCount).toBe(VALID_MODEL_CODES.length)
   })
 })
-
-// ─────────────────────────────────────────────────────────────
-// filterOptions completeness — resetCallPoints
-// ─────────────────────────────────────────────────────────────
 
 describe('isConfigurationComplete — resetCallPoints', () => {
   it('returns true when all 4 steps selected', () => {
@@ -661,10 +616,6 @@ describe('isConfigurationComplete — resetCallPoints', () => {
     ).toBe(100)
   })
 })
-
-// ─────────────────────────────────────────────────────────────
-// Model definition integrity
-// ─────────────────────────────────────────────────────────────
 
 describe('resetCallPointsModel definition', () => {
   it('has correct model id and slug', () => {

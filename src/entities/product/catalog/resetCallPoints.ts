@@ -5,7 +5,7 @@ export const resetCallPointsMeta: ConfiguratorMeta = {
   slug: 'reset-call-points',
   name: 'ReSet Call Points',
   description: 'Manual Call Point With Re-settable Operating Element',
-  imagePath: '/Configurators/07_ReSet Call Points.webp',
+  imagePath: '/ReSet Call Points/HERO/02.webp',
   colours: ['yellow', 'red', 'white', 'green', 'blue', 'orange'],
   tags: ['call-point', 'fire-alarm', 'reset-device'],
   isImplemented: true,

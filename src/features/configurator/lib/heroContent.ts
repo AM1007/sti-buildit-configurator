@@ -172,8 +172,8 @@ For the domed version of the Universal Stopper <a href="/configurator/universal-
     title: 'Resettable Manual Call Point',
     description: `The ReSet Call Point is a manual call point that simulates break glass activation whilst offering the user the benefits of a re-settable operating element. An activation indicator drops into view on activation. The unit is then simply reset with a key and is ready for immediate re-use.`,
     media: [
-      { type: 'image', src: '/ReSet Call Points/HERO/01.webp', alt: 'ReSet Call Points' },
       { type: 'image', src: '/ReSet Call Points/HERO/02.webp', alt: 'ReSet Call Points' },
+      { type: 'image', src: '/ReSet Call Points/HERO/01.webp', alt: 'ReSet Call Points' },
       { type: 'image', src: '/ReSet Call Points/HERO/03.webp', alt: 'ReSet Call Points' },
       { type: 'image', src: '/ReSet Call Points/HERO/04.webp', alt: 'ReSet Call Points' },
       { type: 'image', src: '/ReSet Call Points/HERO/05.webp', alt: 'ReSet Call Points' },

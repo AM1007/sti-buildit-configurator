@@ -48,6 +48,7 @@ export interface Option {
   label: string
   code: string
   image?: string
+  imageMap?: Record<OptionId, string>
   notes?: string
   availableFor?: OptionId[]
   dependsOn?: StepId

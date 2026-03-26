@@ -1,7 +1,8 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { X } from 'lucide-react'
-import type { Step, OptionId, Configuration, ModelId } from '@shared/types'
+import type { Step, OptionId, Configuration, ModelId, Option } from '@shared/types'
+import { getModelById } from '@entities/product/models'
 import { OptionCard } from './OptionCard'
 import { getOptionsWithAvailability } from '@features/configurator/lib/filterOptions'
 import { useModelTranslations } from '../hooks/useModelTranslations'
@@ -16,6 +17,21 @@ interface OptionBottomSheetProps {
   onSelect: (optionId: OptionId) => void
   onClear: () => void
   onClose: () => void
+}
+
+function resolveOptionImage(
+  option: Option,
+  config: Configuration,
+  modelId: ModelId,
+): Option {
+  if (!option.imageMap) return option
+  const model = getModelById(modelId)
+  if (!model?.primaryDependencyStep) return option
+  const depValue = config[model.primaryDependencyStep]
+  if (!depValue) return option
+  const resolved = option.imageMap[depValue]
+  if (!resolved) return option
+  return { ...option, image: resolved }
 }
 
 export function OptionBottomSheet({
@@ -38,6 +54,15 @@ export function OptionBottomSheet({
   const optionsWithStatus = getOptionsWithAvailability(step, config, modelId)
   const availableOptions = optionsWithStatus.filter(
     ({ availability }) => availability.available,
+  )
+
+  const resolvedOptions = useMemo(
+    () =>
+      availableOptions.map(({ option, availability }) => ({
+        option: resolveOptionImage(option, config, modelId),
+        availability,
+      })),
+    [availableOptions, config, modelId],
   )
 
   useEffect(() => {
@@ -113,7 +138,7 @@ export function OptionBottomSheet({
                   {title}
                 </h3>
                 <span className="mt-0.5 text-xs text-slate-500">
-                  {formatOptionsAvailable(availableOptions.length, lang, t)}
+                  {formatOptionsAvailable(resolvedOptions.length, lang, t)}
                 </span>
               </div>
               <button
@@ -132,7 +157,7 @@ export function OptionBottomSheet({
                 role="listbox"
                 aria-label={`${title} options`}
               >
-                {availableOptions.map(({ option }) => (
+                {resolvedOptions.map(({ option }) => (
                   <OptionCard
                     key={option.id}
                     option={option}

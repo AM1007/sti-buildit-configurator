@@ -1,4 +1,6 @@
-import type { Step, OptionId, Configuration, ModelId } from '@shared/types'
+import { useMemo } from 'react'
+import type { Step, OptionId, Configuration, ModelId, Option } from '@shared/types'
+import { getModelById } from '@entities/product/models'
 import { OptionCard } from './OptionCard'
 import { getOptionsWithAvailability } from '@features/configurator/lib/filterOptions'
 import { useTranslation } from '@shared/i18n'
@@ -24,6 +26,21 @@ function formatStepNumber(index: number): string {
   return index.toString().padStart(2, '0')
 }
 
+function resolveOptionImage(
+  option: Option,
+  config: Configuration,
+  modelId: ModelId,
+): Option {
+  if (!option.imageMap) return option
+  const model = getModelById(modelId)
+  if (!model?.primaryDependencyStep) return option
+  const depValue = config[model.primaryDependencyStep]
+  if (!depValue) return option
+  const resolved = option.imageMap[depValue]
+  if (!resolved) return option
+  return { ...option, image: resolved }
+}
+
 export function StepSelector({
   step,
   stepIndex,
@@ -46,6 +63,15 @@ export function StepSelector({
     ({ availability }) => availability.available,
   )
   const hiddenCount = optionsWithStatus.length - availableOptions.length
+
+  const resolvedOptions = useMemo(
+    () =>
+      availableOptions.map(({ option, availability }) => ({
+        option: resolveOptionImage(option, config, modelId),
+        availability,
+      })),
+    [availableOptions, config, modelId],
+  )
 
   const handleOptionClick = (optionId: OptionId) => {
     if (optionId === selectedOptionId) {
@@ -122,7 +148,7 @@ export function StepSelector({
             role="listbox"
             aria-label={`${title} options`}
           >
-            {availableOptions.map(({ option }) => (
+            {resolvedOptions.map(({ option }) => (
               <OptionCard
                 key={option.id}
                 option={option}

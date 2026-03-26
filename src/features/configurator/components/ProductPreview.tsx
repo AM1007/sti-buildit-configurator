@@ -13,6 +13,8 @@ export function ProductPreview({ model, config, onEditStep }: ProductPreviewProp
   const { getStepTitle } = useModelTranslations(model.id)
 
   const visibleSteps = getVisibleSteps(model, config)
+  const depStep = model.primaryDependencyStep
+  const depValue = depStep ? config[depStep] : null
 
   return (
     <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4 xl:grid-cols-4">
@@ -31,12 +33,17 @@ export function ProductPreview({ model, config, onEditStep }: ProductPreviewProp
         const selectedOptionId = config[step.id]
         const selectedOption = step.options.find((o) => o.id === selectedOptionId)
 
+        let image = selectedOption?.image
+        if (selectedOption?.imageMap && depValue) {
+          image = selectedOption.imageMap[depValue] ?? image
+        }
+
         return (
           <PreviewTile
             key={step.id}
             stepId={step.id}
             label={getStepTitle(step.id)}
-            image={selectedOption?.image}
+            image={image}
             isSelected={!!selectedOptionId}
             onEdit={onEditStep}
           />
