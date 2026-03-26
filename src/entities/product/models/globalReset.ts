@@ -122,7 +122,7 @@ const steps: Step[] = [
         id: '22-0',
         label: '#22-0 Running Man symbol',
         code: '22-0',
-        image: `${IMG}/TEXT/RM Running Man Logo.webp`,
+        image: `${IMG}/TEXT/HF FireHouseFlame Symbol.webp`,
       },
       {
         id: '22-0-EN',
