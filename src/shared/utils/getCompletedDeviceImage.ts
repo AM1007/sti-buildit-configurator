@@ -9,6 +9,7 @@ interface GetCompletedDeviceImageParams {
 
 interface CompletedDeviceImageResult {
   imagePath: string | null
+  imagePaths?: string[]
   reason?: string
 }
 
@@ -65,7 +66,6 @@ const MODEL_CONFIG: Record<
       E: 'ORANGE',
     },
     colourStep: 'colour',
-    // No clStep — label CL already included in fullCode via buildProductModel (code: "CL", separator: "-")
   },
   'key-switches': {
     basePath: '/Key Switches/COMPLETED DEVICE',
@@ -78,7 +78,6 @@ const MODEL_CONFIG: Record<
       E0: 'ORANGE',
     },
     colourStep: 'colourMounting',
-    // No clStep — label CL already included in fullCode via buildProductModel (code: "CL", separator: "-")
   },
   'reset-call-points': {
     basePath: '/ReSet Call Points/COMPLETED DEVICE',
@@ -91,7 +90,6 @@ const MODEL_CONFIG: Record<
       O: 'ORANGE',
     },
     colourStep: 'colour',
-    // No clStep — label CL already included in fullCode via buildProductModel (code: "CL")
   },
   'waterproof-push-buttons': {
     basePath: '/Waterproof Push Buttons/COMPLETED DEVICE',
@@ -104,7 +102,6 @@ const MODEL_CONFIG: Record<
       E: 'ORANGE',
     },
     colourStep: 'housingColour',
-    // No clStep — label CL already included in fullCode via buildProductModel (code: "CL", separator: "-")
   },
   'waterproof-reset-call-point': {
     basePath: '/Waterproof ReSet Call Point/COMPLETED DEVICE',
@@ -117,7 +114,6 @@ const MODEL_CONFIG: Record<
       O: 'ORANGE',
     },
     colourStep: 'colour',
-    // No clStep — label CL already included in fullCode via buildProductModel (code: "CL")
   },
   'g3-multipurpose-push-button': {
     basePath: '/G3 Multipurpose Push Button/COMPLETED DEVICE',
@@ -215,11 +211,9 @@ const MODEL_CONFIG: Record<
   'euro-stopper': {
     basePath: '/Euro Stopper/COMPLETED DEVICE',
     colourMap: {
-      // Special labels
       ML: 'RED',
       FR: 'RED',
       EG: 'GREEN',
-      // No label variants
       NK: 'BLACK',
       NB: 'BLUE',
       NG: 'GREEN',
@@ -227,7 +221,6 @@ const MODEL_CONFIG: Record<
       NR: 'RED',
       NW: 'WHITE',
       NY: 'YELLOW',
-      // Custom label variants
       CK: 'BLACK',
       CB: 'BLUE',
       CG: 'GREEN',
@@ -289,7 +282,15 @@ export function getCompletedDeviceImage({
 
   const hasCL = modelConfig.clStep && config[modelConfig.clStep] === 'CL'
   const fileName = hasCL ? `${fullCode}-CL` : fullCode
-  const imagePath = `${modelConfig.basePath}/${colourFolder}/${fileName}.webp`
+  const basePath = `${modelConfig.basePath}/${colourFolder}`
+  const imagePath = `${basePath}/${fileName}.webp`
+
+  if (modelId === 'g3-multipurpose-push-button') {
+    return {
+      imagePath,
+      imagePaths: [`${basePath}/${fileName}_text.webp`, `${basePath}/${fileName}.webp`],
+    }
+  }
 
   return {
     imagePath,

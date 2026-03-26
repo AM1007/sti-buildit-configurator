@@ -24,6 +24,7 @@ interface DesktopLayoutProps {
   productName: string
   heroDescription?: string
   imagePath: string | null
+  imagePaths?: string[]
   onCustomTextSubmit: (data: Omit<CustomTextData, 'submitted'>) => void
 }
 
@@ -48,6 +49,7 @@ export function DesktopLayout({
   productName,
   heroDescription,
   imagePath,
+  imagePaths,
   onCustomTextSubmit,
 }: DesktopLayoutProps) {
   return (
@@ -81,6 +83,7 @@ export function DesktopLayout({
         productName={productName}
         productDescription={heroDescription}
         productImageUrl={imagePath}
+        imagePaths={imagePaths}
         onCustomTextSubmit={onCustomTextSubmit}
         className="min-w-0 flex-1 sticky top-20"
       />

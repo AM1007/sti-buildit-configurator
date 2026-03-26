@@ -40,6 +40,7 @@ interface MainPanelProps {
   productName: string
   productDescription?: string
   productImageUrl?: string | null
+  imagePaths?: string[]
   onCustomTextSubmit: (data: Omit<CustomTextData, 'submitted'>) => void
   className?: string
 }
@@ -61,6 +62,7 @@ export function MainPanel({
   productName,
   productDescription,
   productImageUrl,
+  imagePaths,
   onCustomTextSubmit,
   className = '',
 }: MainPanelProps) {
@@ -192,6 +194,7 @@ export function MainPanel({
               {imagePath ? (
                 <ProductPreviewContent
                   imagePath={imagePath}
+                  imagePaths={imagePaths}
                   productCode={productModel.fullCode}
                 />
               ) : (

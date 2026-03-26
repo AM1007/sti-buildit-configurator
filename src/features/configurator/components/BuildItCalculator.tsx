@@ -77,7 +77,7 @@ export function BuildItCalculator({
     isComplete,
   }
 
-  const { imagePath } = getCompletedDeviceImage({
+  const { imagePath, imagePaths } = getCompletedDeviceImage({
     fullCode: productModel.fullCode,
     modelId: model.id,
     config,
@@ -155,6 +155,7 @@ export function BuildItCalculator({
     productName,
     heroDescription: heroContent?.description,
     imagePath,
+    imagePaths,
     onCustomTextSubmit: handleCustomTextSubmit,
   }
 

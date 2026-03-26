@@ -1,6 +1,16 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { RotateCcw, Share2, Star, Pencil, FileText } from 'lucide-react'
+import {
+  RotateCcw,
+  Share2,
+  Star,
+  Pencil,
+  FileText,
+  ChevronLeft,
+  ChevronRight,
+} from 'lucide-react'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import type { Swiper as SwiperType } from 'swiper'
 import { ClipLoader } from 'react-spinners'
 import type { ModelDefinition, CustomTextData, Configuration } from '@shared/types'
 import { buildProductModel } from '@entities/product'
@@ -37,7 +47,46 @@ interface MobileTabletLayoutProps {
   productName: string
   heroDescription?: string
   imagePath: string | null
+  imagePaths?: string[]
   onCustomTextSubmit: (data: Omit<CustomTextData, 'submitted'>) => void
+}
+
+function MobilePreviewImage({ src, alt }: { src: string; alt: string }) {
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
+
+  return (
+    <div className="flex h-80 md:h-96 items-center justify-center">
+      {error ? (
+        <div className="flex h-full w-full items-center justify-center">
+          <p className="text-sm text-slate-400">Image not available</p>
+        </div>
+      ) : (
+        <div className="relative flex h-full w-full items-center justify-center">
+          {loading && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <ClipLoader color="#c8102e" size={32} />
+            </div>
+          )}
+          <img
+            alt={alt}
+            loading="lazy"
+            width="400"
+            height="400"
+            className={`max-h-full max-w-full select-none object-contain transition-opacity duration-300 ${
+              loading ? 'h-0 opacity-0' : 'opacity-100'
+            }`}
+            src={src}
+            onLoad={() => setLoading(false)}
+            onError={() => {
+              setLoading(false)
+              setError(true)
+            }}
+          />
+        </div>
+      )}
+    </div>
+  )
 }
 
 export function MobileTabletLayout({
@@ -57,6 +106,7 @@ export function MobileTabletLayout({
   productName,
   heroDescription,
   imagePath,
+  imagePaths,
   onCustomTextSubmit,
 }: MobileTabletLayoutProps) {
   const { t } = useTranslation()
@@ -67,6 +117,8 @@ export function MobileTabletLayout({
   const [userOverrideEdit, setUserOverrideEdit] = useState(false)
   const [previewImageLoading, setPreviewImageLoading] = useState(true)
   const [previewImageError, setPreviewImageError] = useState(false)
+  const [swiperIndex, setSwiperIndex] = useState(0)
+  const swiperRef = useRef<SwiperType | null>(null)
 
   const showCustomTextForm = shouldShowCustomTextForm(
     model,
@@ -79,6 +131,7 @@ export function MobileTabletLayout({
 
   const canShowPreview = productModel.isComplete && !!imagePath
   const showPreviewImage = canShowPreview && !userOverrideEdit && !showCustomTextForm
+  const slides = imagePaths && imagePaths.length > 1 ? imagePaths : null
 
   useEffect(() => {
     if (!canShowPreview) {
@@ -89,6 +142,7 @@ export function MobileTabletLayout({
   useEffect(() => {
     setPreviewImageLoading(true)
     setPreviewImageError(false)
+    setSwiperIndex(0)
   }, [imagePath])
 
   useEffect(() => {
@@ -138,6 +192,111 @@ export function MobileTabletLayout({
     return getMaxLength(model.id, effectiveLineCount)
   }
 
+  const renderPreviewContent = () => {
+    if (slides) {
+      return (
+        <>
+          <div className="relative w-full">
+            <Swiper
+              onSwiper={(swiper) => {
+                swiperRef.current = swiper
+              }}
+              onSlideChange={(swiper) => setSwiperIndex(swiper.activeIndex)}
+              slidesPerView={1}
+              spaceBetween={0}
+              speed={300}
+              className="w-full"
+            >
+              {slides.map((src, index) => (
+                <SwiperSlide key={src}>
+                  <MobilePreviewImage
+                    src={src}
+                    alt={`${productModel.fullCode} ${index + 1}`}
+                  />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+
+            {swiperIndex > 0 && (
+              <button
+                type="button"
+                onClick={() => swiperRef.current?.slidePrev()}
+                className="absolute left-1 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-slate-200 bg-white/80 text-slate-500 shadow-sm backdrop-blur-sm transition-all active:scale-95"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+            )}
+
+            {swiperIndex < slides.length - 1 && (
+              <button
+                type="button"
+                onClick={() => swiperRef.current?.slideNext()}
+                className="absolute right-1 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-slate-200 bg-white/80 text-slate-500 shadow-sm backdrop-blur-sm transition-all active:scale-95"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            )}
+
+            <div className="mt-3 flex items-center justify-center gap-1.5">
+              {slides.map((_, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  onClick={() => swiperRef.current?.slideTo(index)}
+                  className={`h-1.5 rounded-full transition-all ${
+                    index === swiperIndex ? 'w-4 bg-brand-600' : 'w-1.5 bg-slate-300'
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+          <p className="mt-3 text-center font-mono text-xs font-semibold text-slate-600">
+            {productModel.fullCode}
+          </p>
+        </>
+      )
+    }
+
+    return (
+      <>
+        {previewImageError ? (
+          <div className="flex flex-col items-center gap-2 py-8 text-center">
+            <p className="text-sm font-medium text-slate-500">
+              {t('configurator.previewNotAvailable')}
+            </p>
+          </div>
+        ) : (
+          <div className="relative flex h-80 md:h-96 w-full items-center justify-center">
+            {previewImageLoading && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <ClipLoader color="#c8102e" size={40} />
+              </div>
+            )}
+            <img
+              alt={productModel.fullCode}
+              src={imagePath!}
+              width="400"
+              height="400"
+              className={`max-h-full max-w-full select-none object-contain transition-opacity duration-300 ${
+                previewImageLoading ? 'opacity-0' : 'opacity-100'
+              }`}
+              onLoad={() => setPreviewImageLoading(false)}
+              onError={() => {
+                setPreviewImageLoading(false)
+                setPreviewImageError(true)
+              }}
+            />
+          </div>
+        )}
+        {!previewImageLoading && !previewImageError && (
+          <p className="mt-3 text-center font-mono text-xs font-semibold text-slate-600">
+            {productModel.fullCode}
+          </p>
+        )}
+      </>
+    )
+  }
+
   return (
     <div className="mx-auto max-w-7xl px-4 pb-8 pt-6 md:px-6">
       <div className="overflow-hidden rounded-sm border border-slate-200 bg-white shadow-sm">
@@ -165,42 +324,9 @@ export function MobileTabletLayout({
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.98 }}
               transition={{ duration: 0.25, ease: 'easeOut' }}
-              className="relative flex flex-col items-center justify-center p-6 md:p-8"
+              className="relative flex flex-col items-center justify-center p-4 md:p-5"
             >
-              {previewImageError ? (
-                <div className="flex flex-col items-center gap-2 py-8 text-center">
-                  <p className="text-sm font-medium text-slate-500">
-                    {t('configurator.previewNotAvailable')}
-                  </p>
-                </div>
-              ) : (
-                <>
-                  {previewImageLoading && (
-                    <div className="flex items-center justify-center py-16">
-                      <ClipLoader color="#c8102e" size={40} />
-                    </div>
-                  )}
-                  <img
-                    alt={productModel.fullCode}
-                    src={imagePath}
-                    width="400"
-                    height="400"
-                    className={`w-full max-w-sm select-none object-contain transition-opacity duration-300 ${
-                      previewImageLoading ? 'h-0 opacity-0' : 'opacity-100'
-                    }`}
-                    onLoad={() => setPreviewImageLoading(false)}
-                    onError={() => {
-                      setPreviewImageLoading(false)
-                      setPreviewImageError(true)
-                    }}
-                  />
-                  {!previewImageLoading && !previewImageError && (
-                    <p className="mt-3 text-center font-mono text-xs font-semibold text-slate-600">
-                      {productModel.fullCode}
-                    </p>
-                  )}
-                </>
-              )}
+              {renderPreviewContent()}
               <button
                 type="button"
                 onClick={() => setUserOverrideEdit(true)}
