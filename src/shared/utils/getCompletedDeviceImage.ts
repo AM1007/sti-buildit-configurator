@@ -286,6 +286,14 @@ export function getCompletedDeviceImage({
   const imagePath = `${basePath}/${fileName}.webp`
 
   if (modelId === 'g3-multipurpose-push-button') {
+    const singleImageCodes = new Set(['G3C105RM-EN', 'G3C109XT-EN', 'G3C105XT-EN'])
+
+    if (singleImageCodes.has(fullCode)) {
+      return {
+        imagePath,
+      }
+    }
+
     return {
       imagePath,
       imagePaths: [`${basePath}/${fileName}_text.webp`, `${basePath}/${fileName}.webp`],
