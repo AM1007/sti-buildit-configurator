@@ -76,7 +76,8 @@
     "charactersRemaining": "Залишилось символів",
     "textPreview": "Попередній перегляд тексту",
     "submitCustomText": "Застосувати текст",
-    "noSelection": "НЕ ВИБРАНО"
+    "noSelection": "НЕ ВИБРАНО",
+    "lockedBanner": "Конфігурацію зафіксовано. Скиньте або видаліть зі списку, щоб редагувати."
   },
 
   "myList": {

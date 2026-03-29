@@ -8,6 +8,7 @@ import {
   FileText,
   ChevronLeft,
   ChevronRight,
+  Lock,
 } from 'lucide-react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import type { Swiper as SwiperType } from 'swiper'
@@ -347,6 +348,14 @@ export function MobileTabletLayout({
               transition={{ duration: 0.25, ease: 'easeOut' }}
               className="p-4 md:p-5"
             >
+              {isInMyList && (
+                <div className="mb-3 flex items-center gap-2 rounded-sm border border-amber-200 bg-amber-50 px-3 py-2">
+                  <Lock className="h-3.5 w-3.5 shrink-0 text-amber-600" />
+                  <span className="text-xs font-medium text-amber-700">
+                    {t('configurator.lockedBanner')}
+                  </span>
+                </div>
+              )}
               <ProductPreview model={model} config={config} onEditStep={onEditStep} />
             </motion.div>
           )}

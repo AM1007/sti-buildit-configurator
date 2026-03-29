@@ -76,7 +76,8 @@
     "charactersRemaining": "Characters remaining",
     "textPreview": "Text preview",
     "submitCustomText": "Apply text",
-    "noSelection": "NO SELECTION"
+    "noSelection": "NO SELECTION",
+    "lockedBanner": "Configuration is locked. Reset or remove from list to edit."
   },
 
   "myList": {

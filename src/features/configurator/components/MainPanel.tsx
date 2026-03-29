@@ -19,6 +19,7 @@ import {
   getMaxLength,
 } from '@entities/product/customTextConfig'
 import { getEffectiveLineCount } from '@shared/utils/customTextHelpers'
+import { Lock } from 'lucide-react'
 import { useTranslation, useLanguage } from '@shared/i18n'
 
 type TabId = 'edit' | 'preview'
@@ -176,6 +177,14 @@ export function MainPanel({
         <div className="tech-grid relative flex-1">
           {activeTab === 'edit' && (
             <div className="h-full p-8">
+              {isInMyList && (
+                <div className="mb-4 flex items-center gap-2 rounded-sm border border-amber-200 bg-amber-50 px-3 py-2">
+                  <Lock className="h-3.5 w-3.5 shrink-0 text-amber-600" />
+                  <span className="text-xs font-medium text-amber-700">
+                    {t('configurator.lockedBanner')}
+                  </span>
+                </div>
+              )}
               {showCustomTextForm && customTextConfig ? (
                 <CustomTextForm
                   variant={customTextConfig.variant}

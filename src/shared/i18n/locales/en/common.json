@@ -122,7 +122,8 @@
     "optionsAvailable": "options available",
     "optionsAvailable_one": "option available",
     "optionsAvailable_few": "options available",
-    "optionsAvailable_many": "options available"
+    "optionsAvailable_many": "options available",
+    "lockedBanner": "Configuration is locked. Reset or remove from list to edit."
   },
   "myList": {
     "title": "Project Specification",
