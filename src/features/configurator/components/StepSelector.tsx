@@ -15,6 +15,7 @@ interface StepSelectorProps {
   selectedOptionId: OptionId | null
   config: Configuration
   modelId: ModelId
+  isLocked?: boolean
   onSelect: (optionId: OptionId) => void
   onClear: () => void
   onToggle: () => void
@@ -49,6 +50,7 @@ export function StepSelector({
   selectedOptionId,
   config,
   modelId,
+  isLocked = false,
   onSelect,
   onClear,
   onToggle,
@@ -74,6 +76,7 @@ export function StepSelector({
   )
 
   const handleOptionClick = (optionId: OptionId) => {
+    if (isLocked) return
     if (optionId === selectedOptionId) {
       onClear()
     } else {
@@ -154,6 +157,7 @@ export function StepSelector({
                 option={option}
                 isSelected={option.id === selectedOptionId}
                 isAvailable={true}
+                isLocked={isLocked}
                 onSelect={() => handleOptionClick(option.id)}
                 label={getOptionLabel ? getOptionLabel(step.id, option.id) : option.label}
               />

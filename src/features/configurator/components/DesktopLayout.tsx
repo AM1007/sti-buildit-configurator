@@ -20,6 +20,7 @@ interface DesktopLayoutProps {
   onAddToMyList: () => void
   onRemoveFromMyList: () => void
   isInMyList: boolean
+  isLocked: boolean
   actionsReady: boolean
   productName: string
   heroDescription?: string
@@ -45,6 +46,7 @@ export function DesktopLayout({
   onAddToMyList,
   onRemoveFromMyList,
   isInMyList,
+  isLocked,
   actionsReady,
   productName,
   heroDescription,
@@ -63,6 +65,7 @@ export function DesktopLayout({
         onSelectOption={(stepId, optionId) => selectOption(stepId, optionId)}
         onClearOption={(stepId) => clearSelection(stepId)}
         onSetCurrentStep={setCurrentStep}
+        isLocked={isLocked}
         className="w-[520px] shrink-0"
       />
 

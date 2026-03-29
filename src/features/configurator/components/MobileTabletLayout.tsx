@@ -43,6 +43,7 @@ interface MobileTabletLayoutProps {
   onAddToMyList: () => void
   onRemoveFromMyList: () => void
   isInMyList: boolean
+  isLocked?: boolean
   actionsReady: boolean
   productName: string
   heroDescription?: string
@@ -366,7 +367,11 @@ export function MobileTabletLayout({
           <button
             type="button"
             onClick={onReset}
-            className="flex items-center gap-1 text-[13px] text-slate-500 transition-colors hover:text-brand-600"
+            className={`flex items-center gap-1 text-[13px] transition-colors ${
+              isInMyList
+                ? 'text-red-600 hover:text-red-700'
+                : 'text-slate-500 hover:text-brand-600'
+            }`}
           >
             <RotateCcw className="h-3.5 w-3.5" />
             {t('common.reset')}

@@ -23,6 +23,7 @@ interface SidebarProps {
   onSelectOption: (stepId: StepId, optionId: OptionId) => void
   onClearOption: (stepId: StepId) => void
   onSetCurrentStep: (stepId: StepId) => void
+  isLocked?: boolean
   getStepTitle?: (stepId: string) => string
   getOptionLabel?: (stepId: string, optionId: string) => string
   className?: string
@@ -37,6 +38,7 @@ export function Sidebar({
   onSelectOption,
   onClearOption,
   onSetCurrentStep,
+  isLocked = false,
   className = '',
 }: SidebarProps) {
   const { getStepTitle, getOptionLabel } = useModelTranslations(modelId)
@@ -80,6 +82,7 @@ export function Sidebar({
             selectedOptionId={config[step.id] ?? null}
             config={config}
             modelId={model.id}
+            isLocked={isLocked}
             onSelect={(optionId) => onSelectOption(step.id, optionId)}
             onClear={() => onClearOption(step.id)}
             onToggle={() => onSetCurrentStep(step.id)}

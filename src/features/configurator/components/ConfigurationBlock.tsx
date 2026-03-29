@@ -83,7 +83,11 @@ export function ConfigurationBlock({
         <button
           type="button"
           onClick={onReset}
-          className="flex items-center gap-1 text-[13px] text-slate-500 transition-colors hover:text-brand-600 md:text-xs md:text-slate-400"
+          className={`flex items-center gap-1 text-[13px] transition-colors md:text-xs ${
+            isInMyList
+              ? 'text-red-600 hover:text-red-700'
+              : 'text-slate-500 hover:text-brand-600 md:text-slate-400'
+          }`}
         >
           <RotateCcw className="h-3.5 w-3.5 md:h-3 md:w-3" />
           {t('common.reset')}

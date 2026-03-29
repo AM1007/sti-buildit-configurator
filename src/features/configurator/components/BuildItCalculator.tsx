@@ -139,6 +139,8 @@ export function BuildItCalculator({
     ? (model.steps.find((s) => s.id === activeSheetStep) ?? null)
     : null
 
+  const isLocked = isInMyList
+
   const sharedLayoutProps = {
     model,
     config,
@@ -151,6 +153,7 @@ export function BuildItCalculator({
     onAddToMyList: handleAddToMyList,
     onRemoveFromMyList: handleRemoveFromMyList,
     isInMyList,
+    isLocked,
     actionsReady,
     productName,
     heroDescription: heroContent?.description,
@@ -186,6 +189,7 @@ export function BuildItCalculator({
           onSelect={handleSheetSelect}
           onClear={handleSheetClear}
           onClose={() => setActiveSheetStep(null)}
+          isLocked={isLocked}
         />
       )}
     </>

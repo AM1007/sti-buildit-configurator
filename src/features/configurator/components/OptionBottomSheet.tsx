@@ -17,6 +17,7 @@ interface OptionBottomSheetProps {
   onSelect: (optionId: OptionId) => void
   onClear: () => void
   onClose: () => void
+  isLocked?: boolean
 }
 
 function resolveOptionImage(
@@ -43,6 +44,7 @@ export function OptionBottomSheet({
   onSelect,
   onClear,
   onClose,
+  isLocked = false,
 }: OptionBottomSheetProps) {
   const { t } = useTranslation()
   const { lang } = useLanguage()
@@ -95,6 +97,7 @@ export function OptionBottomSheet({
   }, [open, onClose])
 
   const handleOptionClick = (optionId: OptionId) => {
+    if (isLocked) return
     if (optionId === selectedOptionId) {
       onClear()
     } else {
@@ -163,6 +166,7 @@ export function OptionBottomSheet({
                     option={option}
                     isSelected={option.id === selectedOptionId}
                     isAvailable={true}
+                    isLocked={isLocked}
                     onSelect={() => handleOptionClick(option.id)}
                     label={getOptionLabel(step.id, option.id)}
                     forceTile
@@ -171,7 +175,7 @@ export function OptionBottomSheet({
               </div>
             </div>
 
-            {selectedOptionId && (
+            {selectedOptionId && !isLocked && (
               <div className="border-t border-slate-200 bg-slate-50 px-5 py-3">
                 <button
                   type="button"
