@@ -104,6 +104,7 @@ export function isConfigurationComplete(
 ): boolean {
   const visibleSteps = getVisibleSteps(model, config)
   for (const step of visibleSteps) {
+    if (!step.required) continue
     if (!config[step.id]) return false
   }
   return true
@@ -116,6 +117,7 @@ export function getMissingRequiredSteps(
   const missing: string[] = []
   const visibleSteps = getVisibleSteps(model, config)
   for (const step of visibleSteps) {
+    if (!step.required) continue
     if (!config[step.id]) missing.push(step.id)
   }
   return missing

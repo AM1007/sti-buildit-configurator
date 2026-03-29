@@ -79,7 +79,7 @@ export interface RPSelectionState {
 export function buildRPModelCode(selections: RPSelectionState): string | null {
   const { colour, mounting, electricalArrangement, label } = selections
 
-  if (!colour || !mounting || !electricalArrangement || !label) {
+  if (!colour || !mounting || !electricalArrangement) {
     return null
   }
 
@@ -94,53 +94,25 @@ export function parseRPModelCode(code: string): RPSelectionState | null {
     return null
   }
 
-  const colour = match[1]
-  const mounting = match[2]
-  const electricalArrangement = match[3]
-  const clSuffix = match[4]
-
-  let label: string
-  if (clSuffix === 'CL') {
-    label = 'CL'
-  } else {
-    switch (colour) {
-      case 'R':
-        label = 'HF'
-        break
-      case 'G':
-        label = 'RM'
-        break
-      default:
-        label = 'SAK'
-        break
-    }
+  const result: RPSelectionState = {
+    colour: match[1],
+    mounting: match[2],
+    electricalArrangement: match[3],
   }
 
-  return { colour, mounting, electricalArrangement, label }
+  if (match[4] === 'CL') {
+    result.label = 'CL'
+  }
+
+  return result
 }
 
 export function isValidRPCombination(
   selections: RPSelectionState,
 ): { valid: true } | { valid: false; reason: string } {
-  const { colour, label } = selections
   const modelCode = buildRPModelCode(selections)
 
   if (!modelCode) return { valid: true }
-
-  if (colour && label) {
-    if (label === 'HF' && colour !== 'R') {
-      return { valid: false, reason: `HF label is only available for Red (R) colour.` }
-    }
-    if (label === 'RM' && colour !== 'G') {
-      return { valid: false, reason: `RM label is only available for Green (G) colour.` }
-    }
-    if (label === 'SAK' && (colour === 'R' || colour === 'G')) {
-      return {
-        valid: false,
-        reason: `SAK label is not available for Red or Green colour.`,
-      }
-    }
-  }
 
   if (VALID_MODEL_SET.has(modelCode)) return { valid: true }
 
@@ -207,18 +179,14 @@ const ELECTRICAL_TO_COLOUR: ConstraintMatrix = {
 }
 
 const COLOUR_TO_LABEL: ConstraintMatrix = {
-  R: ['HF'],
-  G: ['RM', 'CL'],
-  Y: ['SAK', 'CL'],
-  W: ['SAK', 'CL'],
-  B: ['SAK', 'CL'],
-  O: ['SAK', 'CL'],
+  G: ['CL'],
+  Y: ['CL'],
+  W: ['CL'],
+  B: ['CL'],
+  O: ['CL'],
 }
 
 const LABEL_TO_COLOUR: ConstraintMatrix = {
-  HF: ['R'],
-  RM: ['G'],
-  SAK: ['Y', 'W', 'B', 'O'],
   CL: ['G', 'Y', 'W', 'B', 'O'],
 }
 
@@ -234,27 +202,21 @@ const ELECTRICAL_TO_MOUNTING: ConstraintMatrix = {
 }
 
 const MOUNTING_TO_LABEL: ConstraintMatrix = {
-  D2: ['HF', 'RM', 'SAK', 'CL'],
-  F2: ['RM', 'SAK', 'CL'],
-  S2: ['HF', 'RM', 'SAK', 'CL'],
+  D2: ['CL'],
+  F2: ['CL'],
+  S2: ['CL'],
 }
 
 const LABEL_TO_MOUNTING: ConstraintMatrix = {
-  HF: ['D2', 'S2'],
-  RM: ['D2', 'F2', 'S2'],
-  SAK: ['D2', 'F2', 'S2'],
   CL: ['D2', 'F2', 'S2'],
 }
 
 const ELECTRICAL_TO_LABEL: ConstraintMatrix = {
-  '02': ['HF', 'RM', 'SAK', 'CL'],
-  '11': ['HF', 'RM', 'SAK', 'CL'],
+  '02': ['CL'],
+  '11': ['CL'],
 }
 
 const LABEL_TO_ELECTRICAL: ConstraintMatrix = {
-  HF: ['02', '11'],
-  RM: ['02', '11'],
-  SAK: ['02', '11'],
   CL: ['02', '11'],
 }
 
