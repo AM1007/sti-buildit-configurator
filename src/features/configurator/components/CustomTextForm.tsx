@@ -8,6 +8,7 @@ interface CustomTextFormProps {
   maxLength: number
   onSubmit: (data: Omit<CustomTextData, 'submitted'>) => void
   initialData?: CustomTextData
+  scriptRestriction?: 'latin' | 'cyrillic' | null
 }
 
 export function CustomTextForm({
@@ -15,9 +16,27 @@ export function CustomTextForm({
   maxLength,
   onSubmit,
   initialData,
+  scriptRestriction = null,
 }: CustomTextFormProps) {
   const { t } = useTranslation()
   const isDualBlock = variant === 'dual-block-three-line'
+
+  const CYRILLIC_RE = /[а-яА-ЯіІїЇєЄґҐёЁ]/
+  const LATIN_RE = /[a-zA-Z]/
+
+  function hasDisallowedScript(value: string): boolean {
+    if (!scriptRestriction || !value) return false
+    if (scriptRestriction === 'latin') return CYRILLIC_RE.test(value)
+    if (scriptRestriction === 'cyrillic') return LATIN_RE.test(value)
+    return false
+  }
+
+  function getScriptError(): string | null {
+    if (!scriptRestriction) return null
+    if (scriptRestriction === 'latin') return t('customText.latinOnly')
+    if (scriptRestriction === 'cyrillic') return t('customText.cyrillicOnly')
+    return null
+  }
 
   const getInitialLineCount = (): 1 | 2 | 3 => {
     if (variant === 'singleline') return 1
@@ -126,6 +145,26 @@ export function CustomTextForm({
       }
     }
 
+    if (scriptRestriction) {
+      const linesToCheck = [line1]
+      if (showLine2) linesToCheck.push(line2)
+      if (showLine3) linesToCheck.push(line3)
+      if (isDualBlock) {
+        linesToCheck.push(coverLine1)
+        if (coverLineCount >= 2) linesToCheck.push(coverLine2)
+        if (coverLineCount >= 3) linesToCheck.push(coverLine3)
+      }
+
+      const scriptError =
+        scriptRestriction === 'latin'
+          ? t('customText.latinOnly')
+          : t('customText.cyrillicOnly')
+
+      if (linesToCheck.some(hasDisallowedScript)) {
+        validationErrors.push(scriptError)
+      }
+    }
+
     if (validationErrors.length > 0) {
       setErrors(validationErrors)
       return
@@ -193,11 +232,25 @@ export function CustomTextForm({
     </div>
   )
 
-  const inputClassName = `flex min-h-10 w-full items-center justify-start border border-solid 
-                          border-gray-300 bg-gray-100 px-3 py-1.5 text-base font-normal 
+  const baseInputClassName = `flex min-h-10 w-full items-center justify-start border border-solid 
+                          bg-gray-100 px-3 py-1.5 text-base font-normal 
                           text-gray-800 placeholder:text-gray-500 
-                          hover:border-gray-500 focus:border-gray-500 focus:outline-none 
+                          focus:outline-none 
                           md:min-h-11 md:py-2 md:text-sm`
+
+  function getInputClassName(value: string): string {
+    const hasError = hasDisallowedScript(value)
+    return `${baseInputClassName} ${
+      hasError
+        ? 'border-red-500 focus:border-red-500'
+        : 'border-gray-300 hover:border-gray-500 focus:border-gray-500'
+    }`
+  }
+
+  function renderScriptError(value: string) {
+    if (!hasDisallowedScript(value)) return null
+    return <span className="text-xs text-red-500">{getScriptError()}</span>
+  }
 
   return (
     <div className="flex w-full justify-center">
@@ -231,8 +284,9 @@ export function CustomTextForm({
                     onChange={(e) => setLine1(e.target.value)}
                     maxLength={maxLength}
                     autoComplete="off"
-                    className={inputClassName}
+                    className={getInputClassName(line1)}
                   />
+                  {renderScriptError(line1)}
                 </div>
 
                 {showLine2 && (
@@ -245,8 +299,9 @@ export function CustomTextForm({
                       onChange={(e) => setLine2(e.target.value)}
                       maxLength={maxLength}
                       autoComplete="off"
-                      className={inputClassName}
+                      className={getInputClassName(line2)}
                     />
+                    {renderScriptError(line2)}
                   </div>
                 )}
 
@@ -260,8 +315,9 @@ export function CustomTextForm({
                       onChange={(e) => setLine3(e.target.value)}
                       maxLength={maxLength}
                       autoComplete="off"
-                      className={inputClassName}
+                      className={getInputClassName(line3)}
                     />
+                    {renderScriptError(line3)}
                   </div>
                 )}
               </div>
@@ -294,8 +350,9 @@ export function CustomTextForm({
                       onChange={(e) => setCoverLine1(e.target.value)}
                       maxLength={maxLength}
                       autoComplete="off"
-                      className={inputClassName}
+                      className={getInputClassName(coverLine1)}
                     />
+                    {renderScriptError(coverLine1)}
                   </div>
 
                   {coverLineCount >= 2 && (
@@ -308,8 +365,9 @@ export function CustomTextForm({
                         onChange={(e) => setCoverLine2(e.target.value)}
                         maxLength={maxLength}
                         autoComplete="off"
-                        className={inputClassName}
+                        className={getInputClassName(coverLine2)}
                       />
+                      {renderScriptError(coverLine2)}
                     </div>
                   )}
 
@@ -323,8 +381,9 @@ export function CustomTextForm({
                         onChange={(e) => setCoverLine3(e.target.value)}
                         maxLength={maxLength}
                         autoComplete="off"
-                        className={inputClassName}
+                        className={getInputClassName(coverLine3)}
                       />
+                      {renderScriptError(coverLine3)}
                     </div>
                   )}
                 </div>

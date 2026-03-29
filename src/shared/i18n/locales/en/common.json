@@ -251,7 +251,9 @@
     "coverLine1Required": "Cover line 1 is required",
     "lineExceedsMax": "Label line {line} exceeds {max} characters",
     "coverLineExceedsMax": "Cover line {line} exceeds {max} characters",
-    "nonReturnable": "CUSTOM PRODUCTS ARE NON-RETURNABLE"
+    "nonReturnable": "CUSTOM PRODUCTS ARE NON-RETURNABLE",
+    "latinOnly": "Latin characters only (digits and symbols are allowed)",
+    "cyrillicOnly": "Cyrillic characters only (digits and symbols are allowed)"
   },
   "card": {
     "features": "Specifications",

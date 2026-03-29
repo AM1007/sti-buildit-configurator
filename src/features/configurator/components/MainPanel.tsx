@@ -132,6 +132,13 @@ export function MainPanel({
     return getMaxLength(model.id, effectiveLineCount)
   }
 
+  const getScriptRestriction = (): 'latin' | 'cyrillic' | null => {
+    const lang = config.language
+    if (lang === 'EN') return 'latin'
+    if (lang === 'UA') return 'cyrillic'
+    return null
+  }
+
   return (
     <div className={`flex flex-col ${className}`}>
       <div className="flex min-h-[600px] flex-1 flex-col overflow-hidden rounded-sm border border-slate-200 bg-white shadow-sm">
@@ -191,6 +198,7 @@ export function MainPanel({
                   maxLength={getFormMaxLength()}
                   onSubmit={handleCustomTextSubmit}
                   initialData={customText ?? undefined}
+                  scriptRestriction={getScriptRestriction()}
                 />
               ) : (
                 <ProductPreview model={model} config={config} onEditStep={onEditStep} />

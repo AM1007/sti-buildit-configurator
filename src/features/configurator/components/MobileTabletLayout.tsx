@@ -194,6 +194,13 @@ export function MobileTabletLayout({
     return getMaxLength(model.id, effectiveLineCount)
   }
 
+  const getScriptRestriction = (): 'latin' | 'cyrillic' | null => {
+    const lang = config.language
+    if (lang === 'EN') return 'latin'
+    if (lang === 'UA') return 'cyrillic'
+    return null
+  }
+
   const renderPreviewContent = () => {
     if (slides) {
       return (
@@ -317,6 +324,7 @@ export function MobileTabletLayout({
                 maxLength={getFormMaxLength()}
                 onSubmit={onCustomTextSubmit}
                 initialData={customText ?? undefined}
+                scriptRestriction={getScriptRestriction()}
               />
             </motion.div>
           ) : showPreviewImage && imagePath ? (
