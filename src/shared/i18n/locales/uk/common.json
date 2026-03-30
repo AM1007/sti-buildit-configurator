@@ -122,7 +122,8 @@
     "optionsAvailable": "опцій доступно",
     "optionsAvailable_one": "опція доступна",
     "optionsAvailable_few": "опції доступно",
-    "optionsAvailable_many": "опцій доступно"
+    "optionsAvailable_many": "опцій доступно",
+    "lockedBanner": "Конфігурацію зафіксовано. Скиньте або видаліть зі списку, щоб редагувати."
   },
   "myList": {
     "title": "Специфікація проєкту",
