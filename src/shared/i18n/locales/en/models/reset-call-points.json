@@ -39,9 +39,9 @@
     "label": {
       "title": "MARKING",
       "options": {
-        "HF": "#HF House Flame symbol",
-        "RM": "#RM Running Man symbol",
-        "SAK": "#SAK Self-adhesive label kit",
+        "HF": "House Flame symbol",
+        "RM": "Running Man symbol",
+        "SAK": "Self-adhesive label kit",
         "CL": "#CL Custom marking (NON-RETURNABLE)"
       }
     }

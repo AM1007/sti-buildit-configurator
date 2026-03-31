@@ -43,7 +43,7 @@ export interface WRPSelectionState {
 
 export function buildWRPModelCode(selections: WRPSelectionState): string | null {
   const { colour, electricalArrangement, label } = selections
-  if (!colour || !electricalArrangement) return null
+  if (!colour || !electricalArrangement || !label) return null
 
   const base = `WRP2-${colour}-${electricalArrangement}`
   if (label === 'CL') return `${base}-CL`
@@ -61,6 +61,8 @@ export function parseWRPModelCode(code: string): WRPSelectionState | null {
 
   if (match[3]) {
     result.label = 'CL'
+  } else {
+    result.label = getDefaultLabelForColour(result.colour!)
   }
 
   return result
@@ -69,9 +71,25 @@ export function parseWRPModelCode(code: string): WRPSelectionState | null {
 export function isValidWRPCombination(
   selections: WRPSelectionState,
 ): { valid: true } | { valid: false; reason: string } {
+  const { colour, label } = selections
   const modelCode = buildWRPModelCode(selections)
 
   if (!modelCode) return { valid: true }
+
+  if (colour && label) {
+    if (label === 'HF' && colour !== 'R') {
+      return { valid: false, reason: `HF label is only available for Red (R) colour.` }
+    }
+    if (label === 'RM' && colour !== 'G') {
+      return { valid: false, reason: `RM label is only available for Green (G) colour.` }
+    }
+    if (label === 'SAK' && (colour === 'R' || colour === 'G')) {
+      return {
+        valid: false,
+        reason: `SAK label is not available for Red or Green colour.`,
+      }
+    }
+  }
 
   if (VALID_MODEL_SET.has(modelCode)) return { valid: true }
 
@@ -108,6 +126,17 @@ export function getValidWRPOptionsForStep(
   return Array.from(validOptions)
 }
 
+function getDefaultLabelForColour(colour: string): string {
+  switch (colour) {
+    case 'R':
+      return 'HF'
+    case 'G':
+      return 'RM'
+    default:
+      return 'SAK' // Y, B, W, O
+  }
+}
+
 const COLOUR_TO_ELECTRICAL: ConstraintMatrix = {
   R: ['02', '11'],
   G: ['02', '11'],
@@ -123,24 +152,30 @@ const ELECTRICAL_TO_COLOUR: ConstraintMatrix = {
 }
 
 const COLOUR_TO_LABEL: ConstraintMatrix = {
-  R: ['CL'],
-  G: ['CL'],
-  Y: ['CL'],
-  B: ['CL'],
-  W: ['CL'],
-  O: ['CL'],
+  R: ['HF', 'CL'],
+  G: ['RM', 'CL'],
+  Y: ['SAK', 'CL'],
+  B: ['SAK', 'CL'],
+  W: ['SAK', 'CL'],
+  O: ['SAK', 'CL'],
 }
 
 const LABEL_TO_COLOUR: ConstraintMatrix = {
+  HF: ['R'],
+  RM: ['G'],
+  SAK: ['Y', 'B', 'W', 'O'],
   CL: ['R', 'G', 'Y', 'B', 'W', 'O'],
 }
 
 const ELECTRICAL_TO_LABEL: ConstraintMatrix = {
-  '02': ['CL'],
-  '11': ['CL'],
+  '02': ['HF', 'RM', 'SAK', 'CL'],
+  '11': ['HF', 'RM', 'SAK', 'CL'],
 }
 
 const LABEL_TO_ELECTRICAL: ConstraintMatrix = {
+  HF: ['02', '11'],
+  RM: ['02', '11'],
+  SAK: ['02', '11'],
   CL: ['02', '11'],
 }
 

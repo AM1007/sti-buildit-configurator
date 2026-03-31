@@ -102,8 +102,26 @@ const steps: Step[] = [
   {
     id: 'label',
     title: 'LABEL',
-    required: false,
+    required: true,
     options: [
+      {
+        id: 'HF',
+        label: "# 'House Flame' Logo",
+        code: '',
+        image: `${IMG}/LABEL/House-Flame-Logo.webp`,
+      },
+      {
+        id: 'RM',
+        label: "# 'Running Man' Logo",
+        code: '',
+        image: `${IMG}/LABEL/Running-Man-Logo.webp`,
+      },
+      {
+        id: 'SAK',
+        label: '# Self-Assemble Label Kit',
+        code: '',
+        image: `${IMG}/LABEL/Self-Assemble-Label-Kit.webp`,
+      },
       {
         id: 'CL',
         label: '#CL Custom Label',
