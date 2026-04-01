@@ -44,28 +44,67 @@ function getSeparator(model: ModelDefinition, stepId: string, code: string): str
   return schema.separator
 }
 
+function resolveLookupCode(
+  config: Configuration,
+  lookupSteps: string[],
+  lookupMap: Record<string, string>,
+): string {
+  const keyParts: string[] = []
+  for (const stepId of lookupSteps) {
+    const val = config[stepId]
+    if (!val) return ''
+    keyParts.push(val)
+  }
+  return lookupMap[keyParts.join('|')] ?? ''
+}
+
 export function buildProductModel(
   config: Configuration,
   model: ModelDefinition,
 ): ProductModel {
   const { productModelSchema: schema, stepOrder } = model
+  const { codeLookup } = schema
+
+  const lookupStepSet = new Set(codeLookup?.steps ?? [])
 
   const parts: Record<string, string> = {}
   const missingSteps: string[] = []
 
   for (const stepId of stepOrder) {
     const optionId = config[stepId] ?? null
-    const code = findCode(model, stepId, optionId)
-    parts[stepId] = code
+
+    if (lookupStepSet.has(stepId)) {
+      parts[stepId] = ''
+    } else {
+      parts[stepId] = findCode(model, stepId, optionId)
+    }
 
     if (isStepRequired(model, stepId) && !optionId) {
       missingSteps.push(stepId)
     }
   }
 
+  let lookupCode = ''
+  let lookupInserted = false
+
+  if (codeLookup) {
+    lookupCode = resolveLookupCode(config, codeLookup.steps, codeLookup.map)
+  }
+
   let fullCode = schema.baseCode
 
   for (const stepId of schema.partsOrder) {
+    if (lookupStepSet.has(stepId)) {
+      if (!lookupInserted) {
+        lookupInserted = true
+        if (lookupCode) {
+          const separator = getSeparator(model, stepId, lookupCode)
+          fullCode += separator + lookupCode
+        }
+      }
+      continue
+    }
+
     const code = parts[stepId] ?? ''
     const separator = getSeparator(model, stepId, code)
     fullCode += separator + code

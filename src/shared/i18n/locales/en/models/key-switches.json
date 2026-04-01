@@ -5,7 +5,7 @@
     "series": "StopperSwitch Series",
     "badges": ["Key Operated", "Dual Mount", "Indoor Use Only"],
     "heroTitle": "Key-Operated Switches for Access Control and Signalling",
-    "heroDescription": "Low and high voltage key-operated switches available in multiple switch types and electrical configurations, including single-pole, double-pole and three-position arrangements. Optional protective cover and pre-alarm indication available.\n\nDual mounting system for flush or surface installation. Supplied with 35 mm back box.\n\nIntended for indoor access control, system reset and controlled switching applications.\n\nNot suitable for outdoor use. Not compatible with Enviro Stopper."
+    "heroDescription": "Low- and high-voltage key switches with various mechanism types and electrical configurations, including single-pole, double-pole, and three-position circuits. Optional protective housing and pre-activation indication available.\n\nThe Dual Mount system supports both flush and surface mounting. Supplied with a 35 mm back box.\n\nIntended for indoor access control systems, system reset functions, and authorized switching operations.\n\nNot suitable for outdoor use."
   },
   "steps": {
     "colourMounting": {
@@ -22,26 +22,27 @@
     "switchType": {
       "title": "SWITCH TYPE",
       "options": {
-        "2": "#2 2 Position Key Switch Single Pole",
-        "3": "#3 2 Position Key Switch - Key Trapped in 'on' position",
-        "4": "#4 2 Position Key Switch Double Pole",
-        "5": "#5 3 Position Key Switch"
+        "two-pos": "2-position spring return",
+        "two-pos-lock": "2-position latching",
+        "three-pos": "3-position centre OFF"
       }
     },
     "electricalArrangement": {
       "title": "ELECTRICAL CONFIGURATION",
       "options": {
-        "0": "#0 Single-pole",
-        "1": "#1 Double-pole, normally open",
-        "2": "#2 Double-pole, normally closed",
-        "3": "#3 Three-position key switch"
+        "single-pole": "Single Pole Changeover",
+        "double-no": "Double Pole Normally Open",
+        "double-no-lock": "Double Pole Normally Open Latching",
+        "double-nc": "Double Pole Normally Closed",
+        "double-nc-lock": "Double Pole Normally Closed Latching",
+        "three-pos-arr": "Three-Position Key Switch"
       }
     },
     "label": {
       "title": "MARKING",
       "options": {
-        "SAK": "#SAK Self-adhesive label kit",
-        "CL": "#CL Custom marking (NON-RETURNABLE)"
+        "SAK": "Self-Assemble Label Kit",
+        "CL": "#CL Custom Label (NON-RETURNABLE)"
       }
     }
   }

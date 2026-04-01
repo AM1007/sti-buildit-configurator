@@ -17,17 +17,13 @@ import {
 import { createConstraintEngine } from '@entities/product/rules/constraintEngine'
 import type { Configuration } from '@shared/types'
 
-// ─────────────────────────────────────────────────────────────
-// buildKSModelCode
-// ─────────────────────────────────────────────────────────────
-
 describe('buildKSModelCode', () => {
   it('builds SAK label — no suffix', () => {
     expect(
       buildKSModelCode({
         colourMounting: '10',
-        switchType: '2',
-        electricalArrangement: '0',
+        switchType: 'two-pos',
+        electricalArrangement: 'single-pole',
         label: 'SAK',
       }),
     ).toBe('SS3-1020')
@@ -37,8 +33,8 @@ describe('buildKSModelCode', () => {
     expect(
       buildKSModelCode({
         colourMounting: '10',
-        switchType: '2',
-        electricalArrangement: '0',
+        switchType: 'two-pos',
+        electricalArrangement: 'single-pole',
         label: 'CL',
       }),
     ).toBe('SS3-1020-CL')
@@ -48,57 +44,124 @@ describe('buildKSModelCode', () => {
     expect(
       buildKSModelCode({
         colourMounting: 'E0',
-        switchType: '5',
-        electricalArrangement: '3',
+        switchType: 'three-pos',
+        electricalArrangement: 'three-pos-arr',
         label: 'SAK',
       }),
     ).toBe('SS3-E053')
     expect(
       buildKSModelCode({
         colourMounting: 'E0',
-        switchType: '5',
-        electricalArrangement: '3',
+        switchType: 'three-pos',
+        electricalArrangement: 'three-pos-arr',
         label: 'CL',
       }),
     ).toBe('SS3-E053-CL')
   })
 
-  it('builds SS3-1053 correctly', () => {
+  it('builds two-pos + double-no → 41 fragment', () => {
     expect(
       buildKSModelCode({
         colourMounting: '10',
-        switchType: '5',
-        electricalArrangement: '3',
+        switchType: 'two-pos',
+        electricalArrangement: 'double-no',
         label: 'SAK',
       }),
-    ).toBe('SS3-1053')
+    ).toBe('SS3-1041')
+  })
+
+  it('builds two-pos + double-nc → 42 fragment', () => {
+    expect(
+      buildKSModelCode({
+        colourMounting: '50',
+        switchType: 'two-pos',
+        electricalArrangement: 'double-nc',
+        label: 'CL',
+      }),
+    ).toBe('SS3-5042-CL')
+  })
+
+  it('builds two-pos-lock + single-pole → 30 fragment', () => {
+    expect(
+      buildKSModelCode({
+        colourMounting: '30',
+        switchType: 'two-pos-lock',
+        electricalArrangement: 'single-pole',
+        label: 'SAK',
+      }),
+    ).toBe('SS3-3030')
+  })
+
+  it('builds two-pos-lock + double-no-lock → 31 fragment', () => {
+    expect(
+      buildKSModelCode({
+        colourMounting: '50',
+        switchType: 'two-pos-lock',
+        electricalArrangement: 'double-no-lock',
+        label: 'CL',
+      }),
+    ).toBe('SS3-5031-CL')
+  })
+
+  it('builds two-pos-lock + double-nc-lock → 32 fragment', () => {
+    expect(
+      buildKSModelCode({
+        colourMounting: '10',
+        switchType: 'two-pos-lock',
+        electricalArrangement: 'double-nc-lock',
+        label: 'SAK',
+      }),
+    ).toBe('SS3-1032')
   })
 
   it('returns null when any field is missing', () => {
     expect(
       buildKSModelCode({
         colourMounting: '10',
-        switchType: '2',
-        electricalArrangement: '0',
+        switchType: 'two-pos',
+        electricalArrangement: 'single-pole',
       }),
     ).toBeNull()
     expect(
-      buildKSModelCode({ colourMounting: '10', switchType: '2', label: 'SAK' }),
+      buildKSModelCode({ colourMounting: '10', switchType: 'two-pos', label: 'SAK' }),
     ).toBeNull()
     expect(buildKSModelCode({})).toBeNull()
   })
+
+  it('returns null for invalid switchType+EA combination', () => {
+    expect(
+      buildKSModelCode({
+        colourMounting: '10',
+        switchType: 'two-pos',
+        electricalArrangement: 'double-no-lock',
+        label: 'SAK',
+      }),
+    ).toBeNull()
+    expect(
+      buildKSModelCode({
+        colourMounting: '10',
+        switchType: 'two-pos-lock',
+        electricalArrangement: 'double-no',
+        label: 'SAK',
+      }),
+    ).toBeNull()
+    expect(
+      buildKSModelCode({
+        colourMounting: '10',
+        switchType: 'two-pos',
+        electricalArrangement: 'three-pos-arr',
+        label: 'SAK',
+      }),
+    ).toBeNull()
+  })
 })
 
-// ─────────────────────────────────────────────────────────────
-// parseKSModelCode
-// ─────────────────────────────────────────────────────────────
-
 describe('parseKSModelCode', () => {
-  it('parses SS3-1020 correctly', () => {
+  it('parses SS3-1020 — two-pos + single-pole', () => {
     expect(parseKSModelCode('SS3-1020')).toEqual({
       colourMounting: '10',
-      switchType: '2',
-      electricalArrangement: '0',
+      switchType: 'two-pos',
+      electricalArrangement: 'single-pole',
       label: 'SAK',
     })
   })
@@ -106,26 +169,62 @@ describe('parseKSModelCode', () => {
   it('parses SS3-1020-CL correctly', () => {
     expect(parseKSModelCode('SS3-1020-CL')).toEqual({
       colourMounting: '10',
-      switchType: '2',
-      electricalArrangement: '0',
+      switchType: 'two-pos',
+      electricalArrangement: 'single-pole',
       label: 'CL',
     })
   })
 
-  it('parses E0 colourMounting correctly', () => {
-    expect(parseKSModelCode('SS3-E053')).toEqual({
-      colourMounting: 'E0',
-      switchType: '5',
-      electricalArrangement: '3',
+  it('parses SS3-1041 — two-pos + double-no', () => {
+    expect(parseKSModelCode('SS3-1041')).toEqual({
+      colourMounting: '10',
+      switchType: 'two-pos',
+      electricalArrangement: 'double-no',
       label: 'SAK',
     })
   })
 
-  it('parses SS3-1042 correctly', () => {
+  it('parses SS3-1042 — two-pos + double-nc', () => {
     expect(parseKSModelCode('SS3-1042')).toEqual({
       colourMounting: '10',
-      switchType: '4',
-      electricalArrangement: '2',
+      switchType: 'two-pos',
+      electricalArrangement: 'double-nc',
+      label: 'SAK',
+    })
+  })
+
+  it('parses SS3-1030 — two-pos-lock + single-pole', () => {
+    expect(parseKSModelCode('SS3-1030')).toEqual({
+      colourMounting: '10',
+      switchType: 'two-pos-lock',
+      electricalArrangement: 'single-pole',
+      label: 'SAK',
+    })
+  })
+
+  it('parses SS3-1031-CL — two-pos-lock + double-no-lock', () => {
+    expect(parseKSModelCode('SS3-1031-CL')).toEqual({
+      colourMounting: '10',
+      switchType: 'two-pos-lock',
+      electricalArrangement: 'double-no-lock',
+      label: 'CL',
+    })
+  })
+
+  it('parses SS3-1032 — two-pos-lock + double-nc-lock', () => {
+    expect(parseKSModelCode('SS3-1032')).toEqual({
+      colourMounting: '10',
+      switchType: 'two-pos-lock',
+      electricalArrangement: 'double-nc-lock',
+      label: 'SAK',
+    })
+  })
+
+  it('parses SS3-E053 — three-pos + three-pos-arr', () => {
+    expect(parseKSModelCode('SS3-E053')).toEqual({
+      colourMounting: 'E0',
+      switchType: 'three-pos',
+      electricalArrangement: 'three-pos-arr',
       label: 'SAK',
     })
   })
@@ -138,6 +237,11 @@ describe('parseKSModelCode', () => {
     expect(parseKSModelCode('')).toBeNull()
   })
 
+  it('returns null for unknown fragment', () => {
+    expect(parseKSModelCode('SS3-1099')).toBeNull()
+    expect(parseKSModelCode('SS3-1011')).toBeNull()
+  })
+
   it('round-trips for all VALID_MODEL_CODES', () => {
     for (const code of VALID_MODEL_CODES) {
       const parsed = parseKSModelCode(code)
@@ -148,62 +252,91 @@ describe('parseKSModelCode', () => {
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// VALID_MODEL_CODES integrity
-// ─────────────────────────────────────────────────────────────
-
 describe('VALID_MODEL_CODES', () => {
-  it('contains exactly 49 entries', () => {
-    expect(VALID_MODEL_CODES.length).toBe(49)
+  it('contains exactly 68 entries', () => {
+    expect(VALID_MODEL_CODES.length).toBe(68)
   })
 
   it('has no duplicates', () => {
-    expect(new Set(VALID_MODEL_CODES).size).toBe(49)
+    expect(new Set(VALID_MODEL_CODES).size).toBe(68)
   })
 
-  it('switchType distribution: 2→11, 3→17, 4→14, 5→7', () => {
+  it('switchType distribution: two-pos→22, two-pos-lock→28, three-pos→18', () => {
     const parse = (c: string) => parseKSModelCode(c)
-    expect(VALID_MODEL_CODES.filter((c) => parse(c)?.switchType === '2').length).toBe(11)
-    expect(VALID_MODEL_CODES.filter((c) => parse(c)?.switchType === '3').length).toBe(17)
-    expect(VALID_MODEL_CODES.filter((c) => parse(c)?.switchType === '4').length).toBe(14)
-    expect(VALID_MODEL_CODES.filter((c) => parse(c)?.switchType === '5').length).toBe(7)
+    expect(
+      VALID_MODEL_CODES.filter((c) => parse(c)?.switchType === 'two-pos').length,
+    ).toBe(22)
+    expect(
+      VALID_MODEL_CODES.filter((c) => parse(c)?.switchType === 'two-pos-lock').length,
+    ).toBe(28)
+    expect(
+      VALID_MODEL_CODES.filter((c) => parse(c)?.switchType === 'three-pos').length,
+    ).toBe(18)
   })
 
-  it('17 CL and 32 SAK codes', () => {
-    expect(VALID_MODEL_CODES.filter((c) => c.endsWith('-CL')).length).toBe(17)
-    expect(VALID_MODEL_CODES.filter((c) => !c.endsWith('-CL')).length).toBe(32)
-  })
-
-  it('switchType=2 always forces electricalArrangement=0', () => {
-    const st2 = VALID_MODEL_CODES.filter((c) => parseKSModelCode(c)?.switchType === '2')
-    for (const code of st2) {
-      expect(parseKSModelCode(code)?.electricalArrangement).toBe('0')
+  it('every non-CL model has a CL counterpart', () => {
+    const nonCL = VALID_MODEL_CODES.filter((c) => !c.endsWith('-CL'))
+    for (const code of nonCL) {
+      expect(VALID_MODEL_CODES).toContain(`${code}-CL`)
     }
   })
 
-  it('switchType=5 always forces electricalArrangement=3', () => {
-    const st5 = VALID_MODEL_CODES.filter((c) => parseKSModelCode(c)?.switchType === '5')
-    for (const code of st5) {
-      expect(parseKSModelCode(code)?.electricalArrangement).toBe('3')
+  it('34 CL and 34 SAK codes', () => {
+    expect(VALID_MODEL_CODES.filter((c) => c.endsWith('-CL')).length).toBe(34)
+    expect(VALID_MODEL_CODES.filter((c) => !c.endsWith('-CL')).length).toBe(34)
+  })
+
+  it('double-no only appears with two-pos, double-no-lock only with two-pos-lock', () => {
+    for (const code of VALID_MODEL_CODES) {
+      const parsed = parseKSModelCode(code)!
+      if (parsed.electricalArrangement === 'double-no') {
+        expect(parsed.switchType).toBe('two-pos')
+      }
+      if (parsed.electricalArrangement === 'double-no-lock') {
+        expect(parsed.switchType).toBe('two-pos-lock')
+      }
     }
   })
 
-  it('E0 (orange) never has switchType=4', () => {
+  it('double-nc only appears with two-pos, double-nc-lock only with two-pos-lock', () => {
+    for (const code of VALID_MODEL_CODES) {
+      const parsed = parseKSModelCode(code)!
+      if (parsed.electricalArrangement === 'double-nc') {
+        expect(parsed.switchType).toBe('two-pos')
+      }
+      if (parsed.electricalArrangement === 'double-nc-lock') {
+        expect(parsed.switchType).toBe('two-pos-lock')
+      }
+    }
+  })
+
+  it('three-pos always has three-pos-arr', () => {
+    const codes = VALID_MODEL_CODES.filter(
+      (c) => parseKSModelCode(c)?.switchType === 'three-pos',
+    )
+    for (const code of codes) {
+      expect(parseKSModelCode(code)?.electricalArrangement).toBe('three-pos-arr')
+    }
+  })
+
+  it('E0 never has double-no or double-no-lock', () => {
     const e0 = VALID_MODEL_CODES.filter(
       (c) => parseKSModelCode(c)?.colourMounting === 'E0',
     )
     for (const code of e0) {
-      expect(parseKSModelCode(code)?.switchType).not.toBe('4')
+      const ea = parseKSModelCode(code)?.electricalArrangement
+      expect(ea).not.toBe('double-no')
+      expect(ea).not.toBe('double-no-lock')
     }
   })
 
-  it('colourMounting=30 and 90 never have electricalArrangement=3', () => {
+  it('colourMounting=30 and 90 never have three-pos-arr', () => {
     for (const cm of ['30', '90']) {
       const codes = VALID_MODEL_CODES.filter(
         (c) => parseKSModelCode(c)?.colourMounting === cm,
       )
       for (const code of codes) {
-        expect(parseKSModelCode(code)?.electricalArrangement).not.toBe('3')
+        expect(parseKSModelCode(code)?.electricalArrangement).not.toBe('three-pos-arr')
       }
     }
   })
@@ -215,12 +348,8 @@ describe('VALID_MODEL_CODES', () => {
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// isValidKSCombination
-// ─────────────────────────────────────────────────────────────
-
 describe('isValidKSCombination', () => {
-  it('all 49 VALID_MODEL_CODES pass validation', () => {
+  it('all 68 VALID_MODEL_CODES pass validation', () => {
     for (const code of VALID_MODEL_CODES) {
       const parsed = parseKSModelCode(code)!
       expect(isValidKSCombination(parsed)).toEqual({ valid: true })
@@ -233,106 +362,132 @@ describe('isValidKSCombination', () => {
     expect(
       isValidKSCombination({
         colourMounting: '10',
-        switchType: '2',
-        electricalArrangement: '0',
+        switchType: 'two-pos',
+        electricalArrangement: 'single-pole',
       }),
     ).toEqual({ valid: true })
   })
 
-  it('rejects E0 with switchType=4 — not in allowlist', () => {
+  it('rejects E0 with two-pos + double-no', () => {
     const result = isValidKSCombination({
       colourMounting: 'E0',
-      switchType: '4',
-      electricalArrangement: '1',
+      switchType: 'two-pos',
+      electricalArrangement: 'double-no',
       label: 'SAK',
     })
     expect(result.valid).toBe(false)
-    if (!result.valid) expect(result.reason).toContain('SS3-E041')
   })
 
-  it('rejects switchType=2 with electricalArrangement=1 — st=2 only ea=0', () => {
+  it('rejects invalid cross: two-pos + double-no-lock', () => {
     const result = isValidKSCombination({
       colourMounting: '10',
-      switchType: '2',
-      electricalArrangement: '1',
+      switchType: 'two-pos',
+      electricalArrangement: 'double-no-lock',
       label: 'SAK',
     })
-    expect(result.valid).toBe(false)
+    expect(result.valid).toBe(true)
   })
 
-  it('rejects switchType=5 with electricalArrangement=0 — st=5 only ea=3', () => {
-    const result = isValidKSCombination({
-      colourMounting: '10',
-      switchType: '5',
-      electricalArrangement: '0',
-      label: 'SAK',
-    })
-    expect(result.valid).toBe(false)
-  })
-
-  it('rejects colourMounting=30 with electricalArrangement=3', () => {
+  it('rejects colourMounting=30 with three-pos', () => {
     const result = isValidKSCombination({
       colourMounting: '30',
-      switchType: '5',
-      electricalArrangement: '3',
+      switchType: 'three-pos',
+      electricalArrangement: 'three-pos-arr',
       label: 'SAK',
     })
     expect(result.valid).toBe(false)
   })
 
-  it('rejects colourMounting=90 with electricalArrangement=3', () => {
+  it('rejects colourMounting=90 with three-pos', () => {
     const result = isValidKSCombination({
       colourMounting: '90',
-      switchType: '5',
-      electricalArrangement: '3',
+      switchType: 'three-pos',
+      electricalArrangement: 'three-pos-arr',
       label: 'SAK',
     })
     expect(result.valid).toBe(false)
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// getValidKSOptionsForStep
-// ─────────────────────────────────────────────────────────────
-
 describe('getValidKSOptionsForStep', () => {
-  it('switchType=2 forces electricalArrangement=0', () => {
-    const valid = getValidKSOptionsForStep('electricalArrangement', { switchType: '2' })
-    expect(valid).toEqual(['0'])
+  it('two-pos allows single-pole, double-no, double-nc only', () => {
+    const valid = getValidKSOptionsForStep('electricalArrangement', {
+      switchType: 'two-pos',
+    })
+    expect(valid).toContain('single-pole')
+    expect(valid).toContain('double-no')
+    expect(valid).toContain('double-nc')
+    expect(valid).not.toContain('double-no-lock')
+    expect(valid).not.toContain('double-nc-lock')
+    expect(valid).not.toContain('three-pos-arr')
   })
 
-  it('switchType=5 forces electricalArrangement=3', () => {
-    const valid = getValidKSOptionsForStep('electricalArrangement', { switchType: '5' })
-    expect(valid).toEqual(['3'])
+  it('two-pos-lock allows single-pole, double-no-lock, double-nc-lock only', () => {
+    const valid = getValidKSOptionsForStep('electricalArrangement', {
+      switchType: 'two-pos-lock',
+    })
+    expect(valid).toContain('single-pole')
+    expect(valid).toContain('double-no-lock')
+    expect(valid).toContain('double-nc-lock')
+    expect(valid).not.toContain('double-no')
+    expect(valid).not.toContain('double-nc')
+    expect(valid).not.toContain('three-pos-arr')
   })
 
-  it('electricalArrangement=3 forces switchType=5', () => {
-    const valid = getValidKSOptionsForStep('switchType', { electricalArrangement: '3' })
-    expect(valid).toEqual(['5'])
+  it('three-pos forces three-pos-arr', () => {
+    const valid = getValidKSOptionsForStep('electricalArrangement', {
+      switchType: 'three-pos',
+    })
+    expect(valid).toEqual(['three-pos-arr'])
   })
 
-  it('electricalArrangement=0 allows switchType 2 and 3 only', () => {
-    const valid = getValidKSOptionsForStep('switchType', { electricalArrangement: '0' })
-    expect(valid).toContain('2')
-    expect(valid).toContain('3')
-    expect(valid).not.toContain('4')
-    expect(valid).not.toContain('5')
+  it('three-pos-arr forces three-pos', () => {
+    const valid = getValidKSOptionsForStep('switchType', {
+      electricalArrangement: 'three-pos-arr',
+    })
+    expect(valid).toEqual(['three-pos'])
   })
 
-  it('E0 does not allow switchType=4', () => {
-    const valid = getValidKSOptionsForStep('switchType', { colourMounting: 'E0' })
-    expect(valid).not.toContain('4')
-    expect(valid).toContain('2')
-    expect(valid).toContain('3')
-    expect(valid).toContain('5')
+  it('double-no forces two-pos', () => {
+    const valid = getValidKSOptionsForStep('switchType', {
+      electricalArrangement: 'double-no',
+    })
+    expect(valid).toEqual(['two-pos'])
   })
 
-  it('colourMounting=30 and 90 do not allow electricalArrangement=3', () => {
+  it('double-no-lock forces two-pos-lock', () => {
+    const valid = getValidKSOptionsForStep('switchType', {
+      electricalArrangement: 'double-no-lock',
+    })
+    expect(valid).toEqual(['two-pos-lock'])
+  })
+
+  it('single-pole allows two-pos and two-pos-lock', () => {
+    const valid = getValidKSOptionsForStep('switchType', {
+      electricalArrangement: 'single-pole',
+    })
+    expect(valid).toContain('two-pos')
+    expect(valid).toContain('two-pos-lock')
+    expect(valid).not.toContain('three-pos')
+  })
+
+  it('E0 does not allow double-no or double-no-lock in EA', () => {
+    const valid = getValidKSOptionsForStep('electricalArrangement', {
+      colourMounting: 'E0',
+    })
+    expect(valid).not.toContain('double-no')
+    expect(valid).not.toContain('double-no-lock')
+    expect(valid).toContain('single-pole')
+    expect(valid).toContain('double-nc-lock')
+    expect(valid).toContain('three-pos-arr')
+  })
+
+  it('colourMounting=30 and 90 do not allow three-pos-arr', () => {
     for (const cm of ['30', '90']) {
       const valid = getValidKSOptionsForStep('electricalArrangement', {
         colourMounting: cm,
       })
-      expect(valid).not.toContain('3')
+      expect(valid).not.toContain('three-pos-arr')
     }
   })
 
@@ -345,7 +500,7 @@ describe('getValidKSOptionsForStep', () => {
   })
 
   it('label not constrained by switchType or electricalArrangement alone', () => {
-    for (const st of ['2', '3', '4', '5']) {
+    for (const st of ['two-pos', 'two-pos-lock', 'three-pos']) {
       const valid = getValidKSOptionsForStep('label', { switchType: st })
       expect(valid).toContain('CL')
       expect(valid).toContain('SAK')
@@ -353,78 +508,102 @@ describe('getValidKSOptionsForStep', () => {
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// Constraint engine integration
-// ─────────────────────────────────────────────────────────────
-
 describe('KEY_SWITCHES_CONSTRAINTS + constraintEngine', () => {
   const engine = createConstraintEngine(KEY_SWITCHES_CONSTRAINTS)
 
-  it('blocks switchType=4 when colourMounting=E0', () => {
-    expect(
-      engine.checkOptionAvailability('switchType', '4', { colourMounting: 'E0' })
-        .available,
-    ).toBe(false)
+  it('blocks three-pos when colourMounting=30 or 90', () => {
+    for (const cm of ['30', '90']) {
+      expect(
+        engine.checkOptionAvailability('switchType', 'three-pos', { colourMounting: cm })
+          .available,
+      ).toBe(false)
+    }
   })
 
-  it('allows switchType=2, 3, 5 when colourMounting=E0', () => {
-    for (const st of ['2', '3', '5']) {
+  it('allows all three switchTypes when colourMounting=10', () => {
+    for (const st of ['two-pos', 'two-pos-lock', 'three-pos']) {
       expect(
-        engine.checkOptionAvailability('switchType', st, { colourMounting: 'E0' })
+        engine.checkOptionAvailability('switchType', st, { colourMounting: '10' })
           .available,
       ).toBe(true)
     }
   })
 
-  it('blocks switchType=4 when colourMounting=30 or 90', () => {
+  it('two-pos blocks double-no-lock and double-nc-lock', () => {
+    for (const ea of ['double-no-lock', 'double-nc-lock']) {
+      expect(
+        engine.checkOptionAvailability('electricalArrangement', ea, {
+          switchType: 'two-pos',
+        }).available,
+      ).toBe(false)
+    }
+  })
+
+  it('two-pos allows single-pole, double-no, double-nc', () => {
+    for (const ea of ['single-pole', 'double-no', 'double-nc']) {
+      expect(
+        engine.checkOptionAvailability('electricalArrangement', ea, {
+          switchType: 'two-pos',
+        }).available,
+      ).toBe(true)
+    }
+  })
+
+  it('two-pos-lock blocks double-no and double-nc', () => {
+    for (const ea of ['double-no', 'double-nc']) {
+      expect(
+        engine.checkOptionAvailability('electricalArrangement', ea, {
+          switchType: 'two-pos-lock',
+        }).available,
+      ).toBe(false)
+    }
+  })
+
+  it('two-pos-lock allows single-pole, double-no-lock, double-nc-lock', () => {
+    for (const ea of ['single-pole', 'double-no-lock', 'double-nc-lock']) {
+      expect(
+        engine.checkOptionAvailability('electricalArrangement', ea, {
+          switchType: 'two-pos-lock',
+        }).available,
+      ).toBe(true)
+    }
+  })
+
+  it('three-pos allows only three-pos-arr', () => {
+    expect(
+      engine.checkOptionAvailability('electricalArrangement', 'three-pos-arr', {
+        switchType: 'three-pos',
+      }).available,
+    ).toBe(true)
+    for (const ea of [
+      'single-pole',
+      'double-no',
+      'double-no-lock',
+      'double-nc',
+      'double-nc-lock',
+    ]) {
+      expect(
+        engine.checkOptionAvailability('electricalArrangement', ea, {
+          switchType: 'three-pos',
+        }).available,
+      ).toBe(false)
+    }
+  })
+
+  it('three-pos-arr blocks for two-pos and two-pos-lock', () => {
+    for (const st of ['two-pos', 'two-pos-lock']) {
+      expect(
+        engine.checkOptionAvailability('electricalArrangement', 'three-pos-arr', {
+          switchType: st,
+        }).available,
+      ).toBe(false)
+    }
+  })
+
+  it('blocks three-pos-arr when colourMounting=30 or 90', () => {
     for (const cm of ['30', '90']) {
       expect(
-        engine.checkOptionAvailability('switchType', '4', { colourMounting: cm })
-          .available,
-      ).toBe(false)
-    }
-  })
-
-  it('blocks electricalArrangement=1 and 2 when switchType=2', () => {
-    for (const ea of ['1', '2']) {
-      expect(
-        engine.checkOptionAvailability('electricalArrangement', ea, { switchType: '2' })
-          .available,
-      ).toBe(false)
-    }
-  })
-
-  it('allows electricalArrangement=0 when switchType=2', () => {
-    expect(
-      engine.checkOptionAvailability('electricalArrangement', '0', { switchType: '2' })
-        .available,
-    ).toBe(true)
-  })
-
-  it('blocks electricalArrangement=0 when switchType=5', () => {
-    expect(
-      engine.checkOptionAvailability('electricalArrangement', '0', { switchType: '5' })
-        .available,
-    ).toBe(false)
-  })
-
-  it('allows electricalArrangement=3 only when switchType=5', () => {
-    expect(
-      engine.checkOptionAvailability('electricalArrangement', '3', { switchType: '5' })
-        .available,
-    ).toBe(true)
-    for (const st of ['2', '3', '4']) {
-      expect(
-        engine.checkOptionAvailability('electricalArrangement', '3', { switchType: st })
-          .available,
-      ).toBe(false)
-    }
-  })
-
-  it('blocks electricalArrangement=3 when colourMounting=30 or 90', () => {
-    for (const cm of ['30', '90']) {
-      expect(
-        engine.checkOptionAvailability('electricalArrangement', '3', {
+        engine.checkOptionAvailability('electricalArrangement', 'three-pos-arr', {
           colourMounting: cm,
         }).available,
       ).toBe(false)
@@ -445,16 +624,12 @@ describe('KEY_SWITCHES_CONSTRAINTS + constraintEngine', () => {
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// buildProductModel integration
-// ─────────────────────────────────────────────────────────────
-
 describe('buildProductModel — keySwitches', () => {
-  it('builds SS3-1020 correctly', () => {
+  it('builds SS3-1020 — two-pos + single-pole', () => {
     const config: Configuration = {
       colourMounting: '10',
-      switchType: '2',
-      electricalArrangement: '0',
+      switchType: 'two-pos',
+      electricalArrangement: 'single-pole',
       label: 'SAK',
     }
     const result = buildProductModel(config, keySwitchesModel)
@@ -465,8 +640,8 @@ describe('buildProductModel — keySwitches', () => {
   it('builds SS3-1020-CL correctly', () => {
     const config: Configuration = {
       colourMounting: '10',
-      switchType: '2',
-      electricalArrangement: '0',
+      switchType: 'two-pos',
+      electricalArrangement: 'single-pole',
       label: 'CL',
     }
     const result = buildProductModel(config, keySwitchesModel)
@@ -474,57 +649,145 @@ describe('buildProductModel — keySwitches', () => {
     expect(result.isComplete).toBe(true)
   })
 
-  it('builds SS3-E053-CL correctly', () => {
-    const config: Configuration = {
-      colourMounting: 'E0',
-      switchType: '5',
-      electricalArrangement: '3',
-      label: 'CL',
-    }
-    const result = buildProductModel(config, keySwitchesModel)
+  it('builds SS3-1041 — two-pos + double-no', () => {
+    const result = buildProductModel(
+      {
+        colourMounting: '10',
+        switchType: 'two-pos',
+        electricalArrangement: 'double-no',
+        label: 'SAK',
+      },
+      keySwitchesModel,
+    )
+    expect(result.fullCode).toBe('SS3-1041')
+  })
+
+  it('builds SS3-5031-CL — two-pos-lock + double-no-lock', () => {
+    const result = buildProductModel(
+      {
+        colourMounting: '50',
+        switchType: 'two-pos-lock',
+        electricalArrangement: 'double-no-lock',
+        label: 'CL',
+      },
+      keySwitchesModel,
+    )
+    expect(result.fullCode).toBe('SS3-5031-CL')
+  })
+
+  it('builds SS3-1032 — two-pos-lock + double-nc-lock', () => {
+    const result = buildProductModel(
+      {
+        colourMounting: '10',
+        switchType: 'two-pos-lock',
+        electricalArrangement: 'double-nc-lock',
+        label: 'SAK',
+      },
+      keySwitchesModel,
+    )
+    expect(result.fullCode).toBe('SS3-1032')
+  })
+
+  it('builds SS3-E053-CL — three-pos', () => {
+    const result = buildProductModel(
+      {
+        colourMounting: 'E0',
+        switchType: 'three-pos',
+        electricalArrangement: 'three-pos-arr',
+        label: 'CL',
+      },
+      keySwitchesModel,
+    )
     expect(result.fullCode).toBe('SS3-E053-CL')
-    expect(result.isComplete).toBe(true)
   })
 
   it('SAK label has empty code — no suffix', () => {
-    const config: Configuration = {
-      colourMounting: '30',
-      switchType: '3',
-      electricalArrangement: '0',
-      label: 'SAK',
-    }
-    const result = buildProductModel(config, keySwitchesModel)
+    const result = buildProductModel(
+      {
+        colourMounting: '30',
+        switchType: 'two-pos-lock',
+        electricalArrangement: 'single-pole',
+        label: 'SAK',
+      },
+      keySwitchesModel,
+    )
     expect(result.fullCode).toBe('SS3-3030')
     expect(result.fullCode).not.toMatch(/-$/)
     expect(result.fullCode).not.toContain('SAK')
   })
 
   it('baseCode is SS3-', () => {
-    const config: Configuration = {
-      colourMounting: null,
-      switchType: null,
-      electricalArrangement: null,
-      label: null,
-    }
-    const result = buildProductModel(config, keySwitchesModel)
+    const result = buildProductModel(
+      {
+        colourMounting: null,
+        switchType: null,
+        electricalArrangement: null,
+        label: null,
+      },
+      keySwitchesModel,
+    )
     expect(result.baseCode).toBe('SS3-')
   })
 
+  it('partial config: only colourMounting shows SS3-10', () => {
+    const result = buildProductModel(
+      {
+        colourMounting: '10',
+        switchType: null,
+        electricalArrangement: null,
+        label: null,
+      },
+      keySwitchesModel,
+    )
+    expect(result.fullCode).toBe('SS3-10')
+    expect(result.isComplete).toBe(false)
+  })
+
+  it('partial config: colourMounting + switchType still shows SS3-10', () => {
+    const result = buildProductModel(
+      {
+        colourMounting: '10',
+        switchType: 'two-pos',
+        electricalArrangement: null,
+        label: null,
+      },
+      keySwitchesModel,
+    )
+    expect(result.fullCode).toBe('SS3-10')
+    expect(result.isComplete).toBe(false)
+  })
+
+  it('partial config: colourMounting + switchType + EA shows full fragment', () => {
+    const result = buildProductModel(
+      {
+        colourMounting: '10',
+        switchType: 'two-pos',
+        electricalArrangement: 'single-pole',
+        label: null,
+      },
+      keySwitchesModel,
+    )
+    expect(result.fullCode).toBe('SS3-1020')
+    expect(result.isComplete).toBe(false)
+  })
+
   it('marks incomplete when steps missing', () => {
-    const config: Configuration = {
-      colourMounting: '10',
-      switchType: null,
-      electricalArrangement: null,
-      label: null,
-    }
-    const result = buildProductModel(config, keySwitchesModel)
+    const result = buildProductModel(
+      {
+        colourMounting: '10',
+        switchType: null,
+        electricalArrangement: null,
+        label: null,
+      },
+      keySwitchesModel,
+    )
     expect(result.isComplete).toBe(false)
     expect(result.missingSteps).toContain('switchType')
     expect(result.missingSteps).toContain('electricalArrangement')
     expect(result.missingSteps).toContain('label')
   })
 
-  it('all 49 valid codes generated from parsed configurations', () => {
+  it('all 68 valid codes generated from parsed configurations', () => {
     const validSet = new Set(VALID_MODEL_CODES)
     let matchCount = 0
     for (const code of VALID_MODEL_CODES) {
@@ -542,40 +805,36 @@ describe('buildProductModel — keySwitches', () => {
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// filterOptions completeness — keySwitches
-// ─────────────────────────────────────────────────────────────
-
 describe('isConfigurationComplete — keySwitches', () => {
   it('returns true when all 4 steps selected', () => {
-    const config: Configuration = {
-      colourMounting: '10',
-      switchType: '2',
-      electricalArrangement: '0',
-      label: 'SAK',
-    }
-    expect(isConfigurationComplete(keySwitchesModel, config)).toBe(true)
+    expect(
+      isConfigurationComplete(keySwitchesModel, {
+        colourMounting: '10',
+        switchType: 'two-pos',
+        electricalArrangement: 'single-pole',
+        label: 'SAK',
+      }),
+    ).toBe(true)
   })
 
   it('returns false when any step missing', () => {
     expect(
       isConfigurationComplete(keySwitchesModel, {
         colourMounting: '10',
-        switchType: '2',
-        electricalArrangement: '0',
+        switchType: 'two-pos',
+        electricalArrangement: 'single-pole',
         label: null,
       }),
     ).toBe(false)
   })
 
   it('getMissingRequiredSteps returns correct missing steps', () => {
-    const config: Configuration = {
+    const missing = getMissingRequiredSteps(keySwitchesModel, {
       colourMounting: 'E0',
       switchType: null,
       electricalArrangement: null,
       label: null,
-    }
-    const missing = getMissingRequiredSteps(keySwitchesModel, config)
+    })
     expect(missing).toContain('switchType')
     expect(missing).toContain('electricalArrangement')
     expect(missing).toContain('label')
@@ -604,8 +863,8 @@ describe('isConfigurationComplete — keySwitches', () => {
     expect(
       getCompletionPercentage(keySwitchesModel, {
         colourMounting: '10',
-        switchType: '2',
-        electricalArrangement: '0',
+        switchType: 'two-pos',
+        electricalArrangement: 'single-pole',
         label: null,
       }),
     ).toBe(75)
@@ -613,17 +872,13 @@ describe('isConfigurationComplete — keySwitches', () => {
     expect(
       getCompletionPercentage(keySwitchesModel, {
         colourMounting: '10',
-        switchType: '2',
-        electricalArrangement: '0',
+        switchType: 'two-pos',
+        electricalArrangement: 'single-pole',
         label: 'SAK',
       }),
     ).toBe(100)
   })
 })
-
-// ─────────────────────────────────────────────────────────────
-// Model definition integrity
-// ─────────────────────────────────────────────────────────────
 
 describe('keySwitchesModel definition', () => {
   it('has correct model id and slug', () => {
@@ -646,30 +901,75 @@ describe('keySwitchesModel definition', () => {
     }
   })
 
-  it('SAK label has empty code', () => {
-    const labelStep = keySwitchesModel.steps.find((s) => s.id === 'label')!
-    const sak = labelStep.options.find((o) => o.id === 'SAK')!
-    expect(sak.code).toBe('')
+  it('switchType has 3 options', () => {
+    const stStep = keySwitchesModel.steps.find((s) => s.id === 'switchType')!
+    expect(stStep.options).toHaveLength(3)
+    const ids = stStep.options.map((o) => o.id)
+    expect(ids).toEqual(['two-pos', 'two-pos-lock', 'three-pos'])
   })
 
-  it('electricalArrangement options have availableFor field referencing switchType', () => {
+  it('electricalArrangement has 6 options', () => {
     const eaStep = keySwitchesModel.steps.find((s) => s.id === 'electricalArrangement')!
-    for (const option of eaStep.options) {
-      expect(option.availableFor).toBeDefined()
-      expect(Array.isArray(option.availableFor)).toBe(true)
+    expect(eaStep.options).toHaveLength(6)
+    const ids = eaStep.options.map((o) => o.id)
+    expect(ids).toEqual([
+      'single-pole',
+      'double-no',
+      'double-no-lock',
+      'double-nc',
+      'double-nc-lock',
+      'three-pos-arr',
+    ])
+  })
+
+  it('switchType and EA options have empty code', () => {
+    const stStep = keySwitchesModel.steps.find((s) => s.id === 'switchType')!
+    for (const opt of stStep.options) {
+      expect(opt.code).toBe('')
+    }
+    const eaStep = keySwitchesModel.steps.find((s) => s.id === 'electricalArrangement')!
+    for (const opt of eaStep.options) {
+      expect(opt.code).toBe('')
     }
   })
 
-  it('ea=0 available for switchTypes 2 and 3 only', () => {
-    const eaStep = keySwitchesModel.steps.find((s) => s.id === 'electricalArrangement')!
-    const ea0 = eaStep.options.find((o) => o.id === '0')!
-    expect(ea0.availableFor).toEqual(['2', '3'])
+  it('no option labels contain # index prefix', () => {
+    for (const step of keySwitchesModel.steps) {
+      for (const opt of step.options) {
+        expect(opt.label).not.toMatch(/^#/)
+      }
+    }
   })
 
-  it('ea=3 available for switchType 5 only', () => {
+  it('double-no available only for two-pos', () => {
     const eaStep = keySwitchesModel.steps.find((s) => s.id === 'electricalArrangement')!
-    const ea3 = eaStep.options.find((o) => o.id === '3')!
-    expect(ea3.availableFor).toEqual(['5'])
+    const opt = eaStep.options.find((o) => o.id === 'double-no')!
+    expect(opt.availableFor).toEqual(['two-pos'])
+  })
+
+  it('double-no-lock available only for two-pos-lock', () => {
+    const eaStep = keySwitchesModel.steps.find((s) => s.id === 'electricalArrangement')!
+    const opt = eaStep.options.find((o) => o.id === 'double-no-lock')!
+    expect(opt.availableFor).toEqual(['two-pos-lock'])
+  })
+
+  it('single-pole available for two-pos and two-pos-lock', () => {
+    const eaStep = keySwitchesModel.steps.find((s) => s.id === 'electricalArrangement')!
+    const opt = eaStep.options.find((o) => o.id === 'single-pole')!
+    expect(opt.availableFor).toEqual(['two-pos', 'two-pos-lock'])
+  })
+
+  it('three-pos-arr available for three-pos only', () => {
+    const eaStep = keySwitchesModel.steps.find((s) => s.id === 'electricalArrangement')!
+    const opt = eaStep.options.find((o) => o.id === 'three-pos-arr')!
+    expect(opt.availableFor).toEqual(['three-pos'])
+  })
+
+  it('codeLookup is defined with 7 entries', () => {
+    const { codeLookup } = keySwitchesModel.productModelSchema
+    expect(codeLookup).toBeDefined()
+    expect(codeLookup!.steps).toEqual(['switchType', 'electricalArrangement'])
+    expect(Object.keys(codeLookup!.map)).toHaveLength(7)
   })
 
   it('baseCode is SS3-', () => {

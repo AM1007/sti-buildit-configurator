@@ -61,11 +61,17 @@ export interface Step {
   options: Option[]
 }
 
+export interface CodeLookupEntry {
+  steps: StepId[]
+  map: Record<string, string>
+}
+
 export interface ProductModelSchema {
   baseCode: string
   partsOrder: StepId[]
   separator: 'none' | 'dash'
   separatorMap?: Record<StepId, string>
+  codeLookup?: CodeLookupEntry
 }
 
 export interface ModelDefinition {
