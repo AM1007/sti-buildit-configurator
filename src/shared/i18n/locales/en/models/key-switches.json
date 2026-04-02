@@ -31,10 +31,10 @@
       "title": "ELECTRICAL CONFIGURATION",
       "options": {
         "single-pole": "Single Pole Changeover",
-        "double-no": "Double Pole Normally Open",
-        "double-no-lock": "Double Pole Normally Open Latching",
-        "double-nc": "Double Pole Normally Closed",
-        "double-nc-lock": "Double Pole Normally Closed Latching",
+        "double-no": "Double pole, NO",
+        "double-no-lock": "Double pole, NO, latching",
+        "double-nc": "Double pole, NC",
+        "double-nc-lock": "Double pole, NC, latching",
         "three-pos-arr": "Three-Position Key Switch"
       }
     },
@@ -42,7 +42,7 @@
       "title": "MARKING",
       "options": {
         "SAK": "Self-Assemble Label Kit",
-        "CL": "#CL Custom Label (NON-RETURNABLE)"
+        "CL": "#CL Custom labelling in Ukrainian or English (NON-RETURNABLE)"
       }
     }
   }

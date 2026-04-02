@@ -46,8 +46,8 @@
     "label": {
       "title": "MARKING",
       "options": {
-        "SAK": "#SAK Self-adhesive label kit",
-        "CL": "#CL Custom marking (NON-RETURNABLE)"
+        "SAK": "Self-adhesive label kit",
+        "CL": "#CL Custom labelling in Ukrainian or English (NON-RETURNABLE)"
       }
     }
   }

@@ -113,7 +113,6 @@ const steps: Step[] = [
         label: '#6 Pneumatic EXTENDED LEAD TIMES',
         code: '6',
         image: `${IMG}/PUSH BUTTON TYPE/6-Pneumatic-EXTENDED-LEAD-TIMES.webp`,
-        notes: 'EXTENDED LEAD TIMES',
       },
     ],
   },

@@ -267,6 +267,7 @@ export const DEBUG_MATRICES = {
 const WPB_STEPS = ['housingColour', 'buttonColour', 'buttonType', 'label']
 
 function wpbAllowlistFn(stepId: string, config: Configuration): Set<string> | null {
+  if (stepId === 'electricalArrangements') return null
   return buildAllowlistSet(stepId, config, WPB_STEPS, (s, o) =>
     getValidWPBOptionsForStep(s as never, o as never),
   )

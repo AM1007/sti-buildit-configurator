@@ -24,8 +24,8 @@
       "options": {
         "HOUSE_FLAME": "#HF House Flame symbol",
         "RUNNING_MAN": "#RM Running Man symbol",
-        "SELF_ASSEMBLE": "#SAK Self-adhesive label kit",
-        "CL": "#CL Custom marking (NON-RETURNABLE)"
+        "SELF_ASSEMBLE": "Self-adhesive label kit",
+        "CL": "#CL Custom labelling in Ukrainian or English (NON-RETURNABLE)"
       }
     },
     "electricalArrangement": {

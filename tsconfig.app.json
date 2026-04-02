@@ -22,7 +22,6 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
 
-    "baseUrl": ".",
     "paths": {
       "@shared/*": ["./src/shared/*"],
       "@shared": ["./src/shared/index.ts"],

@@ -6,6 +6,7 @@ export const VALID_MODEL_CODES: readonly string[] = [
   'SS3-1R14',
   'SS3-1R14-CL',
   'SS3-1W14',
+  'SS3-1W14-CL',
 
   'SS3-3G14',
   'SS3-3G14-CL',
@@ -17,6 +18,7 @@ export const VALID_MODEL_CODES: readonly string[] = [
   'SS3-5R14',
   'SS3-5R14-CL',
   'SS3-5G14',
+  'SS3-5G14-CL',
 
   'SS3-7W14',
   'SS3-7W14-CL',
@@ -41,6 +43,7 @@ export const VALID_MODEL_CODES: readonly string[] = [
   'SS3-3W60-CL',
 
   'SS3-5Y60',
+  'SS3-5Y60-CL',
 
   'SS3-7G60',
   'SS3-7G60-CL',
@@ -56,6 +59,7 @@ export const VALID_MODEL_CODES: readonly string[] = [
   'SS3-3G04',
   'SS3-3G04-CL',
   'SS3-3W04',
+  'SS3-3W04-CL',
 
   'SS3-5Y04',
   'SS3-5Y04-CL',
@@ -67,6 +71,7 @@ export const VALID_MODEL_CODES: readonly string[] = [
   'SS3-7W04',
   'SS3-7W04-CL',
   'SS3-7B04',
+  'SS3-7B04-CL',
   'SS3-7R04',
   'SS3-7R04-CL',
 
@@ -77,6 +82,7 @@ export const VALID_MODEL_CODES: readonly string[] = [
   'SS3-9Y04-CL',
 
   'SS3-EE04',
+  'SS3-EE04-CL',
 ] as const
 
 const VALID_MODEL_SET = new Set(VALID_MODEL_CODES)

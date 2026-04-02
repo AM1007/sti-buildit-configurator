@@ -5,7 +5,7 @@
     "series": "StopperSwitch Series",
     "badges": ["Dual Mount", "Low / High Voltage"],
     "heroTitle": "Indoor Push Buttons for Signalling and Control",
-    "heroDescription": "Low and high voltage push buttons supporting Key-to-Reset, Momentary and Pneumatic operating modes. Available in single-pole switching and multifunction signal configurations.\n\nDual mounting system compatible with standard UK back boxes for flush or surface installation.\n\nIntended for indoor access control, emergency signalling and building management systems."
+    "heroDescription": "Low and high voltage push buttons supporting Key-to-Reset, Momentary and Pneumatic operating modes. Available in single-pole switching and multifunction signal configurations.\n\nDual mounting system compatible with standard back boxes for flush or surface installation.\n\nIntended for indoor access control, emergency signalling and building management systems."
   },
   "steps": {
     "colour": {
@@ -41,15 +41,15 @@
     "electricalArrangements": {
       "title": "ELECTRICAL CONFIGURATION",
       "options": {
-        "0": "#0 Single-pole switching",
-        "4": "#4 Multifunction signal (SPC & DPC)"
+        "0": "#0 Single pole (SPC)",
+        "4": "#4 SPC & DPC (dual pole)"
       }
     },
     "label": {
       "title": "MARKING",
       "options": {
-        "SAK": "#SAK Self-adhesive label kit",
-        "CL": "#CL Custom marking (NON-RETURNABLE)"
+        "SAK": "Self-adhesive label kit",
+        "CL": "#CL Custom labelling in Ukrainian or English (NON-RETURNABLE)"
       }
     }
   }
