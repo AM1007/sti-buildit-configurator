@@ -5,7 +5,7 @@
     "series": "StopperSwitch Series",
     "badges": ["IP67 Rated", "Outdoor Use", "Key-to-Reset"],
     "heroTitle": "IP67 Push Buttons for Outdoor Installation",
-    "heroDescription": "IP67-rated low and high voltage push buttons available in Momentary (StopperPush) and Latching Key-to-Reset (StopperLatch) configurations. Multifunction electrical signal configuration (SPC & DPC).\n\nSurface-mounted housing. Multiple housing and button colour combinations with standard or custom marking options. Compatible with Universal Stopper protective enclosures.\n\nIntended for outdoor installations and wet environments requiring sealed signalling and control devices."
+    "heroDescription": "IP67-rated low and high voltage push buttons available in Momentary (StopperPush) and Latching Key-to-Reset (StopperLatch) configurations. Multifunction electrical signal configuration (SPC & DPC).\n\nSurface-mounted housing. Multiple housing and button colour combinations with standard or custom marking options.\n\nIntended for outdoor installations and wet environments requiring sealed signalling and control devices."
   },
   "steps": {
     "housingColour": {
