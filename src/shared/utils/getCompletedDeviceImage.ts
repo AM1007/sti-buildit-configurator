@@ -261,15 +261,6 @@ export function getCompletedDeviceImage({
     }
   }
 
-  if (modelId === 'stopper-stations') {
-    if (config.cover === '2') {
-      return {
-        imagePath: null,
-        reason: 'Shield cover variants do not have preview images',
-      }
-    }
-  }
-
   const colourValue = config[modelConfig.colourStep] ?? ''
   const colourFolder = modelConfig.colourMap[colourValue]
 
@@ -313,12 +304,6 @@ export function canHaveCompletedDeviceImage(
 
   if (!modelConfig) {
     return false
-  }
-
-  if (modelId === 'stopper-stations') {
-    if (config.cover === '2') {
-      return false
-    }
   }
 
   const colourValue = config[modelConfig.colourStep] ?? ''

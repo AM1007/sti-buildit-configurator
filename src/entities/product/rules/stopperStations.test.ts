@@ -17,141 +17,103 @@ import {
 import { createConstraintEngine } from '@entities/product/rules/constraintEngine'
 import type { Configuration } from '@shared/types'
 
-// ─────────────────────────────────────────────────────────────
-// buildSSModelCode
-// ─────────────────────────────────────────────────────────────
-
 describe('buildSSModelCode', () => {
-  it('builds SS2000ES-EN correctly', () => {
+  it('builds SS2000NT-EN correctly', () => {
     expect(
       buildSSModelCode({
         colour: '0',
-        cover: '0',
         activation: '0',
-        text: 'ES',
+        text: 'NT',
         language: 'EN',
       }),
-    ).toBe('SS2000ES-EN')
+    ).toBe('SS2000NT-EN')
   })
 
-  it('builds SS2001ZA-ZL correctly — ZL language', () => {
+  it('builds SS2001ZA-UA correctly', () => {
     expect(
       buildSSModelCode({
         colour: '0',
-        cover: '0',
         activation: '1',
         text: 'ZA',
-        language: 'ZL',
+        language: 'UA',
       }),
-    ).toBe('SS2001ZA-ZL')
+    ).toBe('SS2001ZA-UA')
   })
 
-  it('builds SS2107ZA-ZL correctly — green ZL', () => {
+  it('builds SS2107ZA-UA correctly', () => {
     expect(
       buildSSModelCode({
         colour: '1',
-        cover: '0',
         activation: '7',
         text: 'ZA',
-        language: 'ZL',
+        language: 'UA',
       }),
-    ).toBe('SS2107ZA-ZL')
+    ).toBe('SS2107ZA-UA')
   })
 
   it('activation sub-variants use single digit code', () => {
     expect(
       buildSSModelCode({
         colour: '0',
-        cover: '0',
         activation: '6',
-        text: 'EM',
+        text: 'NT',
         language: 'EN',
       }),
-    ).toBe('SS2006EM-EN')
+    ).toBe('SS2006NT-EN')
     expect(
       buildSSModelCode({
         colour: '0',
-        cover: '0',
         activation: '7',
-        text: 'AB',
+        text: 'ZA',
         language: 'EN',
       }),
-    ).toBe('SS2007AB-EN')
-  })
-
-  it('installationOptions not included in model code', () => {
-    const withoutInstall = buildSSModelCode({
-      colour: '0',
-      cover: '0',
-      activation: '1',
-      text: 'EM',
-      language: 'EN',
-    })
-    expect(withoutInstall).toBe('SS2001EM-EN')
-    expect(withoutInstall).not.toContain('KIT')
-    expect(withoutInstall).not.toContain('none')
+    ).toBe('SS2007ZA-EN')
   })
 
   it('returns null when any required field is missing', () => {
-    expect(
-      buildSSModelCode({ colour: '0', cover: '0', activation: '0', text: 'ES' }),
-    ).toBeNull()
-    expect(
-      buildSSModelCode({ colour: '0', cover: '0', activation: '0', language: 'EN' }),
-    ).toBeNull()
+    expect(buildSSModelCode({ colour: '0', activation: '0', text: 'NT' })).toBeNull()
+    expect(buildSSModelCode({ colour: '0', activation: '0', language: 'EN' })).toBeNull()
     expect(buildSSModelCode({})).toBeNull()
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// parseSSModelCode
-// ─────────────────────────────────────────────────────────────
-
 describe('parseSSModelCode', () => {
-  it('parses SS2000ES-EN correctly', () => {
-    expect(parseSSModelCode('SS2000ES-EN')).toEqual({
+  it('parses SS2000NT-EN correctly', () => {
+    expect(parseSSModelCode('SS2000NT-EN')).toEqual({
       colour: '0',
-      cover: '0',
       activation: '0',
-      text: 'ES',
+      text: 'NT',
       language: 'EN',
     })
   })
 
-  it('parses SS2001ZA-ZL correctly', () => {
-    expect(parseSSModelCode('SS2001ZA-ZL')).toEqual({
+  it('parses SS2001ZA-UA correctly', () => {
+    expect(parseSSModelCode('SS2001ZA-UA')).toEqual({
       colour: '0',
-      cover: '0',
       activation: '1',
       text: 'ZA',
-      language: 'ZL',
+      language: 'UA',
     })
   })
 
-  it('parses SS2107ZA-ZL correctly', () => {
-    expect(parseSSModelCode('SS2107ZA-ZL')).toEqual({
+  it('parses SS2107ZA-UA correctly', () => {
+    expect(parseSSModelCode('SS2107ZA-UA')).toEqual({
       colour: '1',
-      cover: '0',
       activation: '7',
       text: 'ZA',
-      language: 'ZL',
+      language: 'UA',
     })
   })
 
   it('activation parses as single digit — sub-variants indistinguishable', () => {
-    expect(parseSSModelCode('SS2006EM-EN')?.activation).toBe('6')
-    expect(parseSSModelCode('SS2007AB-EN')?.activation).toBe('7')
-  })
-
-  it('installationOptions not present in parsed output', () => {
-    const parsed = parseSSModelCode('SS2000ES-EN')
-    expect(parsed).not.toHaveProperty('installationOptions')
+    expect(parseSSModelCode('SS2006NT-EN')?.activation).toBe('6')
+    expect(parseSSModelCode('SS2007ZA-EN')?.activation).toBe('7')
   })
 
   it('returns null for invalid format', () => {
     expect(parseSSModelCode('INVALID')).toBeNull()
-    expect(parseSSModelCode('SS200ES-EN')).toBeNull()
-    expect(parseSSModelCode('SS2000ES')).toBeNull()
+    expect(parseSSModelCode('SS200NT-EN')).toBeNull()
+    expect(parseSSModelCode('SS2000NT')).toBeNull()
     expect(parseSSModelCode('')).toBeNull()
   })
 
@@ -165,62 +127,52 @@ describe('parseSSModelCode', () => {
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// VALID_MODEL_CODES integrity
-// ─────────────────────────────────────────────────────────────
-
 describe('VALID_MODEL_CODES', () => {
-  it('contains exactly 209 entries', () => {
-    expect(VALID_MODEL_CODES.length).toBe(209)
+  it('contains exactly 142 entries', () => {
+    expect(VALID_MODEL_CODES.length).toBe(142)
   })
 
   it('has no duplicates', () => {
-    expect(new Set(VALID_MODEL_CODES).size).toBe(209)
+    expect(new Set(VALID_MODEL_CODES).size).toBe(142)
   })
 
-  it('colour distribution: 0→44, 1→44, 2→55, 3→25, 4→36, 5→5', () => {
+  it('colour distribution: 0→27, 1→37, 2→25, 3→21, 4→24, 5→8', () => {
     const parse = (c: string) => parseSSModelCode(c)
-    expect(VALID_MODEL_CODES.filter((c) => parse(c)?.colour === '0').length).toBe(44)
-    expect(VALID_MODEL_CODES.filter((c) => parse(c)?.colour === '1').length).toBe(44)
-    expect(VALID_MODEL_CODES.filter((c) => parse(c)?.colour === '2').length).toBe(55)
-    expect(VALID_MODEL_CODES.filter((c) => parse(c)?.colour === '3').length).toBe(25)
-    expect(VALID_MODEL_CODES.filter((c) => parse(c)?.colour === '4').length).toBe(36)
-    expect(VALID_MODEL_CODES.filter((c) => parse(c)?.colour === '5').length).toBe(5)
+    expect(VALID_MODEL_CODES.filter((c) => parse(c)?.colour === '0').length).toBe(27)
+    expect(VALID_MODEL_CODES.filter((c) => parse(c)?.colour === '1').length).toBe(37)
+    expect(VALID_MODEL_CODES.filter((c) => parse(c)?.colour === '2').length).toBe(25)
+    expect(VALID_MODEL_CODES.filter((c) => parse(c)?.colour === '3').length).toBe(21)
+    expect(VALID_MODEL_CODES.filter((c) => parse(c)?.colour === '4').length).toBe(24)
+    expect(VALID_MODEL_CODES.filter((c) => parse(c)?.colour === '5').length).toBe(8)
   })
 
-  it('cover is always 0 in all codes', () => {
-    for (const code of VALID_MODEL_CODES) {
-      expect(parseSSModelCode(code)?.cover).toBe('0')
-    }
-  })
-
-  it('only 2 ZL language codes', () => {
-    const zl = VALID_MODEL_CODES.filter((c) => parseSSModelCode(c)?.language === 'ZL')
-    expect(zl).toHaveLength(2)
-    expect(zl).toContain('SS2001ZA-ZL')
-    expect(zl).toContain('SS2107ZA-ZL')
-  })
-
-  it('ZL language only with text=ZA', () => {
-    for (const code of VALID_MODEL_CODES.filter(
-      (c) => parseSSModelCode(c)?.language === 'ZL',
-    )) {
+  it('UA language codes exist for ZA text only', () => {
+    const ua = VALID_MODEL_CODES.filter((c) => parseSSModelCode(c)?.language === 'UA')
+    for (const code of ua) {
       expect(parseSSModelCode(code)?.text).toBe('ZA')
     }
   })
 
-  it('ZL language only with colours 0 and 1', () => {
-    for (const code of VALID_MODEL_CODES.filter(
-      (c) => parseSSModelCode(c)?.language === 'ZL',
-    )) {
-      expect(['0', '1']).toContain(parseSSModelCode(code)?.colour)
-    }
+  it('UA language available for all colours', () => {
+    const uaColours = new Set(
+      VALID_MODEL_CODES.filter((c) => parseSSModelCode(c)?.language === 'UA').map(
+        (c) => parseSSModelCode(c)?.colour,
+      ),
+    )
+    expect(uaColours).toEqual(new Set(['0', '1', '2', '3', '4', '5']))
   })
 
   it('XT text only appears with colour=1 (green)', () => {
     const xtCodes = VALID_MODEL_CODES.filter((c) => parseSSModelCode(c)?.text === 'XT')
     for (const code of xtCodes) {
       expect(parseSSModelCode(code)?.colour).toBe('1')
+    }
+  })
+
+  it('EM text only appears with colour=3 (white)', () => {
+    const emCodes = VALID_MODEL_CODES.filter((c) => parseSSModelCode(c)?.text === 'EM')
+    for (const code of emCodes) {
+      expect(parseSSModelCode(code)?.colour).toBe('3')
     }
   })
 
@@ -248,12 +200,8 @@ describe('VALID_MODEL_CODES', () => {
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// isValidSSCombination
-// ─────────────────────────────────────────────────────────────
-
 describe('isValidSSCombination', () => {
-  it('all 209 VALID_MODEL_CODES pass validation', () => {
+  it('all 142 VALID_MODEL_CODES pass validation', () => {
     for (const code of VALID_MODEL_CODES) {
       const parsed = parseSSModelCode(code)!
       expect(isValidSSCombination(parsed)).toEqual({ valid: true })
@@ -265,36 +213,21 @@ describe('isValidSSCombination', () => {
     expect(isValidSSCombination({ colour: '0' })).toEqual({ valid: true })
   })
 
-  it('rejects ZL language with non-ZA text', () => {
+  it('rejects UA language with non-ZA text', () => {
     const result = isValidSSCombination({
       colour: '0',
-      cover: '0',
-      activation: '1',
-      text: 'EM',
-      language: 'ZL',
+      activation: '0',
+      text: 'NT',
+      language: 'UA',
     })
     expect(result.valid).toBe(false)
-    if (!result.valid) expect(result.reason).toContain('SS2001EM-ZL')
-  })
-
-  it('rejects ZL language with colour=2, 3, 4, or 5', () => {
-    for (const colour of ['2', '3', '4', '5']) {
-      const result = isValidSSCombination({
-        colour,
-        cover: '0',
-        activation: '1',
-        text: 'ZA',
-        language: 'ZL',
-      })
-      expect(result.valid).toBe(false)
-    }
+    if (!result.valid) expect(result.reason).toContain('SS2000NT-UA')
   })
 
   it('rejects XT text with any colour except 1', () => {
     for (const colour of ['0', '2', '3', '4', '5']) {
       const result = isValidSSCombination({
         colour,
-        cover: '0',
         activation: '2',
         text: 'XT',
         language: 'EN',
@@ -306,38 +239,28 @@ describe('isValidSSCombination', () => {
   it('rejects orange colour with activation=0', () => {
     const result = isValidSSCombination({
       colour: '5',
-      cover: '0',
       activation: '0',
-      text: 'EM',
+      text: 'ZA',
       language: 'EN',
     })
     expect(result.valid).toBe(false)
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// getValidSSOptionsForStep
-// ─────────────────────────────────────────────────────────────
-
 describe('getValidSSOptionsForStep', () => {
-  it('cover always returns only 0', () => {
-    expect(getValidSSOptionsForStep('cover', {})).toEqual(['0'])
-    expect(getValidSSOptionsForStep('cover', { colour: '2' })).toEqual(['0'])
-  })
-
-  it('ZL language only valid with ZA text', () => {
-    const valid = getValidSSOptionsForStep('text', { language: 'ZL' })
+  it('UA language only valid with ZA text', () => {
+    const valid = getValidSSOptionsForStep('text', { language: 'UA' })
     expect(valid).toEqual(['ZA'])
   })
 
-  it('ZA text allows both EN and ZL languages — only text that does', () => {
+  it('ZA text allows both EN and UA languages', () => {
     const valid = getValidSSOptionsForStep('language', { text: 'ZA' })
     expect(valid).toContain('EN')
-    expect(valid).toContain('ZL')
+    expect(valid).toContain('UA')
   })
 
   it('non-ZA texts only allow EN language', () => {
-    for (const text of ['EM', 'ES', 'EX', 'LD', 'NT', 'AB', 'XT']) {
+    for (const text of ['EM', 'NT', 'XT', 'PX']) {
       const valid = getValidSSOptionsForStep('language', { text })
       expect(valid).toEqual(['EN'])
     }
@@ -362,35 +285,23 @@ describe('getValidSSOptionsForStep', () => {
     expect(valid).toEqual(['1'])
   })
 
-  it('ZL language restricts colour to 0 and 1 only', () => {
-    const valid = getValidSSOptionsForStep('colour', { language: 'ZL' })
+  it('UA language available for all colours', () => {
+    const valid = getValidSSOptionsForStep('colour', { language: 'UA' })
     expect(valid).toContain('0')
     expect(valid).toContain('1')
-    expect(valid).not.toContain('2')
-    expect(valid).not.toContain('3')
-    expect(valid).not.toContain('4')
-    expect(valid).not.toContain('5')
+    expect(valid).toContain('2')
+    expect(valid).toContain('3')
+    expect(valid).toContain('4')
+    expect(valid).toContain('5')
   })
 })
-
-// ─────────────────────────────────────────────────────────────
-// Constraint engine integration
-// ─────────────────────────────────────────────────────────────
 
 describe('STOPPER_STATIONS_CONSTRAINTS + constraintEngine', () => {
   const engine = createConstraintEngine(STOPPER_STATIONS_CONSTRAINTS)
 
-  it('blocks ZL language when colour is 2, 3, 4, or 5', () => {
-    for (const colour of ['2', '3', '4', '5']) {
-      expect(engine.checkOptionAvailability('language', 'ZL', { colour }).available).toBe(
-        false,
-      )
-    }
-  })
-
-  it('allows ZL language when colour is 0 or 1', () => {
-    for (const colour of ['0', '1']) {
-      expect(engine.checkOptionAvailability('language', 'ZL', { colour }).available).toBe(
+  it('allows UA language for all colours', () => {
+    for (const colour of ['0', '1', '2', '3', '4', '5']) {
+      expect(engine.checkOptionAvailability('language', 'UA', { colour }).available).toBe(
         true,
       )
     }
@@ -446,9 +357,9 @@ describe('STOPPER_STATIONS_CONSTRAINTS + constraintEngine', () => {
     }
   })
 
-  it('blocks ZL language when text is not ZA', () => {
-    for (const text of ['EM', 'ES', 'EX', 'NT', 'AB']) {
-      expect(engine.checkOptionAvailability('language', 'ZL', { text }).available).toBe(
+  it('blocks UA language when text is not ZA', () => {
+    for (const text of ['EM', 'NT', 'XT', 'PX']) {
+      expect(engine.checkOptionAvailability('language', 'UA', { text }).available).toBe(
         false,
       )
     }
@@ -459,75 +370,37 @@ describe('STOPPER_STATIONS_CONSTRAINTS + constraintEngine', () => {
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// buildProductModel integration
-// ─────────────────────────────────────────────────────────────
-
 describe('buildProductModel — stopperStations', () => {
-  it('builds SS2000ES-EN correctly', () => {
+  it('builds SS2000NT-EN correctly', () => {
     const config: Configuration = {
       colour: '0',
-      cover: '0',
       activation: '0',
-      text: 'ES',
+      text: 'NT',
       language: 'EN',
-      installationOptions: 'none',
     }
     const result = buildProductModel(config, stopperStationsModel)
-    expect(result.fullCode).toBe('SS2000ES-EN')
+    expect(result.fullCode).toBe('SS2000NT-EN')
     expect(result.isComplete).toBe(true)
   })
 
-  it('builds SS2001ZA-ZL correctly', () => {
+  it('builds SS2001ZA-UA correctly', () => {
     const config: Configuration = {
       colour: '0',
-      cover: '0',
       activation: '1',
       text: 'ZA',
-      language: 'ZL',
-      installationOptions: 'none',
+      language: 'UA',
     }
     const result = buildProductModel(config, stopperStationsModel)
-    expect(result.fullCode).toBe('SS2001ZA-ZL')
+    expect(result.fullCode).toBe('SS2001ZA-UA')
     expect(result.isComplete).toBe(true)
-  })
-
-  it('installationOptions with empty code produces no suffix', () => {
-    const config: Configuration = {
-      colour: '0',
-      cover: '0',
-      activation: '0',
-      text: 'ES',
-      language: 'EN',
-      installationOptions: 'none',
-    }
-    const result = buildProductModel(config, stopperStationsModel)
-    expect(result.fullCode).toBe('SS2000ES-EN')
-    expect(result.fullCode).not.toContain('none')
-  })
-
-  it('installationOptions with KIT code appends to SKU', () => {
-    const config: Configuration = {
-      colour: '0',
-      cover: '0',
-      activation: '1',
-      text: 'EM',
-      language: 'EN',
-      installationOptions: '&KIT-71100A-R',
-    }
-    const result = buildProductModel(config, stopperStationsModel)
-    expect(result.fullCode).toContain('SS2001EM-EN')
-    expect(result.fullCode).toContain('&KIT-71100A-R')
   })
 
   it('baseCode is SS2', () => {
     const config: Configuration = {
       colour: null,
-      cover: null,
       activation: null,
       text: null,
       language: null,
-      installationOptions: null,
     }
     const result = buildProductModel(config, stopperStationsModel)
     expect(result.baseCode).toBe('SS2')
@@ -536,25 +409,32 @@ describe('buildProductModel — stopperStations', () => {
   it('language uses dash separator', () => {
     const config: Configuration = {
       colour: '1',
-      cover: '0',
       activation: '0',
-      text: 'EM',
+      text: 'NT',
       language: 'EN',
-      installationOptions: 'none',
     }
     const result = buildProductModel(config, stopperStationsModel)
-    expect(result.fullCode).toBe('SS2100EM-EN')
+    expect(result.fullCode).toBe('SS2100NT-EN')
     expect(result.fullCode).toContain('-EN')
+  })
+
+  it('cover digit 0 is embedded between colour and activation', () => {
+    const config: Configuration = {
+      colour: '3',
+      activation: '2',
+      text: 'ZA',
+      language: 'EN',
+    }
+    const result = buildProductModel(config, stopperStationsModel)
+    expect(result.fullCode).toBe('SS2302ZA-EN')
   })
 
   it('marks incomplete when steps missing', () => {
     const config: Configuration = {
       colour: '0',
-      cover: '0',
       activation: null,
       text: null,
       language: null,
-      installationOptions: null,
     }
     const result = buildProductModel(config, stopperStationsModel)
     expect(result.isComplete).toBe(false)
@@ -563,29 +443,23 @@ describe('buildProductModel — stopperStations', () => {
     expect(result.missingSteps).toContain('language')
   })
 
-  it('all 209 valid base codes generated from parsed configurations', () => {
+  it('all 142 valid base codes generated from parsed configurations', () => {
     const validSet = new Set(VALID_MODEL_CODES)
     let matchCount = 0
     for (const code of VALID_MODEL_CODES) {
       const parsed = parseSSModelCode(code)!
 
-      // activation sub-variants (6-red/6-green/6-blue, 7-red/7-green)
-      // cannot be recovered from a parsed code — the digit '6' or '7'
-      // is shared by all sub-variants. Skip these codes in the roundtrip
-      // test; they are covered by individual build/parse tests above.
       const activation = parsed.activation ?? null
       if (activation === '6' || activation === '7') {
-        matchCount++ // count as matched — roundtrip is not possible by design
+        matchCount++
         continue
       }
 
       const config: Configuration = {
         colour: parsed.colour ?? null,
-        cover: parsed.cover ?? null,
         activation,
         text: parsed.text ?? null,
         language: parsed.language ?? null,
-        installationOptions: 'none',
       }
       const result = buildProductModel(config, stopperStationsModel)
       if (validSet.has(result.fullCode)) matchCount++
@@ -594,19 +468,13 @@ describe('buildProductModel — stopperStations', () => {
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// filterOptions completeness — stopperStations
-// ─────────────────────────────────────────────────────────────
-
 describe('isConfigurationComplete — stopperStations', () => {
-  it('returns true when all 6 steps selected', () => {
+  it('returns true when all 4 steps selected', () => {
     const config: Configuration = {
       colour: '0',
-      cover: '0',
       activation: '0',
-      text: 'ES',
+      text: 'NT',
       language: 'EN',
-      installationOptions: 'none',
     }
     expect(isConfigurationComplete(stopperStationsModel, config)).toBe(true)
   })
@@ -615,11 +483,9 @@ describe('isConfigurationComplete — stopperStations', () => {
     expect(
       isConfigurationComplete(stopperStationsModel, {
         colour: '0',
-        cover: '0',
         activation: '0',
-        text: 'ES',
-        language: 'EN',
-        installationOptions: null,
+        text: 'NT',
+        language: null,
       }),
     ).toBe(false)
   })
@@ -627,71 +493,64 @@ describe('isConfigurationComplete — stopperStations', () => {
   it('getMissingRequiredSteps returns correct missing steps', () => {
     const config: Configuration = {
       colour: '0',
-      cover: '0',
       activation: '1',
       text: null,
       language: null,
-      installationOptions: null,
     }
     const missing = getMissingRequiredSteps(stopperStationsModel, config)
     expect(missing).toContain('text')
     expect(missing).toContain('language')
-    expect(missing).toContain('installationOptions')
     expect(missing).not.toContain('colour')
-    expect(missing).not.toContain('cover')
     expect(missing).not.toContain('activation')
   })
 
-  it('getCompletionPercentage for 6-step model', () => {
+  it('getCompletionPercentage for 4-step model', () => {
     expect(
       getCompletionPercentage(stopperStationsModel, {
         colour: null,
-        cover: null,
         activation: null,
         text: null,
         language: null,
-        installationOptions: null,
       }),
     ).toBe(0)
 
     expect(
       getCompletionPercentage(stopperStationsModel, {
         colour: '0',
-        cover: null,
         activation: null,
         text: null,
         language: null,
-        installationOptions: null,
       }),
-    ).toBe(17)
+    ).toBe(25)
 
     expect(
       getCompletionPercentage(stopperStationsModel, {
         colour: '0',
-        cover: '0',
         activation: '0',
         text: null,
         language: null,
-        installationOptions: null,
       }),
     ).toBe(50)
 
     expect(
       getCompletionPercentage(stopperStationsModel, {
         colour: '0',
-        cover: '0',
         activation: '0',
-        text: 'ES',
+        text: 'NT',
+        language: null,
+      }),
+    ).toBe(75)
+
+    expect(
+      getCompletionPercentage(stopperStationsModel, {
+        colour: '0',
+        activation: '0',
+        text: 'NT',
         language: 'EN',
-        installationOptions: 'none',
       }),
     ).toBe(100)
   })
 })
-
-// ─────────────────────────────────────────────────────────────
-// Model definition integrity
-// ─────────────────────────────────────────────────────────────
 
 describe('stopperStationsModel definition', () => {
   it('has correct model id and slug', () => {
@@ -699,31 +558,30 @@ describe('stopperStationsModel definition', () => {
     expect(stopperStationsModel.slug).toBe('stopper-stations')
   })
 
-  it('has 6 steps in stepOrder', () => {
-    expect(stopperStationsModel.stepOrder).toHaveLength(6)
+  it('has 4 steps in stepOrder', () => {
+    expect(stopperStationsModel.stepOrder).toHaveLength(4)
     expect(stopperStationsModel.stepOrder).toEqual([
       'colour',
-      'cover',
       'activation',
       'text',
       'language',
-      'installationOptions',
     ])
   })
 
-  it('cover step has only one option — 0', () => {
-    const coverStep = stopperStationsModel.steps.find((s) => s.id === 'cover')!
-    expect(coverStep.options).toHaveLength(1)
-    expect(coverStep.options[0].id).toBe('0')
-  })
-
-  it('language step has 2 options — EN and ZL', () => {
+  it('language step has 2 options — EN and UA', () => {
     const langStep = stopperStationsModel.steps.find((s) => s.id === 'language')!
     const ids = langStep.options.map((o) => o.id)
     expect(ids).toContain('EN')
-    expect(ids).toContain('ZL')
+    expect(ids).toContain('UA')
+    expect(ids).not.toContain('ZL')
     expect(ids).not.toContain('ES')
     expect(ids).not.toContain('FR')
+  })
+
+  it('text step has 5 options', () => {
+    const textStep = stopperStationsModel.steps.find((s) => s.id === 'text')!
+    const ids = textStep.options.map((o) => o.id)
+    expect(ids).toEqual(['EM', 'NT', 'PX', 'XT', 'ZA'])
   })
 
   it('activation step has 13 options including sub-variants', () => {
@@ -739,24 +597,20 @@ describe('stopperStationsModel definition', () => {
     expect(act7).toHaveLength(2)
   })
 
-  it('installationOptions none has empty code', () => {
-    const ioStep = stopperStationsModel.steps.find((s) => s.id === 'installationOptions')!
-    const none = ioStep.options.find((o) => o.id === 'none')!
-    expect(none.code).toBe('')
-  })
-
   it('baseCode is SS2', () => {
     expect(stopperStationsModel.productModelSchema.baseCode).toBe('SS2')
   })
 
-  it('only language uses dash separator', () => {
+  it('activation separator embeds cover digit 0', () => {
+    const { separatorMap } = stopperStationsModel.productModelSchema
+    expect(separatorMap?.activation).toBe('0')
+  })
+
+  it('language uses dash separator', () => {
     const { separatorMap } = stopperStationsModel.productModelSchema
     expect(separatorMap?.language).toBe('-')
     expect(separatorMap?.colour).toBe('')
-    expect(separatorMap?.cover).toBe('')
-    expect(separatorMap?.activation).toBe('')
     expect(separatorMap?.text).toBe('')
-    expect(separatorMap?.installationOptions).toBe('')
   })
 
   it('all steps are required', () => {

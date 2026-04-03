@@ -5,7 +5,7 @@
     "series": "Series 2000",
     "badges": ["UL Listed", "ADA Compliant"],
     "heroTitle": "Configurable Push Buttons and Key Switches",
-    "heroDescription": "UL Listed push buttons and key-operated switches designed to reduce accidental activation. Multiple operating modes available, including Key-to-Reset, Turn-to-Reset, Momentary, Pneumatic and illuminated variants.\n\nAvailable in multiple colour configurations with standard or custom marking, optional protective cover and surface mounting kits. Universal mounting plate included.\n\nIntended for emergency systems, access control, HVAC shutdown and industrial signalling applications."
+    "heroDescription": "UL Listed push buttons and key-operated switches designed to reduce accidental activation. Multiple operating modes available, including Key-to-Reset, Turn-to-Reset, Momentary, Pneumatic and illuminated variants.\n\nAvailable in multiple colour configurations with standard or custom marking. Universal mounting plate included.\n\nIntended for emergency systems, access control, HVAC shutdown and industrial signalling applications."
   },
   "steps": {
     "colour": {
@@ -17,12 +17,6 @@
         "3": "#3 White",
         "4": "#4 Blue",
         "5": "#5 Orange"
-      }
-    },
-    "cover": {
-      "title": "PROTECTIVE COVER",
-      "options": {
-        "0": "#0 No cover"
       }
     },
     "activation": {
@@ -46,18 +40,10 @@
     "text": {
       "title": "MARKING",
       "options": {
-        "AB": "#AB ABORT",
         "EM": "#EM EMERGENCY",
-        "EX": "#EX EMERGENCY EXIT",
-        "PO": "#PO EMERGENCY POWER OFF",
-        "ES": "#ES EMERGENCY STOP",
-        "EV": "#EV EVACUATION",
-        "XT": "#XT EXIT",
-        "PS": "#PS FUEL PUMP SHUT-DOWN",
-        "HV": "#HV HVAC SHUT-DOWN",
-        "LD": "#LD LOCKDOWN",
-        "PX": "#PX PUSH TO EXIT",
         "NT": "#NT No text",
+        "PX": "#PX PUSH TO EXIT",
+        "XT": "#XT EXIT",
         "ZA": "#ZA Custom text (NON-RETURNABLE)"
       }
     },
@@ -65,26 +51,7 @@
       "title": "LANGUAGE",
       "options": {
         "EN": "#EN English",
-        "ES": "#ES Spanish",
-        "ZL": "#ZL Other language (NON-RETURNABLE)"
-      }
-    },
-    "installationOptions": {
-      "title": "INSTALLATION ACCESSORIES",
-      "options": {
-        "none": "# No additional mounting accessories required",
-        "&KIT-71100A-R": "#&KIT-71100A-R Red surface back box",
-        "&KIT-71100A-G": "#&KIT-71100A-G Green surface back box",
-        "&KIT-71100A-Y": "#&KIT-71100A-Y Yellow surface back box",
-        "&KIT-71100A-W": "#&KIT-71100A-W White surface back box",
-        "&KIT-71100A-B": "#&KIT-71100A-B Blue surface back box",
-        "&KIT-71100A-E": "#&KIT-71100A-E Orange surface back box",
-        "&KIT-71101B-R": "#&KIT-71101B-R Red deep surface mounting kit",
-        "&KIT-71101B-G": "#&KIT-71101B-G Green deep surface mounting kit",
-        "&KIT-71101B-Y": "#&KIT-71101B-Y Yellow deep surface mounting kit",
-        "&KIT-71101B-W": "#&KIT-71101B-W White deep surface mounting kit",
-        "&KIT-71101B-B": "#&KIT-71101B-B Blue deep surface mounting kit",
-        "&KIT-71101B-E": "#&KIT-71101B-E Orange deep surface mounting kit"
+        "UA": "#UA Ukrainian"
       }
     }
   }
