@@ -158,15 +158,15 @@ describe('parseIPBModelCode', () => {
 // ─────────────────────────────────────────────────────────────
 
 describe('VALID_MODEL_CODES', () => {
-  it('contains exactly 59 entries', () => {
-    expect(VALID_MODEL_CODES.length).toBe(59)
+  it('contains exactly 61 entries', () => {
+    expect(VALID_MODEL_CODES.length).toBe(61)
   })
 
   it('has no duplicates', () => {
-    expect(new Set(VALID_MODEL_CODES).size).toBe(59)
+    expect(new Set(VALID_MODEL_CODES).size).toBe(61)
   })
 
-  it('pushButtonType distribution: 0→24, 1→26, 6→9', () => {
+  it('pushButtonType distribution: 0→24, 1→26, 6→11', () => {
     const parse = (c: string) => parseIPBModelCode(c)
     expect(VALID_MODEL_CODES.filter((c) => parse(c)?.pushButtonType === '0').length).toBe(
       24,
@@ -175,15 +175,15 @@ describe('VALID_MODEL_CODES', () => {
       26,
     )
     expect(VALID_MODEL_CODES.filter((c) => parse(c)?.pushButtonType === '6').length).toBe(
-      9,
+      11,
     )
   })
 
-  it('27 CL and 32 SAK codes', () => {
+  it('28 CL and 33 SAK codes', () => {
     const cl = VALID_MODEL_CODES.filter((c) => c.endsWith('-CL'))
     const sak = VALID_MODEL_CODES.filter((c) => !c.endsWith('-CL'))
-    expect(cl.length).toBe(27)
-    expect(sak.length).toBe(32)
+    expect(cl.length).toBe(28)
+    expect(sak.length).toBe(33)
   })
 
   it('pneumatic (pbt=6) always has electricalArrangements=0', () => {
@@ -247,7 +247,7 @@ describe('VALID_MODEL_CODES', () => {
 // ─────────────────────────────────────────────────────────────
 
 describe('isValidIPBCombination', () => {
-  it('all 59 VALID_MODEL_CODES pass validation', () => {
+  it('all 61 VALID_MODEL_CODES pass validation', () => {
     for (const code of VALID_MODEL_CODES) {
       const parsed = parseIPBModelCode(code)!
       expect(isValidIPBCombination(parsed)).toEqual({ valid: true })
@@ -568,7 +568,7 @@ describe('buildProductModel — indoorPushButtons', () => {
     expect(result.missingSteps).toContain('label')
   })
 
-  it('all 59 valid codes generated from parsed configurations', () => {
+  it('all 61 valid codes generated from parsed configurations', () => {
     const validSet = new Set(VALID_MODEL_CODES)
     let matchCount = 0
     for (const code of VALID_MODEL_CODES) {

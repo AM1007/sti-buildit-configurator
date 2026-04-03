@@ -33,7 +33,7 @@
     "buttonType": {
       "title": "OPERATING MODE",
       "options": {
-        "0": "#0 Latching, Key-to-Reset",
+        "0": "#0 Latching (key-to-reset)",
         "1": "#1 Momentary"
       }
     },

@@ -48,7 +48,9 @@ export const VALID_MODEL_CODES: readonly string[] = [
   'SS3-7G60',
   'SS3-7G60-CL',
   'SS3-7R60',
+  'SS3-7R60-CL',
 
+  'SS3-9R60',
   'SS3-9R60-CL',
 
   'SS3-1R04',

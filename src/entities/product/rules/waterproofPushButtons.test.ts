@@ -159,38 +159,38 @@ describe('parseWPBModelCode', () => {
 // ─────────────────────────────────────────────────────────────
 
 describe('VALID_MODEL_CODES', () => {
-  it('contains exactly 36 entries', () => {
-    expect(VALID_MODEL_CODES.length).toBe(36)
+  it('contains exactly 47 entries', () => {
+    expect(VALID_MODEL_CODES.length).toBe(47)
   })
 
   it('has no duplicates', () => {
-    expect(new Set(VALID_MODEL_CODES).size).toBe(36)
+    expect(new Set(VALID_MODEL_CODES).size).toBe(47)
   })
 
-  it('housing distribution: 1→3, 3→6, 5→7, 7→11, 9→8, E→1', () => {
+  it('housing distribution: 1→4, 3→11, 5→8, 7→14, 9→8, E→2', () => {
     const parse = (c: string) => parseWPBModelCode(c)
     expect(VALID_MODEL_CODES.filter((c) => parse(c)?.housingColour === '1').length).toBe(
-      3,
+      4,
     )
     expect(VALID_MODEL_CODES.filter((c) => parse(c)?.housingColour === '3').length).toBe(
-      6,
+      11,
     )
     expect(VALID_MODEL_CODES.filter((c) => parse(c)?.housingColour === '5').length).toBe(
-      7,
+      8,
     )
     expect(VALID_MODEL_CODES.filter((c) => parse(c)?.housingColour === '7').length).toBe(
-      11,
+      14,
     )
     expect(VALID_MODEL_CODES.filter((c) => parse(c)?.housingColour === '9').length).toBe(
       8,
     )
     expect(VALID_MODEL_CODES.filter((c) => parse(c)?.housingColour === 'E').length).toBe(
-      1,
+      2,
     )
   })
 
-  it('13 CL and 23 SAK codes', () => {
-    expect(VALID_MODEL_CODES.filter((c) => c.endsWith('-CL')).length).toBe(13)
+  it('24 CL and 23 SAK codes', () => {
+    expect(VALID_MODEL_CODES.filter((c) => c.endsWith('-CL')).length).toBe(24)
     expect(VALID_MODEL_CODES.filter((c) => !c.endsWith('-CL')).length).toBe(23)
   })
 
@@ -202,12 +202,13 @@ describe('VALID_MODEL_CODES', () => {
     }
   })
 
-  it('orange housing (E) has exactly one SKU — WSS3-EE04', () => {
+  it('orange housing (E) has exactly two SKUs — WSS3-EE04 and WSS3-EE04-CL', () => {
     const eCodes = VALID_MODEL_CODES.filter(
       (c) => parseWPBModelCode(c)?.housingColour === 'E',
     )
-    expect(eCodes).toHaveLength(1)
-    expect(eCodes[0]).toBe('WSS3-EE04')
+    expect(eCodes).toHaveLength(2)
+    expect(eCodes).toContain('WSS3-EE04')
+    expect(eCodes).toContain('WSS3-EE04-CL')
   })
 
   it('orange housing never has buttonType=1', () => {
@@ -216,15 +217,6 @@ describe('VALID_MODEL_CODES', () => {
     )
     for (const code of eCodes) {
       expect(parseWPBModelCode(code)?.buttonType).not.toBe('1')
-    }
-  })
-
-  it('orange housing never has CL label', () => {
-    const eCodes = VALID_MODEL_CODES.filter(
-      (c) => parseWPBModelCode(c)?.housingColour === 'E',
-    )
-    for (const code of eCodes) {
-      expect(parseWPBModelCode(code)?.label).not.toBe('CL')
     }
   })
 
@@ -249,7 +241,7 @@ describe('VALID_MODEL_CODES', () => {
 // ─────────────────────────────────────────────────────────────
 
 describe('isValidWPBCombination', () => {
-  it('all 36 VALID_MODEL_CODES pass validation', () => {
+  it('all 47 VALID_MODEL_CODES pass validation', () => {
     for (const code of VALID_MODEL_CODES) {
       const parsed = parseWPBModelCode(code)!
       expect(isValidWPBCombination(parsed)).toEqual({ valid: true })
@@ -538,7 +530,7 @@ describe('buildProductModel — waterproofPushButtons', () => {
     expect(result.missingSteps).toContain('label')
   })
 
-  it('all 36 valid codes generated from parsed configurations', () => {
+  it('all 47 valid codes generated from parsed configurations', () => {
     const validSet = new Set(VALID_MODEL_CODES)
     let matchCount = 0
     for (const code of VALID_MODEL_CODES) {

@@ -6,13 +6,19 @@ export const VALID_MODEL_CODES: readonly string[] = [
   'WSS3-1R04',
   'WSS3-1R04-CL',
   'WSS3-1R14',
+  'WSS3-1R14-CL',
 
   'WSS3-3G04',
+  'WSS3-3G04-CL',
   'WSS3-3G14',
+  'WSS3-3G14-CL',
   'WSS3-3R04',
+  'WSS3-3R04-CL',
   'WSS3-3R14-CL',
   'WSS3-3W04',
+  'WSS3-3W04-CL',
   'WSS3-3W14',
+  'WSS3-3W14-CL',
 
   'WSS3-5R04',
   'WSS3-5R04-CL',
@@ -21,16 +27,20 @@ export const VALID_MODEL_CODES: readonly string[] = [
   'WSS3-5Y04',
   'WSS3-5Y04-CL',
   'WSS3-5Y14',
+  'WSS3-5Y14-CL',
 
   'WSS3-7B04',
   'WSS3-7B04-CL',
   'WSS3-7B14',
+  'WSS3-7B14-CL',
   'WSS3-7G04',
+  'WSS3-7G04-CL',
   'WSS3-7G14',
   'WSS3-7G14-CL',
   'WSS3-7R04',
   'WSS3-7R04-CL',
   'WSS3-7R14',
+  'WSS3-7R14-CL',
   'WSS3-7W04',
   'WSS3-7W04-CL',
 
@@ -44,6 +54,7 @@ export const VALID_MODEL_CODES: readonly string[] = [
   'WSS3-9W14-CL',
 
   'WSS3-EE04',
+  'WSS3-EE04-CL',
 ] as const
 
 const VALID_MODEL_SET = new Set(VALID_MODEL_CODES)
@@ -155,11 +166,11 @@ const HOUSING_TO_LABEL: ConstraintMatrix = {
   '5': ['CL', 'SAK'],
   '7': ['CL', 'SAK'],
   '9': ['CL', 'SAK'],
-  E: ['SAK'],
+  E: ['CL', 'SAK'],
 }
 
 const LABEL_TO_HOUSING: ConstraintMatrix = {
-  CL: ['1', '3', '5', '7', '9'],
+  CL: ['1', '3', '5', '7', '9', 'E'],
   SAK: ['1', '3', '5', '7', '9', 'E'],
 }
 
@@ -179,7 +190,7 @@ const BUTTONTYPE_TO_BUTTONCOLOUR: ConstraintMatrix = {
 
 const BUTTONCOLOUR_TO_LABEL: ConstraintMatrix = {
   B: ['CL', 'SAK'],
-  E: ['SAK'],
+  E: ['CL', 'SAK'],
   G: ['CL', 'SAK'],
   R: ['CL', 'SAK'],
   W: ['CL', 'SAK'],
@@ -187,7 +198,7 @@ const BUTTONCOLOUR_TO_LABEL: ConstraintMatrix = {
 }
 
 const LABEL_TO_BUTTONCOLOUR: ConstraintMatrix = {
-  CL: ['B', 'G', 'R', 'W', 'Y'],
+  CL: ['B', 'E', 'G', 'R', 'W', 'Y'],
   SAK: ['B', 'E', 'G', 'R', 'W', 'Y'],
 }
 

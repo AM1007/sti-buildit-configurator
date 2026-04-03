@@ -33,9 +33,9 @@
     "pushButtonType": {
       "title": "OPERATING MODE",
       "options": {
-        "0": "#0 Key-to-Reset",
+        "0": "#0 Latching (key-to-reset)",
         "1": "#1 Momentary",
-        "6": "#6 Pneumatic (EXTENDED LEAD TIME)"
+        "6": "#6 Pneumatic timer"
       }
     },
     "electricalArrangements": {
