@@ -109,10 +109,18 @@ export function CustomTextForm({
       )
     }
 
+    if (showLine2 && !line2.trim()) {
+      validationErrors.push(t('customText.line2Required'))
+    }
+
     if (showLine2 && line2.length > maxLength) {
       validationErrors.push(
         t('customText.lineExceedsMax', { line: '2', max: maxLength.toString() }),
       )
+    }
+
+    if (showLine3 && !line3.trim()) {
+      validationErrors.push(t('customText.line3Required'))
     }
 
     if (showLine3 && line3.length > maxLength) {

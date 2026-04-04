@@ -68,6 +68,7 @@ export const VALID_MODEL_CODES: readonly string[] = [
   'SS2109NT-EN',
   'SS2109PX-EN',
   'SS2109ZA-EN',
+  'SS2109ZA-UA',
 
   'SS2200ZA-EN',
   'SS2200ZA-UA',

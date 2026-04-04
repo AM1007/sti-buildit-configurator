@@ -248,6 +248,8 @@
     "linePlaceholder": "Line {line}",
     "maxCharacters": "Maximum {max} characters per line",
     "labelLine1Required": "Label line 1 is required",
+    "line2Required": "Line 2 is required",
+    "line3Required": "Line 3 is required",
     "coverLine1Required": "Cover line 1 is required",
     "lineExceedsMax": "Label line {line} exceeds {max} characters",
     "coverLineExceedsMax": "Cover line {line} exceeds {max} characters",

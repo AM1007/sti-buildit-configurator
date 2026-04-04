@@ -248,6 +248,8 @@
     "linePlaceholder": "Рядок {line}",
     "maxCharacters": "Максимум {max} символів у кожному рядку",
     "labelLine1Required": "Обов’язковий рядок 1 маркування",
+    "line2Required": "Рядок 2 обов'язковий",
+    "line3Required": "Рядок 3 обов'язковий",
     "coverLine1Required": "Обов’язковий рядок 1 для кришки",
     "lineExceedsMax": "Рядок {line} перевищує {max} символів",
     "coverLineExceedsMax": "Рядок {line} для кришки перевищує {max} символів",

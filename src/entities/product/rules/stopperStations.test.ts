@@ -128,18 +128,18 @@ describe('parseSSModelCode', () => {
 })
 
 describe('VALID_MODEL_CODES', () => {
-  it('contains exactly 142 entries', () => {
-    expect(VALID_MODEL_CODES.length).toBe(142)
+  it('contains exactly 143 entries', () => {
+    expect(VALID_MODEL_CODES.length).toBe(143)
   })
 
   it('has no duplicates', () => {
-    expect(new Set(VALID_MODEL_CODES).size).toBe(142)
+    expect(new Set(VALID_MODEL_CODES).size).toBe(143)
   })
 
   it('colour distribution: 0→27, 1→37, 2→25, 3→21, 4→24, 5→8', () => {
     const parse = (c: string) => parseSSModelCode(c)
     expect(VALID_MODEL_CODES.filter((c) => parse(c)?.colour === '0').length).toBe(27)
-    expect(VALID_MODEL_CODES.filter((c) => parse(c)?.colour === '1').length).toBe(37)
+    expect(VALID_MODEL_CODES.filter((c) => parse(c)?.colour === '1').length).toBe(38)
     expect(VALID_MODEL_CODES.filter((c) => parse(c)?.colour === '2').length).toBe(25)
     expect(VALID_MODEL_CODES.filter((c) => parse(c)?.colour === '3').length).toBe(21)
     expect(VALID_MODEL_CODES.filter((c) => parse(c)?.colour === '4').length).toBe(24)
@@ -201,7 +201,7 @@ describe('VALID_MODEL_CODES', () => {
 })
 
 describe('isValidSSCombination', () => {
-  it('all 142 VALID_MODEL_CODES pass validation', () => {
+  it('all 143 VALID_MODEL_CODES pass validation', () => {
     for (const code of VALID_MODEL_CODES) {
       const parsed = parseSSModelCode(code)!
       expect(isValidSSCombination(parsed)).toEqual({ valid: true })
@@ -443,7 +443,7 @@ describe('buildProductModel — stopperStations', () => {
     expect(result.missingSteps).toContain('language')
   })
 
-  it('all 142 valid base codes generated from parsed configurations', () => {
+  it('all 143 valid base codes generated from parsed configurations', () => {
     const validSet = new Set(VALID_MODEL_CODES)
     let matchCount = 0
     for (const code of VALID_MODEL_CODES) {
