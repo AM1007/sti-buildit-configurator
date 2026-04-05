@@ -38,24 +38,6 @@ const steps: Step[] = [
     required: true,
     options: [
       {
-        id: 'FIRE',
-        label: '# IN CASE OF FIRE LIFT COVER - BREAK GLASS',
-        code: '',
-        image: `${IMG}/LABEL/in case of fire.webp`,
-      },
-      {
-        id: 'EMERGENCY_DOOR',
-        label: '# IN CASE OF EMERGENCY - LIFT COVER BREAK GLASS TO OPEN DOOR',
-        code: '',
-        image: `${IMG}/LABEL/in case of emergency break glass.webp`,
-      },
-      {
-        id: 'EMERGENCY_OPERATE',
-        label: '# IN CASE OF EMERGENCY LIFT COVER - OPERATE DEVICE',
-        code: '',
-        image: `${IMG}/LABEL/in case of emergency operate.webp`,
-      },
-      {
         id: 'CL',
         label: '#CL Custom Label',
         code: 'CL',

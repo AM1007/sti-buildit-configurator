@@ -3,31 +3,29 @@ import { registerProductConstraints, buildAllowlistSet } from '../constraintRegi
 import type { Configuration } from '@shared/types'
 
 export const VALID_MODEL_CODES: readonly string[] = [
-  'STI-6930',
+  'STI-6930-CL',
   'STI-6930-PLAIN',
-  'STI-6930-G',
+  'STI-6930-G-CL',
   'STI-6930-G-PLAIN',
-  'STI-6930-Y',
   'STI-6930-Y-CL',
-  'STI-6930-W',
+  'STI-6930-Y-PLAIN',
+  'STI-6930-W-CL',
   'STI-6930-W-PLAIN',
-  'STI-6930-B',
-  'STI-6930-E',
+  'STI-6930-B-CL',
+  'STI-6930-B-PLAIN',
+  'STI-6930-E-CL',
+  'STI-6930-E-PLAIN',
 
-  'STI-6931',
   'STI-6931-CL',
   'STI-6931-PLAIN',
-  'STI-6931-G',
+  'STI-6931-G-CL',
   'STI-6931-G-PLAIN',
-  'STI-6931-Y',
   'STI-6931-Y-CL',
   'STI-6931-Y-PLAIN',
-  'STI-6931-W',
+  'STI-6931-W-CL',
   'STI-6931-W-PLAIN',
-  'STI-6931-B',
   'STI-6931-B-CL',
   'STI-6931-B-PLAIN',
-  'STI-6931-E',
   'STI-6931-E-CL',
   'STI-6931-E-PLAIN',
 ] as const
@@ -50,9 +48,6 @@ const COLOUR_TO_SKU_SUFFIX: Record<string, string> = {
 }
 
 const LABEL_TO_SKU_SUFFIX: Record<string, string> = {
-  FIRE: '',
-  EMERGENCY_DOOR: '',
-  EMERGENCY_OPERATE: '',
   CL: '-CL',
   PLAIN: '-PLAIN',
 }
@@ -83,17 +78,8 @@ const SKU_COLOUR_MAP: Record<string, string> = {
   E: 'E',
 }
 
-const COLOUR_TO_STANDARD_LABEL: Record<string, string> = {
-  R: 'FIRE',
-  G: 'EMERGENCY_DOOR',
-  Y: 'EMERGENCY_OPERATE',
-  W: 'EMERGENCY_OPERATE',
-  B: 'EMERGENCY_OPERATE',
-  E: 'EMERGENCY_OPERATE',
-}
-
 export function parseCPSModelCode(code: string): CPSSelectionState | null {
-  const match = code.match(/^STI-693([01])(?:-(G|Y|W|B|E))?(?:-(CL|PLAIN))?$/)
+  const match = code.match(/^STI-693([01])(?:-(G|Y|W|B|E))?-(CL|PLAIN)$/)
 
   if (!match) {
     return null
@@ -101,23 +87,14 @@ export function parseCPSModelCode(code: string): CPSSelectionState | null {
 
   const mounting = match[1]
   const colourCode = match[2] ?? ''
-  const labelCode = match[3] ?? ''
+  const labelCode = match[3]
 
   const colour = SKU_COLOUR_MAP[colourCode]
   if (!colour) {
     return null
   }
 
-  let label: string
-  if (labelCode === 'CL') {
-    label = 'CL'
-  } else if (labelCode === 'PLAIN') {
-    label = 'PLAIN'
-  } else {
-    label = COLOUR_TO_STANDARD_LABEL[colour]
-  }
-
-  return { mounting, colour, label }
+  return { mounting, colour, label: labelCode }
 }
 
 export function isValidCPSCombination(
@@ -163,19 +140,16 @@ export function getValidCPSOptionsForStep(
 }
 
 const COLOUR_TO_LABEL: ConstraintMatrix = {
-  R: ['FIRE', 'CL', 'PLAIN'],
-  G: ['EMERGENCY_DOOR', 'PLAIN'],
-  Y: ['EMERGENCY_OPERATE', 'CL', 'PLAIN'],
-  W: ['EMERGENCY_OPERATE', 'PLAIN'],
-  B: ['EMERGENCY_OPERATE', 'CL', 'PLAIN'],
-  E: ['EMERGENCY_OPERATE', 'CL', 'PLAIN'],
+  R: ['CL', 'PLAIN'],
+  G: ['CL', 'PLAIN'],
+  Y: ['CL', 'PLAIN'],
+  W: ['CL', 'PLAIN'],
+  B: ['CL', 'PLAIN'],
+  E: ['CL', 'PLAIN'],
 }
 
 const LABEL_TO_COLOUR: ConstraintMatrix = {
-  FIRE: ['R'],
-  EMERGENCY_DOOR: ['G'],
-  EMERGENCY_OPERATE: ['Y', 'W', 'B', 'E'],
-  CL: ['R', 'Y', 'B', 'E'],
+  CL: ['R', 'G', 'Y', 'W', 'B', 'E'],
   PLAIN: ['R', 'G', 'Y', 'W', 'B', 'E'],
 }
 

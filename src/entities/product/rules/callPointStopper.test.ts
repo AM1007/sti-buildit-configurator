@@ -17,75 +17,85 @@ import {
 import { createConstraintEngine } from '@entities/product/rules/constraintEngine'
 import type { Configuration } from '@shared/types'
 
-// ─────────────────────────────────────────────────────────────
-// buildCPSModelCode
-// ─────────────────────────────────────────────────────────────
-
 describe('buildCPSModelCode', () => {
-  it('builds flush red fire alarm — no suffixes', () => {
-    expect(buildCPSModelCode({ mounting: '0', colour: 'R', label: 'FIRE' })).toBe(
-      'STI-6930',
+  it('builds flush red CL', () => {
+    expect(buildCPSModelCode({ mounting: '0', colour: 'R', label: 'CL' })).toBe(
+      'STI-6930-CL',
     )
   })
 
-  it('builds surface red fire alarm — no colour suffix', () => {
-    expect(buildCPSModelCode({ mounting: '1', colour: 'R', label: 'FIRE' })).toBe(
-      'STI-6931',
+  it('builds flush red PLAIN', () => {
+    expect(buildCPSModelCode({ mounting: '0', colour: 'R', label: 'PLAIN' })).toBe(
+      'STI-6930-PLAIN',
     )
   })
 
-  it('builds surface red custom label', () => {
+  it('builds surface red CL', () => {
     expect(buildCPSModelCode({ mounting: '1', colour: 'R', label: 'CL' })).toBe(
       'STI-6931-CL',
     )
   })
 
-  it('builds flush green plain', () => {
+  it('builds flush green PLAIN', () => {
     expect(buildCPSModelCode({ mounting: '0', colour: 'G', label: 'PLAIN' })).toBe(
       'STI-6930-G-PLAIN',
     )
   })
 
-  it('builds surface yellow custom label', () => {
+  it('builds surface yellow CL', () => {
     expect(buildCPSModelCode({ mounting: '1', colour: 'Y', label: 'CL' })).toBe(
       'STI-6931-Y-CL',
     )
   })
 
-  it('builds surface blue plain', () => {
+  it('builds surface blue PLAIN', () => {
     expect(buildCPSModelCode({ mounting: '1', colour: 'B', label: 'PLAIN' })).toBe(
       'STI-6931-B-PLAIN',
     )
   })
 
-  it('builds surface orange emergency operate — no label suffix', () => {
-    expect(
-      buildCPSModelCode({ mounting: '1', colour: 'E', label: 'EMERGENCY_OPERATE' }),
-    ).toBe('STI-6931-E')
+  it('builds flush orange CL', () => {
+    expect(buildCPSModelCode({ mounting: '0', colour: 'E', label: 'CL' })).toBe(
+      'STI-6930-E-CL',
+    )
+  })
+
+  it('builds surface white PLAIN', () => {
+    expect(buildCPSModelCode({ mounting: '1', colour: 'W', label: 'PLAIN' })).toBe(
+      'STI-6931-W-PLAIN',
+    )
   })
 
   it('returns null when any field is missing', () => {
     expect(buildCPSModelCode({ mounting: '0', colour: 'R' })).toBeNull()
-    expect(buildCPSModelCode({ mounting: '0', label: 'FIRE' })).toBeNull()
-    expect(buildCPSModelCode({ colour: 'R', label: 'FIRE' })).toBeNull()
+    expect(buildCPSModelCode({ mounting: '0', label: 'CL' })).toBeNull()
+    expect(buildCPSModelCode({ colour: 'R', label: 'CL' })).toBeNull()
     expect(buildCPSModelCode({})).toBeNull()
+  })
+
+  it('returns null for unknown label', () => {
+    expect(buildCPSModelCode({ mounting: '0', colour: 'R', label: 'FIRE' })).toBeNull()
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// parseCPSModelCode
-// ─────────────────────────────────────────────────────────────
-
 describe('parseCPSModelCode', () => {
-  it('parses flush red fire — no suffixes', () => {
-    expect(parseCPSModelCode('STI-6930')).toEqual({
+  it('parses flush red CL', () => {
+    expect(parseCPSModelCode('STI-6930-CL')).toEqual({
       mounting: '0',
       colour: 'R',
-      label: 'FIRE',
+      label: 'CL',
     })
   })
 
-  it('parses surface red custom label', () => {
+  it('parses flush red PLAIN', () => {
+    expect(parseCPSModelCode('STI-6930-PLAIN')).toEqual({
+      mounting: '0',
+      colour: 'R',
+      label: 'PLAIN',
+    })
+  })
+
+  it('parses surface red CL', () => {
     expect(parseCPSModelCode('STI-6931-CL')).toEqual({
       mounting: '1',
       colour: 'R',
@@ -93,7 +103,7 @@ describe('parseCPSModelCode', () => {
     })
   })
 
-  it('parses flush green plain', () => {
+  it('parses flush green PLAIN', () => {
     expect(parseCPSModelCode('STI-6930-G-PLAIN')).toEqual({
       mounting: '0',
       colour: 'G',
@@ -109,20 +119,27 @@ describe('parseCPSModelCode', () => {
     })
   })
 
-  it('parses surface orange — standard label maps to EMERGENCY_OPERATE', () => {
-    expect(parseCPSModelCode('STI-6931-E')).toEqual({
+  it('parses surface orange PLAIN', () => {
+    expect(parseCPSModelCode('STI-6931-E-PLAIN')).toEqual({
       mounting: '1',
       colour: 'E',
-      label: 'EMERGENCY_OPERATE',
+      label: 'PLAIN',
     })
   })
 
-  it('parses green standard label — maps to EMERGENCY_DOOR', () => {
-    expect(parseCPSModelCode('STI-6930-G')).toEqual({
+  it('parses flush white CL', () => {
+    expect(parseCPSModelCode('STI-6930-W-CL')).toEqual({
       mounting: '0',
-      colour: 'G',
-      label: 'EMERGENCY_DOOR',
+      colour: 'W',
+      label: 'CL',
     })
+  })
+
+  it('returns null for codes without label suffix', () => {
+    expect(parseCPSModelCode('STI-6930')).toBeNull()
+    expect(parseCPSModelCode('STI-6931')).toBeNull()
+    expect(parseCPSModelCode('STI-6930-G')).toBeNull()
+    expect(parseCPSModelCode('STI-6931-E')).toBeNull()
   })
 
   it('returns null for invalid format', () => {
@@ -142,13 +159,9 @@ describe('parseCPSModelCode', () => {
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// VALID_MODEL_CODES integrity
-// ─────────────────────────────────────────────────────────────
-
 describe('VALID_MODEL_CODES', () => {
-  it('contains 26 entries', () => {
-    expect(VALID_MODEL_CODES.length).toBe(26)
+  it('contains 24 entries', () => {
+    expect(VALID_MODEL_CODES.length).toBe(24)
   })
 
   it('has no duplicates', () => {
@@ -162,14 +175,20 @@ describe('VALID_MODEL_CODES', () => {
     }
   })
 
-  it('10 flush mount codes', () => {
+  it('12 flush mount codes', () => {
     const flush = VALID_MODEL_CODES.filter((c) => c.startsWith('STI-6930'))
-    expect(flush.length).toBe(10)
+    expect(flush.length).toBe(12)
   })
 
-  it('16 surface mount codes', () => {
+  it('12 surface mount codes', () => {
     const surface = VALID_MODEL_CODES.filter((c) => c.startsWith('STI-6931'))
-    expect(surface.length).toBe(16)
+    expect(surface.length).toBe(12)
+  })
+
+  it('all codes end with -CL or -PLAIN', () => {
+    for (const code of VALID_MODEL_CODES) {
+      expect(code.endsWith('-CL') || code.endsWith('-PLAIN')).toBe(true)
+    }
   })
 
   it('all codes parse successfully', () => {
@@ -178,10 +197,6 @@ describe('VALID_MODEL_CODES', () => {
     }
   })
 })
-
-// ─────────────────────────────────────────────────────────────
-// isValidCPSCombination
-// ─────────────────────────────────────────────────────────────
 
 describe('isValidCPSCombination', () => {
   it('all VALID_MODEL_CODES pass validation', () => {
@@ -197,43 +212,24 @@ describe('isValidCPSCombination', () => {
     expect(isValidCPSCombination({ mounting: '0', colour: 'R' })).toEqual({ valid: true })
   })
 
-  it('rejects flush red custom label — not in allowlist', () => {
-    const result = isValidCPSCombination({ mounting: '0', colour: 'R', label: 'CL' })
-    expect(result.valid).toBe(false)
-    if (!result.valid) {
-      expect(result.reason).toContain('STI-6930-CL')
+  it('every colour + mounting + CL is valid', () => {
+    for (const colour of ['R', 'G', 'Y', 'W', 'B', 'E']) {
+      for (const mounting of ['0', '1']) {
+        const result = isValidCPSCombination({ mounting, colour, label: 'CL' })
+        expect(result.valid).toBe(true)
+      }
     }
   })
 
-  it('rejects flush yellow plain — not in allowlist', () => {
-    const result = isValidCPSCombination({ mounting: '0', colour: 'Y', label: 'PLAIN' })
-    expect(result.valid).toBe(false)
-  })
-
-  it('rejects flush blue custom label — not in allowlist', () => {
-    const result = isValidCPSCombination({ mounting: '0', colour: 'B', label: 'CL' })
-    expect(result.valid).toBe(false)
-  })
-
-  it('rejects flush blue plain — not in allowlist', () => {
-    const result = isValidCPSCombination({ mounting: '0', colour: 'B', label: 'PLAIN' })
-    expect(result.valid).toBe(false)
-  })
-
-  it('rejects flush orange custom label — not in allowlist', () => {
-    const result = isValidCPSCombination({ mounting: '0', colour: 'E', label: 'CL' })
-    expect(result.valid).toBe(false)
-  })
-
-  it('rejects flush orange plain — not in allowlist', () => {
-    const result = isValidCPSCombination({ mounting: '0', colour: 'E', label: 'PLAIN' })
-    expect(result.valid).toBe(false)
+  it('every colour + mounting + PLAIN is valid', () => {
+    for (const colour of ['R', 'G', 'Y', 'W', 'B', 'E']) {
+      for (const mounting of ['0', '1']) {
+        const result = isValidCPSCombination({ mounting, colour, label: 'PLAIN' })
+        expect(result.valid).toBe(true)
+      }
+    }
   })
 })
-
-// ─────────────────────────────────────────────────────────────
-// getValidCPSOptionsForStep
-// ─────────────────────────────────────────────────────────────
 
 describe('getValidCPSOptionsForStep', () => {
   it('returns all mounting options when nothing selected', () => {
@@ -242,99 +238,70 @@ describe('getValidCPSOptionsForStep', () => {
     expect(valid).toContain('1')
   })
 
-  it('FIRE label only valid with red colour', () => {
-    const valid = getValidCPSOptionsForStep('colour', { label: 'FIRE' })
-    expect(valid).toEqual(['R'])
-  })
-
-  it('EMERGENCY_DOOR label only valid with green colour', () => {
-    const valid = getValidCPSOptionsForStep('colour', { label: 'EMERGENCY_DOOR' })
-    expect(valid).toEqual(['G'])
-  })
-
-  it('EMERGENCY_OPERATE label valid with Y W B E but not R G', () => {
-    const valid = getValidCPSOptionsForStep('colour', { label: 'EMERGENCY_OPERATE' })
+  it('CL label valid with all colours', () => {
+    const valid = getValidCPSOptionsForStep('colour', { label: 'CL' })
+    expect(valid).toContain('R')
+    expect(valid).toContain('G')
     expect(valid).toContain('Y')
     expect(valid).toContain('W')
     expect(valid).toContain('B')
     expect(valid).toContain('E')
-    expect(valid).not.toContain('R')
-    expect(valid).not.toContain('G')
   })
 
-  it('CL label not available for flush green', () => {
-    const valid = getValidCPSOptionsForStep('label', { mounting: '0', colour: 'G' })
-    expect(valid).not.toContain('CL')
-    expect(valid).toContain('EMERGENCY_DOOR')
-    expect(valid).toContain('PLAIN')
+  it('PLAIN label valid with all colours', () => {
+    const valid = getValidCPSOptionsForStep('colour', { label: 'PLAIN' })
+    expect(valid).toContain('R')
+    expect(valid).toContain('G')
+    expect(valid).toContain('Y')
+    expect(valid).toContain('W')
+    expect(valid).toContain('B')
+    expect(valid).toContain('E')
   })
 
-  it('surface mount enables more label options for blue than flush', () => {
-    const validSurface = getValidCPSOptionsForStep('label', {
-      mounting: '1',
-      colour: 'B',
-    })
-    const validFlush = getValidCPSOptionsForStep('label', { mounting: '0', colour: 'B' })
-    expect(validSurface).toContain('CL')
-    expect(validSurface).toContain('PLAIN')
-    expect(validFlush).not.toContain('CL')
-    expect(validFlush).not.toContain('PLAIN')
+  it('every colour returns CL and PLAIN as valid labels', () => {
+    for (const colour of ['R', 'G', 'Y', 'W', 'B', 'E']) {
+      const valid = getValidCPSOptionsForStep('label', { colour })
+      expect(valid).toContain('CL')
+      expect(valid).toContain('PLAIN')
+      expect(valid.length).toBe(2)
+    }
   })
 
-  it('white colour has no CL option in either mounting', () => {
-    const validFlush = getValidCPSOptionsForStep('label', { mounting: '0', colour: 'W' })
-    const validSurface = getValidCPSOptionsForStep('label', {
-      mounting: '1',
-      colour: 'W',
-    })
-    expect(validFlush).not.toContain('CL')
-    expect(validSurface).not.toContain('CL')
+  it('flush mount returns CL and PLAIN for any colour', () => {
+    for (const colour of ['R', 'G', 'Y', 'W', 'B', 'E']) {
+      const valid = getValidCPSOptionsForStep('label', { mounting: '0', colour })
+      expect(valid).toContain('CL')
+      expect(valid).toContain('PLAIN')
+    }
   })
 })
-
-// ─────────────────────────────────────────────────────────────
-// Constraint engine integration
-// ─────────────────────────────────────────────────────────────
 
 describe('CALL_POINT_STOPPER_CONSTRAINTS + constraintEngine', () => {
   const engine = createConstraintEngine(CALL_POINT_STOPPER_CONSTRAINTS)
 
-  it('FIRE label blocks all non-red colours', () => {
-    for (const colour of ['G', 'Y', 'W', 'B', 'E']) {
-      const result = engine.checkOptionAvailability('colour', colour, { label: 'FIRE' })
-      expect(result.available).toBe(false)
+  it('CL label allows all colours', () => {
+    for (const colour of ['R', 'G', 'Y', 'W', 'B', 'E']) {
+      const result = engine.checkOptionAvailability('colour', colour, { label: 'CL' })
+      expect(result.available).toBe(true)
     }
   })
 
-  it('FIRE label allows red colour', () => {
-    const result = engine.checkOptionAvailability('colour', 'R', { label: 'FIRE' })
-    expect(result.available).toBe(true)
+  it('PLAIN label allows all colours', () => {
+    for (const colour of ['R', 'G', 'Y', 'W', 'B', 'E']) {
+      const result = engine.checkOptionAvailability('colour', colour, { label: 'PLAIN' })
+      expect(result.available).toBe(true)
+    }
   })
 
-  it('EMERGENCY_DOOR label blocks red colour', () => {
-    const result = engine.checkOptionAvailability('colour', 'R', {
-      label: 'EMERGENCY_DOOR',
-    })
-    expect(result.available).toBe(false)
-  })
-
-  it('green colour blocks FIRE and CL labels', () => {
-    expect(
-      engine.checkOptionAvailability('label', 'FIRE', { colour: 'G' }).available,
-    ).toBe(false)
-    expect(engine.checkOptionAvailability('label', 'CL', { colour: 'G' }).available).toBe(
-      false,
-    )
-  })
-
-  it('green colour allows EMERGENCY_DOOR and PLAIN labels', () => {
-    expect(
-      engine.checkOptionAvailability('label', 'EMERGENCY_DOOR', { colour: 'G' })
-        .available,
-    ).toBe(true)
-    expect(
-      engine.checkOptionAvailability('label', 'PLAIN', { colour: 'G' }).available,
-    ).toBe(true)
+  it('every colour allows CL and PLAIN labels', () => {
+    for (const colour of ['R', 'G', 'Y', 'W', 'B', 'E']) {
+      expect(engine.checkOptionAvailability('label', 'CL', { colour }).available).toBe(
+        true,
+      )
+      expect(engine.checkOptionAvailability('label', 'PLAIN', { colour }).available).toBe(
+        true,
+      )
+    }
   })
 
   it('constraint engine modelId matches', () => {
@@ -342,26 +309,43 @@ describe('CALL_POINT_STOPPER_CONSTRAINTS + constraintEngine', () => {
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// buildProductModel integration
-// ─────────────────────────────────────────────────────────────
-
 describe('buildProductModel — callPointStopper', () => {
-  it('flush red fire — no suffixes → STI-6930', () => {
-    const config: Configuration = { mounting: '0', colour: 'R', label: 'FIRE' }
+  it('flush red CL → STI-6930-CL', () => {
+    const config: Configuration = { mounting: '0', colour: 'R', label: 'CL' }
     const result = buildProductModel(config, callPointStopperModel)
-    expect(result.fullCode).toBe('STI-6930')
+    expect(result.fullCode).toBe('STI-6930-CL')
     expect(result.isComplete).toBe(true)
   })
 
-  it('surface red plain → STI-6931-PLAIN', () => {
+  it('flush red PLAIN → STI-6930-PLAIN', () => {
+    const config: Configuration = { mounting: '0', colour: 'R', label: 'PLAIN' }
+    const result = buildProductModel(config, callPointStopperModel)
+    expect(result.fullCode).toBe('STI-6930-PLAIN')
+    expect(result.isComplete).toBe(true)
+  })
+
+  it('surface red CL → STI-6931-CL', () => {
+    const config: Configuration = { mounting: '1', colour: 'R', label: 'CL' }
+    const result = buildProductModel(config, callPointStopperModel)
+    expect(result.fullCode).toBe('STI-6931-CL')
+    expect(result.isComplete).toBe(true)
+  })
+
+  it('surface red PLAIN → STI-6931-PLAIN', () => {
     const config: Configuration = { mounting: '1', colour: 'R', label: 'PLAIN' }
     const result = buildProductModel(config, callPointStopperModel)
     expect(result.fullCode).toBe('STI-6931-PLAIN')
     expect(result.isComplete).toBe(true)
   })
 
-  it('flush green plain → STI-6930-G-PLAIN', () => {
+  it('flush green CL → STI-6930-G-CL', () => {
+    const config: Configuration = { mounting: '0', colour: 'G', label: 'CL' }
+    const result = buildProductModel(config, callPointStopperModel)
+    expect(result.fullCode).toBe('STI-6930-G-CL')
+    expect(result.isComplete).toBe(true)
+  })
+
+  it('flush green PLAIN → STI-6930-G-PLAIN', () => {
     const config: Configuration = { mounting: '0', colour: 'G', label: 'PLAIN' }
     const result = buildProductModel(config, callPointStopperModel)
     expect(result.fullCode).toBe('STI-6930-G-PLAIN')
@@ -375,28 +359,31 @@ describe('buildProductModel — callPointStopper', () => {
     expect(result.isComplete).toBe(true)
   })
 
-  it('surface orange emergency operate → STI-6931-E', () => {
-    const config: Configuration = {
-      mounting: '1',
-      colour: 'E',
-      label: 'EMERGENCY_OPERATE',
-    }
+  it('surface orange PLAIN → STI-6931-E-PLAIN', () => {
+    const config: Configuration = { mounting: '1', colour: 'E', label: 'PLAIN' }
     const result = buildProductModel(config, callPointStopperModel)
-    expect(result.fullCode).toBe('STI-6931-E')
+    expect(result.fullCode).toBe('STI-6931-E-PLAIN')
     expect(result.isComplete).toBe(true)
   })
 
-  it('red colour has empty code — separator skipped', () => {
+  it('flush white CL → STI-6930-W-CL', () => {
+    const config: Configuration = { mounting: '0', colour: 'W', label: 'CL' }
+    const result = buildProductModel(config, callPointStopperModel)
+    expect(result.fullCode).toBe('STI-6930-W-CL')
+    expect(result.isComplete).toBe(true)
+  })
+
+  it('surface blue CL → STI-6931-B-CL', () => {
+    const config: Configuration = { mounting: '1', colour: 'B', label: 'CL' }
+    const result = buildProductModel(config, callPointStopperModel)
+    expect(result.fullCode).toBe('STI-6931-B-CL')
+    expect(result.isComplete).toBe(true)
+  })
+
+  it('red colour has empty code — no double dash', () => {
     const config: Configuration = { mounting: '0', colour: 'R', label: 'PLAIN' }
     const result = buildProductModel(config, callPointStopperModel)
     expect(result.fullCode).toBe('STI-6930-PLAIN')
-    expect(result.fullCode).not.toContain('--')
-  })
-
-  it('standard label options have empty code — separator skipped', () => {
-    const config: Configuration = { mounting: '0', colour: 'G', label: 'EMERGENCY_DOOR' }
-    const result = buildProductModel(config, callPointStopperModel)
-    expect(result.fullCode).toBe('STI-6930-G')
     expect(result.fullCode).not.toContain('--')
   })
 
@@ -438,13 +425,9 @@ describe('buildProductModel — callPointStopper', () => {
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// filterOptions completeness — callPointStopper
-// ─────────────────────────────────────────────────────────────
-
 describe('isConfigurationComplete — callPointStopper', () => {
   it('returns true when all three steps selected', () => {
-    const config: Configuration = { mounting: '0', colour: 'R', label: 'FIRE' }
+    const config: Configuration = { mounting: '0', colour: 'R', label: 'CL' }
     expect(isConfigurationComplete(callPointStopperModel, config)).toBe(true)
   })
 
@@ -503,15 +486,11 @@ describe('isConfigurationComplete — callPointStopper', () => {
       getCompletionPercentage(callPointStopperModel, {
         mounting: '0',
         colour: 'R',
-        label: 'FIRE',
+        label: 'CL',
       }),
     ).toBe(100)
   })
 })
-
-// ─────────────────────────────────────────────────────────────
-// Model definition integrity
-// ─────────────────────────────────────────────────────────────
 
 describe('callPointStopperModel definition', () => {
   it('has correct model id and slug', () => {
@@ -532,20 +511,26 @@ describe('callPointStopperModel definition', () => {
     }
   })
 
-  it('red colour has empty code — SKU suffix handled at rules level', () => {
+  it('red colour has empty code', () => {
     const colourStep = callPointStopperModel.steps.find((s) => s.id === 'colour')!
     const red = colourStep.options.find((o) => o.id === 'R')!
     expect(red.code).toBe('')
   })
 
-  it('standard label options have empty codes', () => {
+  it('label step has exactly 2 options — CL and PLAIN', () => {
     const labelStep = callPointStopperModel.steps.find((s) => s.id === 'label')!
-    const fire = labelStep.options.find((o) => o.id === 'FIRE')!
-    const emergencyDoor = labelStep.options.find((o) => o.id === 'EMERGENCY_DOOR')!
-    const emergencyOperate = labelStep.options.find((o) => o.id === 'EMERGENCY_OPERATE')!
-    expect(fire.code).toBe('')
-    expect(emergencyDoor.code).toBe('')
-    expect(emergencyOperate.code).toBe('')
+    const ids = labelStep.options.map((o) => o.id)
+    expect(ids).toEqual(['CL', 'PLAIN'])
+  })
+
+  it('CL label has code CL', () => {
+    const labelStep = callPointStopperModel.steps.find((s) => s.id === 'label')!
+    expect(labelStep.options.find((o) => o.id === 'CL')?.code).toBe('CL')
+  })
+
+  it('PLAIN label has code PLAIN', () => {
+    const labelStep = callPointStopperModel.steps.find((s) => s.id === 'label')!
+    expect(labelStep.options.find((o) => o.id === 'PLAIN')?.code).toBe('PLAIN')
   })
 
   it('baseCode is STI-693', () => {

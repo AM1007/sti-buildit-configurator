@@ -5,7 +5,7 @@
     "series": "Series 2000",
     "badges": ["UL Listed", "ADA Compliant"],
     "heroTitle": "Configurable Push Buttons and Key Switches",
-    "heroDescription": "UL Listed push buttons and key-operated switches designed to reduce accidental activation. Multiple operating modes available, including Key-to-Reset, Turn-to-Reset, Momentary, Pneumatic and illuminated variants.\n\nAvailable in multiple colour configurations with standard or custom marking. Universal mounting plate included.\n\nIntended for emergency systems, access control, HVAC shutdown and industrial signalling applications."
+    "heroDescription": "UL Listed push buttons and key-operated switches designed to reduce accidental activation. Multiple operating modes available, including Turn-to-Reset, Momentary, Pneumatic and illuminated variants.\n\nAvailable in multiple colour configurations with standard or custom marking. Universal mounting plate included.\n\nIntended for emergency systems, access control, HVAC shutdown and industrial signalling applications."
   },
   "steps": {
     "colour": {
@@ -24,17 +24,17 @@
       "options": {
         "0": "#0 Key-to-Reset",
         "1": "#1 Turn-to-Reset",
-        "2": "#2 Key-to-Reset, illuminated (red/green/white)",
+        "2": "#2 Key-to-Reset, illuminated (r/g/w)",
         "3": "#3 Key-operated",
         "4": "#4 Momentary",
-        "5": "#5 Momentary, illuminated (red/green/white)",
-        "6-red": "#6 Red illuminated",
-        "6-green": "#6 Green illuminated",
-        "6-blue": "#6 Blue illuminated",
-        "7-red": "#7 Weather-resistant momentary, red illuminated",
-        "7-green": "#7 Weather-resistant momentary, green illuminated",
-        "8": "#8 Pneumatic, illuminated (red/green/white)",
-        "9": "#9 Turn-to-Reset, illuminated (red/green/white)"
+        "5": "#5 Momentary, illuminated (r/g/w)",
+        "6-red": "#6 Illuminated, red",
+        "6-green": "#6 Illuminated, green",
+        "6-blue": "#6 Illuminated, blue",
+        "7-red": "#7 Weather-resistant, illuminated, red",
+        "7-green": "#7 Weather-resistant, illuminated, green",
+        "8": "#8 Pneumatic, illuminated (r/g/w)",
+        "9": "#9 Turn-to-Reset, illuminated (r/g/w)"
       }
     },
     "text": {
