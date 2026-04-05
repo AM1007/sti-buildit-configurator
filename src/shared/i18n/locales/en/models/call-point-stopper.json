@@ -25,7 +25,7 @@
         "FIRE": "# IN CASE OF FIRE – LIFT COVER, BREAK GLASS",
         "EMERGENCY_DOOR": "# IN CASE OF EMERGENCY – LIFT COVER, BREAK GLASS TO OPEN DOOR",
         "EMERGENCY_OPERATE": "# IN CASE OF EMERGENCY – LIFT COVER, OPERATE DEVICE",
-        "CL": "#CL Custom text",
+        "CL": "#CL Custom labelling in Ukrainian or English (NON-RETURNABLE)",
         "PLAIN": "#PLAIN No text"
       }
     },
