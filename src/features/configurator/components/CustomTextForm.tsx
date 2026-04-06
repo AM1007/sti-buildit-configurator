@@ -6,6 +6,7 @@ import { useTranslation } from '@shared/i18n'
 interface CustomTextFormProps {
   variant: CustomTextVariant
   maxLength: number
+  maxLines: 2 | 3
   onSubmit: (data: Omit<CustomTextData, 'submitted'>) => void
   initialData?: CustomTextData
   scriptRestriction?: 'latin' | 'cyrillic' | null
@@ -14,6 +15,7 @@ interface CustomTextFormProps {
 export function CustomTextForm({
   variant,
   maxLength,
+  maxLines,
   onSubmit,
   initialData,
   scriptRestriction = null,
@@ -43,7 +45,7 @@ export function CustomTextForm({
     if (variant === 'multiline-fixed') return 2
     if (variant === 'multiline-three-line') return 3
     if (variant === 'dual-block-three-line') return initialData?.lineCount ?? 3
-    return initialData?.lineCount ?? 2
+    return initialData?.lineCount ?? 1
   }
 
   const getInitialCoverLineCount = (): 1 | 2 | 3 => {
@@ -190,6 +192,8 @@ export function CustomTextForm({
     })
   }
 
+  const showThreeLineOption = maxLines >= 3
+
   const renderLineCountSelector = (
     name: string,
     value: 1 | 2 | 3,
@@ -207,7 +211,7 @@ export function CustomTextForm({
           className="size-4 appearance-none rounded-full border border-solid border-gray-400 
                      checked:border-[5px] checked:border-brand-600"
         />
-        <span>{t('customText.lineCount', { count: '1' })}</span>
+        <span>{t('customText.oneLine')}</span>
       </label>
 
       <label className="flex items-center justify-start gap-2 text-sm font-normal">
@@ -220,7 +224,7 @@ export function CustomTextForm({
           className="size-4 appearance-none rounded-full border border-solid border-gray-400 
                      checked:border-[5px] checked:border-brand-600"
         />
-        <span>{t('customText.lineCount', { count: '2' })}</span>
+        <span>{t('customText.twoLines')}</span>
       </label>
 
       {showThreeLine && (
@@ -234,7 +238,7 @@ export function CustomTextForm({
             className="size-4 appearance-none rounded-full border border-solid border-gray-400 
                        checked:border-[5px] checked:border-brand-600"
           />
-          <span>{t('customText.lineCount', { count: '3' })}</span>
+          <span>{t('customText.threeLines')}</span>
         </label>
       )}
     </div>
@@ -279,7 +283,7 @@ export function CustomTextForm({
                   'lineCount',
                   selectedLineCount,
                   handleLineCountChange,
-                  isDualBlock,
+                  showThreeLineOption,
                 )}
 
               <div className="grid grid-cols-1 gap-3">
@@ -318,7 +322,7 @@ export function CustomTextForm({
                     <input
                       type="text"
                       name="line3"
-                      placeholder={t('customText.linePlaceholder', { line: '3' })}
+                      placeholder={t('customText.line3Placeholder')}
                       value={line3}
                       onChange={(e) => setLine3(e.target.value)}
                       maxLength={maxLength}

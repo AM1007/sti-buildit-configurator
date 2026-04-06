@@ -244,6 +244,9 @@
     "enterLabel": "ENTER CUSTOM TEXT",
     "label": "Label",
     "cover": "Cover",
+    "oneLine": "1 line",
+    "twoLines": "2 lines",
+    "threeLines": "3 lines",
     "lineCount": "{count} Line",
     "linePlaceholder": "Line {line}",
     "maxCharacters": "Maximum {max} characters per line",
@@ -255,7 +258,8 @@
     "coverLineExceedsMax": "Cover line {line} exceeds {max} characters",
     "nonReturnable": "CUSTOM PRODUCTS ARE NON-RETURNABLE",
     "latinOnly": "Latin characters only (digits and symbols are allowed)",
-    "cyrillicOnly": "Cyrillic characters only (digits and symbols are allowed)"
+    "cyrillicOnly": "Cyrillic characters only (digits and symbols are allowed)",
+    "line3Placeholder": "Line 3 (Bottom)"
   },
   "card": {
     "features": "Specifications",

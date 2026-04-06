@@ -12,7 +12,7 @@ export function getEffectiveLineCount(
     case 'multiline-three-line':
       return 3
     case 'multiline-selectable':
-      return selectedLineCount as 1 | 2
+      return selectedLineCount
     case 'dual-block-three-line':
       return selectedLineCount
   }
