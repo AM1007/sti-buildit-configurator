@@ -127,7 +127,7 @@ export function MainPanel({
     if (!customTextConfig) return 20
     const effectiveLineCount = getEffectiveLineCount(
       customTextConfig.variant,
-      customText?.lineCount ?? 2,
+      customText?.lineCount ?? 1,
     )
     return getMaxLength(model.id, effectiveLineCount)
   }
@@ -196,6 +196,7 @@ export function MainPanel({
                 <CustomTextForm
                   variant={customTextConfig.variant}
                   maxLength={getFormMaxLength()}
+                  maxLines={customTextConfig.maxLines}
                   onSubmit={handleCustomTextSubmit}
                   initialData={customText ?? undefined}
                   scriptRestriction={getScriptRestriction()}

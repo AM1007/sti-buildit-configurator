@@ -14,13 +14,15 @@ const MODEL_CUSTOM_TEXT_CONFIG: Partial<Record<ModelId, CustomTextConfig>> = {
     optionId: 'C',
     variant: 'multiline-fixed',
     maxLength: 30,
+    maxLines: 2,
     line2Required: false,
   },
   'stopper-stations': {
     stepId: 'text',
     optionId: 'ZA',
     variant: 'multiline-selectable',
-    maxLength: { oneLine: 13, twoLines: 20 },
+    maxLength: { oneLine: 13, twoLines: 20, threeLines: 20 },
+    maxLines: 3,
     line2Required: false,
   },
   'indoor-push-buttons': {
@@ -28,6 +30,7 @@ const MODEL_CUSTOM_TEXT_CONFIG: Partial<Record<ModelId, CustomTextConfig>> = {
     optionId: 'CL',
     variant: 'singleline',
     maxLength: 20,
+    maxLines: 2,
     line2Required: false,
   },
   'key-switches': {
@@ -35,6 +38,7 @@ const MODEL_CUSTOM_TEXT_CONFIG: Partial<Record<ModelId, CustomTextConfig>> = {
     optionId: 'CL',
     variant: 'singleline',
     maxLength: 20,
+    maxLines: 2,
     line2Required: false,
   },
   'waterproof-push-buttons': {
@@ -42,6 +46,7 @@ const MODEL_CUSTOM_TEXT_CONFIG: Partial<Record<ModelId, CustomTextConfig>> = {
     optionId: 'CL',
     variant: 'singleline',
     maxLength: 20,
+    maxLines: 2,
     line2Required: false,
   },
   'reset-call-points': {
@@ -49,6 +54,7 @@ const MODEL_CUSTOM_TEXT_CONFIG: Partial<Record<ModelId, CustomTextConfig>> = {
     optionId: 'CL',
     variant: 'multiline-fixed',
     maxLength: 10,
+    maxLines: 2,
     line2Required: false,
   },
   'waterproof-reset-call-point': {
@@ -56,6 +62,7 @@ const MODEL_CUSTOM_TEXT_CONFIG: Partial<Record<ModelId, CustomTextConfig>> = {
     optionId: 'CL',
     variant: 'multiline-fixed',
     maxLength: 10,
+    maxLines: 2,
     line2Required: false,
   },
   'g3-multipurpose-push-button': {
@@ -63,6 +70,7 @@ const MODEL_CUSTOM_TEXT_CONFIG: Partial<Record<ModelId, CustomTextConfig>> = {
     optionId: 'ZA',
     variant: 'multiline-three-line',
     maxLength: 13,
+    maxLines: 3,
     line2Required: false,
   },
   'universal-stopper': {
@@ -70,6 +78,7 @@ const MODEL_CUSTOM_TEXT_CONFIG: Partial<Record<ModelId, CustomTextConfig>> = {
     optionId: 'C',
     variant: 'multiline-fixed',
     maxLength: 30,
+    maxLines: 2,
     line2Required: false,
   },
   'global-reset': {
@@ -77,6 +86,7 @@ const MODEL_CUSTOM_TEXT_CONFIG: Partial<Record<ModelId, CustomTextConfig>> = {
     optionId: 'ZA',
     variant: 'singleline',
     maxLength: 20,
+    maxLines: 2,
     line2Required: false,
   },
   'enviro-stopper': {
@@ -84,6 +94,7 @@ const MODEL_CUSTOM_TEXT_CONFIG: Partial<Record<ModelId, CustomTextConfig>> = {
     optionId: 'C',
     variant: 'multiline-fixed',
     maxLength: 30,
+    maxLines: 2,
     line2Required: false,
   },
   'call-point-stopper': {
@@ -91,6 +102,7 @@ const MODEL_CUSTOM_TEXT_CONFIG: Partial<Record<ModelId, CustomTextConfig>> = {
     optionId: 'CL',
     variant: 'multiline-selectable',
     maxLength: { oneLine: 30, twoLines: 30 },
+    maxLines: 2,
     line2Required: false,
   },
   'euro-stopper': {
@@ -98,6 +110,7 @@ const MODEL_CUSTOM_TEXT_CONFIG: Partial<Record<ModelId, CustomTextConfig>> = {
     optionId: 'C',
     variant: 'multiline-fixed',
     maxLength: 20,
+    maxLines: 2,
     line2Required: false,
   },
 }
@@ -234,7 +247,11 @@ export function getMaxLength(modelId: ModelId, lineCount: 1 | 2 | 3): number {
     return config.maxLength
   }
 
-  return lineCount === 1 ? config.maxLength.oneLine : config.maxLength.twoLines
+  if (lineCount === 1) return config.maxLength.oneLine
+  if (lineCount === 3 && config.maxLength.threeLines !== undefined) {
+    return config.maxLength.threeLines
+  }
+  return config.maxLength.twoLines
 }
 
 export function validateCustomText(
@@ -311,7 +328,7 @@ export function validateCustomText(
   }
 
   const effectiveLineCount = getEffectiveLineCount(config.variant, data.lineCount)
-  const maxLength = getMaxLength(modelId, effectiveLineCount as 1 | 2)
+  const maxLength = getMaxLength(modelId, effectiveLineCount)
 
   if (!data.line1.trim()) {
     errors.push('Line 1 is required')
@@ -321,13 +338,19 @@ export function validateCustomText(
     errors.push(`Line 1 exceeds ${maxLength} characters`)
   }
 
-  if (effectiveLineCount === 2) {
+  if (effectiveLineCount >= 2) {
     if (config.line2Required && !data.line2.trim()) {
       errors.push('Line 2 is required')
     }
 
     if (data.line2.length > maxLength) {
       errors.push(`Line 2 exceeds ${maxLength} characters`)
+    }
+  }
+
+  if (effectiveLineCount >= 3) {
+    if (data.line3 && data.line3.length > maxLength) {
+      errors.push(`Line 3 exceeds ${maxLength} characters`)
     }
   }
 
@@ -361,7 +384,7 @@ function getEffectiveLineCount(
     case 'multiline-three-line':
       return 3
     case 'multiline-selectable':
-      return selectedLineCount as 1 | 2
+      return selectedLineCount
     case 'dual-block-three-line':
       return selectedLineCount
   }

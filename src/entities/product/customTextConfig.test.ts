@@ -82,7 +82,19 @@ describe('getCustomTextConfig', () => {
       expect(config!.stepId).toBeTruthy()
       expect(config!.optionId).toBeTruthy()
       expect(config!.variant).toBeTruthy()
+      expect(config!.maxLines).toBeGreaterThanOrEqual(2)
+      expect(config!.maxLines).toBeLessThanOrEqual(3)
     }
+  })
+
+  it('stopper-stations has maxLines 3', () => {
+    const config = getCustomTextConfig('stopper-stations')
+    expect(config!.maxLines).toBe(3)
+  })
+
+  it('call-point-stopper has maxLines 2', () => {
+    const config = getCustomTextConfig('call-point-stopper')
+    expect(config!.maxLines).toBe(2)
   })
 })
 
@@ -311,6 +323,14 @@ describe('getMaxLength', () => {
     expect(getMaxLength('stopper-stations', 2)).toBe(20)
   })
 
+  it('returns threeLines for stopper-stations with 3 lines', () => {
+    expect(getMaxLength('stopper-stations', 3)).toBe(20)
+  })
+
+  it('falls back to twoLines when threeLines not defined', () => {
+    expect(getMaxLength('call-point-stopper', 3)).toBe(30)
+  })
+
   it('returns default 20 for unsupported model', () => {
     expect(getMaxLength('nonexistent' as never, 1)).toBe(20)
   })
@@ -370,6 +390,40 @@ describe('validateCustomText', () => {
 
   it('rejects multiline-selectable when line exceeds 2-line max', () => {
     const data = { lineCount: 2 as const, line1: 'A'.repeat(21), line2: '', line3: '' }
+    const result = validateCustomText(data, 'stopper-stations')
+    expect(result.valid).toBe(false)
+  })
+
+  it('validates multiline-selectable with 3 lines for stopper-stations', () => {
+    const data = { lineCount: 3 as const, line1: 'Line1', line2: 'Line2', line3: 'Line3' }
+    const result = validateCustomText(data, 'stopper-stations')
+    expect(result.valid).toBe(true)
+  })
+
+  it('rejects multiline-selectable 3 lines when line3 exceeds max', () => {
+    const data = {
+      lineCount: 3 as const,
+      line1: 'OK',
+      line2: 'OK',
+      line3: 'A'.repeat(21),
+    }
+    const result = validateCustomText(data, 'stopper-stations')
+    expect(result.valid).toBe(false)
+  })
+
+  it('uses threeLines maxLength for 3-line stopper-stations', () => {
+    const data = {
+      lineCount: 3 as const,
+      line1: 'A'.repeat(20),
+      line2: 'B'.repeat(20),
+      line3: 'C'.repeat(20),
+    }
+    const result = validateCustomText(data, 'stopper-stations')
+    expect(result.valid).toBe(true)
+  })
+
+  it('rejects 3-line stopper-stations when exceeding threeLines maxLength', () => {
+    const data = { lineCount: 3 as const, line1: 'A'.repeat(21), line2: 'B', line3: 'C' }
     const result = validateCustomText(data, 'stopper-stations')
     expect(result.valid).toBe(false)
   })

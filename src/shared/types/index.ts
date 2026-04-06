@@ -131,7 +131,8 @@ export interface CustomTextConfig {
   stepId: StepId
   optionId: OptionId
   variant: CustomTextVariant
-  maxLength: number | { oneLine: number; twoLines: number }
+  maxLength: number | { oneLine: number; twoLines: number; threeLines?: number }
+  maxLines: 2 | 3
   line2Required: boolean
 }
 
