@@ -189,7 +189,7 @@ export function MobileTabletLayout({
     if (!customTextConfig) return 20
     const effectiveLineCount = getEffectiveLineCount(
       customTextConfig.variant,
-      customText?.lineCount ?? 2,
+      customText?.lineCount ?? 1,
     )
     return getMaxLength(model.id, effectiveLineCount)
   }
@@ -322,6 +322,7 @@ export function MobileTabletLayout({
               <CustomTextForm
                 variant={customTextConfig.variant}
                 maxLength={getFormMaxLength()}
+                maxLines={customTextConfig.maxLines}
                 onSubmit={onCustomTextSubmit}
                 initialData={customText ?? undefined}
                 scriptRestriction={getScriptRestriction()}
