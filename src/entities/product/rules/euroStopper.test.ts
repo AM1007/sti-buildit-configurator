@@ -17,10 +17,6 @@ import {
 import { createConstraintEngine } from '@entities/product/rules/constraintEngine'
 import type { Configuration } from '@shared/types'
 
-// ─────────────────────────────────────────────────────────────
-// buildEUSModelCode
-// ─────────────────────────────────────────────────────────────
-
 describe('buildEUSModelCode', () => {
   it('builds flush no-sounder blue custom — STI-15010CB', () => {
     expect(buildEUSModelCode({ mounting: '0', sounder: '10', colourLabel: 'CB' })).toBe(
@@ -40,9 +36,9 @@ describe('buildEUSModelCode', () => {
     )
   })
 
-  it('builds flush sounder relay fire red — STI-15030FR', () => {
-    expect(buildEUSModelCode({ mounting: '0', sounder: '30', colourLabel: 'FR' })).toBe(
-      'STI-15030FR',
+  it('builds flush sounder relay red custom — STI-15030CR', () => {
+    expect(buildEUSModelCode({ mounting: '0', sounder: '30', colourLabel: 'CR' })).toBe(
+      'STI-15030CR',
     )
   })
 
@@ -53,10 +49,6 @@ describe('buildEUSModelCode', () => {
     expect(buildEUSModelCode({})).toBeNull()
   })
 })
-
-// ─────────────────────────────────────────────────────────────
-// parseEUSModelCode
-// ─────────────────────────────────────────────────────────────
 
 describe('parseEUSModelCode', () => {
   it('parses flush mount correctly — mounting=0', () => {
@@ -101,26 +93,22 @@ describe('parseEUSModelCode', () => {
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// VALID_MODEL_CODES integrity
-// ─────────────────────────────────────────────────────────────
-
 describe('VALID_MODEL_CODES', () => {
-  it('contains exactly 57 entries', () => {
-    expect(VALID_MODEL_CODES.length).toBe(57)
+  it('contains exactly 70 entries', () => {
+    expect(VALID_MODEL_CODES.length).toBe(70)
   })
 
   it('has no duplicates', () => {
-    expect(new Set(VALID_MODEL_CODES).size).toBe(57)
+    expect(new Set(VALID_MODEL_CODES).size).toBe(70)
   })
 
-  it('16 flush mount (0), 21 surface 32mm (C), 20 surface 50mm (D)', () => {
+  it('20 flush mount (0), 28 surface 32mm (C), 22 surface 50mm (D)', () => {
     const flush = VALID_MODEL_CODES.filter((c) => parseEUSModelCode(c)?.mounting === '0')
     const c32 = VALID_MODEL_CODES.filter((c) => parseEUSModelCode(c)?.mounting === 'C')
     const d50 = VALID_MODEL_CODES.filter((c) => parseEUSModelCode(c)?.mounting === 'D')
-    expect(flush.length).toBe(16)
-    expect(c32.length).toBe(21)
-    expect(d50.length).toBe(20)
+    expect(flush.length).toBe(20)
+    expect(c32.length).toBe(28)
+    expect(d50.length).toBe(22)
   })
 
   it('all mounting codes are 0, C, or D only', () => {
@@ -148,9 +136,10 @@ describe('VALID_MODEL_CODES', () => {
     expect(nkCodes[0]).toBe('STI-15010NK')
   })
 
-  it('CK absent from allowlist entirely', () => {
+  it('CK appears only with flush mount and sounder=10', () => {
     const ckCodes = VALID_MODEL_CODES.filter((c) => c.endsWith('CK'))
-    expect(ckCodes).toHaveLength(0)
+    expect(ckCodes).toHaveLength(1)
+    expect(ckCodes[0]).toBe('STI-15010CK')
   })
 
   it('EG only appears with sounder=30', () => {
@@ -161,6 +150,19 @@ describe('VALID_MODEL_CODES', () => {
     }
   })
 
+  it('EG only appears with mounting=D', () => {
+    const egCodes = VALID_MODEL_CODES.filter((c) => c.endsWith('EG'))
+    for (const code of egCodes) {
+      const parsed = parseEUSModelCode(code)!
+      expect(parsed.mounting).toBe('D')
+    }
+  })
+
+  it('FR does not appear in allowlist', () => {
+    const frCodes = VALID_MODEL_CODES.filter((c) => c.endsWith('FR'))
+    expect(frCodes).toHaveLength(0)
+  })
+
   it('all codes parse successfully', () => {
     for (const code of VALID_MODEL_CODES) {
       expect(parseEUSModelCode(code)).not.toBeNull()
@@ -168,12 +170,8 @@ describe('VALID_MODEL_CODES', () => {
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// isValidEUSCombination
-// ─────────────────────────────────────────────────────────────
-
 describe('isValidEUSCombination', () => {
-  it('all 57 VALID_MODEL_CODES pass validation', () => {
+  it('all 70 VALID_MODEL_CODES pass validation', () => {
     for (const code of VALID_MODEL_CODES) {
       const parsed = parseEUSModelCode(code)!
       expect(isValidEUSCombination(parsed)).toEqual({ valid: true })
@@ -188,84 +186,84 @@ describe('isValidEUSCombination', () => {
     })
   })
 
-  it('rejects CK colour — not in allowlist', () => {
-    const result = isValidEUSCombination({
-      mounting: '0',
-      sounder: '10',
-      colourLabel: 'CK',
-    })
-    expect(result.valid).toBe(false)
-    if (!result.valid) {
-      expect(result.reason).toContain('STI-15010CK')
-    }
+  it('accepts CK with flush mount and sounder=10', () => {
+    expect(
+      isValidEUSCombination({ mounting: '0', sounder: '10', colourLabel: 'CK' }),
+    ).toEqual({ valid: true })
+  })
+
+  it('rejects CK with surface mount — only valid with flush', () => {
+    expect(
+      isValidEUSCombination({ mounting: 'C', sounder: '10', colourLabel: 'CK' }).valid,
+    ).toBe(false)
+    expect(
+      isValidEUSCombination({ mounting: 'D', sounder: '10', colourLabel: 'CK' }).valid,
+    ).toBe(false)
   })
 
   it('rejects NK with surface mount — only valid with flush', () => {
-    const resultC = isValidEUSCombination({
-      mounting: 'C',
-      sounder: '10',
-      colourLabel: 'NK',
-    })
-    const resultD = isValidEUSCombination({
-      mounting: 'D',
-      sounder: '10',
-      colourLabel: 'NK',
-    })
-    expect(resultC.valid).toBe(false)
-    expect(resultD.valid).toBe(false)
+    expect(
+      isValidEUSCombination({ mounting: 'C', sounder: '10', colourLabel: 'NK' }).valid,
+    ).toBe(false)
+    expect(
+      isValidEUSCombination({ mounting: 'D', sounder: '10', colourLabel: 'NK' }).valid,
+    ).toBe(false)
   })
 
   it('accepts NK with flush mount and sounder=10', () => {
     expect(
       isValidEUSCombination({ mounting: '0', sounder: '10', colourLabel: 'NK' }),
-    ).toEqual({
-      valid: true,
-    })
+    ).toEqual({ valid: true })
   })
 
   it('rejects EG with sounder=10 or sounder=20', () => {
     expect(
-      isValidEUSCombination({ mounting: '0', sounder: '10', colourLabel: 'EG' }).valid,
+      isValidEUSCombination({ mounting: 'D', sounder: '10', colourLabel: 'EG' }).valid,
     ).toBe(false)
     expect(
       isValidEUSCombination({ mounting: 'D', sounder: '20', colourLabel: 'EG' }).valid,
     ).toBe(false)
   })
 
-  it('accepts EG with sounder=30 for valid mountings', () => {
-    expect(
-      isValidEUSCombination({ mounting: '0', sounder: '30', colourLabel: 'EG' }),
-    ).toEqual({
-      valid: true,
-    })
+  it('accepts EG only with mounting=D and sounder=30', () => {
     expect(
       isValidEUSCombination({ mounting: 'D', sounder: '30', colourLabel: 'EG' }),
-    ).toEqual({
-      valid: true,
-    })
+    ).toEqual({ valid: true })
   })
 
-  it('rejects CR colour with flush or 32mm mounting', () => {
+  it('rejects EG with mounting=0 or mounting=C', () => {
     expect(
-      isValidEUSCombination({ mounting: '0', sounder: '10', colourLabel: 'CR' }).valid,
+      isValidEUSCombination({ mounting: '0', sounder: '30', colourLabel: 'EG' }).valid,
     ).toBe(false)
     expect(
-      isValidEUSCombination({ mounting: 'C', sounder: '10', colourLabel: 'CR' }).valid,
+      isValidEUSCombination({ mounting: 'C', sounder: '30', colourLabel: 'EG' }).valid,
     ).toBe(false)
   })
 
-  it('accepts CR only with 50mm mounting', () => {
+  it('accepts CR with all three mounting types', () => {
+    expect(
+      isValidEUSCombination({ mounting: '0', sounder: '30', colourLabel: 'CR' }),
+    ).toEqual({ valid: true })
+    expect(
+      isValidEUSCombination({ mounting: 'C', sounder: '10', colourLabel: 'CR' }),
+    ).toEqual({ valid: true })
     expect(
       isValidEUSCombination({ mounting: 'D', sounder: '10', colourLabel: 'CR' }),
-    ).toEqual({
-      valid: true,
-    })
+    ).toEqual({ valid: true })
+  })
+
+  it('rejects FR — removed from allowlist', () => {
+    expect(
+      isValidEUSCombination({ mounting: '0', sounder: '30', colourLabel: 'FR' }).valid,
+    ).toBe(false)
+    expect(
+      isValidEUSCombination({ mounting: 'C', sounder: '30', colourLabel: 'FR' }).valid,
+    ).toBe(false)
+    expect(
+      isValidEUSCombination({ mounting: 'D', sounder: '10', colourLabel: 'FR' }).valid,
+    ).toBe(false)
   })
 })
-
-// ─────────────────────────────────────────────────────────────
-// getValidEUSOptionsForStep
-// ─────────────────────────────────────────────────────────────
 
 describe('getValidEUSOptionsForStep', () => {
   it('returns all three mountings when nothing selected', () => {
@@ -280,15 +278,24 @@ describe('getValidEUSOptionsForStep', () => {
     expect(valid).toEqual(['30'])
   })
 
-  it('sounder=30 does not include CK or CR colourLabels', () => {
-    const valid = getValidEUSOptionsForStep('colourLabel', { sounder: '30' })
-    expect(valid).not.toContain('CK')
-    expect(valid).not.toContain('CR')
+  it('EG colourLabel only valid with mounting=D', () => {
+    const valid = getValidEUSOptionsForStep('mounting', { colourLabel: 'EG' })
+    expect(valid).toEqual(['D'])
   })
 
-  it('sounder=30 includes EG, FR, NG, NR, NY, NB, CG', () => {
+  it('sounder=30 does not include CK colourLabel', () => {
     const valid = getValidEUSOptionsForStep('colourLabel', { sounder: '30' })
-    for (const colour of ['EG', 'FR', 'NG', 'NR', 'NY', 'NB', 'CG']) {
+    expect(valid).not.toContain('CK')
+  })
+
+  it('sounder=30 does not include FR colourLabel', () => {
+    const valid = getValidEUSOptionsForStep('colourLabel', { sounder: '30' })
+    expect(valid).not.toContain('FR')
+  })
+
+  it('sounder=30 includes EG, NG, NR, NY, NB, CG, CR, CB, CY', () => {
+    const valid = getValidEUSOptionsForStep('colourLabel', { sounder: '30' })
+    for (const colour of ['EG', 'NG', 'NR', 'NY', 'NB', 'CG', 'CR', 'CB', 'CY']) {
       expect(valid).toContain(colour)
     }
   })
@@ -298,12 +305,38 @@ describe('getValidEUSOptionsForStep', () => {
     expect(valid).toEqual(['0'])
   })
 
-  it('CR colour only valid with 50mm mounting', () => {
-    const valid = getValidEUSOptionsForStep('mounting', { colourLabel: 'CR' })
-    expect(valid).toEqual(['D'])
+  it('CK colour only valid with flush mounting', () => {
+    const valid = getValidEUSOptionsForStep('mounting', { colourLabel: 'CK' })
+    expect(valid).toEqual(['0'])
   })
 
-  it('CK never appears as valid colourLabel option', () => {
+  it('CR colour valid with all three mountings', () => {
+    const valid = getValidEUSOptionsForStep('mounting', { colourLabel: 'CR' })
+    expect(valid).toContain('0')
+    expect(valid).toContain('C')
+    expect(valid).toContain('D')
+  })
+
+  it('CK appears as valid colourLabel only with mounting=0 and sounder=10', () => {
+    const validFlush10 = getValidEUSOptionsForStep('colourLabel', {
+      mounting: '0',
+      sounder: '10',
+    })
+    expect(validFlush10).toContain('CK')
+
+    const invalidCombinations = [
+      { mounting: 'C', sounder: '10' },
+      { mounting: 'D', sounder: '10' },
+      { mounting: '0', sounder: '20' },
+      { mounting: '0', sounder: '30' },
+    ]
+    for (const sel of invalidCombinations) {
+      const valid = getValidEUSOptionsForStep('colourLabel', sel)
+      expect(valid).not.toContain('CK')
+    }
+  })
+
+  it('FR never appears as valid colourLabel option', () => {
     const combinations = [
       { mounting: '0' },
       { mounting: 'C' },
@@ -312,10 +345,11 @@ describe('getValidEUSOptionsForStep', () => {
       { sounder: '20' },
       { sounder: '30' },
       { mounting: '0', sounder: '10' },
+      { mounting: 'D', sounder: '30' },
     ]
     for (const sel of combinations) {
       const valid = getValidEUSOptionsForStep('colourLabel', sel)
-      expect(valid).not.toContain('CK')
+      expect(valid).not.toContain('FR')
     }
   })
 
@@ -336,10 +370,6 @@ describe('getValidEUSOptionsForStep', () => {
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// Constraint engine integration
-// ─────────────────────────────────────────────────────────────
-
 describe('EURO_STOPPER_CONSTRAINTS + constraintEngine', () => {
   const engine = createConstraintEngine(EURO_STOPPER_CONSTRAINTS)
 
@@ -350,6 +380,20 @@ describe('EURO_STOPPER_CONSTRAINTS + constraintEngine', () => {
 
   it('allows EG colourLabel when sounder=30', () => {
     const result = engine.checkOptionAvailability('colourLabel', 'EG', { sounder: '30' })
+    expect(result.available).toBe(true)
+  })
+
+  it('blocks EG colourLabel when mounting=0 or C', () => {
+    expect(
+      engine.checkOptionAvailability('colourLabel', 'EG', { mounting: '0' }).available,
+    ).toBe(false)
+    expect(
+      engine.checkOptionAvailability('colourLabel', 'EG', { mounting: 'C' }).available,
+    ).toBe(false)
+  })
+
+  it('allows EG colourLabel when mounting=D', () => {
+    const result = engine.checkOptionAvailability('colourLabel', 'EG', { mounting: 'D' })
     expect(result.available).toBe(true)
   })
 
@@ -367,18 +411,25 @@ describe('EURO_STOPPER_CONSTRAINTS + constraintEngine', () => {
     expect(result.available).toBe(true)
   })
 
-  it('blocks CR colourLabel when mounting=0 or C', () => {
+  it('blocks CK colourLabel when mounting=C or D', () => {
     expect(
-      engine.checkOptionAvailability('colourLabel', 'CR', { mounting: '0' }).available,
+      engine.checkOptionAvailability('colourLabel', 'CK', { mounting: 'C' }).available,
     ).toBe(false)
     expect(
-      engine.checkOptionAvailability('colourLabel', 'CR', { mounting: 'C' }).available,
+      engine.checkOptionAvailability('colourLabel', 'CK', { mounting: 'D' }).available,
     ).toBe(false)
   })
 
-  it('allows CR colourLabel when mounting=D', () => {
-    const result = engine.checkOptionAvailability('colourLabel', 'CR', { mounting: 'D' })
+  it('allows CK colourLabel when mounting=0', () => {
+    const result = engine.checkOptionAvailability('colourLabel', 'CK', { mounting: '0' })
     expect(result.available).toBe(true)
+  })
+
+  it('allows CR colourLabel for all mountings', () => {
+    for (const mounting of ['0', 'C', 'D']) {
+      const result = engine.checkOptionAvailability('colourLabel', 'CR', { mounting })
+      expect(result.available).toBe(true)
+    }
   })
 
   it('no mounting↔sounder constraints — mounting does not restrict sounder', () => {
@@ -395,10 +446,6 @@ describe('EURO_STOPPER_CONSTRAINTS + constraintEngine', () => {
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// buildProductModel integration
-// ─────────────────────────────────────────────────────────────
-
 describe('buildProductModel — euroStopper', () => {
   it('builds STI-15010CB correctly — flush, no sounder, blue custom', () => {
     const config: Configuration = { mounting: '0', sounder: '10', colourLabel: 'CB' }
@@ -407,10 +454,10 @@ describe('buildProductModel — euroStopper', () => {
     expect(result.isComplete).toBe(true)
   })
 
-  it('builds STI-15C30FR correctly — surface 32mm, relay, fire red', () => {
-    const config: Configuration = { mounting: 'C', sounder: '30', colourLabel: 'FR' }
+  it('builds STI-15C30CG correctly — surface 32mm, relay, green custom', () => {
+    const config: Configuration = { mounting: 'C', sounder: '30', colourLabel: 'CG' }
     const result = buildProductModel(config, euroStopperModel)
-    expect(result.fullCode).toBe('STI-15C30FR')
+    expect(result.fullCode).toBe('STI-15C30CG')
     expect(result.isComplete).toBe(true)
   })
 
@@ -418,6 +465,13 @@ describe('buildProductModel — euroStopper', () => {
     const config: Configuration = { mounting: 'D', sounder: '30', colourLabel: 'EG' }
     const result = buildProductModel(config, euroStopperModel)
     expect(result.fullCode).toBe('STI-15D30EG')
+    expect(result.isComplete).toBe(true)
+  })
+
+  it('builds STI-15010CK correctly — flush, no sounder, black custom', () => {
+    const config: Configuration = { mounting: '0', sounder: '10', colourLabel: 'CK' }
+    const result = buildProductModel(config, euroStopperModel)
+    expect(result.fullCode).toBe('STI-15010CK')
     expect(result.isComplete).toBe(true)
   })
 
@@ -443,7 +497,7 @@ describe('buildProductModel — euroStopper', () => {
     expect(result.missingSteps).toContain('colourLabel')
   })
 
-  it('all 57 valid codes generated from parsed configurations', () => {
+  it('all 70 valid codes generated from parsed configurations', () => {
     const validSet = new Set(VALID_MODEL_CODES)
     let matchCount = 0
 
@@ -461,10 +515,6 @@ describe('buildProductModel — euroStopper', () => {
     expect(matchCount).toBe(VALID_MODEL_CODES.length)
   })
 })
-
-// ─────────────────────────────────────────────────────────────
-// filterOptions completeness — euroStopper
-// ─────────────────────────────────────────────────────────────
 
 describe('isConfigurationComplete — euroStopper', () => {
   it('returns true when all three steps selected', () => {
@@ -525,10 +575,6 @@ describe('isConfigurationComplete — euroStopper', () => {
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// Model definition integrity
-// ─────────────────────────────────────────────────────────────
-
 describe('euroStopperModel definition', () => {
   it('has correct model id and slug', () => {
     expect(euroStopperModel.id).toBe('euro-stopper')
@@ -547,7 +593,7 @@ describe('euroStopperModel definition', () => {
     expect(ids).toEqual(['10', '20', '30'])
   })
 
-  it('colourLabel step has 17 options including CK not in allowlist', () => {
+  it('colourLabel step has 17 options including CK in model definition', () => {
     const colourStep = euroStopperModel.steps.find((s) => s.id === 'colourLabel')!
     expect(colourStep.options).toHaveLength(17)
     const ids = colourStep.options.map((o) => o.id)

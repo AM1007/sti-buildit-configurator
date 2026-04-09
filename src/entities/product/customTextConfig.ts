@@ -68,8 +68,8 @@ const MODEL_CUSTOM_TEXT_CONFIG: Partial<Record<ModelId, CustomTextConfig>> = {
   'g3-multipurpose-push-button': {
     stepId: 'text',
     optionId: 'ZA',
-    variant: 'multiline-three-line',
-    maxLength: 13,
+    variant: 'multiline-selectable',
+    maxLength: { oneLine: 13, twoLines: 13, threeLines: 13 },
     maxLines: 3,
     line2Required: false,
   },

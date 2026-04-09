@@ -53,7 +53,7 @@ describe('getCustomTextConfig', () => {
     expect(config).not.toBeNull()
     expect(config!.stepId).toBe('text')
     expect(config!.optionId).toBe('ZA')
-    expect(config!.variant).toBe('multiline-three-line')
+    expect(config!.variant).toBe('multiline-selectable')
   })
 
   it('returns null for unknown model', () => {
@@ -92,6 +92,11 @@ describe('getCustomTextConfig', () => {
     expect(config!.maxLines).toBe(3)
   })
 
+  it('g3-multipurpose-push-button has maxLines 3', () => {
+    const config = getCustomTextConfig('g3-multipurpose-push-button')
+    expect(config!.maxLines).toBe(3)
+  })
+
   it('call-point-stopper has maxLines 2', () => {
     const config = getCustomTextConfig('call-point-stopper')
     expect(config!.maxLines).toBe(2)
@@ -103,6 +108,12 @@ describe('getCustomTextVariant', () => {
     expect(getCustomTextVariant('indoor-push-buttons')).toBe('singleline')
   })
 
+  it('returns multiline-selectable for g3-multipurpose-push-button', () => {
+    expect(getCustomTextVariant('g3-multipurpose-push-button')).toBe(
+      'multiline-selectable',
+    )
+  })
+
   it('returns null for unknown model', () => {
     expect(getCustomTextVariant('nonexistent' as never)).toBeNull()
   })
@@ -111,6 +122,11 @@ describe('getCustomTextVariant', () => {
 describe('getCustomTextTrigger', () => {
   it('returns stepId and optionId for known model', () => {
     const trigger = getCustomTextTrigger('stopper-stations')
+    expect(trigger).toEqual({ stepId: 'text', optionId: 'ZA' })
+  })
+
+  it('returns stepId and optionId for g3-multipurpose-push-button', () => {
+    const trigger = getCustomTextTrigger('g3-multipurpose-push-button')
     expect(trigger).toEqual({ stepId: 'text', optionId: 'ZA' })
   })
 
@@ -313,12 +329,19 @@ describe('shouldShowCustomTextForm', () => {
 })
 
 describe('getMaxLength', () => {
-  it('returns numeric maxLength for model with number config', () => {
+  it('returns oneLine maxLength for g3 with 1 line', () => {
     expect(getMaxLength('g3-multipurpose-push-button', 1)).toBe(13)
+  })
+
+  it('returns twoLines maxLength for g3 with 2 lines', () => {
     expect(getMaxLength('g3-multipurpose-push-button', 2)).toBe(13)
   })
 
-  it('returns oneLine/twoLines for model with object config', () => {
+  it('returns threeLines maxLength for g3 with 3 lines', () => {
+    expect(getMaxLength('g3-multipurpose-push-button', 3)).toBe(13)
+  })
+
+  it('returns oneLine/twoLines for stopper-stations with object config', () => {
     expect(getMaxLength('stopper-stations', 1)).toBe(13)
     expect(getMaxLength('stopper-stations', 2)).toBe(20)
   })
@@ -364,31 +387,71 @@ describe('validateCustomText', () => {
     expect(result.errors).toContain('Custom text not supported for this model')
   })
 
-  it('validates multiline-three-line variant', () => {
+  it('validates g3 multiline-selectable with 1 line', () => {
+    const data = { lineCount: 1 as const, line1: 'Short', line2: '', line3: '' }
+    const result = validateCustomText(data, 'g3-multipurpose-push-button')
+    expect(result.valid).toBe(true)
+  })
+
+  it('validates g3 multiline-selectable with 2 lines', () => {
+    const data = { lineCount: 2 as const, line1: 'Line1', line2: 'Line2', line3: '' }
+    const result = validateCustomText(data, 'g3-multipurpose-push-button')
+    expect(result.valid).toBe(true)
+  })
+
+  it('validates g3 multiline-selectable with 3 lines', () => {
     const data = { lineCount: 3 as const, line1: 'Line1', line2: 'Line2', line3: 'Line3' }
     const result = validateCustomText(data, 'g3-multipurpose-push-button')
     expect(result.valid).toBe(true)
   })
 
-  it('rejects multiline-three-line when line exceeds max', () => {
-    const data = { lineCount: 3 as const, line1: 'A'.repeat(14), line2: '', line3: '' }
+  it('rejects g3 when line1 exceeds 13 characters', () => {
+    const data = { lineCount: 1 as const, line1: 'A'.repeat(14), line2: '', line3: '' }
     const result = validateCustomText(data, 'g3-multipurpose-push-button')
     expect(result.valid).toBe(false)
   })
 
-  it('validates multiline-selectable with 1 line', () => {
+  it('rejects g3 when line2 exceeds 13 characters', () => {
+    const data = { lineCount: 2 as const, line1: 'OK', line2: 'A'.repeat(14), line3: '' }
+    const result = validateCustomText(data, 'g3-multipurpose-push-button')
+    expect(result.valid).toBe(false)
+  })
+
+  it('rejects g3 when line3 exceeds 13 characters', () => {
+    const data = {
+      lineCount: 3 as const,
+      line1: 'OK',
+      line2: 'OK',
+      line3: 'A'.repeat(14),
+    }
+    const result = validateCustomText(data, 'g3-multipurpose-push-button')
+    expect(result.valid).toBe(false)
+  })
+
+  it('accepts g3 with all lines exactly at 13 characters', () => {
+    const data = {
+      lineCount: 3 as const,
+      line1: 'A'.repeat(13),
+      line2: 'B'.repeat(13),
+      line3: 'C'.repeat(13),
+    }
+    const result = validateCustomText(data, 'g3-multipurpose-push-button')
+    expect(result.valid).toBe(true)
+  })
+
+  it('validates multiline-selectable with 1 line for stopper-stations', () => {
     const data = { lineCount: 1 as const, line1: 'Short', line2: '', line3: '' }
     const result = validateCustomText(data, 'stopper-stations')
     expect(result.valid).toBe(true)
   })
 
-  it('validates multiline-selectable with 2 lines', () => {
+  it('validates multiline-selectable with 2 lines for stopper-stations', () => {
     const data = { lineCount: 2 as const, line1: 'Line1', line2: 'Line2', line3: '' }
     const result = validateCustomText(data, 'stopper-stations')
     expect(result.valid).toBe(true)
   })
 
-  it('rejects multiline-selectable when line exceeds 2-line max', () => {
+  it('rejects multiline-selectable when line exceeds 2-line max for stopper-stations', () => {
     const data = { lineCount: 2 as const, line1: 'A'.repeat(21), line2: '', line3: '' }
     const result = validateCustomText(data, 'stopper-stations')
     expect(result.valid).toBe(false)
@@ -400,7 +463,7 @@ describe('validateCustomText', () => {
     expect(result.valid).toBe(true)
   })
 
-  it('rejects multiline-selectable 3 lines when line3 exceeds max', () => {
+  it('rejects multiline-selectable 3 lines when line3 exceeds max for stopper-stations', () => {
     const data = {
       lineCount: 3 as const,
       line1: 'OK',
