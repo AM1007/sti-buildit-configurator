@@ -14,6 +14,7 @@ export type ModelId =
   | 'call-point-stopper'
   | 'enviro-armour'
   | 'euro-stopper'
+  | 'stopper-ii'
 
 export type StepId = string
 export type OptionId = string
@@ -41,6 +42,7 @@ export const MODEL_NAMES: Record<ModelId, string> = {
   'call-point-stopper': 'Call Point Stopper',
   'enviro-armour': 'EnviroArmour',
   'euro-stopper': 'Euro Stopper',
+  'stopper-ii': 'Stopper® II',
 }
 
 export interface Option {

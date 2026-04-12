@@ -1,0 +1,55 @@
+{
+  "meta": {
+    "name": "Stopper® II",
+    "description": "Enlarged dome cover for Stopper Stations and analogues",
+    "series": "Stopper II Series",
+    "badges": ["UV Stabilised", "Spring Loaded", "IP54 Available"],
+    "heroTitle": "Enlarged Dome Cover for Stopper Stations and Analogues",
+    "heroDescription": "The Stopper II is a series of enlarged dome-shaped protective covers designed for Stopper Station push buttons and compatible analogues. The clear polycarbonate dome with a spring-loaded hinge mechanism provides reliable physical protection against accidental or unauthorised activations while maintaining instant access to the button in an emergency. The range includes models for both indoor and outdoor installation, with outdoor variants rated to IP54.\n\nConfiguration options include models with a built-in sounder for local audible alert when the cover is lifted — powered either by a 9V PP3 battery or an external 12–24VDC supply. Six colour insert options are available alongside standard Fire Alarm and Emergency Exit labels, as well as the option for custom text. Mounting is flush or surface, with an optional enclosed back box for flush installations."
+  },
+  "steps": {
+    "environment": {
+      "title": "ENVIRONMENT",
+      "options": {
+        "indoor": "Indoor",
+        "outdoor": "Outdoor (IP54)"
+      }
+    },
+    "sounder": {
+      "title": "SOUNDER",
+      "options": {
+        "none": "No sounder",
+        "battery": "Built-in sounder (9V PP3 battery)",
+        "dc": "Built-in sounder (12–24VDC)"
+      }
+    },
+    "mounting": {
+      "title": "MOUNTING",
+      "options": {
+        "flush": "Flush mount",
+        "surface": "Surface mount",
+        "backbox": "Flush mount with back box"
+      }
+    },
+    "colour": {
+      "title": "COLOUR",
+      "options": {
+        "NR": "No colour insert (clear)",
+        "red": "Red",
+        "green": "Green",
+        "yellow": "Yellow",
+        "blue": "Blue",
+        "orange": "Orange"
+      }
+    },
+    "label": {
+      "title": "LABEL",
+      "options": {
+        "fire": "Fire Alarm label",
+        "emergency": "Emergency Exit label",
+        "none": "No label",
+        "custom": "Custom label (NON RETURNABLE)"
+      }
+    }
+  }
+}

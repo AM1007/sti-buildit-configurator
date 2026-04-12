@@ -15,6 +15,7 @@ import { enviroStopperModel } from './enviroStopper'
 import { callPointStopperModel } from './callPointStopper'
 import { enviroArmourModel } from './enviroArmour'
 import { euroStopperModel } from './euroStopper'
+import { stopperIIModel } from './stopperII'
 
 export const MODEL_REGISTRY: Record<ModelId, ModelDefinition> = {
   'stopper-stations': stopperStationsModel,
@@ -32,6 +33,7 @@ export const MODEL_REGISTRY: Record<ModelId, ModelDefinition> = {
   'call-point-stopper': callPointStopperModel,
   'enviro-armour': enviroArmourModel,
   'euro-stopper': euroStopperModel,
+  'stopper-ii': stopperIIModel,
 }
 
 export const PRODUCTION_MODEL_IDS: ModelId[] = [
@@ -50,6 +52,7 @@ export const PRODUCTION_MODEL_IDS: ModelId[] = [
   'call-point-stopper',
   'enviro-armour',
   'euro-stopper',
+  'stopper-ii',
 ]
 
 export function isProductionReady(modelId: ModelId): boolean {
@@ -101,3 +104,4 @@ export { enviroStopperModel } from './enviroStopper'
 export { callPointStopperModel } from './callPointStopper'
 export { enviroArmourModel } from './enviroArmour'
 export { euroStopperModel } from './euroStopper'
+export { stopperIIModel } from './stopperII'

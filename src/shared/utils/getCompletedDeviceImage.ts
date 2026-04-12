@@ -22,6 +22,15 @@ const STOPPER_COLOUR_TO_FOLDER: Record<string, string> = {
   '5': 'ORANGE',
 }
 
+const STOPPER_II_COLOUR_TO_FOLDER: Record<string, string> = {
+  red: 'RED',
+  green: 'GREEN',
+  yellow: 'YELLOW',
+  blue: 'BLUE',
+  orange: 'ORANGE',
+  NR: 'NR',
+}
+
 const MODEL_CONFIG: Record<
   string,
   {
@@ -230,6 +239,11 @@ const MODEL_CONFIG: Record<
       CY: 'YELLOW',
     },
     colourStep: 'colourLabel',
+  },
+  'stopper-ii': {
+    basePath: '/Stopper II/COMPLETED DEVICE',
+    colourMap: STOPPER_II_COLOUR_TO_FOLDER,
+    colourStep: 'colour',
   },
 }
 

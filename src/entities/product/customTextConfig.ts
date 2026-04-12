@@ -113,6 +113,14 @@ const MODEL_CUSTOM_TEXT_CONFIG: Partial<Record<ModelId, CustomTextConfig>> = {
     maxLines: 2,
     line2Required: false,
   },
+  'stopper-ii': {
+    stepId: 'label',
+    optionId: 'custom',
+    variant: 'multiline-fixed',
+    maxLength: 30,
+    maxLines: 2,
+    line2Required: false,
+  },
 }
 
 export function getCustomTextConfig(modelId: ModelId): CustomTextConfig | null {

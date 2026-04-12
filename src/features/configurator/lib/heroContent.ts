@@ -371,6 +371,21 @@ The Glow Guide, a unique material that is embedded in the perimeter of the frame
       { type: 'image', src: '/Euro Stopper/HERO/09.webp', alt: 'Euro Stopper' },
     ],
   },
+
+  'stopper-ii': {
+    modelId: 'stopper-ii',
+    title: 'Enlarged Dome Cover for Stopper Stations and Analogues',
+    description: `The Stopper II is a series of enlarged dome-shaped protective covers designed for Stopper Station push buttons and compatible analogues. The clear polycarbonate dome with a spring-loaded hinge mechanism provides reliable physical protection against accidental or unauthorised activations while maintaining instant access to the button in an emergency. The range includes models for both indoor and outdoor installation, with outdoor variants rated to IP54.
+
+Configuration options include models with a built-in sounder for local audible alert when the cover is lifted — powered either by a 9V PP3 battery or an external 12–24VDC supply. Six colour insert options are available alongside standard Fire Alarm and Emergency Exit labels, as well as the option for custom text. Mounting is flush or surface, with an optional enclosed back box for flush installations.`,
+    media: [
+      { type: 'image', src: '/Stopper II/HERO/01.webp', alt: 'Stopper II' },
+      { type: 'image', src: '/Stopper II/HERO/02.webp', alt: 'Stopper II' },
+      { type: 'image', src: '/Stopper II/HERO/03.webp', alt: 'Stopper II' },
+      { type: 'image', src: '/Stopper II/HERO/04.webp', alt: 'Stopper II' },
+      { type: 'image', src: '/Stopper II/HERO/05.webp', alt: 'Stopper II' },
+    ],
+  },
 }
 
 export function getHeroContent(modelId: string): ConfiguratorHeroData | null {

@@ -22,6 +22,7 @@ export { waterproofPushButtonsMeta } from './waterproofPushButtons'
 export { callPointStopperMeta } from './callPointStopper'
 export { enviroArmourMeta } from './enviroArmour'
 export { euroStopperMeta } from './euroStopper'
+export { stopperIIMeta } from './stopperII'
 
 import type { ConfiguratorMeta } from './types'
 import { g3MultipurposePushButtonMeta } from './g3MultipurposePushButton'
@@ -39,6 +40,7 @@ import { waterproofPushButtonsMeta } from './waterproofPushButtons'
 import { callPointStopperMeta } from './callPointStopper'
 import { enviroArmourMeta } from './enviroArmour'
 import { euroStopperMeta } from './euroStopper'
+import { stopperIIMeta } from './stopperII'
 
 export const allConfigurators: ConfiguratorMeta[] = [
   g3MultipurposePushButtonMeta,
@@ -56,6 +58,7 @@ export const allConfigurators: ConfiguratorMeta[] = [
   enviroStopperMeta,
   callPointStopperMeta,
   enviroArmourMeta,
+  stopperIIMeta,
 ]
 
 export function getConfiguratorBySlug(slug: string): ConfiguratorMeta | undefined {
