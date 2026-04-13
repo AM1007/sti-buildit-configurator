@@ -80,7 +80,7 @@ const steps: Step[] = [
         id: 'EG',
         label: '#EG Emergency Exit label (Green)',
         code: 'EG',
-        image: `${IMG}/COLOUR & LABEL/CG Green custom label.webp`,
+        image: `${IMG}/COLOUR & LABEL/EG Exit label.webp`,
       },
       // ASSUMPTION: EG has no dedicated image. Using Green custom-label as closest match.
 
