@@ -1,5 +1,5 @@
 import type { ModelConstraints, ConstraintMatrix } from './types'
-import { registerProductConstraints, buildAllowlistSet } from '../constraintRegistry'
+import { registerProductConstraints } from '../constraintRegistry'
 import type { Configuration } from '@shared/types'
 
 export const VALID_MODEL_CODES: readonly string[] = [
@@ -79,6 +79,15 @@ export const VALID_MODEL_CODES: readonly string[] = [
 
 const VALID_MODEL_SET = new Set(VALID_MODEL_CODES)
 
+const POWER_MAP: Record<string, string> = {
+  '0|20': 'battery',
+  '0|30': 'dc',
+  '1|20': 'battery',
+  '1|30': 'battery',
+  '2|20': 'battery',
+  '2|30': 'battery',
+}
+
 export interface USSelectionState {
   mounting?: string
   hoodSounder?: string
@@ -86,19 +95,11 @@ export interface USSelectionState {
   colourLabel?: string
 }
 
-function resolveHoodSounderCode(hoodSounder: string, power?: string): string {
-  if (hoodSounder === '20' && power === 'dc') return '30'
-  return hoodSounder
-}
-
 export function buildUSModelCode(selections: USSelectionState): string | null {
   const { mounting, hoodSounder, colourLabel } = selections
   if (!mounting || !hoodSounder || !colourLabel) return null
 
-  if (hoodSounder === '20' && !selections.power) return null
-
-  const hsCode = resolveHoodSounderCode(hoodSounder, selections.power)
-  return `STI-13${mounting}${hsCode}${colourLabel}`
+  return `STI-13${mounting}${hoodSounder}${colourLabel}`
 }
 
 export function parseUSModelCode(code: string): USSelectionState | null {
@@ -106,27 +107,11 @@ export function parseUSModelCode(code: string): USSelectionState | null {
   if (!match) return null
 
   const mounting = match[1]
-  const hsCode = match[2]
+  const hoodSounder = match[2]
   const colourLabel = match[3]
 
-  let hoodSounder: string
-  let power: string | undefined
-
-  if (hsCode === '00') {
-    hoodSounder = '00'
-    power = undefined
-  } else if (hsCode === '10') {
-    hoodSounder = '10'
-    power = undefined
-  } else if (hsCode === '20') {
-    hoodSounder = '20'
-    power = 'battery'
-  } else if (hsCode === '30') {
-    hoodSounder = '20'
-    power = 'dc'
-  } else {
-    return null
-  }
+  const powerKey = `${mounting}|${hoodSounder}`
+  const power = POWER_MAP[powerKey]
 
   return { mounting, hoodSounder, power, colourLabel }
 }
@@ -173,48 +158,78 @@ export function getValidUSOptionsForStep(
   return Array.from(validOptions)
 }
 
+function getPowerOptionsForConfig(config: Configuration): Set<string> {
+  const mounting = config.mounting
+  const hoodSounder = config.hoodSounder
+
+  if (hoodSounder === '00' || hoodSounder === '10') {
+    return new Set()
+  }
+
+  if (!hoodSounder) {
+    return new Set(['battery', 'dc'])
+  }
+
+  if (!mounting) {
+    const options = new Set<string>()
+    for (const key of Object.keys(POWER_MAP)) {
+      if (key.endsWith(`|${hoodSounder}`)) {
+        options.add(POWER_MAP[key])
+      }
+    }
+    return options
+  }
+
+  const powerKey = `${mounting}|${hoodSounder}`
+  const power = POWER_MAP[powerKey]
+  return power ? new Set([power]) : new Set()
+}
+
 const MOUNTING_TO_HOODSOUNDER: ConstraintMatrix = {
-  '0': ['00', '10', '20'],
-  '1': ['00', '10', '20'],
-  '2': ['10', '20'],
+  '0': ['00', '10', '20', '30'],
+  '1': ['00', '10', '20', '30'],
+  '2': ['10', '20', '30'],
 }
 
 const HOODSOUNDER_TO_MOUNTING: ConstraintMatrix = {
   '00': ['0', '1'],
   '10': ['0', '1', '2'],
   '20': ['0', '1', '2'],
+  '30': ['0', '1', '2'],
 }
 
 const HOODSOUNDER_TO_POWER: ConstraintMatrix = {
   '00': [],
   '10': [],
-  '20': ['battery', 'dc'],
+  '20': ['battery'],
+  '30': ['battery', 'dc'],
 }
 
 const POWER_TO_HOODSOUNDER: ConstraintMatrix = {
-  battery: ['20'],
-  dc: ['20'],
+  battery: ['20', '30'],
+  dc: ['30'],
 }
 
 const HOODSOUNDER_TO_COLOURLABEL: ConstraintMatrix = {
   '00': ['NC'],
   '10': ['CB', 'CG', 'CK', 'CR', 'CW', 'CY', 'EG', 'FR', 'NB', 'NG', 'NR', 'NW', 'NY'],
   '20': ['CB', 'CG', 'CR', 'CW', 'CY', 'EG', 'FR', 'NB', 'NG', 'NR', 'NY'],
+  '30': ['CB', 'CG', 'CR', 'CY', 'EG', 'FR', 'NB', 'NG', 'NR'],
 }
 
 const COLOURLABEL_TO_HOODSOUNDER: ConstraintMatrix = {
-  CB: ['10', '20'],
-  CG: ['10', '20'],
+  CB: ['10', '20', '30'],
+  CG: ['10', '20', '30'],
   CK: ['10'],
-  CR: ['10', '20'],
+  CR: ['10', '20', '30'],
   CW: ['10', '20'],
-  CY: ['10', '20'],
-  EG: ['10', '20'],
-  FR: ['10', '20'],
-  NB: ['10', '20'],
+  CY: ['10', '20', '30'],
+  EG: ['10', '20', '30'],
+  FR: ['10', '20', '30'],
+  NB: ['10', '20', '30'],
   NC: ['00'],
-  NG: ['10', '20'],
-  NR: ['10', '20'],
+  NG: ['10', '20', '30'],
+  NR: ['10', '20', '30'],
   NW: ['10'],
   NY: ['10', '20'],
 }
@@ -257,25 +272,6 @@ const COLOURLABEL_TO_MOUNTING: ConstraintMatrix = {
   NY: ['0', '1'],
 }
 
-const POWER_TO_COLOURLABEL: ConstraintMatrix = {
-  battery: ['CB', 'CG', 'CR', 'CW', 'CY', 'EG', 'FR', 'NB', 'NG', 'NR', 'NY'],
-  dc: ['CB', 'CG', 'CR', 'CY', 'EG', 'FR', 'NB', 'NG', 'NR'],
-}
-
-const COLOURLABEL_TO_POWER: ConstraintMatrix = {
-  CB: ['battery', 'dc'],
-  CG: ['battery', 'dc'],
-  CR: ['battery', 'dc'],
-  CW: ['battery'],
-  CY: ['battery', 'dc'],
-  EG: ['battery', 'dc'],
-  FR: ['battery', 'dc'],
-  NB: ['battery', 'dc'],
-  NG: ['battery', 'dc'],
-  NR: ['battery', 'dc'],
-  NY: ['battery'],
-}
-
 export const UNIVERSAL_STOPPER_CONSTRAINTS: ModelConstraints = {
   modelId: 'universal-stopper',
   constraints: [
@@ -314,9 +310,6 @@ export const UNIVERSAL_STOPPER_CONSTRAINTS: ModelConstraints = {
       targetStep: 'mounting',
       matrix: COLOURLABEL_TO_MOUNTING,
     },
-
-    { sourceStep: 'power', targetStep: 'colourLabel', matrix: POWER_TO_COLOURLABEL },
-    { sourceStep: 'colourLabel', targetStep: 'power', matrix: COLOURLABEL_TO_POWER },
   ],
 }
 
@@ -329,17 +322,29 @@ export const DEBUG_MATRICES = {
   COLOURLABEL_TO_HOODSOUNDER,
   MOUNTING_TO_COLOURLABEL,
   COLOURLABEL_TO_MOUNTING,
-  POWER_TO_COLOURLABEL,
-  COLOURLABEL_TO_POWER,
   VALID_MODEL_CODES,
 }
 
-const US_STEPS = ['mounting', 'hoodSounder', 'power', 'colourLabel']
+const SKU_STEPS = ['mounting', 'hoodSounder', 'colourLabel']
 
 function usAllowlistFn(stepId: string, config: Configuration): Set<string> | null {
-  return buildAllowlistSet(stepId, config, US_STEPS, (s, o) =>
-    getValidUSOptionsForStep(s as never, o as never),
+  if (stepId === 'power') {
+    return getPowerOptionsForConfig(config)
+  }
+
+  const others: Record<string, string | undefined> = {}
+  for (const k of SKU_STEPS) {
+    if (k !== stepId) {
+      const v = config[k as keyof Configuration]
+      others[k] = v ?? undefined
+    }
+  }
+
+  const valid = getValidUSOptionsForStep(
+    stepId as keyof USSelectionState,
+    others as Omit<USSelectionState, typeof stepId>,
   )
+  return new Set(valid)
 }
 
 registerProductConstraints(

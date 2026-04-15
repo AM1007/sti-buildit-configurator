@@ -52,6 +52,12 @@ const steps: Step[] = [
         code: '20',
         image: `${IMG}/HOOD & SOUNDER/20 Label Hood with Sounder.webp`,
       },
+      {
+        id: '30',
+        label: '#30 Label Hood with Sounder & Relay',
+        code: '30',
+        image: `${IMG}/HOOD & SOUNDER/30 Label Hood with Sounder & Relay.webp`,
+      },
     ],
   },
 
@@ -63,13 +69,13 @@ const steps: Step[] = [
       {
         id: 'battery',
         label: 'Battery 9V PP3',
-        code: 'battery',
+        code: '',
         image: `${IMG}/HOOD & SOUNDER/20 Label Hood with Sounder.webp`,
       },
       {
         id: 'dc',
         label: '12-24VDC',
-        code: 'dc',
+        code: '',
         image: `${IMG}/HOOD & SOUNDER/30 Label Hood with Sounder & Relay.webp`,
       },
     ],
@@ -179,22 +185,12 @@ export const universalStopperModel: ModelDefinition = {
 
   productModelSchema: {
     baseCode: 'STI-13',
-    partsOrder: ['mounting', 'hoodSounder', 'power', 'colourLabel'],
+    partsOrder: ['mounting', 'hoodSounder', 'colourLabel'],
     separator: 'none',
     separatorMap: {
       mounting: '',
       hoodSounder: '',
-      power: '',
       colourLabel: '',
-    },
-    codeLookup: {
-      steps: ['hoodSounder', 'power'],
-      map: {
-        '00|': '00',
-        '10|': '10',
-        '20|battery': '20',
-        '20|dc': '30',
-      },
     },
   },
 }

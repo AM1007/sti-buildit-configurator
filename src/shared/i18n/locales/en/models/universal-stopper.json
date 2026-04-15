@@ -19,9 +19,10 @@
     "hoodSounder": {
       "title": "HOOD / SOUNDER OPTION",
       "options": {
-        "00": "#00 Hood without marking",
-        "10": "#10 Marked hood, no sounder",
-        "20": "#20 Marked hood with sounder"
+        "00": "#00 Transparent cover",
+        "10": "#10 Colored cover (no buzzer)",
+        "20": "#20 Colored cover (with buzzer)",
+        "30": "#30 Colored cover (buzzer + relay)"
       }
     },
     "power": {
