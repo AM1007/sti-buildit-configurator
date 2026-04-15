@@ -108,8 +108,8 @@ const MODEL_CUSTOM_TEXT_CONFIG: Partial<Record<ModelId, CustomTextConfig>> = {
   'euro-stopper': {
     stepId: 'colourLabel',
     optionId: 'C',
-    variant: 'multiline-fixed',
-    maxLength: 20,
+    variant: 'multiline-selectable',
+    maxLength: { oneLine: 20, twoLines: 20 },
     maxLines: 2,
     line2Required: false,
   },

@@ -490,4 +490,69 @@ describe('validateCustomText', () => {
     const result = validateCustomText(data, 'stopper-stations')
     expect(result.valid).toBe(false)
   })
+
+  it('validates euro-stopper multiline-selectable with 1 line', () => {
+    const data = { lineCount: 1 as const, line1: 'Test', line2: '', line3: '' }
+    const result = validateCustomText(data, 'euro-stopper')
+    expect(result.valid).toBe(true)
+  })
+
+  it('validates euro-stopper multiline-selectable with 2 lines', () => {
+    const data = { lineCount: 2 as const, line1: 'Line1', line2: 'Line2', line3: '' }
+    const result = validateCustomText(data, 'euro-stopper')
+    expect(result.valid).toBe(true)
+  })
+
+  it('accepts euro-stopper with lines exactly at 20 characters', () => {
+    const data = {
+      lineCount: 2 as const,
+      line1: 'A'.repeat(20),
+      line2: 'B'.repeat(20),
+      line3: '',
+    }
+    const result = validateCustomText(data, 'euro-stopper')
+    expect(result.valid).toBe(true)
+  })
+
+  it('rejects euro-stopper when line1 exceeds 20 characters', () => {
+    const data = { lineCount: 1 as const, line1: 'A'.repeat(21), line2: '', line3: '' }
+    const result = validateCustomText(data, 'euro-stopper')
+    expect(result.valid).toBe(false)
+  })
+
+  it('rejects euro-stopper when line2 exceeds 20 characters', () => {
+    const data = { lineCount: 2 as const, line1: 'OK', line2: 'A'.repeat(21), line3: '' }
+    const result = validateCustomText(data, 'euro-stopper')
+    expect(result.valid).toBe(false)
+  })
+})
+
+describe('euro-stopper custom text config', () => {
+  it('has variant multiline-selectable', () => {
+    const config = getCustomTextConfig('euro-stopper')
+    expect(config).not.toBeNull()
+    expect(config!.variant).toBe('multiline-selectable')
+  })
+
+  it('has maxLines 2', () => {
+    const config = getCustomTextConfig('euro-stopper')
+    expect(config!.maxLines).toBe(2)
+  })
+
+  it('returns oneLine maxLength 20', () => {
+    expect(getMaxLength('euro-stopper', 1)).toBe(20)
+  })
+
+  it('returns twoLines maxLength 20', () => {
+    expect(getMaxLength('euro-stopper', 2)).toBe(20)
+  })
+
+  it('returns variant multiline-selectable via getCustomTextVariant', () => {
+    expect(getCustomTextVariant('euro-stopper')).toBe('multiline-selectable')
+  })
+
+  it('returns trigger with stepId colourLabel and optionId C', () => {
+    const trigger = getCustomTextTrigger('euro-stopper')
+    expect(trigger).toEqual({ stepId: 'colourLabel', optionId: 'C' })
+  })
 })
