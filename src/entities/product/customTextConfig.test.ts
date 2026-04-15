@@ -556,3 +556,70 @@ describe('euro-stopper custom text config', () => {
     expect(trigger).toEqual({ stepId: 'colourLabel', optionId: 'C' })
   })
 })
+
+describe('universal-stopper custom text config', () => {
+  it('has variant multiline-selectable', () => {
+    const config = getCustomTextConfig('universal-stopper')
+    expect(config).not.toBeNull()
+    expect(config!.variant).toBe('multiline-selectable')
+  })
+
+  it('has maxLines 2', () => {
+    const config = getCustomTextConfig('universal-stopper')
+    expect(config!.maxLines).toBe(2)
+  })
+
+  it('returns oneLine maxLength 30', () => {
+    expect(getMaxLength('universal-stopper', 1)).toBe(30)
+  })
+
+  it('returns twoLines maxLength 30', () => {
+    expect(getMaxLength('universal-stopper', 2)).toBe(30)
+  })
+
+  it('returns variant multiline-selectable via getCustomTextVariant', () => {
+    expect(getCustomTextVariant('universal-stopper')).toBe('multiline-selectable')
+  })
+
+  it('returns trigger with stepId colourLabel and optionId C', () => {
+    const trigger = getCustomTextTrigger('universal-stopper')
+    expect(trigger).toEqual({ stepId: 'colourLabel', optionId: 'C' })
+  })
+})
+
+describe('validateCustomText — universal-stopper', () => {
+  it('validates with 1 line', () => {
+    const data = { lineCount: 1 as const, line1: 'Test', line2: '', line3: '' }
+    const result = validateCustomText(data, 'universal-stopper')
+    expect(result.valid).toBe(true)
+  })
+
+  it('validates with 2 lines', () => {
+    const data = { lineCount: 2 as const, line1: 'Line1', line2: 'Line2', line3: '' }
+    const result = validateCustomText(data, 'universal-stopper')
+    expect(result.valid).toBe(true)
+  })
+
+  it('accepts lines exactly at 30 characters', () => {
+    const data = {
+      lineCount: 2 as const,
+      line1: 'A'.repeat(30),
+      line2: 'B'.repeat(30),
+      line3: '',
+    }
+    const result = validateCustomText(data, 'universal-stopper')
+    expect(result.valid).toBe(true)
+  })
+
+  it('rejects when line1 exceeds 30 characters', () => {
+    const data = { lineCount: 1 as const, line1: 'A'.repeat(31), line2: '', line3: '' }
+    const result = validateCustomText(data, 'universal-stopper')
+    expect(result.valid).toBe(false)
+  })
+
+  it('rejects when line2 exceeds 30 characters', () => {
+    const data = { lineCount: 2 as const, line1: 'OK', line2: 'A'.repeat(31), line3: '' }
+    const result = validateCustomText(data, 'universal-stopper')
+    expect(result.valid).toBe(false)
+  })
+})

@@ -21,8 +21,14 @@
       "options": {
         "00": "#00 Hood without marking",
         "10": "#10 Marked hood, no sounder",
-        "20": "#20 Marked hood with sounder",
-        "30": "#30 Marked hood with sounder and relay"
+        "20": "#20 Marked hood with sounder"
+      }
+    },
+    "power": {
+      "title": "POWER SUPPLY",
+      "options": {
+        "battery": "Battery 9V PP3",
+        "dc": "12-24VDC"
       }
     },
     "colourLabel": {

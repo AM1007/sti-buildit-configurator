@@ -15,8 +15,7 @@ function resolveLookupValue(model: ModelDefinition, config: Configuration): stri
   const keyParts: string[] = []
   for (const stepId of codeLookup.steps) {
     const val = config[stepId]
-    if (!val) return ''
-    keyParts.push(val)
+    keyParts.push(val ?? '')
   }
 
   return codeLookup.map[keyParts.join('|')] ?? ''

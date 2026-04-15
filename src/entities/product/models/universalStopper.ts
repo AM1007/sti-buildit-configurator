@@ -20,8 +20,6 @@ const steps: Step[] = [
         code: '1',
         image: `${IMG}/MOUNTING/1 Surface Mount - ClearOpen Backed Spacer (Dual Mount).webp`,
       },
-      // ASSUMPTION: No dedicated image for mounting=2. Reusing mounting=1 image.
-      // TODO: Replace with correct image when available.
       {
         id: '2',
         label: '#2 Surface Mount with Matching Coloured Frame',
@@ -54,10 +52,24 @@ const steps: Step[] = [
         code: '20',
         image: `${IMG}/HOOD & SOUNDER/20 Label Hood with Sounder.webp`,
       },
+    ],
+  },
+
+  {
+    id: 'power',
+    title: 'POWER SUPPLY',
+    required: false,
+    options: [
       {
-        id: '30',
-        label: '#30 Label Hood with Sounder & Relay',
-        code: '30',
+        id: 'battery',
+        label: 'Battery 9V PP3',
+        code: 'battery',
+        image: `${IMG}/HOOD & SOUNDER/20 Label Hood with Sounder.webp`,
+      },
+      {
+        id: 'dc',
+        label: '12-24VDC',
+        code: 'dc',
         image: `${IMG}/HOOD & SOUNDER/30 Label Hood with Sounder & Relay.webp`,
       },
     ],
@@ -163,16 +175,26 @@ export const universalStopperModel: ModelDefinition = {
 
   steps,
 
-  stepOrder: ['mounting', 'hoodSounder', 'colourLabel'],
+  stepOrder: ['mounting', 'hoodSounder', 'power', 'colourLabel'],
 
   productModelSchema: {
     baseCode: 'STI-13',
-    partsOrder: ['mounting', 'hoodSounder', 'colourLabel'],
+    partsOrder: ['mounting', 'hoodSounder', 'power', 'colourLabel'],
     separator: 'none',
     separatorMap: {
       mounting: '',
       hoodSounder: '',
+      power: '',
       colourLabel: '',
+    },
+    codeLookup: {
+      steps: ['hoodSounder', 'power'],
+      map: {
+        '00|': '00',
+        '10|': '10',
+        '20|battery': '20',
+        '20|dc': '30',
+      },
     },
   },
 }

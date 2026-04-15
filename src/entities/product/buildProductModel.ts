@@ -52,8 +52,7 @@ function resolveLookupCode(
   const keyParts: string[] = []
   for (const stepId of lookupSteps) {
     const val = config[stepId]
-    if (!val) return ''
-    keyParts.push(val)
+    keyParts.push(val ?? '')
   }
   return lookupMap[keyParts.join('|')] ?? ''
 }

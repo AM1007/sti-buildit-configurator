@@ -8,7 +8,10 @@ import type {
 } from '@shared/types'
 import { createEmptyConfiguration } from '@shared/types'
 import { getModelById } from '@entities/product'
-import { getSelectionsToReset } from '@features/configurator/lib/filterOptions'
+import {
+  getSelectionsToReset,
+  getVisibleSteps,
+} from '@features/configurator/lib/filterOptions'
 import {
   shouldClearCustomText,
   getCustomTextTrigger,
@@ -84,10 +87,16 @@ export const useConfigurationStore = create<ConfigurationState>()((set, get) => 
     }
 
     const currentIndex = model.stepOrder.indexOf(stepId)
-    const nextStep =
-      currentIndex < model.stepOrder.length - 1
-        ? model.stepOrder[currentIndex + 1]
-        : stepId
+    const visibleSteps = getVisibleSteps(model, newConfig)
+    const visibleIds = new Set(visibleSteps.map((s) => s.id))
+    let nextStep = stepId
+    for (let i = currentIndex + 1; i < model.stepOrder.length; i++) {
+      const candidate = model.stepOrder[i]
+      if (visibleIds.has(candidate) && !newConfig[candidate]) {
+        nextStep = candidate
+        break
+      }
+    }
 
     let newCustomText = customText
     if (shouldClearCustomText(currentModelId, stepId, prevOptionId, optionId)) {
