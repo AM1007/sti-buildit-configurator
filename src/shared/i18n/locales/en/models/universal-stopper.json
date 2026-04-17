@@ -1,54 +1,48 @@
 {
   "meta": {
     "name": "Universal Stopper®",
-    "description": "Protective enclosure for push buttons and switches",
+    "description": "Protective cover for buttons and switches",
     "series": "Universal Stopper Series",
-    "badges": ["IP54 Rated", "Indoor / Outdoor Use", "Optional Sounder"],
-    "heroTitle": "Dome Polycarbonate Protective Enclosure, IP54",
-    "heroDescription": "Dome polycarbonate enclosure for manual call points, emergency push buttons, control panels and electrical devices. IP54-rated configurations provide protection against impact, dust ingress and water splashes.\n\nAvailable with optional marked hood, sounder with relay and multiple colour and marking configurations. Supports flush, surface and coloured spacer mounting.\n\nIntended for indoor and outdoor installations requiring protection against unauthorised access or accidental activation."
+    "badges": ["IP54 rated", "Indoor & outdoor use", "Optional sounder"],
+    "heroTitle": "Dome protective cover for Stopper Station series buttons and equivalents, IP54",
+    "heroDescription": "Polycarbonate dome cover for manual fire alarm call points, emergency buttons, control panels and electrical devices. IP54-rated configurations provide protection against impact, dust and water spray.\n\nAvailable with optional labelled hood, sounder, relay and various colour and label options. Supports flush mount, surface mount and surface mount with coloured spacer frame.\n\nDesigned for indoor and outdoor installation where protection against unauthorised access or accidental activation is required."
   },
   "steps": {
     "mounting": {
-      "title": "MOUNTING TYPE",
+      "title": "MOUNTING",
       "options": {
-        "0": "#0 Flush mount, open back",
-        "1": "#1 Surface mount with transparent spacer (Dual Mount)",
-        "2": "#2 Surface mount with coloured spacer"
+        "0": "#0 Flush Mount Open Backed",
+        "1": "#1 Surface Mount - Clear/Open Backed Spacer (Dual Mount)",
+        "2": "#2 Surface Mount with Matching Coloured Frame"
       }
     },
     "hoodSounder": {
-      "title": "HOOD / SOUNDER OPTION",
+      "title": "HOOD & SOUNDER",
       "options": {
-        "00": "#00 Transparent cover",
-        "10": "#10 Colored cover (no buzzer)",
-        "20": "#20 Colored cover (with buzzer)",
-        "30": "#30 Colored cover (buzzer + relay)"
-      }
-    },
-    "power": {
-      "title": "POWER SUPPLY",
-      "options": {
-        "battery": "Battery 9V PP3",
-        "dc": "12-24VDC"
+        "prozory": "#00 Clear hood",
+        "color": "#10 Colour hood",
+        "sounder_battery": "#20 Colour, sounder, 9V PP3 battery",
+        "sounder_dc": "#30 Colour sounder, 12-24VDC",
+        "sounder_relay_battery": "#30 Colour sounder & relay, 9V PP3"
       }
     },
     "colourLabel": {
-      "title": "COLOUR AND MARKING",
+      "title": "COLOUR & LABEL",
       "options": {
-        "FR": "#FR Red, 'FIRE ALARM'",
-        "NR": "#NR Red, no marking",
-        "CR": "#CR Red, custom marking (NON-RETURNABLE)",
-        "EG": "#EG Green, 'EMERGENCY EXIT'",
-        "NG": "#NG Green, no marking",
-        "CG": "#CG Green, custom marking (NON-RETURNABLE)",
-        "NC": "#NC Clear, no marking",
-        "CK": "#CK Black, custom marking (NON-RETURNABLE)",
-        "NB": "#NB Blue, no marking",
-        "CB": "#CB Blue, custom marking (NON-RETURNABLE)",
-        "NW": "#NW White, no marking",
-        "CW": "#CW White, custom marking (NON-RETURNABLE)",
-        "NY": "#NY Yellow, no marking",
-        "CY": "#CY Yellow, custom marking (NON-RETURNABLE)"
+        "FR": "#FR Red 'FIRE ALARM' label",
+        "NR": "#NR Red no label",
+        "CR": "#CR Red custom label",
+        "EG": "#EG Green 'EMERGENCY EXIT' label",
+        "NG": "#NG Green no label",
+        "CG": "#CG Green custom label",
+        "NC": "#NC Clear no label",
+        "CK": "#CK Black custom label",
+        "NB": "#NB Blue no label",
+        "CB": "#CB Blue custom label",
+        "NW": "#NW White no label",
+        "CW": "#CW White custom label",
+        "NY": "#NY Yellow no label",
+        "CY": "#CY Yellow custom label"
       }
     }
   }

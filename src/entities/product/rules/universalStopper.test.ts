@@ -14,93 +14,127 @@ import {
   getMissingRequiredSteps,
   getCompletionPercentage,
   getVisibleSteps,
-  getOptionsWithAvailability,
 } from '@features/configurator/lib/filterOptions'
 import { createConstraintEngine } from '@entities/product/rules/constraintEngine'
 import type { Configuration } from '@shared/types'
 
 describe('buildUSModelCode', () => {
-  it('builds correct code from 3 SKU fields', () => {
+  it('builds correct code for prozory', () => {
     expect(
-      buildUSModelCode({ mounting: '0', hoodSounder: '10', colourLabel: 'FR' }),
+      buildUSModelCode({ mounting: '0', hoodSounder: 'prozory', colourLabel: 'NC' }),
+    ).toBe('STI-13000NC')
+  })
+
+  it('builds correct code for color', () => {
+    expect(
+      buildUSModelCode({ mounting: '0', hoodSounder: 'color', colourLabel: 'FR' }),
     ).toBe('STI-13010FR')
   })
 
-  it('builds correct code for hoodSounder 30', () => {
+  it('builds correct code for sounder_battery', () => {
     expect(
-      buildUSModelCode({ mounting: '1', hoodSounder: '30', colourLabel: 'FR' }),
+      buildUSModelCode({
+        mounting: '1',
+        hoodSounder: 'sounder_battery',
+        colourLabel: 'EG',
+      }),
+    ).toBe('STI-13120EG')
+  })
+
+  it('builds correct code for sounder_dc', () => {
+    expect(
+      buildUSModelCode({ mounting: '0', hoodSounder: 'sounder_dc', colourLabel: 'EG' }),
+    ).toBe('STI-13030EG')
+  })
+
+  it('builds correct code for sounder_relay_battery', () => {
+    expect(
+      buildUSModelCode({
+        mounting: '1',
+        hoodSounder: 'sounder_relay_battery',
+        colourLabel: 'FR',
+      }),
     ).toBe('STI-13130FR')
   })
 
-  it('power does not affect SKU', () => {
-    expect(
-      buildUSModelCode({
-        mounting: '0',
-        hoodSounder: '20',
-        power: 'battery',
-        colourLabel: 'FR',
-      }),
-    ).toBe('STI-13020FR')
-    expect(
-      buildUSModelCode({
-        mounting: '0',
-        hoodSounder: '20',
-        power: 'dc',
-        colourLabel: 'FR',
-      }),
-    ).toBe('STI-13020FR')
-    expect(
-      buildUSModelCode({ mounting: '0', hoodSounder: '20', colourLabel: 'FR' }),
-    ).toBe('STI-13020FR')
+  it('sounder_dc and sounder_relay_battery both produce SKU segment 30', () => {
+    const dc = buildUSModelCode({
+      mounting: '0',
+      hoodSounder: 'sounder_dc',
+      colourLabel: 'CR',
+    })
+    const relay = buildUSModelCode({
+      mounting: '1',
+      hoodSounder: 'sounder_relay_battery',
+      colourLabel: 'CR',
+    })
+    expect(dc).toBe('STI-13030CR')
+    expect(relay).toBe('STI-13130CR')
+    expect(dc!.slice(6, 8)).toBe('30')
+    expect(relay!.slice(6, 8)).toBe('30')
   })
 
   it('returns null when required fields are missing', () => {
-    expect(buildUSModelCode({ mounting: '0', hoodSounder: '10' })).toBeNull()
+    expect(buildUSModelCode({ mounting: '0', hoodSounder: 'color' })).toBeNull()
     expect(buildUSModelCode({ mounting: '0', colourLabel: 'FR' })).toBeNull()
-    expect(buildUSModelCode({ hoodSounder: '10', colourLabel: 'FR' })).toBeNull()
+    expect(buildUSModelCode({ hoodSounder: 'color', colourLabel: 'FR' })).toBeNull()
     expect(buildUSModelCode({})).toBeNull()
+  })
+
+  it('returns null for unknown hoodSounder id', () => {
+    expect(
+      buildUSModelCode({ mounting: '0', hoodSounder: 'unknown', colourLabel: 'FR' }),
+    ).toBeNull()
   })
 })
 
 describe('parseUSModelCode', () => {
-  it('parses code with hoodSounder 00 as power=undefined', () => {
-    const parsed = parseUSModelCode('STI-13000NC')
-    expect(parsed).toEqual({
+  it('parses STI-13000NC as prozory', () => {
+    expect(parseUSModelCode('STI-13000NC')).toEqual({
       mounting: '0',
-      hoodSounder: '00',
-      power: undefined,
+      hoodSounder: 'prozory',
       colourLabel: 'NC',
     })
   })
 
-  it('parses code with hoodSounder 10 as power=undefined', () => {
-    const parsed = parseUSModelCode('STI-13010FR')
-    expect(parsed).toEqual({
+  it('parses STI-13010FR as color', () => {
+    expect(parseUSModelCode('STI-13010FR')).toEqual({
       mounting: '0',
-      hoodSounder: '10',
-      power: undefined,
+      hoodSounder: 'color',
       colourLabel: 'FR',
     })
   })
 
-  it('parses flush mount + hoodSounder 20 as battery', () => {
-    const parsed = parseUSModelCode('STI-13020FR')
-    expect(parsed?.power).toBe('battery')
+  it('parses STI-13020FR as sounder_battery', () => {
+    expect(parseUSModelCode('STI-13020FR')).toEqual({
+      mounting: '0',
+      hoodSounder: 'sounder_battery',
+      colourLabel: 'FR',
+    })
   })
 
-  it('parses flush mount + hoodSounder 30 as dc', () => {
-    const parsed = parseUSModelCode('STI-13030EG')
-    expect(parsed?.power).toBe('dc')
+  it('parses STI-13030EG as sounder_dc (flush + segment 30)', () => {
+    expect(parseUSModelCode('STI-13030EG')).toEqual({
+      mounting: '0',
+      hoodSounder: 'sounder_dc',
+      colourLabel: 'EG',
+    })
   })
 
-  it('parses surface mount + hoodSounder 30 as battery', () => {
-    const parsed = parseUSModelCode('STI-13130FR')
-    expect(parsed?.power).toBe('battery')
+  it('parses STI-13130FR as sounder_relay_battery (surface + segment 30)', () => {
+    expect(parseUSModelCode('STI-13130FR')).toEqual({
+      mounting: '1',
+      hoodSounder: 'sounder_relay_battery',
+      colourLabel: 'FR',
+    })
   })
 
-  it('parses frame mount + hoodSounder 30 as battery', () => {
-    const parsed = parseUSModelCode('STI-13230FR')
-    expect(parsed?.power).toBe('battery')
+  it('parses STI-13230FR as sounder_relay_battery (frame + segment 30)', () => {
+    expect(parseUSModelCode('STI-13230FR')).toEqual({
+      mounting: '2',
+      hoodSounder: 'sounder_relay_battery',
+      colourLabel: 'FR',
+    })
   })
 
   it('parses all mounting variants', () => {
@@ -116,16 +150,12 @@ describe('parseUSModelCode', () => {
     expect(parseUSModelCode('STI-13010')).toBeNull()
   })
 
-  it('round-trips: build → parse keeps SKU fields', () => {
-    const code = buildUSModelCode({
-      mounting: '1',
-      hoodSounder: '30',
-      colourLabel: 'CG',
-    })!
-    const parsed = parseUSModelCode(code)
-    expect(parsed?.mounting).toBe('1')
-    expect(parsed?.hoodSounder).toBe('30')
-    expect(parsed?.colourLabel).toBe('CG')
+  it('round-trips all VALID_MODEL_CODES: parse → build = original', () => {
+    for (const code of VALID_MODEL_CODES) {
+      const parsed = parseUSModelCode(code)!
+      const rebuilt = buildUSModelCode(parsed)
+      expect(rebuilt).toBe(code)
+    }
   })
 })
 
@@ -152,7 +182,7 @@ describe('VALID_MODEL_CODES', () => {
     }
   })
 
-  it('contains newly added codes from updated product list', () => {
+  it('contains expected codes from product list', () => {
     const set = new Set(VALID_MODEL_CODES)
     expect(set.has('STI-13010CW')).toBe(true)
     expect(set.has('STI-13020CG')).toBe(true)
@@ -173,13 +203,21 @@ describe('VALID_MODEL_CODES', () => {
 describe('isValidUSCombination', () => {
   it('returns valid for known good combinations', () => {
     expect(
-      isValidUSCombination({ mounting: '0', hoodSounder: '10', colourLabel: 'FR' }),
+      isValidUSCombination({ mounting: '0', hoodSounder: 'color', colourLabel: 'FR' }),
     ).toEqual({ valid: true })
     expect(
-      isValidUSCombination({ mounting: '1', hoodSounder: '20', colourLabel: 'EG' }),
+      isValidUSCombination({
+        mounting: '1',
+        hoodSounder: 'sounder_battery',
+        colourLabel: 'EG',
+      }),
     ).toEqual({ valid: true })
     expect(
-      isValidUSCombination({ mounting: '2', hoodSounder: '30', colourLabel: 'FR' }),
+      isValidUSCombination({
+        mounting: '2',
+        hoodSounder: 'sounder_relay_battery',
+        colourLabel: 'FR',
+      }),
     ).toEqual({ valid: true })
   })
 
@@ -191,7 +229,7 @@ describe('isValidUSCombination', () => {
   it('returns invalid for non-existent combination', () => {
     const result = isValidUSCombination({
       mounting: '2',
-      hoodSounder: '00',
+      hoodSounder: 'prozory',
       colourLabel: 'NC',
     })
     expect(result.valid).toBe(false)
@@ -213,117 +251,143 @@ describe('getValidUSOptionsForStep', () => {
     expect(valid).toContain('2')
   })
 
-  it('hoodSounder=00 only valid with mounting 0 or 1', () => {
-    const valid = getValidUSOptionsForStep('mounting', { hoodSounder: '00' })
+  it('prozory only valid with mounting 0 or 1', () => {
+    const valid = getValidUSOptionsForStep('mounting', { hoodSounder: 'prozory' })
     expect(valid).toContain('0')
     expect(valid).toContain('1')
     expect(valid).not.toContain('2')
   })
 
-  it('NC colourLabel only valid with hoodSounder=00', () => {
+  it('NC colourLabel only valid with prozory', () => {
     const valid = getValidUSOptionsForStep('hoodSounder', { colourLabel: 'NC' })
-    expect(valid).toEqual(['00'])
+    expect(valid).toEqual(['prozory'])
   })
 
-  it('hoodSounder 30 is available', () => {
+  it('sounder_relay_battery available for mounting 1', () => {
     const valid = getValidUSOptionsForStep('hoodSounder', { mounting: '1' })
-    expect(valid).toContain('30')
+    expect(valid).toContain('sounder_relay_battery')
   })
 
-  it('power=dc only for flush+30', () => {
-    const valid = getValidUSOptionsForStep('power', { mounting: '0', hoodSounder: '30' })
-    expect(valid).toEqual(['dc'])
+  it('sounder_relay_battery not available for mounting 0', () => {
+    const valid = getValidUSOptionsForStep('hoodSounder', { mounting: '0' })
+    expect(valid).not.toContain('sounder_relay_battery')
   })
 
-  it('power=battery for surface+30', () => {
-    const valid = getValidUSOptionsForStep('power', { mounting: '1', hoodSounder: '30' })
-    expect(valid).toEqual(['battery'])
+  it('sounder_dc only available for mounting 0', () => {
+    const valid = getValidUSOptionsForStep('hoodSounder', { mounting: '0' })
+    expect(valid).toContain('sounder_dc')
+
+    expect(getValidUSOptionsForStep('hoodSounder', { mounting: '1' })).not.toContain(
+      'sounder_dc',
+    )
+    expect(getValidUSOptionsForStep('hoodSounder', { mounting: '2' })).not.toContain(
+      'sounder_dc',
+    )
   })
 
-  it('power=battery for any mounting+20', () => {
-    expect(
-      getValidUSOptionsForStep('power', { mounting: '0', hoodSounder: '20' }),
-    ).toEqual(['battery'])
-    expect(
-      getValidUSOptionsForStep('power', { mounting: '1', hoodSounder: '20' }),
-    ).toEqual(['battery'])
-    expect(
-      getValidUSOptionsForStep('power', { mounting: '2', hoodSounder: '20' }),
-    ).toEqual(['battery'])
+  it('mounting=0 has 4 hoodSounder options', () => {
+    const valid = getValidUSOptionsForStep('hoodSounder', { mounting: '0' })
+    expect(valid.sort()).toEqual(['color', 'prozory', 'sounder_battery', 'sounder_dc'])
   })
 
-  it('no power options for hoodSounder 00 or 10', () => {
-    expect(getValidUSOptionsForStep('power', { hoodSounder: '00' })).toHaveLength(0)
-    expect(getValidUSOptionsForStep('power', { hoodSounder: '10' })).toHaveLength(0)
+  it('mounting=1 has 4 hoodSounder options', () => {
+    const valid = getValidUSOptionsForStep('hoodSounder', { mounting: '1' })
+    expect(valid.sort()).toEqual([
+      'color',
+      'prozory',
+      'sounder_battery',
+      'sounder_relay_battery',
+    ])
+  })
+
+  it('mounting=2 has 3 hoodSounder options', () => {
+    const valid = getValidUSOptionsForStep('hoodSounder', { mounting: '2' })
+    expect(valid.sort()).toEqual(['color', 'sounder_battery', 'sounder_relay_battery'])
+  })
+
+  it('all 5 hoodSounder options when nothing selected', () => {
+    const valid = getValidUSOptionsForStep('hoodSounder', {})
+    expect(valid.sort()).toEqual([
+      'color',
+      'prozory',
+      'sounder_battery',
+      'sounder_dc',
+      'sounder_relay_battery',
+    ])
+  })
+
+  it('sounder_dc restricts colourLabel to 5 options', () => {
+    const valid = getValidUSOptionsForStep('colourLabel', { hoodSounder: 'sounder_dc' })
+    expect(valid.sort()).toEqual(['CG', 'CR', 'EG', 'NG', 'NR'])
+  })
+
+  it('sounder_dc restricts mounting to only 0', () => {
+    const valid = getValidUSOptionsForStep('mounting', { hoodSounder: 'sounder_dc' })
+    expect(valid).toEqual(['0'])
   })
 })
 
 describe('UNIVERSAL_STOPPER_CONSTRAINTS + constraintEngine', () => {
   const engine = createConstraintEngine(UNIVERSAL_STOPPER_CONSTRAINTS)
 
-  it('blocks hoodSounder=00 when mounting=2', () => {
-    const result = engine.checkOptionAvailability('hoodSounder', '00', { mounting: '2' })
-    expect(result.available).toBe(false)
-  })
-
-  it('allows hoodSounder=00 when mounting=0', () => {
-    const result = engine.checkOptionAvailability('hoodSounder', '00', { mounting: '0' })
-    expect(result.available).toBe(true)
-  })
-
-  it('allows hoodSounder=30 when mounting=1', () => {
-    const result = engine.checkOptionAvailability('hoodSounder', '30', { mounting: '1' })
-    expect(result.available).toBe(true)
-  })
-
-  it('blocks NC colourLabel when hoodSounder=10', () => {
-    const result = engine.checkOptionAvailability('colourLabel', 'NC', {
-      hoodSounder: '10',
+  it('blocks prozory when mounting=2', () => {
+    const result = engine.checkOptionAvailability('hoodSounder', 'prozory', {
+      mounting: '2',
     })
     expect(result.available).toBe(false)
   })
 
-  it('allows NC colourLabel when hoodSounder=00', () => {
-    const result = engine.checkOptionAvailability('colourLabel', 'NC', {
-      hoodSounder: '00',
+  it('allows prozory when mounting=0', () => {
+    const result = engine.checkOptionAvailability('hoodSounder', 'prozory', {
+      mounting: '0',
     })
     expect(result.available).toBe(true)
   })
 
-  it('blocks all power options when hoodSounder=00', () => {
-    expect(
-      engine.checkOptionAvailability('power', 'battery', { hoodSounder: '00' }).available,
-    ).toBe(false)
-    expect(
-      engine.checkOptionAvailability('power', 'dc', { hoodSounder: '00' }).available,
-    ).toBe(false)
+  it('allows sounder_relay_battery when mounting=1', () => {
+    const result = engine.checkOptionAvailability(
+      'hoodSounder',
+      'sounder_relay_battery',
+      { mounting: '1' },
+    )
+    expect(result.available).toBe(true)
   })
 
-  it('blocks all power options when hoodSounder=10', () => {
-    expect(
-      engine.checkOptionAvailability('power', 'battery', { hoodSounder: '10' }).available,
-    ).toBe(false)
-    expect(
-      engine.checkOptionAvailability('power', 'dc', { hoodSounder: '10' }).available,
-    ).toBe(false)
+  it('blocks sounder_relay_battery when mounting=0', () => {
+    const result = engine.checkOptionAvailability(
+      'hoodSounder',
+      'sounder_relay_battery',
+      { mounting: '0' },
+    )
+    expect(result.available).toBe(false)
   })
 
-  it('allows power=battery when hoodSounder=20', () => {
-    expect(
-      engine.checkOptionAvailability('power', 'battery', { hoodSounder: '20' }).available,
-    ).toBe(true)
+  it('blocks sounder_dc when mounting=1', () => {
+    const result = engine.checkOptionAvailability('hoodSounder', 'sounder_dc', {
+      mounting: '1',
+    })
+    expect(result.available).toBe(false)
   })
 
-  it('allows power=battery when hoodSounder=30', () => {
-    expect(
-      engine.checkOptionAvailability('power', 'battery', { hoodSounder: '30' }).available,
-    ).toBe(true)
+  it('allows sounder_dc when mounting=0', () => {
+    const result = engine.checkOptionAvailability('hoodSounder', 'sounder_dc', {
+      mounting: '0',
+    })
+    expect(result.available).toBe(true)
   })
 
-  it('allows power=dc when hoodSounder=30', () => {
-    expect(
-      engine.checkOptionAvailability('power', 'dc', { hoodSounder: '30' }).available,
-    ).toBe(true)
+  it('blocks NC colourLabel when hoodSounder=color', () => {
+    const result = engine.checkOptionAvailability('colourLabel', 'NC', {
+      hoodSounder: 'color',
+    })
+    expect(result.available).toBe(false)
+  })
+
+  it('allows NC colourLabel when hoodSounder=prozory', () => {
+    const result = engine.checkOptionAvailability('colourLabel', 'NC', {
+      hoodSounder: 'prozory',
+    })
+    expect(result.available).toBe(true)
   })
 
   it('constraint engine modelId matches', () => {
@@ -331,130 +395,11 @@ describe('UNIVERSAL_STOPPER_CONSTRAINTS + constraintEngine', () => {
   })
 })
 
-describe('power step visibility', () => {
-  it('power step is hidden when hoodSounder=00', () => {
-    const config: Configuration = {
-      mounting: '0',
-      hoodSounder: '00',
-      power: null,
-      colourLabel: null,
-    }
-    const visible = getVisibleSteps(universalStopperModel, config)
-    expect(visible.map((s) => s.id)).not.toContain('power')
-  })
-
-  it('power step is hidden when hoodSounder=10', () => {
-    const config: Configuration = {
-      mounting: '0',
-      hoodSounder: '10',
-      power: null,
-      colourLabel: null,
-    }
-    const visible = getVisibleSteps(universalStopperModel, config)
-    expect(visible.map((s) => s.id)).not.toContain('power')
-  })
-
-  it('power step is visible when hoodSounder=20', () => {
-    const config: Configuration = {
-      mounting: '0',
-      hoodSounder: '20',
-      power: null,
-      colourLabel: null,
-    }
-    const visible = getVisibleSteps(universalStopperModel, config)
-    expect(visible.map((s) => s.id)).toContain('power')
-  })
-
-  it('power step is visible when hoodSounder=30', () => {
-    const config: Configuration = {
-      mounting: '1',
-      hoodSounder: '30',
-      power: null,
-      colourLabel: null,
-    }
-    const visible = getVisibleSteps(universalStopperModel, config)
-    expect(visible.map((s) => s.id)).toContain('power')
-  })
-})
-
-describe('power allowlist 3-way constraints', () => {
-  it('flush + hoodSounder=30 allows only dc', () => {
-    const config: Configuration = {
-      mounting: '0',
-      hoodSounder: '30',
-      power: null,
-      colourLabel: null,
-    }
-    const powerStep = universalStopperModel.steps.find((s) => s.id === 'power')!
-    const options = getOptionsWithAvailability(
-      powerStep,
-      config,
-      universalStopperModel.id,
-    )
-    const available = options.filter(({ availability }) => availability.available)
-    expect(available.map(({ option }) => option.id)).toEqual(['dc'])
-  })
-
-  it('surface + hoodSounder=30 allows only battery', () => {
-    const config: Configuration = {
-      mounting: '1',
-      hoodSounder: '30',
-      power: null,
-      colourLabel: null,
-    }
-    const powerStep = universalStopperModel.steps.find((s) => s.id === 'power')!
-    const options = getOptionsWithAvailability(
-      powerStep,
-      config,
-      universalStopperModel.id,
-    )
-    const available = options.filter(({ availability }) => availability.available)
-    expect(available.map(({ option }) => option.id)).toEqual(['battery'])
-  })
-
-  it('frame + hoodSounder=30 allows only battery', () => {
-    const config: Configuration = {
-      mounting: '2',
-      hoodSounder: '30',
-      power: null,
-      colourLabel: null,
-    }
-    const powerStep = universalStopperModel.steps.find((s) => s.id === 'power')!
-    const options = getOptionsWithAvailability(
-      powerStep,
-      config,
-      universalStopperModel.id,
-    )
-    const available = options.filter(({ availability }) => availability.available)
-    expect(available.map(({ option }) => option.id)).toEqual(['battery'])
-  })
-
-  it('any mounting + hoodSounder=20 allows only battery', () => {
-    for (const mounting of ['0', '1', '2']) {
-      const config: Configuration = {
-        mounting,
-        hoodSounder: '20',
-        power: null,
-        colourLabel: null,
-      }
-      const powerStep = universalStopperModel.steps.find((s) => s.id === 'power')!
-      const options = getOptionsWithAvailability(
-        powerStep,
-        config,
-        universalStopperModel.id,
-      )
-      const available = options.filter(({ availability }) => availability.available)
-      expect(available.map(({ option }) => option.id)).toEqual(['battery'])
-    }
-  })
-})
-
 describe('buildProductModel — universalStopper', () => {
-  it('builds correct SKU ignoring power', () => {
+  it('builds correct SKU for color option', () => {
     const config: Configuration = {
       mounting: '0',
-      hoodSounder: '10',
-      power: null,
+      hoodSounder: 'color',
       colourLabel: 'FR',
     }
     const result = buildProductModel(config, universalStopperModel)
@@ -462,11 +407,10 @@ describe('buildProductModel — universalStopper', () => {
     expect(result.isComplete).toBe(true)
   })
 
-  it('builds correct SKU for hoodSounder 30', () => {
+  it('builds correct SKU for sounder_relay_battery', () => {
     const config: Configuration = {
       mounting: '1',
-      hoodSounder: '30',
-      power: 'battery',
+      hoodSounder: 'sounder_relay_battery',
       colourLabel: 'FR',
     }
     const result = buildProductModel(config, universalStopperModel)
@@ -474,11 +418,21 @@ describe('buildProductModel — universalStopper', () => {
     expect(result.isComplete).toBe(true)
   })
 
-  it('builds correct SKU for no label hood', () => {
+  it('builds correct SKU for sounder_dc', () => {
     const config: Configuration = {
       mounting: '0',
-      hoodSounder: '00',
-      power: null,
+      hoodSounder: 'sounder_dc',
+      colourLabel: 'EG',
+    }
+    const result = buildProductModel(config, universalStopperModel)
+    expect(result.fullCode).toBe('STI-13030EG')
+    expect(result.isComplete).toBe(true)
+  })
+
+  it('builds correct SKU for prozory', () => {
+    const config: Configuration = {
+      mounting: '0',
+      hoodSounder: 'prozory',
       colourLabel: 'NC',
     }
     const result = buildProductModel(config, universalStopperModel)
@@ -486,115 +440,82 @@ describe('buildProductModel — universalStopper', () => {
     expect(result.isComplete).toBe(true)
   })
 
-  it('power=battery does not change SKU', () => {
-    const withPower: Configuration = {
+  it('builds correct SKU for sounder_battery', () => {
+    const config: Configuration = {
       mounting: '0',
-      hoodSounder: '20',
-      power: 'battery',
+      hoodSounder: 'sounder_battery',
       colourLabel: 'FR',
     }
-    const withoutPower: Configuration = {
-      mounting: '0',
-      hoodSounder: '20',
-      power: null,
+    const result = buildProductModel(config, universalStopperModel)
+    expect(result.fullCode).toBe('STI-13020FR')
+    expect(result.isComplete).toBe(true)
+  })
+
+  it('builds correct SKU for frame mount + sounder_relay_battery', () => {
+    const config: Configuration = {
+      mounting: '2',
+      hoodSounder: 'sounder_relay_battery',
       colourLabel: 'FR',
     }
-    expect(buildProductModel(withPower, universalStopperModel).fullCode).toBe(
-      buildProductModel(withoutPower, universalStopperModel).fullCode,
-    )
+    const result = buildProductModel(config, universalStopperModel)
+    expect(result.fullCode).toBe('STI-13230FR')
+    expect(result.isComplete).toBe(true)
   })
 
   it('baseCode is STI-13', () => {
     const config: Configuration = {
       mounting: null,
       hoodSounder: null,
-      power: null,
       colourLabel: null,
     }
     expect(buildProductModel(config, universalStopperModel).baseCode).toBe('STI-13')
   })
 
-  it('is complete without power when hoodSounder has no sounder', () => {
-    const config: Configuration = {
-      mounting: '0',
-      hoodSounder: '00',
-      power: null,
-      colourLabel: 'NC',
-    }
-    const result = buildProductModel(config, universalStopperModel)
-    expect(result.isComplete).toBe(true)
-    expect(result.missingSteps).toHaveLength(0)
-  })
-
-  it('generated SKUs for all valid combinations exist in VALID_MODEL_CODES', () => {
-    const validSet = new Set(VALID_MODEL_CODES)
-    const mountings = ['0', '1', '2']
-    const hoodSounders = ['00', '10', '20', '30']
-    const colourLabels = [
-      'FR',
-      'NR',
-      'EG',
-      'NG',
-      'NC',
-      'CK',
-      'NB',
-      'CB',
-      'NW',
-      'CW',
-      'NY',
-      'CY',
-      'CR',
-      'CG',
-    ]
-
-    let checkedCount = 0
-    for (const mounting of mountings) {
-      for (const hoodSounder of hoodSounders) {
-        for (const colourLabel of colourLabels) {
-          const config: Configuration = {
-            mounting,
-            hoodSounder,
-            power: null,
-            colourLabel,
-          }
-          const result = buildProductModel(config, universalStopperModel)
-          if (validSet.has(result.fullCode)) {
-            checkedCount++
-          }
-        }
+  it('bijection: all 72 VALID_MODEL_CODES are generated from parsed configurations', () => {
+    const generated = new Set<string>()
+    for (const code of VALID_MODEL_CODES) {
+      const parsed = parseUSModelCode(code)!
+      const config: Configuration = {
+        mounting: parsed.mounting!,
+        hoodSounder: parsed.hoodSounder!,
+        colourLabel: parsed.colourLabel!,
       }
+      const result = buildProductModel(config, universalStopperModel)
+      generated.add(result.fullCode)
     }
-    expect(checkedCount).toBe(VALID_MODEL_CODES.length)
+    expect(generated.size).toBe(72)
+    for (const code of VALID_MODEL_CODES) {
+      expect(generated.has(code)).toBe(true)
+    }
   })
 })
 
 describe('isConfigurationComplete — universalStopper', () => {
-  it('returns true without power when hoodSounder has no sounder', () => {
-    const config: Configuration = {
-      mounting: '0',
-      hoodSounder: '10',
-      power: null,
-      colourLabel: 'FR',
-    }
-    expect(isConfigurationComplete(universalStopperModel, config)).toBe(true)
+  it('returns true when all 3 steps selected', () => {
+    expect(
+      isConfigurationComplete(universalStopperModel, {
+        mounting: '0',
+        hoodSounder: 'color',
+        colourLabel: 'FR',
+      }),
+    ).toBe(true)
   })
 
-  it('returns true with power when hoodSounder has sounder', () => {
-    const config: Configuration = {
-      mounting: '1',
-      hoodSounder: '20',
-      power: 'battery',
-      colourLabel: 'EG',
-    }
-    expect(isConfigurationComplete(universalStopperModel, config)).toBe(true)
+  it('returns true for sounder_dc combination', () => {
+    expect(
+      isConfigurationComplete(universalStopperModel, {
+        mounting: '0',
+        hoodSounder: 'sounder_dc',
+        colourLabel: 'EG',
+      }),
+    ).toBe(true)
   })
 
   it('returns false when colourLabel is missing', () => {
     expect(
       isConfigurationComplete(universalStopperModel, {
         mounting: '0',
-        hoodSounder: '10',
-        power: null,
+        hoodSounder: 'color',
         colourLabel: null,
       }),
     ).toBe(false)
@@ -605,46 +526,41 @@ describe('isConfigurationComplete — universalStopper', () => {
       isConfigurationComplete(universalStopperModel, {
         mounting: null,
         hoodSounder: null,
-        power: null,
         colourLabel: null,
       }),
     ).toBe(false)
   })
 
-  it('getMissingRequiredSteps does not include power', () => {
+  it('getMissingRequiredSteps lists unselected steps', () => {
     const config: Configuration = {
       mounting: '0',
       hoodSounder: null,
-      power: null,
       colourLabel: null,
     }
     const missing = getMissingRequiredSteps(universalStopperModel, config)
     expect(missing).toContain('hoodSounder')
     expect(missing).toContain('colourLabel')
     expect(missing).not.toContain('mounting')
-    expect(missing).not.toContain('power')
   })
 
-  it('getCompletionPercentage 100% without power when no sounder', () => {
+  it('getCompletionPercentage 100% when all 3 steps selected', () => {
     expect(
       getCompletionPercentage(universalStopperModel, {
         mounting: '0',
-        hoodSounder: '10',
-        power: null,
+        hoodSounder: 'color',
         colourLabel: 'FR',
       }),
     ).toBe(100)
   })
 
-  it('getCompletionPercentage 100% with power when sounder selected', () => {
+  it('getCompletionPercentage 33% when 1 of 3 steps selected', () => {
     expect(
       getCompletionPercentage(universalStopperModel, {
         mounting: '0',
-        hoodSounder: '20',
-        power: 'battery',
-        colourLabel: 'FR',
+        hoodSounder: null,
+        colourLabel: null,
       }),
-    ).toBe(100)
+    ).toBeCloseTo(33, 0)
   })
 })
 
@@ -654,16 +570,15 @@ describe('universalStopperModel definition', () => {
     expect(universalStopperModel.slug).toBe('universal-stopper')
   })
 
-  it('has 4 steps in stepOrder', () => {
+  it('has 3 steps in stepOrder', () => {
     expect(universalStopperModel.stepOrder).toEqual([
       'mounting',
       'hoodSounder',
-      'power',
       'colourLabel',
     ])
   })
 
-  it('partsOrder excludes power', () => {
+  it('partsOrder matches stepOrder', () => {
     expect(universalStopperModel.productModelSchema.partsOrder).toEqual([
       'mounting',
       'hoodSounder',
@@ -675,29 +590,34 @@ describe('universalStopperModel definition', () => {
     expect(universalStopperModel.productModelSchema.codeLookup).toBeUndefined()
   })
 
-  it('power step is not required', () => {
-    const powerStep = universalStopperModel.steps.find((s) => s.id === 'power')!
-    expect(powerStep.required).toBe(false)
-  })
-
-  it('other steps are required', () => {
+  it('all steps are required', () => {
     for (const step of universalStopperModel.steps) {
-      if (step.id === 'power') continue
       expect(step.required).toBe(true)
     }
   })
 
-  it('hoodSounder has 4 options (00, 10, 20, 30)', () => {
+  it('hoodSounder has 5 options', () => {
     const hoodStep = universalStopperModel.steps.find((s) => s.id === 'hoodSounder')!
-    expect(hoodStep.options.map((o) => o.id)).toEqual(['00', '10', '20', '30'])
+    expect(hoodStep.options.map((o) => o.id)).toEqual([
+      'prozory',
+      'color',
+      'sounder_battery',
+      'sounder_dc',
+      'sounder_relay_battery',
+    ])
   })
 
-  it('power has 2 options with empty code', () => {
-    const powerStep = universalStopperModel.steps.find((s) => s.id === 'power')!
-    expect(powerStep.options.map((o) => o.id)).toEqual(['battery', 'dc'])
-    for (const opt of powerStep.options) {
-      expect(opt.code).toBe('')
-    }
+  it('hoodSounder option codes: sounder_dc and sounder_relay_battery both map to 30', () => {
+    const hoodStep = universalStopperModel.steps.find((s) => s.id === 'hoodSounder')!
+    const dcOpt = hoodStep.options.find((o) => o.id === 'sounder_dc')!
+    const relayOpt = hoodStep.options.find((o) => o.id === 'sounder_relay_battery')!
+    expect(dcOpt.code).toBe('30')
+    expect(relayOpt.code).toBe('30')
+  })
+
+  it('no power step exists', () => {
+    const powerStep = universalStopperModel.steps.find((s) => s.id === 'power')
+    expect(powerStep).toBeUndefined()
   })
 
   it('baseCode is STI-13', () => {
@@ -710,11 +630,72 @@ describe('universalStopperModel definition', () => {
       .options.map((o) => o.code)
     expect(codes).toEqual(['0', '1', '2'])
   })
+})
 
-  it('hoodSounder option codes match SKU segment format', () => {
-    const codes = universalStopperModel.steps
-      .find((s) => s.id === 'hoodSounder')!
-      .options.map((o) => o.code)
-    expect(codes).toEqual(['00', '10', '20', '30'])
+describe('symmetric filtering', () => {
+  it('selecting sounder_dc first restricts mounting to 0 only', () => {
+    const mountings = getValidUSOptionsForStep('mounting', { hoodSounder: 'sounder_dc' })
+    expect(mountings).toEqual(['0'])
+  })
+
+  it('selecting sounder_dc first restricts colourLabel to 5 options', () => {
+    const labels = getValidUSOptionsForStep('colourLabel', { hoodSounder: 'sounder_dc' })
+    expect(labels.sort()).toEqual(['CG', 'CR', 'EG', 'NG', 'NR'])
+  })
+
+  it('selecting sounder_relay_battery restricts mounting to 1 and 2', () => {
+    const mountings = getValidUSOptionsForStep('mounting', {
+      hoodSounder: 'sounder_relay_battery',
+    })
+    expect(mountings.sort()).toEqual(['1', '2'])
+  })
+
+  it('selecting CK restricts hoodSounder to color only', () => {
+    const hoods = getValidUSOptionsForStep('hoodSounder', { colourLabel: 'CK' })
+    expect(hoods).toEqual(['color'])
+  })
+
+  it('selecting NC restricts hoodSounder to prozory only', () => {
+    const hoods = getValidUSOptionsForStep('hoodSounder', { colourLabel: 'NC' })
+    expect(hoods).toEqual(['prozory'])
+  })
+
+  it('selecting mounting=2 + sounder_relay_battery restricts colourLabel', () => {
+    const labels = getValidUSOptionsForStep('colourLabel', {
+      mounting: '2',
+      hoodSounder: 'sounder_relay_battery',
+    })
+    expect(labels.sort()).toEqual(['CB', 'CG', 'FR', 'NB'])
+  })
+
+  it('selecting FR restricts hoodSounder (no prozory, no sounder_dc)', () => {
+    const hoods = getValidUSOptionsForStep('hoodSounder', { colourLabel: 'FR' })
+    expect(hoods).not.toContain('prozory')
+    expect(hoods).not.toContain('sounder_dc')
+    expect(hoods).toContain('color')
+    expect(hoods).toContain('sounder_battery')
+    expect(hoods).toContain('sounder_relay_battery')
+  })
+})
+
+describe('getVisibleSteps — universalStopper', () => {
+  it('always shows 3 steps', () => {
+    const config: Configuration = {
+      mounting: null,
+      hoodSounder: null,
+      colourLabel: null,
+    }
+    const visible = getVisibleSteps(universalStopperModel, config)
+    expect(visible.map((s) => s.id)).toEqual(['mounting', 'hoodSounder', 'colourLabel'])
+  })
+
+  it('no power step in visible steps', () => {
+    const config: Configuration = {
+      mounting: '0',
+      hoodSounder: 'sounder_battery',
+      colourLabel: null,
+    }
+    const visible = getVisibleSteps(universalStopperModel, config)
+    expect(visible.map((s) => s.id)).not.toContain('power')
   })
 })

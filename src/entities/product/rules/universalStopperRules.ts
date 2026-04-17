@@ -79,19 +79,26 @@ export const VALID_MODEL_CODES: readonly string[] = [
 
 const VALID_MODEL_SET = new Set(VALID_MODEL_CODES)
 
-const POWER_MAP: Record<string, string> = {
-  '0|20': 'battery',
-  '0|30': 'dc',
-  '1|20': 'battery',
-  '1|30': 'battery',
-  '2|20': 'battery',
-  '2|30': 'battery',
+const HOOD_ID_TO_CODE: Record<string, string> = {
+  prozory: '00',
+  color: '10',
+  sounder_battery: '20',
+  sounder_dc: '30',
+  sounder_relay_battery: '30',
+}
+
+function skuSegmentToHoodId(mounting: string, hoodSegment: string): string | null {
+  if (hoodSegment === '00') return 'prozory'
+  if (hoodSegment === '10') return 'color'
+  if (hoodSegment === '20') return 'sounder_battery'
+  if (hoodSegment === '30' && mounting === '0') return 'sounder_dc'
+  if (hoodSegment === '30') return 'sounder_relay_battery'
+  return null
 }
 
 export interface USSelectionState {
   mounting?: string
   hoodSounder?: string
-  power?: string
   colourLabel?: string
 }
 
@@ -99,7 +106,10 @@ export function buildUSModelCode(selections: USSelectionState): string | null {
   const { mounting, hoodSounder, colourLabel } = selections
   if (!mounting || !hoodSounder || !colourLabel) return null
 
-  return `STI-13${mounting}${hoodSounder}${colourLabel}`
+  const hoodCode = HOOD_ID_TO_CODE[hoodSounder]
+  if (!hoodCode) return null
+
+  return `STI-13${mounting}${hoodCode}${colourLabel}`
 }
 
 export function parseUSModelCode(code: string): USSelectionState | null {
@@ -107,13 +117,13 @@ export function parseUSModelCode(code: string): USSelectionState | null {
   if (!match) return null
 
   const mounting = match[1]
-  const hoodSounder = match[2]
+  const hoodSegment = match[2]
   const colourLabel = match[3]
 
-  const powerKey = `${mounting}|${hoodSounder}`
-  const power = POWER_MAP[powerKey]
+  const hoodSounder = skuSegmentToHoodId(mounting, hoodSegment)
+  if (!hoodSounder) return null
 
-  return { mounting, hoodSounder, power, colourLabel }
+  return { mounting, hoodSounder, colourLabel }
 }
 
 export function isValidUSCombination(
@@ -158,80 +168,43 @@ export function getValidUSOptionsForStep(
   return Array.from(validOptions)
 }
 
-function getPowerOptionsForConfig(config: Configuration): Set<string> {
-  const mounting = config.mounting
-  const hoodSounder = config.hoodSounder
-
-  if (hoodSounder === '00' || hoodSounder === '10') {
-    return new Set()
-  }
-
-  if (!hoodSounder) {
-    return new Set(['battery', 'dc'])
-  }
-
-  if (!mounting) {
-    const options = new Set<string>()
-    for (const key of Object.keys(POWER_MAP)) {
-      if (key.endsWith(`|${hoodSounder}`)) {
-        options.add(POWER_MAP[key])
-      }
-    }
-    return options
-  }
-
-  const powerKey = `${mounting}|${hoodSounder}`
-  const power = POWER_MAP[powerKey]
-  return power ? new Set([power]) : new Set()
-}
-
 const MOUNTING_TO_HOODSOUNDER: ConstraintMatrix = {
-  '0': ['00', '10', '20', '30'],
-  '1': ['00', '10', '20', '30'],
-  '2': ['10', '20', '30'],
+  '0': ['prozory', 'color', 'sounder_battery', 'sounder_dc'],
+  '1': ['prozory', 'color', 'sounder_battery', 'sounder_relay_battery'],
+  '2': ['color', 'sounder_battery', 'sounder_relay_battery'],
 }
 
 const HOODSOUNDER_TO_MOUNTING: ConstraintMatrix = {
-  '00': ['0', '1'],
-  '10': ['0', '1', '2'],
-  '20': ['0', '1', '2'],
-  '30': ['0', '1', '2'],
-}
-
-const HOODSOUNDER_TO_POWER: ConstraintMatrix = {
-  '00': [],
-  '10': [],
-  '20': ['battery'],
-  '30': ['battery', 'dc'],
-}
-
-const POWER_TO_HOODSOUNDER: ConstraintMatrix = {
-  battery: ['20', '30'],
-  dc: ['30'],
+  prozory: ['0', '1'],
+  color: ['0', '1', '2'],
+  sounder_battery: ['0', '1', '2'],
+  sounder_dc: ['0'],
+  sounder_relay_battery: ['1', '2'],
 }
 
 const HOODSOUNDER_TO_COLOURLABEL: ConstraintMatrix = {
-  '00': ['NC'],
-  '10': ['CB', 'CG', 'CK', 'CR', 'CW', 'CY', 'EG', 'FR', 'NB', 'NG', 'NR', 'NW', 'NY'],
-  '20': ['CB', 'CG', 'CR', 'CW', 'CY', 'EG', 'FR', 'NB', 'NG', 'NR', 'NY'],
-  '30': ['CB', 'CG', 'CR', 'CY', 'EG', 'FR', 'NB', 'NG', 'NR'],
+  prozory: ['NC'],
+  color: ['CB', 'CG', 'CK', 'CR', 'CW', 'CY', 'EG', 'FR', 'NB', 'NG', 'NR', 'NW', 'NY'],
+  sounder_battery: ['CB', 'CG', 'CR', 'CW', 'CY', 'EG', 'FR', 'NB', 'NG', 'NR', 'NY'],
+  sounder_dc: ['CG', 'CR', 'EG', 'NG', 'NR'],
+  sounder_relay_battery: ['CB', 'CG', 'CR', 'CY', 'EG', 'FR', 'NB', 'NR'],
 }
 
 const COLOURLABEL_TO_HOODSOUNDER: ConstraintMatrix = {
-  CB: ['10', '20', '30'],
-  CG: ['10', '20', '30'],
-  CK: ['10'],
-  CR: ['10', '20', '30'],
-  CW: ['10', '20'],
-  CY: ['10', '20', '30'],
-  EG: ['10', '20', '30'],
-  FR: ['10', '20', '30'],
-  NB: ['10', '20', '30'],
-  NC: ['00'],
-  NG: ['10', '20', '30'],
-  NR: ['10', '20', '30'],
-  NW: ['10'],
-  NY: ['10', '20'],
+  CB: ['color', 'sounder_battery', 'sounder_relay_battery'],
+  CG: ['color', 'sounder_battery', 'sounder_dc', 'sounder_relay_battery'],
+  CK: ['color'],
+  CR: ['color', 'sounder_battery', 'sounder_dc', 'sounder_relay_battery'],
+  CW: ['color', 'sounder_battery'],
+  CY: ['color', 'sounder_battery', 'sounder_relay_battery'],
+  EG: ['color', 'sounder_battery', 'sounder_dc', 'sounder_relay_battery'],
+  FR: ['color', 'sounder_battery', 'sounder_relay_battery'],
+  NB: ['color', 'sounder_battery', 'sounder_relay_battery'],
+  NC: ['prozory'],
+  NG: ['color', 'sounder_battery', 'sounder_dc'],
+  NR: ['color', 'sounder_battery', 'sounder_dc', 'sounder_relay_battery'],
+  NW: ['color'],
+  NY: ['color', 'sounder_battery'],
 }
 
 const MOUNTING_TO_COLOURLABEL: ConstraintMatrix = {
@@ -285,10 +258,6 @@ export const UNIVERSAL_STOPPER_CONSTRAINTS: ModelConstraints = {
       targetStep: 'mounting',
       matrix: HOODSOUNDER_TO_MOUNTING,
     },
-
-    { sourceStep: 'hoodSounder', targetStep: 'power', matrix: HOODSOUNDER_TO_POWER },
-    { sourceStep: 'power', targetStep: 'hoodSounder', matrix: POWER_TO_HOODSOUNDER },
-
     {
       sourceStep: 'hoodSounder',
       targetStep: 'colourLabel',
@@ -299,7 +268,6 @@ export const UNIVERSAL_STOPPER_CONSTRAINTS: ModelConstraints = {
       targetStep: 'hoodSounder',
       matrix: COLOURLABEL_TO_HOODSOUNDER,
     },
-
     {
       sourceStep: 'mounting',
       targetStep: 'colourLabel',
@@ -316,8 +284,6 @@ export const UNIVERSAL_STOPPER_CONSTRAINTS: ModelConstraints = {
 export const DEBUG_MATRICES = {
   MOUNTING_TO_HOODSOUNDER,
   HOODSOUNDER_TO_MOUNTING,
-  HOODSOUNDER_TO_POWER,
-  POWER_TO_HOODSOUNDER,
   HOODSOUNDER_TO_COLOURLABEL,
   COLOURLABEL_TO_HOODSOUNDER,
   MOUNTING_TO_COLOURLABEL,
@@ -325,12 +291,10 @@ export const DEBUG_MATRICES = {
   VALID_MODEL_CODES,
 }
 
-const SKU_STEPS = ['mounting', 'hoodSounder', 'colourLabel']
+const SKU_STEPS: (keyof USSelectionState)[] = ['mounting', 'hoodSounder', 'colourLabel']
 
 function usAllowlistFn(stepId: string, config: Configuration): Set<string> | null {
-  if (stepId === 'power') {
-    return getPowerOptionsForConfig(config)
-  }
+  if (!SKU_STEPS.includes(stepId as keyof USSelectionState)) return null
 
   const others: Record<string, string | undefined> = {}
   for (const k of SKU_STEPS) {

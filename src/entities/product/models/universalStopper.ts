@@ -2,6 +2,29 @@ import type { ModelDefinition, Step } from '@shared/types'
 
 const IMG = '/Universal Stopper'
 
+const HOOD_COLOUR_MAP: Record<string, string> = {
+  FR: 'R',
+  NR: 'R',
+  CR: 'R',
+  EG: 'G',
+  NG: 'G',
+  CG: 'G',
+  NY: 'Y',
+  CY: 'Y',
+  NW: 'W',
+  CW: 'W',
+  NB: 'B',
+  CB: 'B',
+}
+
+function buildImageMap(baseName: string): Record<string, string> {
+  const map: Record<string, string> = {}
+  for (const [labelId, prefix] of Object.entries(HOOD_COLOUR_MAP)) {
+    map[labelId] = `${IMG}/HOOD & SOUNDER/${prefix}-${baseName}.webp`
+  }
+  return map
+}
+
 const steps: Step[] = [
   {
     id: 'mounting',
@@ -35,48 +58,38 @@ const steps: Step[] = [
     required: true,
     options: [
       {
-        id: '00',
+        id: 'prozory',
         label: '#00 No Label Hood',
         code: '00',
         image: `${IMG}/HOOD & SOUNDER/00 No Label Hood.webp`,
       },
       {
-        id: '10',
+        id: 'color',
         label: '#10 Label Hood without Sounder',
         code: '10',
         image: `${IMG}/HOOD & SOUNDER/10 Label Hood without Sounder.webp`,
+        imageMap: buildImageMap('10 Label Hood without Sounder'),
       },
       {
-        id: '20',
-        label: '#20 Label Hood with Sounder',
+        id: 'sounder_battery',
+        label: '#20 Label Hood with Sounder, 9V PP3 battery',
         code: '20',
         image: `${IMG}/HOOD & SOUNDER/20 Label Hood with Sounder.webp`,
+        imageMap: buildImageMap('20 Label Hood with Sounder'),
       },
       {
-        id: '30',
-        label: '#30 Label Hood with Sounder & Relay',
+        id: 'sounder_dc',
+        label: '#30 Label Hood with Sounder, 12-24VDC',
+        code: '30',
+        image: `${IMG}/HOOD & SOUNDER/20 Label Hood with Sounder.webp`,
+        imageMap: buildImageMap('20 Label Hood with Sounder'),
+      },
+      {
+        id: 'sounder_relay_battery',
+        label: '#30 Label Hood with Sounder & Relay, 9V PP3 battery',
         code: '30',
         image: `${IMG}/HOOD & SOUNDER/30 Label Hood with Sounder & Relay.webp`,
-      },
-    ],
-  },
-
-  {
-    id: 'power',
-    title: 'POWER SUPPLY',
-    required: false,
-    options: [
-      {
-        id: 'battery',
-        label: 'Battery 9V PP3',
-        code: '',
-        image: `${IMG}/HOOD & SOUNDER/20 Label Hood with Sounder.webp`,
-      },
-      {
-        id: 'dc',
-        label: '12-24VDC',
-        code: '',
-        image: `${IMG}/HOOD & SOUNDER/30 Label Hood with Sounder & Relay.webp`,
+        imageMap: buildImageMap('30 Label Hood with Sounder & Relay'),
       },
     ],
   },
@@ -181,7 +194,7 @@ export const universalStopperModel: ModelDefinition = {
 
   steps,
 
-  stepOrder: ['mounting', 'hoodSounder', 'power', 'colourLabel'],
+  stepOrder: ['mounting', 'hoodSounder', 'colourLabel'],
 
   productModelSchema: {
     baseCode: 'STI-13',
@@ -193,4 +206,6 @@ export const universalStopperModel: ModelDefinition = {
       colourLabel: '',
     },
   },
+
+  primaryDependencyStep: 'colourLabel',
 }
