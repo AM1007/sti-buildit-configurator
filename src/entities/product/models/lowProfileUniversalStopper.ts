@@ -2,21 +2,32 @@ import type { ModelDefinition, Step } from '@shared/types'
 
 const IMG = '/Low Profile Universal Stopper'
 
-const steps: Step[] = [
-  {
-    id: 'cover',
-    title: 'COVER',
-    required: true,
-    options: [
-      {
-        id: '14',
-        label: '#14 Low profile cover',
-        code: '14',
-        image: `${IMG}/COVER/14 Low profile cover.webp`,
-      },
-    ],
-  },
+const LPUS_COLOUR_MAP: Record<string, string> = {
+  FR: 'R',
+  EG: 'G',
+  NW: 'W',
+  CW: 'W',
+  NY: 'Y',
+  CY: 'Y',
+}
 
+function buildHoodImageMap(baseName: string): Record<string, string> {
+  const map: Record<string, string> = {}
+  for (const [labelId, prefix] of Object.entries(LPUS_COLOUR_MAP)) {
+    map[labelId] = `${IMG}/HOUSING SHELL/${prefix}-${baseName}.webp`
+  }
+  return map
+}
+
+function buildMountingImageMap(baseName: string): Record<string, string> {
+  const map: Record<string, string> = {}
+  for (const [labelId, prefix] of Object.entries(LPUS_COLOUR_MAP)) {
+    map[labelId] = `${IMG}/MOUNTING/${prefix}-${baseName}.webp`
+  }
+  return map
+}
+
+const steps: Step[] = [
   {
     id: 'mounting',
     title: 'MOUNTING',
@@ -34,13 +45,12 @@ const steps: Step[] = [
         code: '1',
         image: `${IMG}/MOUNTING/1 Surface Mount - ClearOpen Backed Spacer (Dual Mount).webp`,
       },
-      // ASSUMPTION: image for mounting "2" does not exist in /public/Low Profile Universal Stopper/MOUNTING/.
-      // Using placeholder path. Requires adding the actual image file.
       {
         id: '2',
         label: '#2 Surface Mount with Matching Coloured Frame',
         code: '2',
-        image: `${IMG}/MOUNTING/2 Surface Mount with Matching Coloured Frame.webp`,
+        image: `${IMG}/MOUNTING/2 Surface Mount Coloured Frame.webp`,
+        imageMap: buildMountingImageMap('2 Surface Mount Coloured Frame'),
       },
     ],
   },
@@ -61,12 +71,14 @@ const steps: Step[] = [
         label: '#10 Label Hood without Sounder',
         code: '10',
         image: `${IMG}/HOUSING SHELL/10 Label Hood without Sounder.webp`,
+        imageMap: buildHoodImageMap('10 Label Hood without Sounder'),
       },
       {
         id: '20',
         label: '#20 Label Hood with Sounder',
         code: '20',
         image: `${IMG}/HOUSING SHELL/20 Label Hood with Sounder EXTENDED LEAD TIMES.webp`,
+        imageMap: buildHoodImageMap('20 Label Hood with Sounder EXTENDED LEAD TIMES'),
       },
     ],
   },
@@ -101,6 +113,12 @@ const steps: Step[] = [
         image: `${IMG}/COLOUR & LABEL/NW White no label.webp`,
       },
       {
+        id: 'CW',
+        label: '#CW White custom label NON RETURNABLE',
+        code: 'CW',
+        image: `${IMG}/COLOUR & LABEL/CW White custom label NON RETURNABLE.webp`,
+      },
+      {
         id: 'NY',
         label: '#NY Yellow no label',
         code: 'NY',
@@ -123,17 +141,18 @@ export const lowProfileUniversalStopperModel: ModelDefinition = {
 
   steps,
 
-  stepOrder: ['cover', 'mounting', 'hoodSounder', 'colourLabel'],
+  stepOrder: ['mounting', 'hoodSounder', 'colourLabel'],
 
   productModelSchema: {
-    baseCode: 'STI',
-    partsOrder: ['cover', 'mounting', 'hoodSounder', 'colourLabel'],
+    baseCode: 'STI-14',
+    partsOrder: ['mounting', 'hoodSounder', 'colourLabel'],
     separator: 'none',
     separatorMap: {
-      cover: '-',
       mounting: '',
       hoodSounder: '',
       colourLabel: '',
     },
   },
+
+  primaryDependencyStep: 'colourLabel',
 }

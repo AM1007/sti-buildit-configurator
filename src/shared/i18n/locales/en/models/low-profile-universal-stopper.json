@@ -1,44 +1,39 @@
 {
   "meta": {
     "name": "Low Profile Universal Stopper®",
-    "description": "Low-profile protective enclosure for call points, push buttons and key switches",
+    "description": "Low profile protective cover for manual call points, buttons and key switches",
     "series": "Universal Stopper Series",
-    "badges": ["IP54 Rated", "Indoor / Outdoor Use", "Optional Sounder"],
-    "heroTitle": "Low-Profile IP54 Protective Enclosure with Optional LED Sounder",
-    "heroDescription": "Low-profile polycarbonate enclosure for manual call points, push buttons and key switches. IP54-rated configurations provide protection against dust ingress and water splashes.\n\nAvailable with optional LED sounder and marked hood. Supports flush, surface and coloured spacer mounting configurations.\n\nIntended for indoor and outdoor installations requiring protection against misuse, impact or accidental activation."
+    "badges": ["IP54 rated", "Indoor & outdoor use", "Optional sounder"],
+    "heroTitle": "Low profile protective cover with sounder and LED indicator, IP54",
+    "heroDescription": "Low profile polycarbonate cover for manual fire alarm call points, buttons and key switches. IP54-rated configurations provide protection against dust and water spray.\n\nAvailable with sounder, LED indicator and labelled hood. Supports flush mount, surface mount with clear spacer and surface mount with coloured spacer frame.\n\nDesigned for indoor and outdoor installation where protection against unauthorised access or accidental activation is required."
   },
   "steps": {
-    "cover": {
-      "title": "ENCLOSURE TYPE",
+    "mounting": {
+      "title": "MOUNTING",
       "options": {
-        "14": "#14 Low-profile enclosure"
+        "0": "#0 Flush Mount Open Backed",
+        "1": "#1 Surface Mount - Clear/Open Backed Spacer (Dual Mount)",
+        "2": "#2 Surface Mount with Matching Coloured Frame"
       }
     },
     "hoodSounder": {
-      "title": "HOOD / SOUNDER OPTION",
+      "title": "HOOD & SOUNDER",
       "options": {
-        "00": "#00 Hood without marking",
-        "10": "#10 Marked hood, no sounder",
-        "20": "#20 Marked hood with sounder"
+        "00": "#00 Clear hood",
+        "10": "#10 Colour hood without sounder",
+        "20": "#20 Colour hood with sounder"
       }
     },
     "colourLabel": {
-      "title": "COLOUR AND MARKING",
+      "title": "COLOUR & LABEL",
       "options": {
-        "FR": "#FR Red, 'FIRE ALARM'",
-        "EG": "#EG Green, 'EMERGENCY EXIT'",
-        "NC": "#NC Clear, no marking",
-        "NW": "#NW White, no marking",
-        "NY": "#NY Yellow, no marking",
-        "CY": "#CY Yellow, custom marking (NON-RETURNABLE)"
-      }
-    },
-    "mounting": {
-      "title": "MOUNTING TYPE",
-      "options": {
-        "0": "#0 Flush mount, open back",
-        "1": "#1 Surface mount with transparent spacer (Dual Mount)",
-        "2": "#2 Surface mount with coloured spacer"
+        "FR": "#FR Red 'FIRE ALARM' label",
+        "EG": "#EG Green 'EMERGENCY EXIT' label",
+        "NC": "#NC Clear no label",
+        "NW": "#NW White no label",
+        "CW": "#CW White custom label",
+        "NY": "#NY Yellow no label",
+        "CY": "#CY Yellow custom label"
       }
     }
   }

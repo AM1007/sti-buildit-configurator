@@ -17,10 +17,6 @@ import {
 import { createConstraintEngine } from '@entities/product/rules/constraintEngine'
 import type { Configuration } from '@shared/types'
 
-// ─────────────────────────────────────────────────────────────
-// buildLPUSModelCode
-// ─────────────────────────────────────────────────────────────
-
 describe('buildLPUSModelCode', () => {
   it('builds STI-14000NC correctly', () => {
     expect(
@@ -34,16 +30,28 @@ describe('buildLPUSModelCode', () => {
     ).toBe('STI-14110FR')
   })
 
-  it('builds STI-14200NW correctly — mounting=2 only NW', () => {
+  it('builds STI-14200NW correctly', () => {
     expect(
       buildLPUSModelCode({ mounting: '2', hoodSounder: '00', colourLabel: 'NW' }),
     ).toBe('STI-14200NW')
+  })
+
+  it('builds STI-14200CW correctly', () => {
+    expect(
+      buildLPUSModelCode({ mounting: '2', hoodSounder: '00', colourLabel: 'CW' }),
+    ).toBe('STI-14200CW')
   })
 
   it('builds STI-14220CY correctly', () => {
     expect(
       buildLPUSModelCode({ mounting: '2', hoodSounder: '20', colourLabel: 'CY' }),
     ).toBe('STI-14220CY')
+  })
+
+  it('builds STI-14010CY correctly', () => {
+    expect(
+      buildLPUSModelCode({ mounting: '0', hoodSounder: '10', colourLabel: 'CY' }),
+    ).toBe('STI-14010CY')
   })
 
   it('returns null when any field is missing', () => {
@@ -53,10 +61,6 @@ describe('buildLPUSModelCode', () => {
     expect(buildLPUSModelCode({})).toBeNull()
   })
 })
-
-// ─────────────────────────────────────────────────────────────
-// parseLPUSModelCode
-// ─────────────────────────────────────────────────────────────
 
 describe('parseLPUSModelCode', () => {
   it('parses STI-14000NC correctly', () => {
@@ -72,6 +76,14 @@ describe('parseLPUSModelCode', () => {
       mounting: '2',
       hoodSounder: '20',
       colourLabel: 'CY',
+    })
+  })
+
+  it('parses STI-14200CW correctly', () => {
+    expect(parseLPUSModelCode('STI-14200CW')).toEqual({
+      mounting: '2',
+      hoodSounder: '00',
+      colourLabel: 'CW',
     })
   })
 
@@ -92,29 +104,25 @@ describe('parseLPUSModelCode', () => {
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// VALID_MODEL_CODES integrity
-// ─────────────────────────────────────────────────────────────
-
 describe('VALID_MODEL_CODES', () => {
-  it('contains exactly 14 entries', () => {
-    expect(VALID_MODEL_CODES.length).toBe(14)
+  it('contains exactly 16 entries', () => {
+    expect(VALID_MODEL_CODES.length).toBe(16)
   })
 
   it('has no duplicates', () => {
-    expect(new Set(VALID_MODEL_CODES).size).toBe(14)
+    expect(new Set(VALID_MODEL_CODES).size).toBe(16)
   })
 
-  it('5 flush (0), 7 surface dual (1), 2 surface+frame (2)', () => {
+  it('6 flush (0), 7 surface dual (1), 3 surface+frame (2)', () => {
     expect(
       VALID_MODEL_CODES.filter((c) => parseLPUSModelCode(c)?.mounting === '0').length,
-    ).toBe(5)
+    ).toBe(6)
     expect(
       VALID_MODEL_CODES.filter((c) => parseLPUSModelCode(c)?.mounting === '1').length,
     ).toBe(7)
     expect(
       VALID_MODEL_CODES.filter((c) => parseLPUSModelCode(c)?.mounting === '2').length,
-    ).toBe(2)
+    ).toBe(3)
   })
 
   it('mounting=2 only has hoodSounder=00 or 20, never 10', () => {
@@ -132,6 +140,14 @@ describe('VALID_MODEL_CODES', () => {
     expect(nwCodes[0]).toBe('STI-14200NW')
   })
 
+  it('CW colourLabel only with mounting=2 and hoodSounder=00', () => {
+    const cwCodes = VALID_MODEL_CODES.filter(
+      (c) => parseLPUSModelCode(c)?.colourLabel === 'CW',
+    )
+    expect(cwCodes).toHaveLength(1)
+    expect(cwCodes[0]).toBe('STI-14200CW')
+  })
+
   it('NC colourLabel only with hoodSounder=00', () => {
     const ncCodes = VALID_MODEL_CODES.filter(
       (c) => parseLPUSModelCode(c)?.colourLabel === 'NC',
@@ -139,6 +155,12 @@ describe('VALID_MODEL_CODES', () => {
     for (const code of ncCodes) {
       expect(parseLPUSModelCode(code)?.hoodSounder).toBe('00')
     }
+  })
+
+  it('contains newly added codes', () => {
+    const set = new Set(VALID_MODEL_CODES)
+    expect(set.has('STI-14010CY')).toBe(true)
+    expect(set.has('STI-14200CW')).toBe(true)
   })
 
   it('false positive STI-14010FR not in allowlist', () => {
@@ -162,12 +184,8 @@ describe('VALID_MODEL_CODES', () => {
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// isValidLPUSCombination
-// ─────────────────────────────────────────────────────────────
-
 describe('isValidLPUSCombination', () => {
-  it('all 14 VALID_MODEL_CODES pass validation', () => {
+  it('all 16 VALID_MODEL_CODES pass validation', () => {
     for (const code of VALID_MODEL_CODES) {
       const parsed = parseLPUSModelCode(code)!
       expect(isValidLPUSCombination(parsed)).toEqual({ valid: true })
@@ -182,7 +200,7 @@ describe('isValidLPUSCombination', () => {
     })
   })
 
-  it('rejects false positive STI-14010FR — flush, label hood, fire red', () => {
+  it('rejects false positive STI-14010FR', () => {
     const result = isValidLPUSCombination({
       mounting: '0',
       hoodSounder: '10',
@@ -192,7 +210,7 @@ describe('isValidLPUSCombination', () => {
     if (!result.valid) expect(result.reason).toContain('STI-14010FR')
   })
 
-  it('rejects false positive STI-14120CY — surface, sounder, yellow custom', () => {
+  it('rejects false positive STI-14120CY', () => {
     const result = isValidLPUSCombination({
       mounting: '1',
       hoodSounder: '20',
@@ -223,10 +241,6 @@ describe('isValidLPUSCombination', () => {
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// getValidLPUSOptionsForStep
-// ─────────────────────────────────────────────────────────────
-
 describe('getValidLPUSOptionsForStep', () => {
   it('returns all three mountings when nothing selected', () => {
     const valid = getValidLPUSOptionsForStep('mounting', {})
@@ -242,10 +256,11 @@ describe('getValidLPUSOptionsForStep', () => {
     expect(valid).toContain('20')
   })
 
-  it('hoodSounder=00 only allows NC and NW colourLabels', () => {
+  it('hoodSounder=00 allows NC, NW and CW colourLabels', () => {
     const valid = getValidLPUSOptionsForStep('colourLabel', { hoodSounder: '00' })
     expect(valid).toContain('NC')
     expect(valid).toContain('NW')
+    expect(valid).toContain('CW')
     expect(valid).not.toContain('FR')
     expect(valid).not.toContain('EG')
     expect(valid).not.toContain('NY')
@@ -257,9 +272,19 @@ describe('getValidLPUSOptionsForStep', () => {
     expect(valid).toEqual(['00'])
   })
 
+  it('CW colourLabel only valid with mounting=2', () => {
+    const valid = getValidLPUSOptionsForStep('mounting', { colourLabel: 'CW' })
+    expect(valid).toEqual(['2'])
+  })
+
   it('NW colourLabel only valid with mounting=2', () => {
     const valid = getValidLPUSOptionsForStep('mounting', { colourLabel: 'NW' })
     expect(valid).toEqual(['2'])
+  })
+
+  it('CY colourLabel valid with all mountings', () => {
+    const valid = getValidLPUSOptionsForStep('mounting', { colourLabel: 'CY' })
+    expect(valid.sort()).toEqual(['0', '1', '2'])
   })
 
   it('NY colourLabel not valid with mounting=2', () => {
@@ -269,14 +294,20 @@ describe('getValidLPUSOptionsForStep', () => {
     expect(valid).toContain('1')
   })
 
-  it('mounting=2 only allows NW and CY colourLabels', () => {
+  it('mounting=2 allows NW, CW and CY colourLabels', () => {
     const valid = getValidLPUSOptionsForStep('colourLabel', { mounting: '2' })
     expect(valid).toContain('NW')
+    expect(valid).toContain('CW')
     expect(valid).toContain('CY')
     expect(valid).not.toContain('NC')
     expect(valid).not.toContain('FR')
     expect(valid).not.toContain('EG')
     expect(valid).not.toContain('NY')
+  })
+
+  it('mounting=0 allows CY', () => {
+    const valid = getValidLPUSOptionsForStep('colourLabel', { mounting: '0' })
+    expect(valid).toContain('CY')
   })
 
   it('hoodSounder=20 only allows FR, EG, CY', () => {
@@ -289,10 +320,6 @@ describe('getValidLPUSOptionsForStep', () => {
     expect(valid).not.toContain('NY')
   })
 })
-
-// ─────────────────────────────────────────────────────────────
-// Constraint engine integration
-// ─────────────────────────────────────────────────────────────
 
 describe('LOW_PROFILE_UNIVERSAL_STOPPER_CONSTRAINTS + constraintEngine', () => {
   const engine = createConstraintEngine(LOW_PROFILE_UNIVERSAL_STOPPER_CONSTRAINTS)
@@ -328,6 +355,13 @@ describe('LOW_PROFILE_UNIVERSAL_STOPPER_CONSTRAINTS + constraintEngine', () => {
     ).toBe(true)
   })
 
+  it('allows CW colourLabel when hoodSounder=00', () => {
+    expect(
+      engine.checkOptionAvailability('colourLabel', 'CW', { hoodSounder: '00' })
+        .available,
+    ).toBe(true)
+  })
+
   it('blocks NW colourLabel when mounting=0 or 1', () => {
     for (const mounting of ['0', '1']) {
       expect(
@@ -358,14 +392,9 @@ describe('LOW_PROFILE_UNIVERSAL_STOPPER_CONSTRAINTS + constraintEngine', () => {
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// buildProductModel integration
-// ─────────────────────────────────────────────────────────────
-
 describe('buildProductModel — lowProfileUniversalStopper', () => {
-  it('builds STI-14000NC correctly — cover fixed as 14', () => {
+  it('builds STI-14000NC correctly', () => {
     const config: Configuration = {
-      cover: '14',
       mounting: '0',
       hoodSounder: '00',
       colourLabel: 'NC',
@@ -377,7 +406,6 @@ describe('buildProductModel — lowProfileUniversalStopper', () => {
 
   it('builds STI-14110FR correctly', () => {
     const config: Configuration = {
-      cover: '14',
       mounting: '1',
       hoodSounder: '10',
       colourLabel: 'FR',
@@ -389,7 +417,6 @@ describe('buildProductModel — lowProfileUniversalStopper', () => {
 
   it('builds STI-14200NW correctly', () => {
     const config: Configuration = {
-      cover: '14',
       mounting: '2',
       hoodSounder: '00',
       colourLabel: 'NW',
@@ -399,9 +426,19 @@ describe('buildProductModel — lowProfileUniversalStopper', () => {
     expect(result.isComplete).toBe(true)
   })
 
+  it('builds STI-14200CW correctly', () => {
+    const config: Configuration = {
+      mounting: '2',
+      hoodSounder: '00',
+      colourLabel: 'CW',
+    }
+    const result = buildProductModel(config, lowProfileUniversalStopperModel)
+    expect(result.fullCode).toBe('STI-14200CW')
+    expect(result.isComplete).toBe(true)
+  })
+
   it('builds STI-14220CY correctly', () => {
     const config: Configuration = {
-      cover: '14',
       mounting: '2',
       hoodSounder: '20',
       colourLabel: 'CY',
@@ -411,34 +448,30 @@ describe('buildProductModel — lowProfileUniversalStopper', () => {
     expect(result.isComplete).toBe(true)
   })
 
-  it('cover uses dash separator, others have none', () => {
+  it('builds STI-14010CY correctly', () => {
     const config: Configuration = {
-      cover: '14',
       mounting: '0',
-      hoodSounder: '00',
-      colourLabel: 'NC',
+      hoodSounder: '10',
+      colourLabel: 'CY',
     }
     const result = buildProductModel(config, lowProfileUniversalStopperModel)
-    expect(result.fullCode).toContain('-14')
-    expect(result.fullCode).not.toContain('-0')
-    expect(result.fullCode).not.toContain('-00')
-    expect(result.fullCode).not.toContain('-NC')
+    expect(result.fullCode).toBe('STI-14010CY')
+    expect(result.isComplete).toBe(true)
   })
 
-  it('baseCode is STI', () => {
+  it('baseCode is STI-14', () => {
     const config: Configuration = {
-      cover: null,
       mounting: null,
       hoodSounder: null,
       colourLabel: null,
     }
-    const result = buildProductModel(config, lowProfileUniversalStopperModel)
-    expect(result.baseCode).toBe('STI')
+    expect(buildProductModel(config, lowProfileUniversalStopperModel).baseCode).toBe(
+      'STI-14',
+    )
   })
 
   it('marks incomplete when steps missing', () => {
     const config: Configuration = {
-      cover: '14',
       mounting: '0',
       hoodSounder: null,
       colourLabel: null,
@@ -449,32 +482,28 @@ describe('buildProductModel — lowProfileUniversalStopper', () => {
     expect(result.missingSteps).toContain('colourLabel')
   })
 
-  it('all 14 valid codes generated from parsed configurations using cover=14', () => {
-    const validSet = new Set(VALID_MODEL_CODES)
-    let matchCount = 0
+  it('bijection: all 16 valid codes generated from parsed configurations', () => {
+    const generated = new Set<string>()
     for (const code of VALID_MODEL_CODES) {
       const parsed = parseLPUSModelCode(code)!
       const config: Configuration = {
-        cover: '14',
-        mounting: parsed.mounting ?? null,
-        hoodSounder: parsed.hoodSounder ?? null,
-        colourLabel: parsed.colourLabel ?? null,
+        mounting: parsed.mounting!,
+        hoodSounder: parsed.hoodSounder!,
+        colourLabel: parsed.colourLabel!,
       }
       const result = buildProductModel(config, lowProfileUniversalStopperModel)
-      if (validSet.has(result.fullCode)) matchCount++
+      generated.add(result.fullCode)
     }
-    expect(matchCount).toBe(VALID_MODEL_CODES.length)
+    expect(generated.size).toBe(16)
+    for (const code of VALID_MODEL_CODES) {
+      expect(generated.has(code)).toBe(true)
+    }
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// filterOptions completeness — lowProfileUniversalStopper
-// ─────────────────────────────────────────────────────────────
-
 describe('isConfigurationComplete — lowProfileUniversalStopper', () => {
-  it('returns true when all 4 steps selected', () => {
+  it('returns true when all 3 steps selected', () => {
     const config: Configuration = {
-      cover: '14',
       mounting: '0',
       hoodSounder: '00',
       colourLabel: 'NC',
@@ -485,7 +514,6 @@ describe('isConfigurationComplete — lowProfileUniversalStopper', () => {
   it('returns false when any step missing', () => {
     expect(
       isConfigurationComplete(lowProfileUniversalStopperModel, {
-        cover: '14',
         mounting: '0',
         hoodSounder: '00',
         colourLabel: null,
@@ -495,7 +523,6 @@ describe('isConfigurationComplete — lowProfileUniversalStopper', () => {
 
   it('getMissingRequiredSteps returns correct missing steps', () => {
     const config: Configuration = {
-      cover: '14',
       mounting: '1',
       hoodSounder: null,
       colourLabel: null,
@@ -503,14 +530,12 @@ describe('isConfigurationComplete — lowProfileUniversalStopper', () => {
     const missing = getMissingRequiredSteps(lowProfileUniversalStopperModel, config)
     expect(missing).toContain('hoodSounder')
     expect(missing).toContain('colourLabel')
-    expect(missing).not.toContain('cover')
     expect(missing).not.toContain('mounting')
   })
 
-  it('getCompletionPercentage for 4-step model', () => {
+  it('getCompletionPercentage for 3-step model', () => {
     expect(
       getCompletionPercentage(lowProfileUniversalStopperModel, {
-        cover: '14',
         mounting: '0',
         hoodSounder: '00',
         colourLabel: 'NC',
@@ -519,27 +544,21 @@ describe('isConfigurationComplete — lowProfileUniversalStopper', () => {
 
     expect(
       getCompletionPercentage(lowProfileUniversalStopperModel, {
-        cover: null,
         mounting: null,
         hoodSounder: null,
         colourLabel: null,
       }),
     ).toBe(0)
 
-    const partial = getCompletionPercentage(lowProfileUniversalStopperModel, {
-      cover: '14',
-      mounting: '0',
-      hoodSounder: null,
-      colourLabel: null,
-    })
-    expect(partial).toBeGreaterThan(0)
-    expect(partial).toBeLessThan(100)
+    expect(
+      getCompletionPercentage(lowProfileUniversalStopperModel, {
+        mounting: '0',
+        hoodSounder: null,
+        colourLabel: null,
+      }),
+    ).toBeCloseTo(33, 0)
   })
 })
-
-// ─────────────────────────────────────────────────────────────
-// Model definition integrity
-// ─────────────────────────────────────────────────────────────
 
 describe('lowProfileUniversalStopperModel definition', () => {
   it('has correct model id and slug', () => {
@@ -547,10 +566,17 @@ describe('lowProfileUniversalStopperModel definition', () => {
     expect(lowProfileUniversalStopperModel.slug).toBe('low-profile-universal-stopper')
   })
 
-  it('cover step has exactly one option — 14', () => {
-    const coverStep = lowProfileUniversalStopperModel.steps.find((s) => s.id === 'cover')!
-    expect(coverStep.options).toHaveLength(1)
-    expect(coverStep.options[0].id).toBe('14')
+  it('has 3 steps in stepOrder (no cover)', () => {
+    expect(lowProfileUniversalStopperModel.stepOrder).toEqual([
+      'mounting',
+      'hoodSounder',
+      'colourLabel',
+    ])
+  })
+
+  it('no cover step exists', () => {
+    const coverStep = lowProfileUniversalStopperModel.steps.find((s) => s.id === 'cover')
+    expect(coverStep).toBeUndefined()
   })
 
   it('hoodSounder step has 3 options — 00, 10, 20', () => {
@@ -561,28 +587,32 @@ describe('lowProfileUniversalStopperModel definition', () => {
     expect(ids).toEqual(['00', '10', '20'])
   })
 
-  it('colourLabel step has 6 options', () => {
+  it('colourLabel step has 7 options', () => {
     const clStep = lowProfileUniversalStopperModel.steps.find(
       (s) => s.id === 'colourLabel',
     )!
-    expect(clStep.options).toHaveLength(6)
+    expect(clStep.options).toHaveLength(7)
   })
 
-  it('baseCode is STI', () => {
-    expect(lowProfileUniversalStopperModel.productModelSchema.baseCode).toBe('STI')
+  it('baseCode is STI-14', () => {
+    expect(lowProfileUniversalStopperModel.productModelSchema.baseCode).toBe('STI-14')
   })
 
-  it('cover uses dash separator, others have none', () => {
-    const { separatorMap } = lowProfileUniversalStopperModel.productModelSchema
-    expect(separatorMap?.cover).toBe('-')
-    expect(separatorMap?.mounting).toBe('')
-    expect(separatorMap?.hoodSounder).toBe('')
-    expect(separatorMap?.colourLabel).toBe('')
+  it('partsOrder matches stepOrder', () => {
+    expect(lowProfileUniversalStopperModel.productModelSchema.partsOrder).toEqual([
+      'mounting',
+      'hoodSounder',
+      'colourLabel',
+    ])
   })
 
   it('all steps are required', () => {
     for (const step of lowProfileUniversalStopperModel.steps) {
       expect(step.required).toBe(true)
     }
+  })
+
+  it('has primaryDependencyStep colourLabel', () => {
+    expect(lowProfileUniversalStopperModel.primaryDependencyStep).toBe('colourLabel')
   })
 })

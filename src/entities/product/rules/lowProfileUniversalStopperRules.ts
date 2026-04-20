@@ -4,19 +4,21 @@ import type { Configuration } from '@shared/types'
 
 export const VALID_MODEL_CODES: readonly string[] = [
   'STI-14000NC',
+  'STI-14010CY',
   'STI-14010EG',
   'STI-14010NY',
-  'STI-14020FR',
   'STI-14020EG',
+  'STI-14020FR',
 
   'STI-14100NC',
-  'STI-14110FR',
-  'STI-14110EG',
   'STI-14110CY',
+  'STI-14110EG',
+  'STI-14110FR',
   'STI-14110NY',
-  'STI-14120FR',
   'STI-14120EG',
+  'STI-14120FR',
 
+  'STI-14200CW',
   'STI-14200NW',
   'STI-14220CY',
 ] as const
@@ -102,33 +104,35 @@ const HOODSOUDER_TO_MOUNTING: ConstraintMatrix = {
 }
 
 const MOUNTING_TO_COLOURLABEL: ConstraintMatrix = {
-  '0': ['NC', 'EG', 'NY', 'FR'],
-  '1': ['NC', 'FR', 'EG', 'CY', 'NY'],
-  '2': ['NW', 'CY'],
+  '0': ['CY', 'EG', 'FR', 'NC', 'NY'],
+  '1': ['CY', 'EG', 'FR', 'NC', 'NY'],
+  '2': ['CW', 'CY', 'NW'],
 }
 
 const COLOURLABEL_TO_MOUNTING: ConstraintMatrix = {
-  NC: ['0', '1'],
+  CW: ['2'],
+  CY: ['0', '1', '2'],
   EG: ['0', '1'],
-  NY: ['0', '1'],
   FR: ['0', '1'],
-  CY: ['1', '2'],
+  NC: ['0', '1'],
   NW: ['2'],
+  NY: ['0', '1'],
 }
 
 const HOODSOUDER_TO_COLOURLABEL: ConstraintMatrix = {
-  '00': ['NC', 'NW'],
-  '10': ['EG', 'NY', 'FR', 'CY'],
-  '20': ['FR', 'EG', 'CY'],
+  '00': ['CW', 'NC', 'NW'],
+  '10': ['CY', 'EG', 'FR', 'NY'],
+  '20': ['CY', 'EG', 'FR'],
 }
 
 const COLOURLABEL_TO_HOODSOUDER: ConstraintMatrix = {
+  CW: ['00'],
+  CY: ['10', '20'],
+  EG: ['10', '20'],
+  FR: ['10', '20'],
   NC: ['00'],
   NW: ['00'],
-  EG: ['10', '20'],
   NY: ['10'],
-  FR: ['10', '20'],
-  CY: ['10', '20'],
 }
 
 export const LOW_PROFILE_UNIVERSAL_STOPPER_CONSTRAINTS: ModelConstraints = {
@@ -171,7 +175,11 @@ export const DEBUG_MATRICES = {
   VALID_MODEL_CODES,
 }
 
-const LPUS_STEPS = ['mounting', 'hoodSounder', 'colourLabel']
+const LPUS_STEPS: (keyof LPUSSelectionState)[] = [
+  'mounting',
+  'hoodSounder',
+  'colourLabel',
+]
 
 function lpusAllowlistFn(stepId: string, config: Configuration): Set<string> | null {
   return buildAllowlistSet(stepId, config, LPUS_STEPS, (s, o) =>

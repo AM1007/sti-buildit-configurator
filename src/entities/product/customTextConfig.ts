@@ -12,8 +12,8 @@ const MODEL_CUSTOM_TEXT_CONFIG: Partial<Record<ModelId, CustomTextConfig>> = {
   'low-profile-universal-stopper': {
     stepId: 'colourLabel',
     optionId: 'C',
-    variant: 'multiline-fixed',
-    maxLength: 30,
+    variant: 'multiline-selectable',
+    maxLength: { oneLine: 30, twoLines: 30 },
     maxLines: 2,
     line2Required: false,
   },
