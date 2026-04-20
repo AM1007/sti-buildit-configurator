@@ -15,12 +15,21 @@ const HOOD_COLOUR_MAP: Record<string, string> = {
   CW: 'W',
   NB: 'B',
   CB: 'B',
+  CK: 'BK',
 }
 
-function buildImageMap(baseName: string): Record<string, string> {
+function buildHoodImageMap(baseName: string): Record<string, string> {
   const map: Record<string, string> = {}
   for (const [labelId, prefix] of Object.entries(HOOD_COLOUR_MAP)) {
     map[labelId] = `${IMG}/HOOD & SOUNDER/${prefix}-${baseName}.webp`
+  }
+  return map
+}
+
+function buildMountingImageMap(baseName: string): Record<string, string> {
+  const map: Record<string, string> = {}
+  for (const [labelId, prefix] of Object.entries(HOOD_COLOUR_MAP)) {
+    map[labelId] = `${IMG}/MOUNTING/${prefix}-${baseName}.webp`
   }
   return map
 }
@@ -47,7 +56,8 @@ const steps: Step[] = [
         id: '2',
         label: '#2 Surface Mount with Matching Coloured Frame',
         code: '2',
-        image: `${IMG}/MOUNTING/1 Surface Mount - ClearOpen Backed Spacer (Dual Mount).webp`,
+        image: `${IMG}/MOUNTING/2 Surface Mount Coloured Frame.webp`,
+        imageMap: buildMountingImageMap('2 Surface Mount Coloured Frame'),
       },
     ],
   },
@@ -61,35 +71,35 @@ const steps: Step[] = [
         id: 'prozory',
         label: '#00 No Label Hood',
         code: '00',
-        image: `${IMG}/HOOD & SOUNDER/00 No Label Hood.webp`,
+        image: `${IMG}/HOOD & SOUNDER/00 No Hood.webp`,
       },
       {
         id: 'color',
         label: '#10 Label Hood without Sounder',
         code: '10',
-        image: `${IMG}/HOOD & SOUNDER/10 Label Hood without Sounder.webp`,
-        imageMap: buildImageMap('10 Label Hood without Sounder'),
+        image: `${IMG}/HOOD & SOUNDER/10 Colour Hood.webp`,
+        imageMap: buildHoodImageMap('10 Colour Hood'),
       },
       {
         id: 'sounder_battery',
         label: '#20 Label Hood with Sounder, 9V PP3 battery',
         code: '20',
-        image: `${IMG}/HOOD & SOUNDER/20 Label Hood with Sounder.webp`,
-        imageMap: buildImageMap('20 Label Hood with Sounder'),
+        image: `${IMG}/HOOD & SOUNDER/20 Sounder Battery.webp`,
+        imageMap: buildHoodImageMap('20 Sounder Battery'),
       },
       {
         id: 'sounder_dc',
         label: '#30 Label Hood with Sounder, 12-24VDC',
         code: '30',
-        image: `${IMG}/HOOD & SOUNDER/20 Label Hood with Sounder.webp`,
-        imageMap: buildImageMap('20 Label Hood with Sounder'),
+        image: `${IMG}/HOOD & SOUNDER/30-DC Sounder DC.webp`,
+        imageMap: buildHoodImageMap('30-DC Sounder DC'),
       },
       {
         id: 'sounder_relay_battery',
         label: '#30 Label Hood with Sounder & Relay, 9V PP3 battery',
         code: '30',
-        image: `${IMG}/HOOD & SOUNDER/30 Label Hood with Sounder & Relay.webp`,
-        imageMap: buildImageMap('30 Label Hood with Sounder & Relay'),
+        image: `${IMG}/HOOD & SOUNDER/30-RB Sounder Relay Battery.webp`,
+        imageMap: buildHoodImageMap('30-RB Sounder Relay Battery'),
       },
     ],
   },

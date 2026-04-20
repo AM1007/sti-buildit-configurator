@@ -19,7 +19,7 @@
     "hoodSounder": {
       "title": "HOOD & SOUNDER",
       "options": {
-        "prozory": "#00 Clear hood",
+        "prozory": "#00 No hood",
         "color": "#10 Colour hood",
         "sounder_battery": "#20 Colour, sounder, 9V PP3 battery",
         "sounder_dc": "#30 Colour sounder, 12-24VDC",
