@@ -43,22 +43,22 @@ import { euroStopperMeta } from './euroStopper'
 import { stopperIIMeta } from './stopperII'
 
 export const allConfigurators: ConfiguratorMeta[] = [
+  gfFireAlarmPushButtonMeta,
   g3MultipurposePushButtonMeta,
   stopperStationsMeta,
   globalResetMeta,
   resetCallPointsMeta,
   waterproofResetCallPointMeta,
-  gfFireAlarmPushButtonMeta,
   indoorPushButtonsMeta,
-  keySwitchesMeta,
   waterproofPushButtonsMeta,
-  euroStopperMeta,
+  keySwitchesMeta,
+  enviroStopperMeta,
+  stopperIIMeta,
   universalStopperMeta,
   lowProfileUniversalStopperMeta,
-  enviroStopperMeta,
+  euroStopperMeta,
   callPointStopperMeta,
   enviroArmourMeta,
-  stopperIIMeta,
 ]
 
 export function getConfiguratorBySlug(slug: string): ConfiguratorMeta | undefined {
