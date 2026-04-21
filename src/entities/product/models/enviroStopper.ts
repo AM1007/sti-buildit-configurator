@@ -2,6 +2,29 @@ import type { ModelDefinition, Step } from '@shared/types'
 
 const IMG = '/Enviro Stopper'
 
+const ES_COLOUR_MAP: Record<string, string> = {
+  FR: 'R',
+  NR: 'R',
+  CR: 'R',
+  EG: 'G',
+  NG: 'G',
+  CG: 'G',
+  NW: 'W',
+  CW: 'W',
+  NY: 'Y',
+  CY: 'Y',
+  NB: 'B',
+  CB: 'B',
+}
+
+function buildHoodImageMap(baseName: string): Record<string, string> {
+  const map: Record<string, string> = {}
+  for (const [labelId, prefix] of Object.entries(ES_COLOUR_MAP)) {
+    map[labelId] = `${IMG}/HOOD_SOUNDER & WIRELESS/${prefix}-${baseName}.webp`
+  }
+  return map
+}
+
 const steps: Step[] = [
   {
     id: 'cover',
@@ -59,18 +82,21 @@ const steps: Step[] = [
         label: '#10 Label Hood without Sounder',
         code: '10',
         image: `${IMG}/HOOD_SOUNDER & WIRELESS/10 Label Hood without Sounder.webp`,
+        imageMap: buildHoodImageMap('10 Label Hood without Sounder'),
       },
       {
         id: '20',
         label: '#20 Label Hood with Sounder',
         code: '20',
         image: `${IMG}/HOOD_SOUNDER & WIRELESS/20 Label Hood with Sounder.webp`,
+        imageMap: buildHoodImageMap('20 Label Hood with Sounder'),
       },
       {
         id: '30',
         label: '#30 Label Hood with Sounder & Relay',
         code: '30',
         image: `${IMG}/HOOD_SOUNDER & WIRELESS/30 Label Hood with Sounder & Relay.webp`,
+        imageMap: buildHoodImageMap('30 Label Hood with Sounder & Relay'),
       },
     ],
   },
@@ -182,4 +208,6 @@ export const enviroStopperModel: ModelDefinition = {
       colourLabel: '',
     },
   },
+
+  primaryDependencyStep: 'colourLabel',
 }
