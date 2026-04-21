@@ -18,8 +18,6 @@ export const VALID_MODEL_CODES: readonly string[] = [
   'STI-14120EG',
   'STI-14120FR',
 
-  'STI-14200CW',
-  'STI-14200NW',
   'STI-14220CY',
 ] as const
 
@@ -94,11 +92,11 @@ export function getValidLPUSOptionsForStep(
 const MOUNTING_TO_HOODSOUDER: ConstraintMatrix = {
   '0': ['00', '10', '20'],
   '1': ['00', '10', '20'],
-  '2': ['00', '20'],
+  '2': ['20'],
 }
 
 const HOODSOUDER_TO_MOUNTING: ConstraintMatrix = {
-  '00': ['0', '1', '2'],
+  '00': ['0', '1'],
   '10': ['0', '1'],
   '20': ['0', '1', '2'],
 }
@@ -106,32 +104,28 @@ const HOODSOUDER_TO_MOUNTING: ConstraintMatrix = {
 const MOUNTING_TO_COLOURLABEL: ConstraintMatrix = {
   '0': ['CY', 'EG', 'FR', 'NC', 'NY'],
   '1': ['CY', 'EG', 'FR', 'NC', 'NY'],
-  '2': ['CW', 'CY', 'NW'],
+  '2': ['CY'],
 }
 
 const COLOURLABEL_TO_MOUNTING: ConstraintMatrix = {
-  CW: ['2'],
   CY: ['0', '1', '2'],
   EG: ['0', '1'],
   FR: ['0', '1'],
   NC: ['0', '1'],
-  NW: ['2'],
   NY: ['0', '1'],
 }
 
 const HOODSOUDER_TO_COLOURLABEL: ConstraintMatrix = {
-  '00': ['CW', 'NC', 'NW'],
+  '00': ['NC'],
   '10': ['CY', 'EG', 'FR', 'NY'],
   '20': ['CY', 'EG', 'FR'],
 }
 
 const COLOURLABEL_TO_HOODSOUDER: ConstraintMatrix = {
-  CW: ['00'],
   CY: ['10', '20'],
   EG: ['10', '20'],
   FR: ['10', '20'],
   NC: ['00'],
-  NW: ['00'],
   NY: ['10'],
 }
 

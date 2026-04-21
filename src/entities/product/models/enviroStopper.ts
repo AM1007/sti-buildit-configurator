@@ -117,18 +117,6 @@ const steps: Step[] = [
         image: `${IMG}/COLOUR & LABEL/CG Green custom label NON RETURNABLE.webp`,
       },
       {
-        id: 'NK',
-        label: '#NK Black no label',
-        code: 'NK',
-        image: `${IMG}/COLOUR & LABEL/NK Black no label.webp`,
-      },
-      {
-        id: 'CK',
-        label: '#CK Black custom label NON RETURNABLE',
-        code: 'CK',
-        image: `${IMG}/COLOUR & LABEL/CK Black custom label NON RETURNABLE.webp`,
-      },
-      {
         id: 'NB',
         label: '#NB Blue no label',
         code: 'NB',

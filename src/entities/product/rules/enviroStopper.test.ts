@@ -17,10 +17,6 @@ import {
 import { createConstraintEngine } from '@entities/product/rules/constraintEngine'
 import type { Configuration } from '@shared/types'
 
-// ─────────────────────────────────────────────────────────────
-// buildESModelCode
-// ─────────────────────────────────────────────────────────────
-
 describe('buildESModelCode', () => {
   it('builds dome sealed no-hood clear — STI-13600NC', () => {
     expect(
@@ -66,6 +62,39 @@ describe('buildESModelCode', () => {
     ).toBe('STI-13710NR')
   })
 
+  it('builds dome sealed sounder yellow custom — STI-13620CY', () => {
+    expect(
+      buildESModelCode({
+        cover: '13',
+        mounting: '6',
+        hoodSounder: '20',
+        colourLabel: 'CY',
+      }),
+    ).toBe('STI-13620CY')
+  })
+
+  it('builds dome open sounder white custom — STI-13720CW', () => {
+    expect(
+      buildESModelCode({
+        cover: '13',
+        mounting: '7',
+        hoodSounder: '20',
+        colourLabel: 'CW',
+      }),
+    ).toBe('STI-13720CW')
+  })
+
+  it('builds dome open sounder yellow custom — STI-13720CY', () => {
+    expect(
+      buildESModelCode({
+        cover: '13',
+        mounting: '7',
+        hoodSounder: '20',
+        colourLabel: 'CY',
+      }),
+    ).toBe('STI-13720CY')
+  })
+
   it('returns null when any field is missing', () => {
     expect(buildESModelCode({ cover: '13', mounting: '6', hoodSounder: '00' })).toBeNull()
     expect(buildESModelCode({ cover: '13', mounting: '6', colourLabel: 'NC' })).toBeNull()
@@ -78,10 +107,6 @@ describe('buildESModelCode', () => {
     expect(buildESModelCode({})).toBeNull()
   })
 })
-
-// ─────────────────────────────────────────────────────────────
-// parseESModelCode
-// ─────────────────────────────────────────────────────────────
 
 describe('parseESModelCode', () => {
   it('parses STI-13600NC correctly', () => {
@@ -102,12 +127,21 @@ describe('parseESModelCode', () => {
     })
   })
 
-  it('parses STI-13710NR correctly — corrected assumption', () => {
+  it('parses STI-13710NR correctly', () => {
     expect(parseESModelCode('STI-13710NR')).toEqual({
       cover: '13',
       mounting: '7',
       hoodSounder: '10',
       colourLabel: 'NR',
+    })
+  })
+
+  it('parses STI-13720CY correctly', () => {
+    expect(parseESModelCode('STI-13720CY')).toEqual({
+      cover: '13',
+      mounting: '7',
+      hoodSounder: '20',
+      colourLabel: 'CY',
     })
   })
 
@@ -128,17 +162,13 @@ describe('parseESModelCode', () => {
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// VALID_MODEL_CODES integrity
-// ─────────────────────────────────────────────────────────────
-
 describe('VALID_MODEL_CODES', () => {
-  it('contains exactly 44 entries', () => {
-    expect(VALID_MODEL_CODES.length).toBe(44)
+  it('contains exactly 47 entries', () => {
+    expect(VALID_MODEL_CODES.length).toBe(47)
   })
 
   it('has no duplicates', () => {
-    expect(new Set(VALID_MODEL_CODES).size).toBe(44)
+    expect(new Set(VALID_MODEL_CODES).size).toBe(47)
   })
 
   it('all codes match STI-{2d}{1d}{2d}{2A} format', () => {
@@ -148,9 +178,9 @@ describe('VALID_MODEL_CODES', () => {
     }
   })
 
-  it('dome cover (13) codes: 35 entries', () => {
+  it('dome cover (13) codes: 38 entries', () => {
     const dome = VALID_MODEL_CODES.filter((c) => parseESModelCode(c)?.cover === '13')
-    expect(dome.length).toBe(35)
+    expect(dome.length).toBe(38)
   })
 
   it('low-profile cover (14) codes: 9 entries', () => {
@@ -182,6 +212,13 @@ describe('VALID_MODEL_CODES', () => {
     expect(lowProfileWithSounder20.length).toBe(0)
   })
 
+  it('contains new codes STI-13620CY, STI-13720CW, STI-13720CY', () => {
+    const set = new Set(VALID_MODEL_CODES)
+    expect(set.has('STI-13620CY')).toBe(true)
+    expect(set.has('STI-13720CW')).toBe(true)
+    expect(set.has('STI-13720CY')).toBe(true)
+  })
+
   it('all codes parse successfully', () => {
     for (const code of VALID_MODEL_CODES) {
       expect(parseESModelCode(code)).not.toBeNull()
@@ -189,12 +226,8 @@ describe('VALID_MODEL_CODES', () => {
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// isValidESCombination
-// ─────────────────────────────────────────────────────────────
-
 describe('isValidESCombination', () => {
-  it('all 44 VALID_MODEL_CODES pass validation', () => {
+  it('all 47 VALID_MODEL_CODES pass validation', () => {
     for (const code of VALID_MODEL_CODES) {
       const parsed = parseESModelCode(code)!
       expect(isValidESCombination(parsed)).toEqual({ valid: true })
@@ -250,7 +283,7 @@ describe('isValidESCombination', () => {
     expect(result.valid).toBe(false)
   })
 
-  it('accepts STI-13710NR — corrected from MD duplicate', () => {
+  it('accepts STI-13710NR', () => {
     const result = isValidESCombination({
       cover: '13',
       mounting: '7',
@@ -259,11 +292,27 @@ describe('isValidESCombination', () => {
     })
     expect(result).toEqual({ valid: true })
   })
-})
 
-// ─────────────────────────────────────────────────────────────
-// getValidESOptionsForStep
-// ─────────────────────────────────────────────────────────────
+  it('accepts STI-13620CY', () => {
+    const result = isValidESCombination({
+      cover: '13',
+      mounting: '6',
+      hoodSounder: '20',
+      colourLabel: 'CY',
+    })
+    expect(result).toEqual({ valid: true })
+  })
+
+  it('accepts STI-13720CW', () => {
+    const result = isValidESCombination({
+      cover: '13',
+      mounting: '7',
+      hoodSounder: '20',
+      colourLabel: 'CW',
+    })
+    expect(result).toEqual({ valid: true })
+  })
+})
 
 describe('getValidESOptionsForStep', () => {
   it('returns both covers when nothing selected', () => {
@@ -313,6 +362,37 @@ describe('getValidESOptionsForStep', () => {
     expect(valid).not.toContain('NK')
   })
 
+  it('hoodSounder=20 allows CW, CY, EG, FR, CG, NG, NW, NY', () => {
+    const valid = getValidESOptionsForStep('colourLabel', { hoodSounder: '20' })
+    expect(valid).toContain('CG')
+    expect(valid).toContain('CW')
+    expect(valid).toContain('CY')
+    expect(valid).toContain('EG')
+    expect(valid).toContain('FR')
+    expect(valid).toContain('NG')
+    expect(valid).toContain('NW')
+    expect(valid).toContain('NY')
+    expect(valid).not.toContain('NC')
+    expect(valid).not.toContain('NR')
+    expect(valid).not.toContain('CB')
+    expect(valid).not.toContain('CR')
+    expect(valid).not.toContain('NB')
+  })
+
+  it('CW colourLabel allows hoodSounder 10 and 20', () => {
+    const valid = getValidESOptionsForStep('hoodSounder', { colourLabel: 'CW' })
+    expect(valid).toContain('10')
+    expect(valid).toContain('20')
+    expect(valid).not.toContain('00')
+    expect(valid).not.toContain('30')
+  })
+
+  it('CY colourLabel allows hoodSounder 10 and 20', () => {
+    const valid = getValidESOptionsForStep('hoodSounder', { colourLabel: 'CY' })
+    expect(valid).toContain('10')
+    expect(valid).toContain('20')
+  })
+
   it('NK and CK never appear as valid options for any combination', () => {
     const combinations = [
       { cover: '13' },
@@ -335,10 +415,6 @@ describe('getValidESOptionsForStep', () => {
     expect(cover14.length).toBeLessThan(cover13.length)
   })
 })
-
-// ─────────────────────────────────────────────────────────────
-// Constraint engine integration
-// ─────────────────────────────────────────────────────────────
 
 describe('ENVIRO_STOPPER_CONSTRAINTS + constraintEngine', () => {
   const engine = createConstraintEngine(ENVIRO_STOPPER_CONSTRAINTS)
@@ -386,6 +462,15 @@ describe('ENVIRO_STOPPER_CONSTRAINTS + constraintEngine', () => {
     }
   })
 
+  it('allows CW and CY colourLabels when hoodSounder=20', () => {
+    for (const colour of ['CW', 'CY']) {
+      const result = engine.checkOptionAvailability('colourLabel', colour, {
+        hoodSounder: '20',
+      })
+      expect(result.available).toBe(true)
+    }
+  })
+
   it('hoodSounder=30 only allows FR and EG via constraint matrix', () => {
     const allColours = [
       'FR',
@@ -419,10 +504,6 @@ describe('ENVIRO_STOPPER_CONSTRAINTS + constraintEngine', () => {
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// buildProductModel integration
-// ─────────────────────────────────────────────────────────────
-
 describe('buildProductModel — enviroStopper', () => {
   it('builds STI-13600NC correctly', () => {
     const config: Configuration = {
@@ -445,6 +526,30 @@ describe('buildProductModel — enviroStopper', () => {
     }
     const result = buildProductModel(config, enviroStopperModel)
     expect(result.fullCode).toBe('STI-14730EG')
+    expect(result.isComplete).toBe(true)
+  })
+
+  it('builds STI-13620CY correctly', () => {
+    const config: Configuration = {
+      cover: '13',
+      mounting: '6',
+      hoodSounder: '20',
+      colourLabel: 'CY',
+    }
+    const result = buildProductModel(config, enviroStopperModel)
+    expect(result.fullCode).toBe('STI-13620CY')
+    expect(result.isComplete).toBe(true)
+  })
+
+  it('builds STI-13720CW correctly', () => {
+    const config: Configuration = {
+      cover: '13',
+      mounting: '7',
+      hoodSounder: '20',
+      colourLabel: 'CW',
+    }
+    const result = buildProductModel(config, enviroStopperModel)
+    expect(result.fullCode).toBe('STI-13720CW')
     expect(result.isComplete).toBe(true)
   })
 
@@ -487,7 +592,7 @@ describe('buildProductModel — enviroStopper', () => {
     expect(result.missingSteps).toContain('colourLabel')
   })
 
-  it('all 44 valid codes generated from parsed configurations', () => {
+  it('all 47 valid codes generated from parsed configurations', () => {
     const validSet = new Set(VALID_MODEL_CODES)
     let matchCount = 0
 
@@ -506,10 +611,6 @@ describe('buildProductModel — enviroStopper', () => {
     expect(matchCount).toBe(VALID_MODEL_CODES.length)
   })
 })
-
-// ─────────────────────────────────────────────────────────────
-// filterOptions completeness — enviroStopper
-// ─────────────────────────────────────────────────────────────
 
 describe('isConfigurationComplete — enviroStopper', () => {
   it('returns true when all four steps selected', () => {
@@ -604,10 +705,6 @@ describe('isConfigurationComplete — enviroStopper', () => {
   })
 })
 
-// ─────────────────────────────────────────────────────────────
-// Model definition integrity
-// ─────────────────────────────────────────────────────────────
-
 describe('enviroStopperModel definition', () => {
   it('has correct model id and slug', () => {
     expect(enviroStopperModel.id).toBe('enviro-stopper')
@@ -642,15 +739,15 @@ describe('enviroStopperModel definition', () => {
     expect(separatorMap?.colourLabel).toBe('')
   })
 
-  it('model definition includes NK and CK options not in allowlist', () => {
+  it('colourLabel step has 13 options', () => {
     const colourStep = enviroStopperModel.steps.find((s) => s.id === 'colourLabel')!
-    const ids = colourStep.options.map((o) => o.id)
-    expect(ids).toContain('NK')
-    expect(ids).toContain('CK')
+    expect(colourStep.options).toHaveLength(13)
   })
 
-  it('colourLabel step has 15 options in definition', () => {
+  it('colourLabel step does not contain NK or CK', () => {
     const colourStep = enviroStopperModel.steps.find((s) => s.id === 'colourLabel')!
-    expect(colourStep.options).toHaveLength(15)
+    const ids = colourStep.options.map((o) => o.id)
+    expect(ids).not.toContain('NK')
+    expect(ids).not.toContain('CK')
   })
 })

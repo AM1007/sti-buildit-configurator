@@ -11,26 +11,26 @@
     "material": {
       "title": "MATERIAL",
       "options": {
-        "S": "#S Fiberglass (limited stock)",
-        "T": "#T Polycarbonate (limited stock)"
+        "S": "#S Fiberglass",
+        "T": "#T Polycarbonate"
       }
     },
     "size": {
       "title": "INTERNAL DIMENSIONS",
       "options": {
-        "121005": "#121005 274 mm × 240 mm × 124 mm (limited stock)",
-        "121006": "#121006 291 mm × 241 mm × 129 mm (limited stock)",
-        "161608": "#161608 366 mm × 388 mm × 181 mm (limited stock)",
-        "181408": "#181408 462 mm × 347 mm × 179 mm (limited stock)",
-        "231609": "#231609 565 mm × 387 mm × 211 mm (limited stock)",
-        "312312": "#312312 762 mm × 582 mm × 276 mm (limited stock)"
+        "121005": "#121005 274 mm × 240 mm × 124 mm",
+        "121006": "#121006 291 mm × 241 mm × 129 mm",
+        "161608": "#161608 366 mm × 388 mm × 181 mm",
+        "181408": "#181408 462 mm × 347 mm × 179 mm",
+        "231609": "#231609 565 mm × 387 mm × 211 mm",
+        "312312": "#312312 762 mm × 582 mm × 276 mm"
       }
     },
     "doorType": {
       "title": "DOOR TYPE",
       "options": {
-        "C": "#C Transparent door (limited stock)",
-        "O": "#O Solid door (limited stock)"
+        "C": "#C Transparent door",
+        "O": "#O Solid door"
       }
     }
   }

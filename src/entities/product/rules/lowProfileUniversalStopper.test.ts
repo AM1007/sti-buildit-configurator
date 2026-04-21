@@ -30,18 +30,6 @@ describe('buildLPUSModelCode', () => {
     ).toBe('STI-14110FR')
   })
 
-  it('builds STI-14200NW correctly', () => {
-    expect(
-      buildLPUSModelCode({ mounting: '2', hoodSounder: '00', colourLabel: 'NW' }),
-    ).toBe('STI-14200NW')
-  })
-
-  it('builds STI-14200CW correctly', () => {
-    expect(
-      buildLPUSModelCode({ mounting: '2', hoodSounder: '00', colourLabel: 'CW' }),
-    ).toBe('STI-14200CW')
-  })
-
   it('builds STI-14220CY correctly', () => {
     expect(
       buildLPUSModelCode({ mounting: '2', hoodSounder: '20', colourLabel: 'CY' }),
@@ -79,14 +67,6 @@ describe('parseLPUSModelCode', () => {
     })
   })
 
-  it('parses STI-14200CW correctly', () => {
-    expect(parseLPUSModelCode('STI-14200CW')).toEqual({
-      mounting: '2',
-      hoodSounder: '00',
-      colourLabel: 'CW',
-    })
-  })
-
   it('returns null for invalid format', () => {
     expect(parseLPUSModelCode('INVALID')).toBeNull()
     expect(parseLPUSModelCode('STI-13000NC')).toBeNull()
@@ -105,15 +85,15 @@ describe('parseLPUSModelCode', () => {
 })
 
 describe('VALID_MODEL_CODES', () => {
-  it('contains exactly 16 entries', () => {
-    expect(VALID_MODEL_CODES.length).toBe(16)
+  it('contains exactly 14 entries', () => {
+    expect(VALID_MODEL_CODES.length).toBe(14)
   })
 
   it('has no duplicates', () => {
-    expect(new Set(VALID_MODEL_CODES).size).toBe(16)
+    expect(new Set(VALID_MODEL_CODES).size).toBe(14)
   })
 
-  it('6 flush (0), 7 surface dual (1), 3 surface+frame (2)', () => {
+  it('6 flush (0), 7 surface dual (1), 1 surface+frame (2)', () => {
     expect(
       VALID_MODEL_CODES.filter((c) => parseLPUSModelCode(c)?.mounting === '0').length,
     ).toBe(6)
@@ -122,30 +102,22 @@ describe('VALID_MODEL_CODES', () => {
     ).toBe(7)
     expect(
       VALID_MODEL_CODES.filter((c) => parseLPUSModelCode(c)?.mounting === '2').length,
-    ).toBe(3)
+    ).toBe(1)
   })
 
-  it('mounting=2 only has hoodSounder=00 or 20, never 10', () => {
+  it('mounting=2 only has hoodSounder=20, never 00 or 10', () => {
     const m2 = VALID_MODEL_CODES.filter((c) => parseLPUSModelCode(c)?.mounting === '2')
     for (const code of m2) {
-      expect(parseLPUSModelCode(code)?.hoodSounder).not.toBe('10')
+      expect(parseLPUSModelCode(code)?.hoodSounder).toBe('20')
     }
   })
 
-  it('NW colourLabel only with mounting=2 and hoodSounder=00', () => {
-    const nwCodes = VALID_MODEL_CODES.filter(
-      (c) => parseLPUSModelCode(c)?.colourLabel === 'NW',
-    )
-    expect(nwCodes).toHaveLength(1)
-    expect(nwCodes[0]).toBe('STI-14200NW')
-  })
-
-  it('CW colourLabel only with mounting=2 and hoodSounder=00', () => {
-    const cwCodes = VALID_MODEL_CODES.filter(
-      (c) => parseLPUSModelCode(c)?.colourLabel === 'CW',
-    )
-    expect(cwCodes).toHaveLength(1)
-    expect(cwCodes[0]).toBe('STI-14200CW')
+  it('does not contain NW or CW colourLabel', () => {
+    for (const code of VALID_MODEL_CODES) {
+      const parsed = parseLPUSModelCode(code)
+      expect(parsed?.colourLabel).not.toBe('NW')
+      expect(parsed?.colourLabel).not.toBe('CW')
+    }
   })
 
   it('NC colourLabel only with hoodSounder=00', () => {
@@ -157,10 +129,15 @@ describe('VALID_MODEL_CODES', () => {
     }
   })
 
-  it('contains newly added codes', () => {
+  it('contains STI-14010CY', () => {
     const set = new Set(VALID_MODEL_CODES)
     expect(set.has('STI-14010CY')).toBe(true)
-    expect(set.has('STI-14200CW')).toBe(true)
+  })
+
+  it('does not contain STI-14200CW or STI-14200NW', () => {
+    const set = new Set(VALID_MODEL_CODES)
+    expect(set.has('STI-14200CW')).toBe(false)
+    expect(set.has('STI-14200NW')).toBe(false)
   })
 
   it('false positive STI-14010FR not in allowlist', () => {
@@ -185,7 +162,7 @@ describe('VALID_MODEL_CODES', () => {
 })
 
 describe('isValidLPUSCombination', () => {
-  it('all 16 VALID_MODEL_CODES pass validation', () => {
+  it('all 14 VALID_MODEL_CODES pass validation', () => {
     for (const code of VALID_MODEL_CODES) {
       const parsed = parseLPUSModelCode(code)!
       expect(isValidLPUSCombination(parsed)).toEqual({ valid: true })
@@ -229,12 +206,23 @@ describe('isValidLPUSCombination', () => {
     expect(result.valid).toBe(false)
   })
 
-  it('rejects NW with mounting=0 or 1', () => {
-    for (const mounting of ['0', '1']) {
+  it('rejects NW with any mounting', () => {
+    for (const mounting of ['0', '1', '2']) {
       const result = isValidLPUSCombination({
         mounting,
         hoodSounder: '00',
         colourLabel: 'NW',
+      })
+      expect(result.valid).toBe(false)
+    }
+  })
+
+  it('rejects CW with any mounting', () => {
+    for (const mounting of ['0', '1', '2']) {
+      const result = isValidLPUSCombination({
+        mounting,
+        hoodSounder: '00',
+        colourLabel: 'CW',
       })
       expect(result.valid).toBe(false)
     }
@@ -252,34 +240,21 @@ describe('getValidLPUSOptionsForStep', () => {
   it('mounting=2 does not allow hoodSounder=10', () => {
     const valid = getValidLPUSOptionsForStep('hoodSounder', { mounting: '2' })
     expect(valid).not.toContain('10')
-    expect(valid).toContain('00')
-    expect(valid).toContain('20')
   })
 
-  it('hoodSounder=00 allows NC, NW and CW colourLabels', () => {
+  it('mounting=2 only allows hoodSounder=20', () => {
+    const valid = getValidLPUSOptionsForStep('hoodSounder', { mounting: '2' })
+    expect(valid).toEqual(['20'])
+  })
+
+  it('hoodSounder=00 allows only NC colourLabel', () => {
     const valid = getValidLPUSOptionsForStep('colourLabel', { hoodSounder: '00' })
-    expect(valid).toContain('NC')
-    expect(valid).toContain('NW')
-    expect(valid).toContain('CW')
-    expect(valid).not.toContain('FR')
-    expect(valid).not.toContain('EG')
-    expect(valid).not.toContain('NY')
-    expect(valid).not.toContain('CY')
+    expect(valid).toEqual(['NC'])
   })
 
   it('NC colourLabel only valid with hoodSounder=00', () => {
     const valid = getValidLPUSOptionsForStep('hoodSounder', { colourLabel: 'NC' })
     expect(valid).toEqual(['00'])
-  })
-
-  it('CW colourLabel only valid with mounting=2', () => {
-    const valid = getValidLPUSOptionsForStep('mounting', { colourLabel: 'CW' })
-    expect(valid).toEqual(['2'])
-  })
-
-  it('NW colourLabel only valid with mounting=2', () => {
-    const valid = getValidLPUSOptionsForStep('mounting', { colourLabel: 'NW' })
-    expect(valid).toEqual(['2'])
   })
 
   it('CY colourLabel valid with all mountings', () => {
@@ -294,15 +269,9 @@ describe('getValidLPUSOptionsForStep', () => {
     expect(valid).toContain('1')
   })
 
-  it('mounting=2 allows NW, CW and CY colourLabels', () => {
+  it('mounting=2 allows only CY colourLabel', () => {
     const valid = getValidLPUSOptionsForStep('colourLabel', { mounting: '2' })
-    expect(valid).toContain('NW')
-    expect(valid).toContain('CW')
-    expect(valid).toContain('CY')
-    expect(valid).not.toContain('NC')
-    expect(valid).not.toContain('FR')
-    expect(valid).not.toContain('EG')
-    expect(valid).not.toContain('NY')
+    expect(valid).toEqual(['CY'])
   })
 
   it('mounting=0 allows CY', () => {
@@ -319,6 +288,14 @@ describe('getValidLPUSOptionsForStep', () => {
     expect(valid).not.toContain('NW')
     expect(valid).not.toContain('NY')
   })
+
+  it('NW and CW are never valid options for colourLabel', () => {
+    for (const mounting of ['0', '1', '2']) {
+      const valid = getValidLPUSOptionsForStep('colourLabel', { mounting })
+      expect(valid).not.toContain('NW')
+      expect(valid).not.toContain('CW')
+    }
+  })
 })
 
 describe('LOW_PROFILE_UNIVERSAL_STOPPER_CONSTRAINTS + constraintEngine', () => {
@@ -330,10 +307,13 @@ describe('LOW_PROFILE_UNIVERSAL_STOPPER_CONSTRAINTS + constraintEngine', () => {
     ).toBe(false)
   })
 
-  it('allows hoodSounder=00 and 20 when mounting=2', () => {
+  it('blocks hoodSounder=00 when mounting=2', () => {
     expect(
       engine.checkOptionAvailability('hoodSounder', '00', { mounting: '2' }).available,
-    ).toBe(true)
+    ).toBe(false)
+  })
+
+  it('allows hoodSounder=20 when mounting=2', () => {
     expect(
       engine.checkOptionAvailability('hoodSounder', '20', { mounting: '2' }).available,
     ).toBe(true)
@@ -355,25 +335,20 @@ describe('LOW_PROFILE_UNIVERSAL_STOPPER_CONSTRAINTS + constraintEngine', () => {
     ).toBe(true)
   })
 
-  it('allows CW colourLabel when hoodSounder=00', () => {
-    expect(
-      engine.checkOptionAvailability('colourLabel', 'CW', { hoodSounder: '00' })
-        .available,
-    ).toBe(true)
-  })
-
-  it('blocks NW colourLabel when mounting=0 or 1', () => {
-    for (const mounting of ['0', '1']) {
+  it('blocks NW colourLabel for all mountings', () => {
+    for (const mounting of ['0', '1', '2']) {
       expect(
         engine.checkOptionAvailability('colourLabel', 'NW', { mounting }).available,
       ).toBe(false)
     }
   })
 
-  it('allows NW colourLabel when mounting=2', () => {
-    expect(
-      engine.checkOptionAvailability('colourLabel', 'NW', { mounting: '2' }).available,
-    ).toBe(true)
+  it('blocks CW colourLabel for all mountings', () => {
+    for (const mounting of ['0', '1', '2']) {
+      expect(
+        engine.checkOptionAvailability('colourLabel', 'CW', { mounting }).available,
+      ).toBe(false)
+    }
   })
 
   it('blocks FR and EG colourLabels when hoodSounder=00', () => {
@@ -412,28 +387,6 @@ describe('buildProductModel — lowProfileUniversalStopper', () => {
     }
     const result = buildProductModel(config, lowProfileUniversalStopperModel)
     expect(result.fullCode).toBe('STI-14110FR')
-    expect(result.isComplete).toBe(true)
-  })
-
-  it('builds STI-14200NW correctly', () => {
-    const config: Configuration = {
-      mounting: '2',
-      hoodSounder: '00',
-      colourLabel: 'NW',
-    }
-    const result = buildProductModel(config, lowProfileUniversalStopperModel)
-    expect(result.fullCode).toBe('STI-14200NW')
-    expect(result.isComplete).toBe(true)
-  })
-
-  it('builds STI-14200CW correctly', () => {
-    const config: Configuration = {
-      mounting: '2',
-      hoodSounder: '00',
-      colourLabel: 'CW',
-    }
-    const result = buildProductModel(config, lowProfileUniversalStopperModel)
-    expect(result.fullCode).toBe('STI-14200CW')
     expect(result.isComplete).toBe(true)
   })
 
@@ -482,7 +435,7 @@ describe('buildProductModel — lowProfileUniversalStopper', () => {
     expect(result.missingSteps).toContain('colourLabel')
   })
 
-  it('bijection: all 16 valid codes generated from parsed configurations', () => {
+  it('bijection: all 14 valid codes generated from parsed configurations', () => {
     const generated = new Set<string>()
     for (const code of VALID_MODEL_CODES) {
       const parsed = parseLPUSModelCode(code)!
@@ -494,7 +447,7 @@ describe('buildProductModel — lowProfileUniversalStopper', () => {
       const result = buildProductModel(config, lowProfileUniversalStopperModel)
       generated.add(result.fullCode)
     }
-    expect(generated.size).toBe(16)
+    expect(generated.size).toBe(14)
     for (const code of VALID_MODEL_CODES) {
       expect(generated.has(code)).toBe(true)
     }
@@ -587,11 +540,20 @@ describe('lowProfileUniversalStopperModel definition', () => {
     expect(ids).toEqual(['00', '10', '20'])
   })
 
-  it('colourLabel step has 7 options', () => {
+  it('colourLabel step has 5 options', () => {
     const clStep = lowProfileUniversalStopperModel.steps.find(
       (s) => s.id === 'colourLabel',
     )!
-    expect(clStep.options).toHaveLength(7)
+    expect(clStep.options).toHaveLength(5)
+  })
+
+  it('colourLabel step does not contain NW or CW', () => {
+    const clStep = lowProfileUniversalStopperModel.steps.find(
+      (s) => s.id === 'colourLabel',
+    )!
+    const ids = clStep.options.map((o) => o.id)
+    expect(ids).not.toContain('NW')
+    expect(ids).not.toContain('CW')
   })
 
   it('baseCode is STI-14', () => {

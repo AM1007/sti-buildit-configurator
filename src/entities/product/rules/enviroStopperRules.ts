@@ -20,6 +20,7 @@ export const VALID_MODEL_CODES: readonly string[] = [
   'STI-13620FR',
   'STI-13620EG',
   'STI-13620CG',
+  'STI-13620CY',
   'STI-13620NG',
   'STI-13620NY',
 
@@ -41,6 +42,8 @@ export const VALID_MODEL_CODES: readonly string[] = [
 
   'STI-13720FR',
   'STI-13720EG',
+  'STI-13720CW',
+  'STI-13720CY',
   'STI-13720NW',
   'STI-13720NY',
 
@@ -156,68 +159,68 @@ const HOOD_SOUNDER_TO_COVER: ConstraintMatrix = {
 }
 
 const COVER_TO_COLOUR_LABEL: ConstraintMatrix = {
-  '13': ['FR', 'EG', 'CR', 'CG', 'CY', 'CW', 'CB', 'NC', 'NR', 'NG', 'NY', 'NW', 'NB'],
-  '14': ['FR', 'EG', 'CY', 'CW', 'NC', 'NW'],
+  '13': ['CB', 'CG', 'CR', 'CW', 'CY', 'EG', 'FR', 'NB', 'NC', 'NG', 'NR', 'NW', 'NY'],
+  '14': ['CW', 'CY', 'EG', 'FR', 'NC', 'NW'],
 }
 
 const COLOUR_LABEL_TO_COVER: ConstraintMatrix = {
-  FR: ['13', '14'],
-  EG: ['13', '14'],
-  CR: ['13'],
-  CG: ['13'],
-  CY: ['13', '14'],
-  CW: ['13', '14'],
   CB: ['13'],
-  NC: ['13', '14'],
-  NR: ['13'],
-  NG: ['13'],
-  NY: ['13'],
-  NW: ['13', '14'],
+  CG: ['13'],
+  CR: ['13'],
+  CW: ['13', '14'],
+  CY: ['13', '14'],
+  EG: ['13', '14'],
+  FR: ['13', '14'],
   NB: ['13'],
+  NC: ['13', '14'],
+  NG: ['13'],
+  NR: ['13'],
+  NW: ['13', '14'],
+  NY: ['13'],
 }
 
 const MOUNTING_TO_COLOUR_LABEL: ConstraintMatrix = {
-  '6': ['FR', 'EG', 'CR', 'CG', 'CY', 'CW', 'CB', 'NC', 'NG', 'NY', 'NW', 'NB'],
-  '7': ['FR', 'EG', 'CR', 'CG', 'CY', 'CW', 'CB', 'NC', 'NR', 'NG', 'NY', 'NW', 'NB'],
+  '6': ['CB', 'CG', 'CR', 'CW', 'CY', 'EG', 'FR', 'NB', 'NC', 'NG', 'NW', 'NY'],
+  '7': ['CB', 'CG', 'CR', 'CW', 'CY', 'EG', 'FR', 'NB', 'NC', 'NG', 'NR', 'NW', 'NY'],
 }
 
 const COLOUR_LABEL_TO_MOUNTING: ConstraintMatrix = {
-  FR: ['6', '7'],
-  EG: ['6', '7'],
-  CR: ['6', '7'],
-  CG: ['6', '7'],
-  CY: ['6', '7'],
-  CW: ['6', '7'],
   CB: ['6', '7'],
-  NC: ['6', '7'],
-  NR: ['7'],
-  NG: ['6', '7'],
-  NY: ['6', '7'],
-  NW: ['6', '7'],
+  CG: ['6', '7'],
+  CR: ['6', '7'],
+  CW: ['6', '7'],
+  CY: ['6', '7'],
+  EG: ['6', '7'],
+  FR: ['6', '7'],
   NB: ['6', '7'],
+  NC: ['6', '7'],
+  NG: ['6', '7'],
+  NR: ['7'],
+  NW: ['6', '7'],
+  NY: ['6', '7'],
 }
 
 const HOOD_SOUNDER_TO_COLOUR_LABEL: ConstraintMatrix = {
   '00': ['NC'],
-  '10': ['FR', 'EG', 'CR', 'CG', 'CY', 'CW', 'CB', 'NR', 'NG', 'NY', 'NW', 'NB'],
-  '20': ['FR', 'EG', 'CG', 'NG', 'NY', 'NW'],
-  '30': ['FR', 'EG'],
+  '10': ['CB', 'CG', 'CR', 'CW', 'CY', 'EG', 'FR', 'NB', 'NG', 'NR', 'NW', 'NY'],
+  '20': ['CG', 'CW', 'CY', 'EG', 'FR', 'NG', 'NW', 'NY'],
+  '30': ['EG', 'FR'],
 }
 
 const COLOUR_LABEL_TO_HOOD_SOUNDER: ConstraintMatrix = {
-  FR: ['10', '20', '30'],
-  EG: ['10', '20', '30'],
-  CR: ['10'],
-  CG: ['10', '20'],
-  CY: ['10'],
-  CW: ['10'],
   CB: ['10'],
-  NC: ['00'],
-  NR: ['10'],
-  NG: ['10', '20'],
-  NY: ['10', '20'],
-  NW: ['10', '20'],
+  CG: ['10', '20'],
+  CR: ['10'],
+  CW: ['10', '20'],
+  CY: ['10', '20'],
+  EG: ['10', '20', '30'],
+  FR: ['10', '20', '30'],
   NB: ['10'],
+  NC: ['00'],
+  NG: ['10', '20'],
+  NR: ['10'],
+  NW: ['10', '20'],
+  NY: ['10', '20'],
 }
 
 export const ENVIRO_STOPPER_CONSTRAINTS: ModelConstraints = {

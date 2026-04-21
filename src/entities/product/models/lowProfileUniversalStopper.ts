@@ -5,8 +5,6 @@ const IMG = '/Low Profile Universal Stopper'
 const LPUS_COLOUR_MAP: Record<string, string> = {
   FR: 'R',
   EG: 'G',
-  NW: 'W',
-  CW: 'W',
   NY: 'Y',
   CY: 'Y',
 }
@@ -105,18 +103,6 @@ const steps: Step[] = [
         label: '#NC Clear no label',
         code: 'NC',
         image: `${IMG}/COLOUR & LABEL/NC Clear no label.webp`,
-      },
-      {
-        id: 'NW',
-        label: '#NW White no label',
-        code: 'NW',
-        image: `${IMG}/COLOUR & LABEL/NW White no label.webp`,
-      },
-      {
-        id: 'CW',
-        label: '#CW White custom label NON RETURNABLE',
-        code: 'CW',
-        image: `${IMG}/COLOUR & LABEL/CW White custom label NON RETURNABLE.webp`,
       },
       {
         id: 'NY',
