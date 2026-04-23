@@ -18,17 +18,17 @@
     "mounting": {
       "title": "MOUNTING CONFIGURATION",
       "options": {
-        "6": "#6 Sealed plate, 20mm back box",
-        "7": "#7 Open plate, 20mm back box"
+        "6": "#6 Ingress protection rating IP66",
+        "7": "#7 Ingress protection rating IP56"
       }
     },
     "hoodSounder": {
       "title": "HOOD / SOUNDER",
       "options": {
         "00": "#00 No hood",
-        "10": "#10 Coloured hood without sounder",
-        "20": "#20 Coloured hood with sounder",
-        "30": "#30 Coloured hood with sounder & relay"
+        "10": "#10 Colour hood",
+        "20": "#20 Colour, sounder, 9V PP3 battery",
+        "30": "#30 Colour sounder, 12-24VDC"
       }
     },
     "colourLabel": {
