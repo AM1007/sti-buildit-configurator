@@ -114,10 +114,10 @@ const MODEL_CUSTOM_TEXT_CONFIG: Partial<Record<ModelId, CustomTextConfig>> = {
     line2Required: false,
   },
   'stopper-ii': {
-    stepId: 'label',
-    optionId: 'custom',
-    variant: 'multiline-fixed',
-    maxLength: 30,
+    stepId: 'colourLabel',
+    optionId: 'C',
+    variant: 'multiline-selectable',
+    maxLength: { oneLine: 30, twoLines: 30 },
     maxLines: 2,
     line2Required: false,
   },
@@ -158,7 +158,8 @@ export function isCustomTextOptionSelected(
     modelId === 'universal-stopper' ||
     modelId === 'low-profile-universal-stopper' ||
     modelId === 'enviro-stopper' ||
-    modelId === 'euro-stopper'
+    modelId === 'euro-stopper' ||
+    modelId === 'stopper-ii'
   ) {
     return selectedOption.startsWith('C') && selectedOption !== 'NC'
   }

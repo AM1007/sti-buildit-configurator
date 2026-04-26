@@ -1,54 +1,51 @@
 {
   "meta": {
     "name": "Stopper® II",
-    "description": "Enlarged dome cover for Stopper Stations and analogues",
+    "description": "Enlarged Dome Cover for Stopper Stations and Analogues",
     "series": "Stopper II Series",
-    "badges": ["UV Stabilised", "Spring Loaded", "IP54 Available"],
-    "heroTitle": "Enlarged Dome Cover for Stopper Stations and Analogues",
-    "heroDescription": "The Stopper II is a series of enlarged dome-shaped protective covers designed for Stopper Station push buttons and compatible analogues. The clear polycarbonate dome with a spring-loaded hinge mechanism provides reliable physical protection against accidental or unauthorised activations while maintaining instant access to the button in an emergency. The range includes models for both indoor and outdoor installation, with outdoor variants rated to IP54.\n\nConfiguration options include models with a built-in sounder for local audible alert when the cover is lifted — powered either by a 9V PP3 battery or an external 12–24VDC supply. Six colour insert options are available alongside standard Fire Alarm and Emergency Exit labels, as well as the option for custom text. Mounting is flush or surface, with an optional enclosed back box for flush installations."
+    "badges": ["UV-stabilised", "Spring-loaded mechanism", "IP54 available"],
+    "heroTitle": "Enlarged Dome Cover for Stopper Station Push Buttons and Analogues",
+    "heroDescription": "Stopper II is a series of enlarged dome-shaped protective covers designed for Stopper Station universal push buttons and compatible analogues. The clear polycarbonate dome with a spring-loaded lid mechanism provides reliable physical protection against accidental or unauthorised activation while maintaining immediate access to the button in an emergency. The range includes models for indoor and outdoor installation with an IP54 protection rating.\n\nThe configuration includes options with a built-in sounder for local audible alarm upon lid opening — powered by a 9V PP3 battery or external 12–24VDC. Six colour insert options are available, along with standard Fire Alarm and Emergency Exit labels, as well as custom text. Mounting options include flush and surface mount, with a back box option for flush installation."
   },
   "steps": {
     "environment": {
-      "title": "ENVIRONMENT",
+      "title": "INSTALLATION ENVIRONMENT",
       "options": {
-        "indoor": "Indoor",
-        "outdoor": "Outdoor (IP54)"
-      }
-    },
-    "sounder": {
-      "title": "SOUNDER",
-      "options": {
-        "none": "No sounder",
-        "battery": "Built-in sounder (9V PP3 battery)",
-        "dc": "Built-in sounder (12–24VDC)"
+        "indoor": "Indoor Installation",
+        "outdoor": "Outdoor Installation (IP54)"
       }
     },
     "mounting": {
-      "title": "MOUNTING",
+      "title": "MOUNTING TYPE",
       "options": {
-        "flush": "Flush mount",
-        "surface": "Surface mount",
-        "backbox": "Flush mount with back box"
+        "flush": "Flush, Open Back",
+        "surface": "Surface, Clear Spacer",
+        "backbox": "Flush + Back Box"
       }
     },
-    "colour": {
-      "title": "COLOUR",
+    "sounder": {
+      "title": "HOOD / SOUNDER",
       "options": {
-        "NR": "No colour insert (clear)",
-        "red": "Red",
-        "green": "Green",
-        "yellow": "Yellow",
-        "blue": "Blue",
-        "orange": "Orange"
+        "none": "No sounder",
+        "battery": "Coloured Hood, Sounder, 9V PP3 Battery",
+        "dc": "Coloured Hood, Sounder, 12-24VDC Powered"
       }
     },
-    "label": {
-      "title": "LABEL",
+    "colourLabel": {
+      "title": "COLOUR & LABEL",
       "options": {
-        "fire": "Fire Alarm label",
-        "emergency": "Emergency Exit label",
-        "none": "No label",
-        "custom": "Custom label (NON RETURNABLE)"
+        "FR": "#FR Red, 'FIRE ALARM'",
+        "NR": "#NR Red, No Label",
+        "CR": "#CR Red, Custom Label",
+        "EG": "#EG Green, 'EMERGENCY EXIT'",
+        "NG": "#NG Green, No Label",
+        "CG": "#CG Green, Custom Label",
+        "NC": "#NC No Colour Insert (Clear)",
+        "NY": "#NY Yellow, No Label",
+        "CY": "#CY Yellow, Custom Label",
+        "NB": "#NB Blue, No Label",
+        "CB": "#CB Blue, Custom Label",
+        "CE": "#CE Orange, Custom Label"
       }
     }
   }

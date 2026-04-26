@@ -9,12 +9,15 @@ export const VALID_MODEL_CODES: readonly string[] = [
   'STI-1200-G',
   'STI-1200-Y',
   'STI-1200-B',
+  'STI-1200-CY',
+  'STI-1200-CB',
   'STI-1230NR',
   'STI-1230',
   'STI-1230-G',
   'STI-1230CR',
   'STI-1230CG',
   'STI-1230CY',
+  'STI-1230-CB',
   'STI-1230CE',
   'STI-1230-Y',
   'STI-1230-B',
@@ -22,6 +25,7 @@ export const VALID_MODEL_CODES: readonly string[] = [
   'STI-1100',
   'STI-1100-G',
   'STI-1100CR',
+  'STI-1100CY',
   'STI-1100CB',
   'STI-1100CE',
   'STI-1100-Y',
@@ -36,6 +40,7 @@ export const VALID_MODEL_CODES: readonly string[] = [
   'STI-1250',
   'STI-1250-G',
   'STI-1250CR',
+  'STI-1250CG',
   'STI-1250NR',
   'STI-1250NG',
   'STI-3150',
@@ -53,334 +58,317 @@ export const VALID_MODEL_CODES: readonly string[] = [
 
 export interface StopperIISelectionState {
   environment?: string
-  sounder?: string
   mounting?: string
-  colour?: string
-  label?: string
+  sounder?: string
+  colourLabel?: string
 }
 
 const CODE_TO_SELECTION: Record<string, StopperIISelectionState> = {
   'STI-1200NR': {
     environment: 'indoor',
-    sounder: 'none',
     mounting: 'flush',
-    colour: 'NR',
-    label: 'none',
+    sounder: 'none',
+    colourLabel: 'NC',
   },
   'STI-1200': {
     environment: 'indoor',
-    sounder: 'none',
     mounting: 'flush',
-    colour: 'red',
-    label: 'fire',
+    sounder: 'none',
+    colourLabel: 'FR',
   },
   'STI-1200A': {
     environment: 'indoor',
-    sounder: 'none',
     mounting: 'backbox',
-    colour: 'red',
-    label: 'fire',
+    sounder: 'none',
+    colourLabel: 'FR',
   },
   'STI-1200-G': {
     environment: 'indoor',
-    sounder: 'none',
     mounting: 'flush',
-    colour: 'green',
-    label: 'emergency',
+    sounder: 'none',
+    colourLabel: 'EG',
   },
   'STI-1200-Y': {
     environment: 'indoor',
-    sounder: 'none',
     mounting: 'flush',
-    colour: 'yellow',
-    label: 'none',
+    sounder: 'none',
+    colourLabel: 'NY',
   },
   'STI-1200-B': {
     environment: 'indoor',
-    sounder: 'none',
     mounting: 'flush',
-    colour: 'blue',
-    label: 'none',
+    sounder: 'none',
+    colourLabel: 'NB',
+  },
+  'STI-1200-CY': {
+    environment: 'indoor',
+    mounting: 'flush',
+    sounder: 'none',
+    colourLabel: 'CY',
+  },
+  'STI-1200-CB': {
+    environment: 'indoor',
+    mounting: 'flush',
+    sounder: 'none',
+    colourLabel: 'CB',
   },
   'STI-1230NR': {
     environment: 'indoor',
-    sounder: 'none',
     mounting: 'surface',
-    colour: 'NR',
-    label: 'none',
+    sounder: 'none',
+    colourLabel: 'NC',
   },
   'STI-1230': {
     environment: 'indoor',
-    sounder: 'none',
     mounting: 'surface',
-    colour: 'red',
-    label: 'fire',
+    sounder: 'none',
+    colourLabel: 'FR',
   },
   'STI-1230-G': {
     environment: 'indoor',
-    sounder: 'none',
     mounting: 'surface',
-    colour: 'green',
-    label: 'emergency',
+    sounder: 'none',
+    colourLabel: 'EG',
   },
   'STI-1230CR': {
     environment: 'indoor',
-    sounder: 'none',
     mounting: 'surface',
-    colour: 'red',
-    label: 'custom',
+    sounder: 'none',
+    colourLabel: 'CR',
   },
   'STI-1230CG': {
     environment: 'indoor',
-    sounder: 'none',
     mounting: 'surface',
-    colour: 'green',
-    label: 'custom',
+    sounder: 'none',
+    colourLabel: 'CG',
   },
   'STI-1230CY': {
     environment: 'indoor',
-    sounder: 'none',
     mounting: 'surface',
-    colour: 'yellow',
-    label: 'custom',
+    sounder: 'none',
+    colourLabel: 'CY',
+  },
+  'STI-1230-CB': {
+    environment: 'indoor',
+    mounting: 'surface',
+    sounder: 'none',
+    colourLabel: 'CB',
   },
   'STI-1230CE': {
     environment: 'indoor',
-    sounder: 'none',
     mounting: 'surface',
-    colour: 'orange',
-    label: 'custom',
+    sounder: 'none',
+    colourLabel: 'CE',
   },
   'STI-1230-Y': {
     environment: 'indoor',
-    sounder: 'none',
     mounting: 'surface',
-    colour: 'yellow',
-    label: 'none',
+    sounder: 'none',
+    colourLabel: 'NY',
   },
   'STI-1230-B': {
     environment: 'indoor',
-    sounder: 'none',
     mounting: 'surface',
-    colour: 'blue',
-    label: 'none',
+    sounder: 'none',
+    colourLabel: 'NB',
   },
   'STI-1100NR': {
     environment: 'indoor',
-    sounder: 'battery',
     mounting: 'flush',
-    colour: 'NR',
-    label: 'none',
+    sounder: 'battery',
+    colourLabel: 'NC',
   },
   'STI-1100': {
     environment: 'indoor',
-    sounder: 'battery',
     mounting: 'flush',
-    colour: 'red',
-    label: 'fire',
+    sounder: 'battery',
+    colourLabel: 'FR',
   },
   'STI-1100-G': {
     environment: 'indoor',
-    sounder: 'battery',
     mounting: 'flush',
-    colour: 'green',
-    label: 'emergency',
+    sounder: 'battery',
+    colourLabel: 'EG',
   },
   'STI-1100CR': {
     environment: 'indoor',
-    sounder: 'battery',
     mounting: 'flush',
-    colour: 'red',
-    label: 'custom',
+    sounder: 'battery',
+    colourLabel: 'CR',
+  },
+  'STI-1100CY': {
+    environment: 'indoor',
+    mounting: 'flush',
+    sounder: 'battery',
+    colourLabel: 'CY',
   },
   'STI-1100CB': {
     environment: 'indoor',
-    sounder: 'battery',
     mounting: 'flush',
-    colour: 'blue',
-    label: 'custom',
+    sounder: 'battery',
+    colourLabel: 'CB',
   },
   'STI-1100CE': {
     environment: 'indoor',
-    sounder: 'battery',
     mounting: 'flush',
-    colour: 'orange',
-    label: 'custom',
+    sounder: 'battery',
+    colourLabel: 'CE',
   },
   'STI-1100-Y': {
     environment: 'indoor',
-    sounder: 'battery',
     mounting: 'flush',
-    colour: 'yellow',
-    label: 'none',
+    sounder: 'battery',
+    colourLabel: 'NY',
   },
   'STI-1130': {
     environment: 'indoor',
-    sounder: 'battery',
     mounting: 'surface',
-    colour: 'red',
-    label: 'fire',
+    sounder: 'battery',
+    colourLabel: 'FR',
   },
   'STI-1130-G': {
     environment: 'indoor',
-    sounder: 'battery',
     mounting: 'surface',
-    colour: 'green',
-    label: 'emergency',
+    sounder: 'battery',
+    colourLabel: 'EG',
   },
   'STI-1130CR': {
     environment: 'indoor',
-    sounder: 'battery',
     mounting: 'surface',
-    colour: 'red',
-    label: 'custom',
+    sounder: 'battery',
+    colourLabel: 'CR',
   },
   'STI-1130CY': {
     environment: 'indoor',
-    sounder: 'battery',
     mounting: 'surface',
-    colour: 'yellow',
-    label: 'custom',
+    sounder: 'battery',
+    colourLabel: 'CY',
   },
   'STI-1130CB': {
     environment: 'indoor',
-    sounder: 'battery',
     mounting: 'surface',
-    colour: 'blue',
-    label: 'custom',
+    sounder: 'battery',
+    colourLabel: 'CB',
   },
   'STI-1130-Y': {
     environment: 'indoor',
-    sounder: 'battery',
     mounting: 'surface',
-    colour: 'yellow',
-    label: 'none',
+    sounder: 'battery',
+    colourLabel: 'NY',
   },
   'STI-1130-B': {
     environment: 'indoor',
-    sounder: 'battery',
     mounting: 'surface',
-    colour: 'blue',
-    label: 'none',
+    sounder: 'battery',
+    colourLabel: 'NB',
   },
   'STI-1130-RC-G': {
     environment: 'indoor',
-    sounder: 'dc',
     mounting: 'surface',
-    colour: 'green',
-    label: 'emergency',
+    sounder: 'dc',
+    colourLabel: 'EG',
   },
   'STI-1250': {
     environment: 'outdoor',
-    sounder: 'none',
     mounting: 'flush',
-    colour: 'red',
-    label: 'fire',
+    sounder: 'none',
+    colourLabel: 'FR',
   },
   'STI-1250-G': {
     environment: 'outdoor',
-    sounder: 'none',
     mounting: 'flush',
-    colour: 'green',
-    label: 'emergency',
+    sounder: 'none',
+    colourLabel: 'EG',
   },
   'STI-1250CR': {
     environment: 'outdoor',
-    sounder: 'none',
     mounting: 'flush',
-    colour: 'red',
-    label: 'custom',
+    sounder: 'none',
+    colourLabel: 'CR',
+  },
+  'STI-1250CG': {
+    environment: 'outdoor',
+    mounting: 'flush',
+    sounder: 'none',
+    colourLabel: 'CG',
   },
   'STI-1250NR': {
     environment: 'outdoor',
-    sounder: 'none',
     mounting: 'flush',
-    colour: 'red',
-    label: 'none',
+    sounder: 'none',
+    colourLabel: 'NR',
   },
   'STI-1250NG': {
     environment: 'outdoor',
-    sounder: 'none',
     mounting: 'flush',
-    colour: 'green',
-    label: 'none',
+    sounder: 'none',
+    colourLabel: 'NG',
   },
   'STI-3150': {
     environment: 'outdoor',
-    sounder: 'none',
     mounting: 'surface',
-    colour: 'red',
-    label: 'fire',
+    sounder: 'none',
+    colourLabel: 'FR',
   },
   'STI-3150-G': {
     environment: 'outdoor',
-    sounder: 'none',
     mounting: 'surface',
-    colour: 'green',
-    label: 'emergency',
+    sounder: 'none',
+    colourLabel: 'EG',
   },
   'STI-3150CR': {
     environment: 'outdoor',
-    sounder: 'none',
     mounting: 'surface',
-    colour: 'red',
-    label: 'custom',
+    sounder: 'none',
+    colourLabel: 'CR',
   },
   'STI-3150CY': {
     environment: 'outdoor',
-    sounder: 'none',
     mounting: 'surface',
-    colour: 'yellow',
-    label: 'custom',
+    sounder: 'none',
+    colourLabel: 'CY',
   },
   'STI-3150CB': {
     environment: 'outdoor',
-    sounder: 'none',
     mounting: 'surface',
-    colour: 'blue',
-    label: 'custom',
+    sounder: 'none',
+    colourLabel: 'CB',
   },
   'STI-3150NR': {
     environment: 'outdoor',
-    sounder: 'none',
     mounting: 'surface',
-    colour: 'red',
-    label: 'none',
+    sounder: 'none',
+    colourLabel: 'NR',
   },
   'STI-3150-Y': {
     environment: 'outdoor',
-    sounder: 'none',
     mounting: 'surface',
-    colour: 'yellow',
-    label: 'none',
+    sounder: 'none',
+    colourLabel: 'NY',
   },
   'STI-3150-B': {
     environment: 'outdoor',
-    sounder: 'none',
     mounting: 'surface',
-    colour: 'blue',
-    label: 'none',
+    sounder: 'none',
+    colourLabel: 'NB',
   },
   'STI-1150': {
     environment: 'outdoor',
-    sounder: 'battery',
     mounting: 'flush',
-    colour: 'red',
-    label: 'fire',
+    sounder: 'battery',
+    colourLabel: 'FR',
   },
   'STI-1155': {
     environment: 'outdoor',
-    sounder: 'battery',
     mounting: 'surface',
-    colour: 'red',
-    label: 'fire',
+    sounder: 'battery',
+    colourLabel: 'FR',
   },
   'STI-1155-G': {
     environment: 'outdoor',
-    sounder: 'battery',
     mounting: 'surface',
-    colour: 'green',
-    label: 'emergency',
+    sounder: 'battery',
+    colourLabel: 'EG',
   },
 }
 
@@ -389,16 +377,16 @@ const ALL_SELECTIONS = Object.values(CODE_TO_SELECTION)
 export function buildStopperIIModelCode(
   selections: StopperIISelectionState,
 ): string | null {
-  const { environment, sounder, mounting, colour, label } = selections
+  const { environment, mounting, sounder, colourLabel } = selections
 
-  if (!environment || !sounder || !mounting || !colour || !label) {
+  if (!environment || !mounting || !sounder || !colourLabel) {
     return null
   }
 
-  const key = `${environment}|${sounder}|${mounting}|${colour}|${label}`
+  const key = `${environment}|${mounting}|${sounder}|${colourLabel}`
 
   for (const [code, sel] of Object.entries(CODE_TO_SELECTION)) {
-    const selKey = `${sel.environment}|${sel.sounder}|${sel.mounting}|${sel.colour}|${sel.label}`
+    const selKey = `${sel.environment}|${sel.mounting}|${sel.sounder}|${sel.colourLabel}`
     if (selKey === key) return code
   }
 
@@ -415,8 +403,8 @@ export function isValidStopperIICombination(
   const modelCode = buildStopperIIModelCode(selections)
 
   if (!modelCode) {
-    const { environment, sounder, mounting, colour, label } = selections
-    if (!environment || !sounder || !mounting || !colour || !label) {
+    const { environment, mounting, sounder, colourLabel } = selections
+    if (!environment || !mounting || !sounder || !colourLabel) {
       return { valid: true }
     }
     return {
@@ -459,7 +447,7 @@ export const STOPPER_II_CONSTRAINTS: ModelConstraints = {
   constraints: [],
 }
 
-const STOPPER_II_STEPS = ['environment', 'sounder', 'mounting', 'colour', 'label']
+const STOPPER_II_STEPS = ['environment', 'mounting', 'sounder', 'colourLabel']
 
 function stopperIIAllowlistFn(stepId: string, config: Configuration): Set<string> | null {
   const others: Partial<StopperIISelectionState> = {}
