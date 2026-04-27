@@ -21,6 +21,19 @@ function resolveLookupValue(model: ModelDefinition, config: Configuration): stri
   return codeLookup.map[keyParts.join('|')] ?? ''
 }
 
+function findLookupPrefix(map: Record<string, string>): string {
+  const values = Object.values(map)
+  if (values.length === 0) return ''
+  let prefix = values[0]
+  for (let i = 1; i < values.length; i++) {
+    while (!values[i].startsWith(prefix)) {
+      prefix = prefix.slice(0, -1)
+      if (prefix === '') return ''
+    }
+  }
+  return prefix
+}
+
 export function ProductModelDisplay({
   model,
   productModel,
@@ -32,6 +45,7 @@ export function ProductModelDisplay({
 
   const lookupStepSet = new Set(codeLookup?.steps ?? [])
   const lookupValue = codeLookup ? resolveLookupValue(model, config) : ''
+  const lookupPrefix = codeLookup && !baseCode ? findLookupPrefix(codeLookup.map) : ''
   let lookupRendered = false
 
   return (
@@ -52,6 +66,10 @@ export function ProductModelDisplay({
             <div key="lookup-combined" className="contents">
               {showSeparator && <span className="text-slate-400">-</span>}
 
+              {lookupPrefix && (
+                <span className="font-medium text-slate-900">{lookupPrefix}</span>
+              )}
+
               <button
                 type="button"
                 onClick={() => onEditStep(firstLookupStep)}
@@ -61,7 +79,9 @@ export function ProductModelDisplay({
                     : 'border-slate-200 bg-slate-50 text-slate-400 hover:border-slate-300'
                 }`}
               >
-                {lookupValue || '?'}
+                {lookupPrefix && lookupValue.startsWith(lookupPrefix)
+                  ? lookupValue.slice(lookupPrefix.length)
+                  : lookupValue || '?'}
                 <span className="pointer-events-none absolute -right-1 -top-1 hidden text-slate-400 group-hover:block max-md:hidden!">
                   <Pencil className="h-2.5 w-2.5" />
                 </span>

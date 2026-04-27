@@ -1,8 +1,16 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { X } from 'lucide-react'
-import type { Step, OptionId, Configuration, ModelId, Option } from '@shared/types'
+import type {
+  Step,
+  OptionId,
+  Configuration,
+  ModelId,
+  ModelDefinition,
+  Option,
+} from '@shared/types'
 import { getModelById } from '@entities/product/models'
+import { getCodeHint } from '@entities/product/models/getCodeHint'
 import { OptionCard } from './OptionCard'
 import { getOptionsWithAvailability } from '@features/configurator/lib/filterOptions'
 import { useModelTranslations } from '../hooks/useModelTranslations'
@@ -35,6 +43,20 @@ function resolveOptionImage(
   return { ...option, image: resolved }
 }
 
+function applyCodeHint(
+  label: string,
+  model: ModelDefinition | undefined,
+  stepId: string,
+  optionId: string,
+  config: Configuration,
+): string {
+  if (!model) return label
+  if (label.startsWith('#')) return label
+  const hint = getCodeHint(model, stepId, optionId, config)
+  if (!hint) return label
+  return `#${hint} ${label}`
+}
+
 export function OptionBottomSheet({
   open,
   step,
@@ -49,6 +71,7 @@ export function OptionBottomSheet({
   const { t } = useTranslation()
   const { lang } = useLanguage()
   const { getStepTitle, getOptionLabel } = useModelTranslations(modelId)
+  const model = getModelById(modelId)
   const sheetRef = useRef<HTMLDivElement>(null)
 
   const title = getStepTitle(step.id)
@@ -160,18 +183,29 @@ export function OptionBottomSheet({
                 role="listbox"
                 aria-label={`${title} options`}
               >
-                {resolvedOptions.map(({ option }) => (
-                  <OptionCard
-                    key={option.id}
-                    option={option}
-                    isSelected={option.id === selectedOptionId}
-                    isAvailable={true}
-                    isLocked={isLocked}
-                    onSelect={() => handleOptionClick(option.id)}
-                    label={getOptionLabel(step.id, option.id)}
-                    forceTile
-                  />
-                ))}
+                {resolvedOptions.map(({ option }) => {
+                  const baseLabel = getOptionLabel(step.id, option.id)
+                  const label = applyCodeHint(
+                    baseLabel,
+                    model,
+                    step.id,
+                    option.id,
+                    config,
+                  )
+
+                  return (
+                    <OptionCard
+                      key={option.id}
+                      option={option}
+                      isSelected={option.id === selectedOptionId}
+                      isAvailable={true}
+                      isLocked={isLocked}
+                      onSelect={() => handleOptionClick(option.id)}
+                      label={label}
+                      forceTile
+                    />
+                  )
+                })}
               </div>
             </div>
 

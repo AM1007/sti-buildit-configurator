@@ -12,7 +12,7 @@
       "title": "INSTALLATION ENVIRONMENT",
       "options": {
         "indoor": "Indoor Installation",
-        "outdoor": "Outdoor Installation (IP54)"
+        "outdoor": "Outdoor Installation"
       }
     },
     "mounting": {
@@ -34,16 +34,16 @@
     "colourLabel": {
       "title": "COLOUR & LABEL",
       "options": {
-        "FR": "#FR Red, 'FIRE ALARM'",
+        "FR": "Red, 'FIRE ALARM'",
         "NR": "#NR Red, No Label",
         "CR": "#CR Red, Custom Label",
-        "EG": "#EG Green, 'EMERGENCY EXIT'",
+        "EG": "#G Green, 'EMERGENCY EXIT'",
         "NG": "#NG Green, No Label",
         "CG": "#CG Green, Custom Label",
-        "NC": "#NC No Colour Insert (Clear)",
+        "NC": "#NR No Colour Insert (Clear)",
         "NY": "#NY Yellow, No Label",
-        "CY": "#CY Yellow, Custom Label",
-        "NB": "#NB Blue, No Label",
+        "CY": "#Y Yellow, Custom Label",
+        "NB": "#B Blue, No Label",
         "CB": "#CB Blue, Custom Label",
         "CE": "#CE Orange, Custom Label"
       }
