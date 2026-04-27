@@ -25,6 +25,27 @@ function buildSounderImageMap(baseName: string): Record<string, string> {
   return map
 }
 
+const MOUNTINGS = ['flush', 'surface'] as const
+
+function buildEnvironmentImageMap(env: string): Record<string, string> {
+  const map: Record<string, string> = {}
+
+  for (const mnt of MOUNTINGS) {
+    map[`${mnt}|`] = `${IMG}/ENVIRONMENT/GR-${mnt} ${env}.webp`
+
+    for (const [labelId, colourPrefix] of Object.entries(SII_COLOUR_MAP)) {
+      map[`${mnt}|${labelId}`] = `${IMG}/ENVIRONMENT/${colourPrefix}-${mnt} ${env}.webp`
+    }
+  }
+
+  map['backbox|'] = `${IMG}/ENVIRONMENT/GR-flush ${env}.webp`
+  for (const [labelId, colourPrefix] of Object.entries(SII_COLOUR_MAP)) {
+    map[`backbox|${labelId}`] = `${IMG}/ENVIRONMENT/${colourPrefix}-flush ${env}.webp`
+  }
+
+  return map
+}
+
 const steps: Step[] = [
   {
     id: 'environment',
@@ -35,13 +56,15 @@ const steps: Step[] = [
         id: 'indoor',
         label: 'Indoor',
         code: '',
-        image: `${IMG}/ENVIRONMENT/indoor.webp`,
+        image: `${IMG}/ENVIRONMENT/GR-flush indoor.webp`,
+        imageMap: buildEnvironmentImageMap('indoor'),
       },
       {
         id: 'outdoor',
         label: 'Outdoor (IP54)',
         code: '',
-        image: `${IMG}/ENVIRONMENT/outdoor.webp`,
+        image: `${IMG}/ENVIRONMENT/GR-flush outdoor.webp`,
+        imageMap: buildEnvironmentImageMap('outdoor'),
       },
     ],
   },
@@ -256,4 +279,5 @@ export const stopperIIModel: ModelDefinition = {
   },
 
   primaryDependencyStep: 'colourLabel',
+  dependencySteps: ['mounting', 'colourLabel'],
 }

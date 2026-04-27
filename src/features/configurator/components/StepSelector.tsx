@@ -42,7 +42,27 @@ function resolveOptionImage(
 ): Option {
   if (!option.imageMap) return option
   const model = getModelById(modelId)
-  if (!model?.primaryDependencyStep) return option
+  if (!model) return option
+
+  if (model.dependencySteps && model.dependencySteps.length > 0) {
+    const keyParts = model.dependencySteps.map((s) => config[s] ?? '')
+    if (keyParts.every((p) => p === '')) return option
+    const compoundKey = keyParts.join('|')
+    const resolved = option.imageMap[compoundKey]
+    if (resolved) return { ...option, image: resolved }
+    for (let i = keyParts.length - 1; i >= 0; i--) {
+      const partialParts = [...keyParts]
+      for (let j = i; j < keyParts.length; j++) {
+        partialParts[j] = ''
+      }
+      const partialKey = partialParts.join('|')
+      const partialResolved = option.imageMap[partialKey]
+      if (partialResolved) return { ...option, image: partialResolved }
+    }
+    return option
+  }
+
+  if (!model.primaryDependencyStep) return option
   const depValue = config[model.primaryDependencyStep]
   if (!depValue) return option
   const resolved = option.imageMap[depValue]

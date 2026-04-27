@@ -50,7 +50,7 @@ export interface Option {
   label: string
   code: string
   image?: string
-  imageMap?: Record<OptionId, string>
+  imageMap?: Record<string, string>
   notes?: string
   availableFor?: OptionId[]
   dependsOn?: StepId
@@ -84,6 +84,7 @@ export interface ModelDefinition {
   stepOrder: StepId[]
   productModelSchema: ProductModelSchema
   primaryDependencyStep?: StepId
+  dependencySteps?: StepId[]
 }
 
 export interface CustomTextData {
