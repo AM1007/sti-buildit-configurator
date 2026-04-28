@@ -43,6 +43,10 @@ function buildEnvironmentImageMap(env: string): Record<string, string> {
     map[`backbox|${labelId}`] = `${IMG}/ENVIRONMENT/${colourPrefix}-flush ${env}.webp`
   }
 
+  for (const [labelId, colourPrefix] of Object.entries(SII_COLOUR_MAP)) {
+    map[labelId] = `${IMG}/ENVIRONMENT/${colourPrefix}-flush ${env}.webp`
+  }
+
   return map
 }
 
@@ -108,12 +112,6 @@ const steps: Step[] = [
         imageMap: buildSounderImageMap('10 Colour Hood'),
       },
       {
-        id: 'clear-none',
-        label: 'Clear Hood, No Sounder',
-        code: '',
-        image: `${IMG}/SOUNDER/00 No Hood.webp`,
-      },
-      {
         id: 'battery',
         label: 'Coloured Hood, Sounder, 9V PP3 Battery',
         code: '',
@@ -121,17 +119,23 @@ const steps: Step[] = [
         imageMap: buildSounderImageMap('20 Sounder Battery'),
       },
       {
-        id: 'battery-clear',
-        label: 'Clear Hood, Sounder, 9V PP3 Battery',
-        code: '',
-        image: `${IMG}/SOUNDER/NC-20 Sounder Battery.webp`,
-      },
-      {
         id: 'dc',
         label: 'Coloured Hood, Sounder, 12-24VDC',
         code: '',
         image: `${IMG}/SOUNDER/30-DC Sounder DC.webp`,
         imageMap: buildSounderImageMap('30-DC Sounder DC'),
+      },
+      {
+        id: 'clear-none',
+        label: 'Clear Hood, No Sounder',
+        code: '',
+        image: `${IMG}/SOUNDER/00 No Hood.webp`,
+      },
+      {
+        id: 'battery-clear',
+        label: 'Clear Hood, Sounder, 9V PP3 Battery',
+        code: '',
+        image: `${IMG}/SOUNDER/NC-20 Sounder Battery.webp`,
       },
     ],
   },

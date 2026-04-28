@@ -40,9 +40,11 @@ function resolveOptionImage(
   if (model.dependencySteps && model.dependencySteps.length > 0) {
     const keyParts = model.dependencySteps.map((s) => config[s] ?? '')
     if (keyParts.every((p) => p === '')) return option
+
     const compoundKey = keyParts.join('|')
     const resolved = option.imageMap[compoundKey]
     if (resolved) return { ...option, image: resolved }
+
     for (let i = keyParts.length - 1; i >= 0; i--) {
       const partialParts = [...keyParts]
       for (let j = i; j < keyParts.length; j++) {
@@ -52,6 +54,14 @@ function resolveOptionImage(
       const partialResolved = option.imageMap[partialKey]
       if (partialResolved) return { ...option, image: partialResolved }
     }
+
+    for (let i = keyParts.length - 1; i >= 0; i--) {
+      if (keyParts[i]) {
+        const single = option.imageMap[keyParts[i]]
+        if (single) return { ...option, image: single }
+      }
+    }
+
     return option
   }
 
