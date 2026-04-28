@@ -12,7 +12,7 @@
       "title": "INSTALLATION ENVIRONMENT",
       "options": {
         "indoor": "Indoor Installation",
-        "outdoor": "Outdoor Installation"
+        "outdoor": "Outdoor Installation (IP54)"
       }
     },
     "mounting": {
@@ -26,24 +26,26 @@
     "sounder": {
       "title": "HOOD / SOUNDER",
       "options": {
-        "none": "No sounder",
+        "colour-none": "Coloured Hood, No Sounder",
+        "clear-none": "Clear Hood, No Sounder",
         "battery": "Coloured Hood, Sounder, 9V PP3 Battery",
+        "battery-clear": "Clear Hood, Sounder, 9V PP3 Battery",
         "dc": "Coloured Hood, Sounder, 12-24VDC Powered"
       }
     },
     "colourLabel": {
       "title": "COLOUR & LABEL",
       "options": {
-        "FR": "Red, 'FIRE ALARM'",
+        "FR": "#FR Red, 'FIRE ALARM'",
         "NR": "#NR Red, No Label",
         "CR": "#CR Red, Custom Label",
-        "EG": "#G Green, 'EMERGENCY EXIT'",
+        "EG": "#EG Green, 'EMERGENCY EXIT'",
         "NG": "#NG Green, No Label",
         "CG": "#CG Green, Custom Label",
-        "NC": "#NR No Colour Insert (Clear)",
+        "NC": "#NC No Colour Insert (Clear)",
         "NY": "#NY Yellow, No Label",
-        "CY": "#Y Yellow, Custom Label",
-        "NB": "#B Blue, No Label",
+        "CY": "#CY Yellow, Custom Label",
+        "NB": "#NB Blue, No Label",
         "CB": "#CB Blue, Custom Label",
         "CE": "#CE Orange, Custom Label"
       }
